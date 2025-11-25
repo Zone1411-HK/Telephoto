@@ -1,0 +1,82 @@
+.navbar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 5vh;
+}
+.navLine{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+body{
+    height: 100vh;
+    width: 100vW;
+}
+.container-fluid{
+    height: 100%;
+    width: 100%;
+}
+.loginMain{
+    display: flex;  
+    flex-direction: column;  
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 5%;
+}
+.login{
+    display: flex;    
+    width: 100%;
+    align-items: center;
+}
+.loginDoboz{
+    display: flex;   
+    justify-content: center;
+    align-items: center;
+}
+.loginDoboz2{
+    display: flex;   
+    flex-direction: column;
+    justify-content: center;
+ 
+}
+.loginTitle{
+    display: flex;   
+    justify-content: center;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 80px;
+}
+.loginSorok{
+    display: flex;
+    justify-content: space-between;
+}
+
+#login{
+    width: 100%;
+}
+
+.roll{
+    overflow-y: scroll;
+    height: 1440px;
+    height: 95vh;
+}
+
+.profileBase{
+    display: flex;
+    flex-direction:row;
+}
+.adatok{
+    display: flex;
+    flex-direction: column;
+}
