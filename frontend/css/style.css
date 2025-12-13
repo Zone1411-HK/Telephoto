@@ -1,8 +1,9 @@
-:root{
+:root {
     --Tojassarga: rgb(230, 230, 220);
+    --invalidRed: rgb(245, 70, 70);
 }
 
-.navbar{
+.navbar {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -11,105 +12,146 @@
     width: 100%;
     height: 5vh;
 }
-.navLine{
+.navLine {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
 }
 
-.container-fluid{
+.container-fluid {
     height: 100%;
     width: 100%;
 }
-.loginMain{
-    display: flex;  
-    flex-direction: column;  
+.loginMain {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
     justify-content: center;
     align-items: center;
     padding-bottom: 5%;
 }
-.login{
-    display: flex;    
+.login {
+    display: flex;
     width: 100%;
     align-items: center;
     font-weight: 750 !important;
 }
-.loginDoboz{
-    display: flex;   
+.loginDoboz {
+    display: flex;
     justify-content: center;
     align-items: center;
 }
-.loginDoboz2{
-    display: flex;   
+.loginDoboz2 {
+    display: flex;
     flex-direction: column;
     justify-content: center;
- 
 }
-.loginTitle{
-    display: flex;   
+.loginTitle {
+    display: flex;
     justify-content: center;
     margin-bottom: 5%;
     font-size: xx-large !important;
     font-weight: 750 !important;
 }
 
-body{
+body {
     height: 100vh;
-    width: 100vW;
-    font-family: "Josefin Sans", sans-serif;
+    width: 100vw;
+    font-family: 'Josefin Sans', sans-serif;
     font-optical-sizing: auto;
     font-weight: 650;
     font-style: normal;
     font-size: larger;
 }
 
-form{
+form {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     height: 80px;
 }
-.loginSorok{
+.loginSorok {
     display: flex;
     justify-content: space-between;
     margin: 1%;
+    width: 100%;
 }
 
-#login{
-    width: 100%;
+#loginButton {
+    position: relative;
+    width: 50%;
     border-radius: 5px;
     border-color: darkslategray;
     background-color: var(--Tojassarga);
 }
 
-.roll{
+.roll {
     overflow-y: scroll;
     height: 1440px;
     height: 95vh;
 }
 
-.profileBase{
+.profileBase {
     display: flex;
-    flex-direction:row;
+    flex-direction: row;
 }
-.adatok{
+.adatok {
     display: flex;
     flex-direction: column;
 }
 
-.inputMezo{
+.inputMezo {
+    border: 2px darkslategray solid;
     border-radius: 7.5px;
-    border-color: darkslategray;
     background-color: var(--Tojassarga);
 }
 
-input[type=button]{
+input[type='button'] {
     background-color: var(--Tojassarga);
     border-radius: 5px;
 }
 
-.lenyitoFul{
+.lenyitoFul {
     /*majd valami lesz itt*/
+}
+
+.invisible {
+    display: none;
+}
+
+@keyframes invalidShake {
+    0% {
+        left: 0px;
+        right: 0px;
+    }
+    25% {
+        right: 0px;
+        left: 10px;
+    }
+
+    50% {
+        right: 10px;
+        left: -10px;
+    }
+    100% {
+        left: 0px;
+        right: 0px;
+        border: 2px solid var(--invalidRed);
+    }
+}
+.invalid {
+    border: 2px solid var(--invalidRed);
+}
+
+.loginBtn {
+    display: flex;
+    justify-content: center;
+}
+
+#usernameInput {
+    position: relative;
+}
+#passwordInput {
+    position: relative;
 }
