@@ -1,6 +1,7 @@
 :root {
     --Tojassarga: rgb(230, 230, 220);
     --invalidRed: rgb(245, 70, 70);
+    --interactiveBlue: rgb(75, 175, 255);
 }
 
 .navbar {
@@ -116,6 +117,7 @@ input[type='button'] {
     /*majd valami lesz itt*/
 }
 
+/* You won't believe what it does */
 .invisible {
     display: none;
 }
@@ -154,4 +156,12 @@ input[type='button'] {
 }
 #passwordInput {
     position: relative;
+}
+
+#registrationText {
+    font-weight: 400;
+    color: var(--interactiveBlue);
+}
+#registrationText:hover {
+    cursor: pointer;
 }
