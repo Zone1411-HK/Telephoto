@@ -159,10 +159,10 @@ input[type='button'] {
     position: relative;
 }
 
-#registrationText {
+.loginRegText {
     font-weight: 400;
     color: var(--interactiveBlue);
 }
-#registrationText:hover {
+.loginRegText:hover {
     cursor: pointer;
 }

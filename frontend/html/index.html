@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="../css/style.css" />
         <!--!JavaScript-->
         <script src="../javascript/fetch.js"></script>
+        <script src="../javascript/registration.js"></script>
         <script src="../javascript/login.js"></script>
         <script src="../javascript/index.js"></script>
         <!--Font Style-->
@@ -41,7 +42,7 @@
                         <div class="loginTitle">
                             <h1>TELEPHOTO</h1>
                         </div>
-                        <div class="loginForm">
+                        <div class="loginForm" id="loginForm">
                             <form>
                                 <div class="loginSorok">
                                     <label for="usernameInput">Felhasználónév: </label>
@@ -56,8 +57,36 @@
                                     <input id="loginButton" type="button" value="Bejelentkezés" />
                                 </div>
                                 <hr />
-                                <div class="" id="registrationDiv">
-                                    <span id="registrationText">Regisztráció</span>
+                                <div class="" id="regTextDiv">
+                                    <span class="loginRegText" id="regText">Regisztráció</span>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="invisible" id="regForm">
+                            <form>
+                                <div class="loginSorok">
+                                    <label for="usernameInput">Felhasználónév: </label>
+                                    <input id="usernameInput" type="text" class="inputMezo" />
+                                </div>
+                                <div class="loginSorok">
+                                    <label for="usernameInput">Email: </label>
+                                    <input id="usernameInput" type="text" class="inputMezo" />
+                                </div>
+                                <div class="loginSorok">
+                                    <label for="passwordInput">Jelszó: </label>
+                                    <input id="passwordInput" type="password" class="inputMezo" />
+                                </div>
+                                <div class="loginSorok">
+                                    <label for="passwordInput">Jelszó: </label>
+                                    <input id="passwordInput" type="password" class="inputMezo" />
+                                </div>
+
+                                <div class="loginBtn">
+                                    <input id="loginButton" type="button" value="Regisztráció" />
+                                </div>
+                                <hr />
+                                <div class="" id="loginTextDiv">
+                                    <span class="loginRegText" id="loginText">Bejelentkezés</span>
                                 </div>
                             </form>
                         </div>
