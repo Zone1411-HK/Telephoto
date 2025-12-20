@@ -152,10 +152,16 @@ input[type='button'] {
     justify-content: center;
 }
 
-#usernameInput {
+/*
+#loginUsername {
     position: relative;
 }
-#passwordInput {
+#loginPassword {
+    position: relative;
+}*/
+
+.loginSorok label,
+input {
     position: relative;
 }
 

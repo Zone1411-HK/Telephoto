@@ -1,14 +1,14 @@
+//TODO Bejelentkezés után tovább vinni a felhasználót a főoldalra
+
 async function login() {
     try {
-        let usernameInput = document.getElementById('usernameInput');
+        let usernameInput = document.getElementById('loginUsername');
         let username = usernameInput.value;
-        !username ? invalidLogin(usernameInput) : usernameInput.classList.remove('invalid');
-        console.log(!username);
+        !username ? invalidElement(usernameInput) : usernameInput.classList.remove('invalid');
 
-        let passwordInput = document.getElementById('passwordInput');
+        let passwordInput = document.getElementById('loginPassword');
         let password = passwordInput.value;
-        !password ? invalidLogin(passwordInput) : passwordInput.classList.remove('invalid');
-        console.log(!password);
+        !password ? invalidElement(passwordInput) : passwordInput.classList.remove('invalid');
 
         if (!!username && !!password) {
             const response = await PostMethodFetch('/api/login', {
@@ -17,7 +17,6 @@ async function login() {
             });
             if (response.isLoggedIn) {
                 console.log('success');
-                //TODO TOVÁBB VITEL A FŐOLDALRA
             } else {
                 console.log('fail');
             }
@@ -27,7 +26,7 @@ async function login() {
     }
 }
 
-function invalidLogin(invalidElement) {
+function invalidElement(invalidElement) {
     invalidElement.style.animation = 'invalidShake 250ms linear 1 forwards';
     setTimeout(() => {
         invalidElement.style.animation = '';

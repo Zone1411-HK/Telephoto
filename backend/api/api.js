@@ -66,27 +66,19 @@ let users = [];
 router.post('/registration', async (request, response) => {
     const { username, email, password } = request.body;
     const { salt, hash } = HashPassword(password);
-    let user;
-    if (isUsernameAvailable(username)) {
-        user = {
-            username: username,
-            email: email,
-            password: {
-                hash: hash,
-                salt: salt
-            }
-        };
-        users.push(user);
-        response.status(200).json({
-            status: 'Successful registration',
-            user: user
-        });
-    } else {
-        response.status(200).json({
-            status: 'Failed registration',
-            user: user
-        });
-    }
+    let user = {
+        username: username,
+        email: email,
+        password: {
+            hash: hash,
+            salt: salt
+        }
+    };
+    users.push(user);
+    response.status(200).json({
+        status: 'Successful registration',
+        user: user
+    });
 });
 
 //? LOGIN
@@ -118,16 +110,21 @@ router.post('/login', async (request, response) => {
     }
 });
 
-function isUsernameAvailable(username) {
+router.post('/isUsernameAvailable', async (request, response) => {
+    const { username } = request.body;
     let j = 0;
     while (j < users.length && users[j].username != username) {
         j++;
     }
     if (j == users.length) {
-        return true;
+        response.status(200).json({
+            available: true
+        });
     } else {
-        return false;
+        response.status(200).json({
+            available: false
+        });
     }
-}
+});
 
 module.exports = router;

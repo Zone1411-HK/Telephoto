@@ -5,8 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('profile').addEventListener('click', () => {});
 
     document.getElementById('loginButton').addEventListener('click', login);
-    document.getElementById('regText').addEventListener('click', toggleLoginRegistration);
     document.getElementById('loginText').addEventListener('click', toggleLoginRegistration);
+    document.getElementById('regButton').addEventListener('click', registration);
+    document.getElementById('regText').addEventListener('click', toggleLoginRegistration);
     document.getElementById('create').addEventListener('click', () => {});
     document.getElementById('settings').addEventListener('click', () => {});
 
