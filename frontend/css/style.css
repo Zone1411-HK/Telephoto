@@ -89,7 +89,6 @@ form {
 
 .roll {
     overflow-y: scroll;
-    height: 1440px;
     height: 95vh;
 }
 

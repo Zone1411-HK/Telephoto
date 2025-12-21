@@ -16,6 +16,9 @@ async function login() {
                 password: password
             });
             if (response.isLoggedIn) {
+                document.getElementById('login').classList.add('invisible');
+                document.getElementById('home').classList.remove('invisible');
+                document.getElementById('navbar').classList.remove('invisible');
                 console.log('success');
             } else {
                 console.log('fail');
