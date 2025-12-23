@@ -62,36 +62,69 @@ function VerifyPassword(password, salt, hash) {
 
 //TODO users listát átvinni SQL-be
 let users = [];
-console.log(users);
 
-router.post('/registration', (request, response) => {
+router.post('/registration', async (request, response) => {
     const { username, email, password } = request.body;
     const { salt, hash } = HashPassword(password);
-
-    users.push({
+    let user = {
         username: username,
         email: email,
-        password: { hash: hash, salt: salt }
+        password: {
+            hash: hash,
+            salt: salt
+        }
+    };
+    users.push(user);
+    response.status(200).json({
+        status: 'Successful registration',
+        user: user
     });
-    console.log(users);
 });
 
-//TODO for()-t kicserélni while()-ra
-router.post('/login', (request, response) => {
+//? LOGIN
+
+router.post('/login', async (request, response) => {
     const { username, password } = request.body;
     let isVerified = false;
-    for (let i = 0; i < users.length; i++) {
+    let j = 0;
+    while (j < users.length && !isVerified) {
         if (
-            username == users[i].username &&
-            VerifyPassword(password, users[i].password.salt, users[i].password.hash)
+            users[j].username == username &&
+            VerifyPassword(password, users[j].password.salt, users[j].password.hash)
         ) {
             isVerified = true;
         }
+        j++;
     }
+
     if (isVerified) {
-        console.log('SUCCESS');
+        response.status(200).json({
+            status: 'Successful login',
+            isLoggedIn: true
+        });
     } else {
-        console.log('FAIL');
+        response.status(200).json({
+            status: 'Failed login',
+            isLoggedIn: false
+        });
     }
 });
+
+router.post('/isUsernameAvailable', async (request, response) => {
+    const { username } = request.body;
+    let j = 0;
+    while (j < users.length && users[j].username != username) {
+        j++;
+    }
+    if (j == users.length) {
+        response.status(200).json({
+            available: true
+        });
+    } else {
+        response.status(200).json({
+            available: false
+        });
+    }
+});
+
 module.exports = router;
