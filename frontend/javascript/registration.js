@@ -6,7 +6,7 @@ async function registration() {
 
         let usernameInput = document.getElementById('regUsername');
         let username = usernameInput.value;
-        const isUsernameAvailable = await PostMethodFetch('/api/isUsernameAvailable', {
+        const isUsernameAvailable = await PostMethodFetch('/api/isUsernameAvailable' + username, {
             username: username
         });
         if (!!username && isUsernameAvailable.available) {
