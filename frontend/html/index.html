@@ -10,12 +10,17 @@
         <script src="../bootstrap/js/popper.min.js"></script>
         <script src="../bootstrap/js/bootstrap.min.js"></script>
         <!--!CSS-->
+        <link rel="stylesheet" href="../leaflet/dist/leaflet.css" />
+        <link rel="stylesheet" href="../leaflet.markercluster/dist/MarkerCluster.Default.css" />
         <link rel="stylesheet" href="../css/style.css" />
         <!--!JavaScript-->
         <script src="../javascript/fetch.js"></script>
+        <script src="../leaflet/dist/leaflet.js"></script>
+        <script src="../leaflet.markercluster/dist/leaflet.markercluster.js"></script>
         <script src="../javascript/registration.js"></script>
         <script src="../javascript/login.js"></script>
         <script src="../javascript/index.js"></script>
+        <script src="../javascript/map.js"></script>
         <!--Font Style-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -28,7 +33,7 @@
         <div class="container-fluid">
             <!--? Ha dolgoztok rajta nyugodtan kivehetitek az invisible-t csak zavaró volt, hogy minden látszott-->
 
-            <div class="loginMain" id="login">
+            <div class="loginMain invisible" id="login">
                 <div class="row login">
                     <div class="col-md-4 col-sm-12 loginDoboz">
                         <img
@@ -154,10 +159,8 @@
             </div>
             -->
 
-            <div class="map invisible">
-                <div class="row">
-                    <div class="col-12"></div>
-                </div>
+            <div class="map">
+                <div id="map"></div>
             </div>
 
             <div class="profile invisible">
