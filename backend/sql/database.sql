@@ -33,6 +33,9 @@ CREATE TABLE posts(
     upvote INT DEFAULT 0,
     downvote INT DEFAULT 0,
     location VARCHAR(176),
+    latitude FLOAT,
+    longitude FLOAT,
+    creation_date DATETIME,
     FOREIGN KEY(user_id) REFERENCES users(user_id)
 );
 //
