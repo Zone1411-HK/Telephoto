@@ -171,3 +171,24 @@ input {
 .loginRegText:hover {
     cursor: pointer;
 }
+
+.postSpace {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 50vh;
+}
+
+.imageSpace {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.descriptionSpace {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+}
