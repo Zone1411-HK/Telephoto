@@ -31,13 +31,20 @@ router.get('/test', (request, response) => {
 //?GET /api/testsql
 router.get('/testsql', async (request, response) => {
     try {
+        /*
         const loginSelect = await database.loginSelect();
         console.log(loginSelect.length);
-        /*const selectall = await database.selectall();
+        const selectall = await database.selectall();
         response.status(200).json({
             message: 'Ez a végpont működik.',
             results: selectall
-        });*/
+        });
+        const addNewUser = await database.addNewUser('asd', 'a', 'a', 'a');
+        console.log(addNewUser);
+        const getUserByUsername = await database.getUserByUsername('asd');
+        console.log(getUserByUsername);
+        const createPost = await database.createPost('asd', 'asd', 'asd', 'asd', 0, 0);
+        */
     } catch (error) {
         response.status(500).json({
             message: 'Ez a végpont nem működik.'
@@ -121,4 +128,27 @@ router.get('/isUsernameAvailable/:name', async (request, response) => {
     }
 });
 
+router.post('/createPost', async (request, response) => {
+    const { username, description, tags, location, latitude, longitude } = request.body;
+    const createPost = await database.createPost(
+        username,
+        description,
+        tags,
+        location,
+        latitude,
+        longitude
+    );
+    console.log(createPost[0].serverStatus);
+    if (createPost[0].affectedRows > 0) {
+        response.status(200).json({
+            Status: 'Successful post creation',
+            Success: true
+        });
+    } else {
+        response.status(200).json({
+            Status: 'Failed post creation',
+            Success: false
+        });
+    }
+});
 module.exports = router;

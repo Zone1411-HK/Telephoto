@@ -19,9 +19,8 @@ async function selectall() {
 
 async function addNewUser(username, salt, hash, email) {
     try {
-        //! OTT ROHADJON MEG AZ IDÉZŐJEL A VALUESBAN
-        const sql = `INSERT INTO users(username, password_salt, password_hash, email) VALUES("${username}", "${salt}", "${hash}", "${email}")`;
-        const [result, fields] = await pool.execute(sql);
+        const sql = `INSERT INTO users(username, password_salt, password_hash, email, is_admin, registration_date) VALUES("${username}", "${salt}", "${hash}", "${email}", false ,NOW())`;
+        await pool.execute(sql);
         return [result, fields];
     } catch (error) {
         console.error(error);
@@ -33,9 +32,33 @@ async function loginSelect() {
     const [rows] = await pool.execute(query);
     return rows;
 }
+
+async function getUserByUsername(username) {
+    try {
+        const sql = `SELECT user_id FROM users WHERE username LIKE "${username}"`;
+        const [rows] = await pool.execute(sql);
+        return rows;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function createPost(username, description, tags, location, latitude, longitude) {
+    try {
+        let userId = await getUserByUsername(username);
+        userId = userId[0].user_id;
+        const sql = `INSERT INTO posts(user_id, description, tags, upvote, downvote, location, latitude, longitude, creation_date) VALUES(${userId},"${description}","${tags}",0,0,"${location}",${latitude}, ${longitude}, NOW())`;
+        const [rows, fields] = await pool.execute(sql);
+        return [rows, fields];
+    } catch (error) {
+        console.error(error);
+    }
+}
 //!Export
 module.exports = {
     selectall,
     addNewUser,
-    loginSelect
+    loginSelect,
+    getUserByUsername,
+    createPost
 };
