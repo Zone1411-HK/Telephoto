@@ -3,6 +3,7 @@
     --invalidRed: rgb(191, 26, 26);
     --interactiveBlue: rgb(6, 7, 113);
     --LoginGomb: rgb(207, 173, 193);
+    --NavBarColor: rgb(203, 217, 155);
 }
 
 .navbar {
@@ -179,4 +180,31 @@ input {
     border-radius: 5px;
     border-color: darkslategray;
     background-color: var(--LoginGomb);
+}
+
+#navBarColor{
+    background-color: var(--NavBarColor);
+}
+
+.navBarButton{
+    border-right: 1px solid darkslategray;
+    border-left: none;
+    border-top: none;
+    border-bottom: none;
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+    background-color: var(--NavBarColor);
+    width: 500px;
+}
+
+.navBarButton2{
+    border: none;
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+    background-color: var(--NavBarColor);
+    width: 500px;
+}
+
+#navbar{
+    background-color: var(--NavBarColor);
 }
