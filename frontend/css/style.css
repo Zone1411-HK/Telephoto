@@ -59,7 +59,7 @@
 }
 
 body {
-    height: 100vh;
+    height: 90vh;
     width: 100vw;
     font-family: 'Josefin Sans', sans-serif;
     font-optical-sizing: auto;
@@ -93,6 +93,9 @@ form {
 .roll {
     overflow-y: scroll;
     height: 95vh;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
 }
 
 .profileBase {
@@ -173,6 +176,38 @@ input {
     cursor: pointer;
 }
 
+.postSpace {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 50vh;
+}
+
+.imageSpace {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.descriptionSpace {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+}
+
+.commentSpace {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    overflow-y: scroll;
+    height: 25rem;
+}
+
+.home {
+    margin-top: 5vh;
+}
 /*workie work*/
 #regButton{
     position: relative;
