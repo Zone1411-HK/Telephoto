@@ -176,6 +176,8 @@ input {
     cursor: pointer;
 }
 
+#map {
+    height: 50rem;
 .postSpace {
     display: flex;
     flex-direction: column;
