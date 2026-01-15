@@ -31,11 +31,13 @@ router.get('/test', (request, response) => {
 //?GET /api/testsql
 router.get('/testsql', async (request, response) => {
     try {
-        const selectall = await database.selectall();
+        const loginSelect = await database.loginSelect();
+        console.log(loginSelect.length);
+        /*const selectall = await database.selectall();
         response.status(200).json({
             message: 'Ez a végpont működik.',
             results: selectall
-        });
+        });*/
     } catch (error) {
         response.status(500).json({
             message: 'Ez a végpont nem működik.'
@@ -57,40 +59,31 @@ function HashPassword(password) {
 
 function VerifyPassword(password, salt, hash) {
     const hashedPassword = crypto.scryptSync(password, salt, 64).toString('hex');
-    return hashedPassword === hash;
+    return hashedPassword;
 }
-
-//TODO users listát átvinni SQL-be
-let users = [];
 
 router.post('/registration', async (request, response) => {
     const { username, email, password } = request.body;
     const { salt, hash } = HashPassword(password);
-    let user = {
-        username: username,
-        email: email,
-        password: {
-            hash: hash,
-            salt: salt
-        }
-    };
-    users.push(user);
+    const addNewUser = await database.addNewUser(username, salt, hash, email);
     response.status(200).json({
         status: 'Successful registration',
-        user: user
+        results: addNewUser[0],
+        fields: addNewUser[1]
     });
 });
 
 //? LOGIN
 
 router.post('/login', async (request, response) => {
+    const loginSelect = await database.loginSelect();
     const { username, password } = request.body;
     let isVerified = false;
     let j = 0;
-    while (j < users.length && !isVerified) {
+    while (j < loginSelect.length && !isVerified) {
         if (
-            users[j].username == username &&
-            VerifyPassword(password, users[j].password.salt, users[j].password.hash)
+            loginSelect[j].username == username &&
+            VerifyPassword(password, loginSelect[j].password_salt, loginSelect[j].password_hash)
         ) {
             isVerified = true;
         }
@@ -110,10 +103,11 @@ router.post('/login', async (request, response) => {
     }
 });
 
-router.post('/isUsernameAvailable', async (request, response) => {
-    const { username } = request.body;
+//TODO SQL LEKÉRDEZÉSSEL MEGKAPNI AZ EDDIG REGISZTRÁLT NEVEKET
+router.get('/isUsernameAvailable/:name', async (request, response) => {
+    const name = request.params.name;
     let j = 0;
-    while (j < users.length && users[j].username != username) {
+    while (j < users.length && users[j].username != name) {
         j++;
     }
     if (j == users.length) {
