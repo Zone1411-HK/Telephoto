@@ -178,6 +178,7 @@ input {
 
 #map {
     height: 50rem;
+}
 .postSpace {
     display: flex;
     flex-direction: column;
@@ -211,7 +212,7 @@ input {
     margin-top: 5vh;
 }
 /*workie work*/
-#regButton{
+#regButton {
     position: relative;
     width: 50%;
     border-radius: 5px;
@@ -219,29 +220,27 @@ input {
     background-color: var(--LoginGomb);
 }
 
-#navBarColor{
+#navBarColor {
     background-color: var(--NavBarColor);
 }
 
-.navBarButton{
+.navBarButton {
+    background-color: var(--NavBarColor);
+    width: 20vw;
+    padding: 0px;
+}
+
+.rightNavBorder {
     border-right: 1px solid darkslategray;
     border-left: none;
     border-top: none;
     border-bottom: none;
     border-bottom-right-radius: 0px;
     border-top-right-radius: 0px;
-    background-color: var(--NavBarColor);
-    width: 500px;
 }
-
-.navBarButton2{
-    border: none;
-    border-bottom-right-radius: 0px;
-    border-top-right-radius: 0px;
-    background-color: var(--NavBarColor);
-    width: 500px;
+.noBorder {
+    border: 0px;
 }
-
-#navbar{
+#navbar {
     background-color: var(--NavBarColor);
 }
