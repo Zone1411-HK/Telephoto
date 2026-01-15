@@ -74,7 +74,7 @@
                                     <input id="regUsername" type="text" class="inputMezo" />
                                 </div>
                                 <div class="loginSorok">
-                                    <label for="regEmail">Email: </label>
+                                    <label for="regEmail">Email cím: </label>
                                     <input id="regEmail" type="text" class="inputMezo" />
                                 </div>
                                 <div class="loginSorok">
@@ -82,7 +82,7 @@
                                     <input id="regPassword" type="password" class="inputMezo" />
                                 </div>
                                 <div class="loginSorok">
-                                    <label for="regConfirmPassword">Jelszó: </label>
+                                    <label for="regConfirmPassword">Jelszó megerősítése: </label>
                                     <input
                                         id="regConfirmPassword"
                                         type="password"
@@ -110,98 +110,9 @@
                     </div>
                 </div>
             </div>
+            
 
-            <div class="home invisible" id="home">
-                <div class="row">
-                    <div class="col-md-3">
-                        <ul>
-                            <li>
-                                <a class="nav-link"
-                                    ><input type="button" id="top" value="Népszerű"
-                                /></a>
-                            </li>
-                            <li>
-                                <a class="nav-link"
-                                    ><input type="button" id="top" value="Toplistás"
-                                /></a>
-                            </li>
-                            <li>
-                                <a class="nav-link"
-                                    ><input type="button" id="top" value="Újak"
-                                /></a>
-                            </li>
-                            <li>
-                                <a class="nav-link"
-                                    ><input type="button" id="top" value="Közeli"
-                                /></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-9 roll">
-                        <div class="row">
-                            <div class="col-md-7">
-                                <div id="postSpace" class="postSpace">
-                                    <hr id="temp" />
-                                </div>
-                            </div>
-                            <div class="col-md-5">
-                                <div id="commentSpace" class="commentSpace">
-                                    <hr id="temp2" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ez mi ez?
-            <div class="personal">
-            </div>
-            -->
-
-            <div class="map">
-                <div id="map"></div>
-            </div>
-
-            <div class="profile invisible">
-                <div class="row profileBase">
-                    <div class="col-md-4 adatok roll">
-                        <div class="col-md-8">
-                            <h2>Név</h2>
-                            <h2>Hely</h2>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="button" id="create" value="Új poszt" />
-                            <input type="button" id="settings" value="Beállítások" />
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                            varius dapibus iaculis. Nulla dignissim consectetur odio, a egestas ex
-                            semper vel. Sed sagittis velit ut elit interdum sagittis. Praesent
-                            ultricies leo a sem tincidunt, vel pretium est bibendum. Donec tortor
-                            velit, pulvinar sit amet massa et, auctor sagittis ipsum. Mauris lacinia
-                            id metus at accumsan. Cras felis sem, volutpat nec erat id, consectetur
-                            sodales velit. Maecenas sed tristique sem. Aenean et elit nec ipsum
-                            tempor pharetra et nec erat. Sed semper purus mattis, tristique ante id,
-                            convallis mi. Aliquam erat volutpat. Pellentesque dignissim eu orci in
-                            commodo. Vivamus a lacus tristique, facilisis nunc et, placerat tellus.
-                            Vestibulum vel nulla sed ipsum gravida auctor. Praesent id neque eget
-                            ipsum ullamcorper efficitur dictum vel magna. Sed faucibus nisi mi.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <nav class="navbar navbar-expand-lg bg-body-tertiary invisible" id="navbar">
-            <div class="container-fluid navLine">
-                <a class="navbar-brand"><input type="button" id="home" value="Főoldal" /></a>
-                <a class="navbar-brand"><input type="button" id="personal" value="Egyéni" /></a>
-                <a class="navbar-brand"><input type="button" id="map" value="Térkép" /></a>
-                <a class="navbar-brand"><input type="button" id="profile" value="Profil" /></a>
-
+            <!--/*
                 <button
                     class="navbar-toggler"
                     type="button"
@@ -257,7 +168,207 @@
                             <a class="nav-link"><input type="button" id="near" value="Közeli" /></a>
                         </li>
                     </ul>
+                </div>-->
+
+            <div class="home" id="home">
+                <div class="row">
+                    <div class="col-md-3">
+                        <ul>
+                            <li>
+                                <a class="nav-link"
+                                    ><input type="button" id="top" value="Népszerű"
+                                /></a>
+                            </li>
+                            <li>
+                                <a class="nav-link"
+                                    ><input type="button" id="top" value="Toplistás"
+                                /></a>
+                            </li>
+                            <li>
+                                <a class="nav-link"
+                                    ><input type="button" id="top" value="Újak"
+                                /></a>
+                            </li>
+                            <li>
+                                <a class="nav-link"
+                                    ><input type="button" id="top" value="Közeli"
+                                /></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-9 roll">
+                        <div class="row" id="templatePost">
+                            <div class="col-md-7 border p-3">
+                                <div id="postSpace" class="postSpace border">
+                                    <div id="imageSpace" class="imageSpace border">
+                                        <img class="img-fluid" src="../images/placeholder1.jpg" />
+                                    </div>
+                                    <div id="rateSpace">
+                                        <input type="radio" name="rating" />
+                                        <input type="radio" name="rating" />
+                                    </div>
+                                    <div id="rateScoreSpace">
+                                        <p id="rateScore">1</p>
+                                    </div>
+                                    <div id="descriptionSpace" class="descriptionSpace">
+                                        <p>Lorem ipsum</p>
+                                    </div>
+                                    <div id="tagSpace" class="tagSpace">
+                                        <p id="tags" class="tags">#asd</p>
+                                    </div>
+                                    <div id="locationSpace" class="locationSpace">
+                                        <p>Tihany 50 150</p>
+                                    </div>
+                                    <div id="datetimeSpace" class="datetimeSpace">
+                                        <p>2026.01.01 18:00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div id="commentSpace" class="commentSpace border p-3">
+                                    <div id="templateComment" class="border row">
+                                        <div class="col-2" id="commenterPicture">
+                                            <img
+                                                src="../images/placeholder1.jpg"
+                                                class="img-fluid"
+                                            />
+                                        </div>
+                                        <div class="col-10" id="commentContent">
+                                            <p>
+                                                Lorem ipsum dolor sit amet consectetur adipisicing
+                                                elit. Iure perferendis quisquam animi amet, dicta
+                                                itaque hic. Sint mollitia ratione iste voluptatum
+                                                molestias, delectus veritatis, iure vel excepturi,
+                                                blanditiis eveniet ducimus.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div id="templateComment" class="border row">
+                                        <div class="col-2" id="commenterPicture">
+                                            <img
+                                                src="../images/placeholder1.jpg"
+                                                class="img-fluid"
+                                            />
+                                        </div>
+                                        <div class="col-10" id="commentContent">
+                                            <p>
+                                                Lorem ipsum dolor sit amet consectetur adipisicing
+                                                elit. Iure perferendis quisquam animi amet, dicta
+                                                itaque hic. Sint mollitia ratione iste voluptatum
+                                                molestias, delectus veritatis, iure vel excepturi,
+                                                blanditiis eveniet ducimus.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div id="templateComment" class="border row">
+                                        <div class="col-2" id="commenterPicture">
+                                            <img
+                                                src="../images/placeholder1.jpg"
+                                                class="img-fluid"
+                                            />
+                                        </div>
+                                        <div class="col-10" id="commentContent">
+                                            <p>
+                                                Lorem ipsum dolor sit amet consectetur adipisicing
+                                                elit. Iure perferendis quisquam animi amet, dicta
+                                                itaque hic. Sint mollitia ratione iste voluptatum
+                                                molestias, delectus veritatis, iure vel excepturi,
+                                                blanditiis eveniet ducimus.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div id="templateComment" class="border row">
+                                        <div class="col-2" id="commenterPicture">
+                                            <img
+                                                src="../images/placeholder1.jpg"
+                                                class="img-fluid"
+                                            />
+                                        </div>
+                                        <div class="col-10" id="commentContent">
+                                            <p>
+                                                Lorem ipsum dolor sit amet consectetur adipisicing
+                                                elit. Iure perferendis quisquam animi amet, dicta
+                                                itaque hic. Sint mollitia ratione iste voluptatum
+                                                molestias, delectus veritatis, iure vel excepturi,
+                                                blanditiis eveniet ducimus.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div id="templateComment" class="border row">
+                                        <div class="col-2" id="commenterPicture">
+                                            <img
+                                                src="../images/placeholder1.jpg"
+                                                class="img-fluid"
+                                            />
+                                        </div>
+                                        <div class="col-10" id="commentContent">
+                                            <p>
+                                                Lorem ipsum dolor sit amet consectetur adipisicing
+                                                elit. Iure perferendis quisquam animi amet, dicta
+                                                itaque hic. Sint mollitia ratione iste voluptatum
+                                                molestias, delectus veritatis, iure vel excepturi,
+                                                blanditiis eveniet ducimus.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Ez mi ez?
+            <div class="personal">
+            </div>
+            -->
+
+            <div class="map">
+                <div id="map"></div>
+                <div class="row">
+                    <div class="col-12"></div>
+                </div>
+            </div>
+
+            <div class="profile">
+                <div class="row profileBase">
+                    <div class="col-md-4 adatok roll">
+                        <div class="col-md-8">
+                            <h2>Név</h2>
+                            <h2>Hely</h2>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="button" id="create" value="Új poszt" />
+                            <input type="button" id="settings" value="Beállítások" />
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+                            varius dapibus iaculis. Nulla dignissim consectetur odio, a egestas ex
+                            semper vel. Sed sagittis velit ut elit interdum sagittis. Praesent
+                            ultricies leo a sem tincidunt, vel pretium est bibendum. Donec tortor
+                            velit, pulvinar sit amet massa et, auctor sagittis ipsum. Mauris lacinia
+                            id metus at accumsan. Cras felis sem, volutpat nec erat id, consectetur
+                            sodales velit. Maecenas sed tristique sem. Aenean et elit nec ipsum
+                            tempor pharetra et nec erat. Sed semper purus mattis, tristique ante id,
+                            convallis mi. Aliquam erat volutpat. Pellentesque dignissim eu orci in
+                            commodo. Vivamus a lacus tristique, facilisis nunc et, placerat tellus.
+                            Vestibulum vel nulla sed ipsum gravida auctor. Praesent id neque eget
+                            ipsum ullamcorper efficitur dictum vel magna. Sed faucibus nisi mi.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="navbar navbar-expand-lg" id="navbar">
+            <div class="container-fluid navLine" id="navBarColor">
+                <a class="navbar-brand"><input type="button" id="homepage" value="Főoldal" class="navBarButton"/></a>
+                <a class="navbar-brand"><input type="button" id="personal" value="Egyéni" class="navBarButton"/></a>
+                <a class="navbar-brand"><input type="button" id="map" value="Térkép" class="navBarButton"/></a>
+                <a class="navbar-brand"><input type="button" id="post" value="Posztolás" class="navBarButton"></a>
+                <a class="navbar-brand"><input type="button" id="profile" value="Profil" class="navBarButton2"/></a>
             </div>
         </nav>
     </body>

@@ -1,7 +1,9 @@
 :root {
-    --Tojassarga: rgb(230, 230, 220);
-    --invalidRed: rgb(245, 70, 70);
-    --interactiveBlue: rgb(75, 175, 255);
+    --Tojassarga: rgb(255, 224, 143);
+    --invalidRed: rgb(191, 26, 26);
+    --interactiveBlue: rgb(6, 7, 113);
+    --LoginGomb: rgb(207, 173, 193);
+    --NavBarColor: rgb(203, 217, 155);
 }
 
 .navbar {
@@ -57,13 +59,14 @@
 }
 
 body {
-    height: 100vh;
+    height: 90vh;
     width: 100vw;
     font-family: 'Josefin Sans', sans-serif;
     font-optical-sizing: auto;
     font-weight: 650;
     font-style: normal;
     font-size: larger;
+    background-color: var(--Tojassarga);
 }
 
 form {
@@ -84,12 +87,15 @@ form {
     width: 50%;
     border-radius: 5px;
     border-color: darkslategray;
-    background-color: var(--Tojassarga);
+    background-color: var(--LoginGomb);
 }
 
 .roll {
     overflow-y: scroll;
     height: 95vh;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
 }
 
 .profileBase {
@@ -103,12 +109,10 @@ form {
 
 .inputMezo {
     border: 2px darkslategray solid;
-    border-radius: 7.5px;
-    background-color: var(--Tojassarga);
+    border-radius: 5px;
 }
 
 input[type='button'] {
-    background-color: var(--Tojassarga);
     border-radius: 5px;
 }
 
@@ -174,4 +178,70 @@ input {
 
 #map {
     height: 50rem;
+.postSpace {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 50vh;
+}
+
+.imageSpace {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.descriptionSpace {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+}
+
+.commentSpace {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    overflow-y: scroll;
+    height: 25rem;
+}
+
+.home {
+    margin-top: 5vh;
+}
+/*workie work*/
+#regButton{
+    position: relative;
+    width: 50%;
+    border-radius: 5px;
+    border-color: darkslategray;
+    background-color: var(--LoginGomb);
+}
+
+#navBarColor{
+    background-color: var(--NavBarColor);
+}
+
+.navBarButton{
+    border-right: 1px solid darkslategray;
+    border-left: none;
+    border-top: none;
+    border-bottom: none;
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+    background-color: var(--NavBarColor);
+    width: 500px;
+}
+
+.navBarButton2{
+    border: none;
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+    background-color: var(--NavBarColor);
+    width: 500px;
+}
+
+#navbar{
+    background-color: var(--NavBarColor);
 }
