@@ -44,6 +44,7 @@ router.get('/testsql', async (request, response) => {
         const getUserByUsername = await database.getUserByUsername('asd');
         console.log(getUserByUsername);
         const createPost = await database.createPost('asd', 'asd', 'asd', 'asd', 0, 0);
+        console.log(await database.getPostDataByPostId(3));
         */
     } catch (error) {
         response.status(500).json({
@@ -151,4 +152,43 @@ router.post('/createPost', async (request, response) => {
         });
     }
 });
+
+router.get('/postInfos/:postId', async (request, response) => {
+    const postId = request.params.postId;
+    const { userInfos, postInfos, pictureInfos } = await database.getPostDataByPostId(postId);
+    const returnInfos = {
+        userInfos: userInfos,
+        postInfos: {
+            description: postInfos.description,
+            tags: postInfos.tags,
+            score: postInfos.upvote - postInfos.downvote,
+            location: postInfos.location,
+            latitude: postInfos.latitude,
+            longitude: postInfos.longitude,
+            creation_date: convertUnixToReadableDate(postInfos.unix_date * 1000)
+        },
+        pictureInfos: pictureInfos
+    };
+    response.status(200).json({
+        Status: 'Success',
+        Infos: returnInfos
+    });
+});
+
+function convertUnixToReadableDate(unix) {
+    let date = new Date(unix);
+    let year = date.getUTCFullYear(date);
+    //! VALAMIÉRT EZ A CSODA 0-TÓL KEZDI A HÓNAPOKAT
+    let month = date.getUTCMonth(date) + 1;
+    month = month.toString();
+    if (month.length == 1) {
+        month = '0' + month.toString();
+    }
+    let day = date.getUTCDate(date);
+    let hour = date.getUTCHours(date);
+    let minute = date.getUTCMinutes(date);
+    let second = date.getUTCSeconds(date);
+    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+}
+
 module.exports = router;

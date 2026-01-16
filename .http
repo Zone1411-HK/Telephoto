@@ -34,3 +34,7 @@ content-type: application/json
     "latitude": 0,
     "longitude": 0
 }
+
+###
+
+GET http://127.0.0.1:3000/api/postInfos/3
