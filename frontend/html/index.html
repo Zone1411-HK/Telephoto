@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="hu">
     <head>
         <meta charset="UTF-8" />
@@ -10,17 +10,19 @@
         <script src="../bootstrap/js/popper.min.js"></script>
         <script src="../bootstrap/js/bootstrap.min.js"></script>
         <!--!CSS-->
-        <link rel="stylesheet" href="../leaflet/dist/leaflet.css" />
-        <link rel="stylesheet" href="../leaflet.markercluster/dist/MarkerCluster.Default.css" />
-        <link rel="stylesheet" href="../css/style.css" />
+        <link rel="stylesheet" href="/leaflet/dist/leaflet.css" />
+        <link rel="stylesheet" href="/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+        <link rel="stylesheet" href="/css/style.css" />
         <!--!JavaScript-->
-        <script src="../javascript/fetch.js"></script>
-        <script src="../leaflet/dist/leaflet.js"></script>
-        <script src="../leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-        <script src="../javascript/registration.js"></script>
-        <script src="../javascript/login.js"></script>
-        <script src="../javascript/index.js"></script>
-        <script src="../javascript/map.js"></script>
+        <script src="/javascript/fetch.js"></script>
+        <script src="/leaflet/dist/leaflet.js"></script>
+        <script src="/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+        <script src="/exifreader/dist/exif-reader.js"></script>
+        <script src="/javascript/registration.js"></script>
+        <script src="/javascript/login.js"></script>
+        <script src="/javascript/index.js"></script>
+        <script src="/javascript/map.js"></script>
+        <script src="/javascript/uploadPost.js"></script>
         <!--Font Style-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -32,7 +34,6 @@
     <body>
         <div class="container-fluid">
             <!--? Ha dolgoztok rajta nyugodtan kivehetitek az invisible-t csak zavaró volt, hogy minden látszott-->
-
             <div class="loginMain invisible" id="login">
                 <div class="row login">
                     <div class="col-md-4 col-sm-12 loginDoboz">
@@ -172,6 +173,8 @@
             <div class="home" id="home">
                 <div class="row">
                     <div class="col-md-3">
+                        <img src="/images/img.jpg" id="test" class="img-fluid" />
+
                         <ul>
                             <li>
                                 <a class="nav-link"
@@ -595,6 +598,33 @@
             </div>
         </div>
 
+        <div class="modal" id="uploadModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <p class="display-6">Posztolj</p>
+                    </div>
+                    <div class="modal-body">
+                        <form enctype="multipart/form-data" id="myForm">
+                            <input
+                                type="file"
+                                id="uploadFile"
+                                accept=".mp4, .avi, .jpg, .jpeg, .jfif, .png, .gif, .webp"
+                                name="uploadFile"
+                                multiple
+                            />
+                            <button type="button" id="loadFiles">Feltölt</button>
+                        </form>
+                        <input type="text" id="uploadDescription" />
+                        <!--TODO Ide a tagaknak az inputja-->
+                        <input type="text" id="uploadLocation" />
+                        <input type="button" value="Mégse" data-ms-dismiss="modal" />
+                        <input type="button" value="Poszt" id="uploadPost" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <nav class="navbar navbar-expand-lg" id="navbar">
             <div class="container-fluid p-0" id="navBarColor">
                 <a class="navbar-brand m-0"
@@ -621,9 +651,11 @@
                 <a class="navbar-brand m-0"
                     ><input
                         type="button"
-                        id="post"
+                        id="postButton"
                         value="Posztolás"
                         class="navBarButton rightNavBorder"
+                        data-bs-toggle="modal"
+                        data-bs-target="#uploadModal"
                 /></a>
                 <a class="navbar-brand m-0"
                     ><input type="button" id="profile" value="Profil" class="navBarButton noBorder"

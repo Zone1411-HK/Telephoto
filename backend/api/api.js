@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
 //!Endpoints:
 //?GET /api/test
@@ -46,6 +46,7 @@ router.get('/testsql', async (request, response) => {
         const createPost = await database.createPost('asd', 'asd', 'asd', 'asd', 0, 0);
         console.log(await database.getPostDataByPostId(3));
         */
+        test();
     } catch (error) {
         response.status(500).json({
             message: 'Ez a végpont nem működik.'
@@ -189,6 +190,19 @@ function convertUnixToReadableDate(unix) {
     let minute = date.getUTCMinutes(date);
     let second = date.getUTCSeconds(date);
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+}
+
+router.post('/upload', upload.array('uploadFile'), (request, response) => {
+    response.send('SUCCESS');
+    console.log('YIPPEE');
+});
+
+function clearUploads() {
+    fs.readdir('./uploads').then((files) => {
+        files.forEach((file) => {
+            fs.unlink('./uploads/' + file);
+        });
+    });
 }
 
 module.exports = router;

@@ -18,10 +18,10 @@ async function PostMethodFetch(url, data) {
             body: JSON.stringify(data)
         });
         if (!response.ok) {
-            throw new Error(`GET hiba: ${response.status} ( ${response.statusText} )`);
+            throw new Error(`POST hiba: ${response.status} ( ${response.statusText} )`);
         }
         return await response.json();
     } catch (error) {
-        throw new Error(`GET hiba: ${error.message}`);
+        throw new Error(`POST hiba: ${error.message}`);
     }
 }

@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('personal').addEventListener('click', () => {});
     document.getElementById('map').addEventListener('click', () => {});
     document.getElementById('profile').addEventListener('click', () => {});
+    document.getElementById('postButton').addEventListener('click', () => {});
 
     document.getElementById('loginButton').addEventListener('click', login);
     document.getElementById('loginText').addEventListener('click', toggleLoginRegistration);
