@@ -54,11 +54,48 @@ async function createPost(username, description, tags, location, latitude, longi
         console.error(error);
     }
 }
+
+async function findUserOfPost(postId) {
+    try {
+        const sql = `SELECT posts.user_id FROM posts WHERE posts.post_id = ${postId} `;
+        const [rows] = await pool.execute(sql);
+        let user = rows[0].user_id;
+        return user;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function getPostDataByPostId(postId) {
+    try {
+        let user = await findUserOfPost(postId);
+        const userSql = `SELECT users.username, users.profile_picture_link FROM users WHERE users.user_id = ${user}`;
+        let userInfos = await pool.execute(userSql);
+        userInfos = userInfos[0][0];
+
+        const postSql = `SELECT description, tags, upvote, downvote, location, latitude, longitude, unix_timestamp(creation_date) as unix_date FROM posts WHERE post_id = ${postId}`;
+        let postInfos = await pool.execute(postSql);
+        postInfos = postInfos[0][0];
+
+        const pictureSql = `SELECT picture_link FROM pictures WHERE post_id = ${postId}`;
+        let pictureInfos = await pool.execute(pictureSql);
+        pictureInfos = pictureInfos[0];
+        pictureArray = [];
+        pictureInfos.forEach((picture) => {
+            pictureArray.push(picture.picture_link);
+        });
+
+        return { userInfos: userInfos, postInfos: postInfos, pictureInfos: pictureArray };
+    } catch (error) {
+        console.error(error);
+    }
+}
 //!Export
 module.exports = {
     selectall,
     addNewUser,
     loginSelect,
     getUserByUsername,
-    createPost
+    createPost,
+    getPostDataByPostId
 };
