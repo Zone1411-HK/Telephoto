@@ -250,3 +250,12 @@ input {
     margin-bottom: 0;
     height: 30px;
 }
+.slideShowController {
+    user-select: none;
+    text-decoration: none;
+    color: white;
+}
+.slideShowController:hover {
+    cursor: pointer;
+    color: gainsboro;
+}

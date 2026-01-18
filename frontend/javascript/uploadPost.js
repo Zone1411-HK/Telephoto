@@ -1,32 +1,25 @@
 //! SZÓLJATOK HA KELL MAGYARÁZAT, MERT ÉN BELE BOLONDULTAM MIRE MEGFEJTETTEM
 //TODO Feltöltött képek megjelenítése, Posztoláskor elmentés
 document.addEventListener('DOMContentLoaded', () => {
+    /*
     const img = document.getElementById('test');
-    getGPS(img.src).then((resolve) => {
+    getGPS('/temp_images/asd.jpg').then((resolve) => {
         const { Latitude, Longitude } = resolve;
         console.log(Latitude + ' ' + Longitude);
     });
-
-    document.getElementById('loadFiles').addEventListener('click', frame);
+    */
+    document.getElementById('loadFiles').addEventListener('click', preLoadFiles);
+    document.getElementById('');
+    document.getElementById('uploadPost').addEventListener('click', uploadPost);
 });
 
-async function frame() {
+async function preLoadFiles() {
     let files = document.getElementById('uploadFile').files;
     let uploadFeedback = document.getElementById('uploadFeedback');
 
     uploadFeedback.innerText = '';
-    if (rightFileFormats(files)) {
-        let formData = new FormData();
-        for (const file of files) {
-            formData.append('uploadFile', file);
-        }
-        console.log(formData);
-
-        let response = await fetch('http://127.0.0.1:3000/api/tempUpload', {
-            method: 'POST',
-            body: formData
-        });
-        response = await response.json();
+    if (rightFileFormats(files) && files.length > 0) {
+        let response = await uploadFiles('/api/tempUpload', files);
         document.getElementById('uploadFeedback').innerText = response.Message;
         uploadFeedback.style.color = 'var(--successGreen)';
 
@@ -153,11 +146,14 @@ function generateCarousel(files) {
     }
     if (files.length > 1) {
         const previous = document.createElement('a');
-        previous.innerText = '&#10094;';
+        previous.classList.add('slideShowController');
+
+        previous.innerText = '🠈';
         previous.addEventListener('click', previousSlide);
 
         const next = document.createElement('a');
-        next.innerText = '&#10095;';
+        next.classList.add('slideShowController');
+        next.innerText = '🠊';
         next.addEventListener('click', nextSlide);
 
         carouselContent.appendChild(previous);
@@ -165,4 +161,57 @@ function generateCarousel(files) {
     }
 }
 
-function upload() {}
+async function uploadPost() {
+    let files = document.getElementById('uploadFile').files;
+    let gps;
+    (await getGPS(files[0])) == null
+        ? (gps = { Latitude: null, Longitude: null })
+        : (gps = await getGPS(files[0]));
+
+    console.log(gps);
+    if (files.length > 0 && rightFileFormats(files)) {
+        let renamedFiles = [];
+        for (let file of files) {
+            let renamedFile = new File([file], `${Date.now()}-${file.name}`, {
+                type: file.type
+            });
+            renamedFiles.push(renamedFile);
+        }
+        let fileNames = [];
+        for (const file of renamedFiles) {
+            fileNames.push(file.name);
+        }
+        console.log(renamedFiles);
+        //let username = sessionStorage.getItem('username');
+        let username = 'asd';
+        let description = document.getElementById('uploadDescription').value;
+        let location = document.getElementById('uploadLocation').value;
+        await uploadFiles('/api/uploadPost', renamedFiles);
+        await PostMethodFetch('/api/createPost', {
+            username: username,
+            fileNames: fileNames,
+            description: description,
+            tags: '',
+            location: location,
+            latitude: gps.Latitude,
+            longitude: gps.Longitude
+        });
+    }
+}
+
+async function uploadFiles(apiUrl, files) {
+    try {
+        let formData = new FormData();
+        for (const file of files) {
+            formData.append('uploadFile', file);
+        }
+        let response = await fetch(apiUrl, {
+            method: 'POST',
+            body: formData
+        });
+        response = await response.json();
+        return response;
+    } catch (error) {
+        return error;
+    }
+}

@@ -131,7 +131,8 @@ router.get('/isUsernameAvailable/:name', async (request, response) => {
 });
 
 router.post('/createPost', async (request, response) => {
-    const { username, description, tags, location, latitude, longitude } = request.body;
+    const { username, fileNames, description, tags, location, latitude, longitude } = request.body;
+    console.log(description);
     const createPost = await database.createPost(
         username,
         description,
@@ -140,7 +141,10 @@ router.post('/createPost', async (request, response) => {
         latitude,
         longitude
     );
-    console.log(createPost[0].serverStatus);
+    console.log(fileNames);
+    for (const file of fileNames) {
+        await database.createPicture(createPost[0].insertId, file);
+    }
     if (createPost[0].affectedRows > 0) {
         response.status(200).json({
             Status: 'Successful post creation',
@@ -206,6 +210,21 @@ router.post('/tempUpload', tempUpload.array('uploadFile'), (request, response) =
         Message: 'Sikeres feltöltés!'
     });
     console.log('YIPPEE');
+});
+
+const postStorage = multer.diskStorage({
+    destination: (request, file, callback) => {
+        callback(null, path.join(__dirname, '../uploads'));
+    },
+    filename: (request, file, callback) => {
+        callback(null, file.originalname); //?egyedi név: post - file eredeti neve
+    }
+});
+const postUpload = multer({ storage: postStorage });
+router.post('/uploadPost', postUpload.array('uploadFile'), (request, response) => {
+    response.status(200).json({
+        Message: 'Sikeres feltöltés!'
+    });
 });
 
 function clearUploads() {

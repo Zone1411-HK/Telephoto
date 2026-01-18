@@ -55,6 +55,16 @@ async function createPost(username, description, tags, location, latitude, longi
     }
 }
 
+async function createPicture(postId, pictureLink) {
+    try {
+        const sql = `INSERT INTO pictures(post_id, picture_link) VALUES (${postId}, "${pictureLink}")`;
+        const [rows, fields] = await pool.execute(sql);
+        return [rows, fields];
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 async function findUserOfPost(postId) {
     try {
         const sql = `SELECT posts.user_id FROM posts WHERE posts.post_id = ${postId} `;
@@ -97,5 +107,6 @@ module.exports = {
     loginSelect,
     getUserByUsername,
     createPost,
-    getPostDataByPostId
+    getPostDataByPostId,
+    createPicture
 };
