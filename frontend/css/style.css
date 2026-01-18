@@ -1,6 +1,7 @@
 :root {
     --Tojassarga: rgb(255, 224, 143);
     --invalidRed: rgb(191, 26, 26);
+    --successGreen: rgb(50, 150, 30);
     --interactiveBlue: rgb(6, 7, 113);
     --LoginGomb: rgb(207, 173, 193);
     --NavBarColor: rgb(203, 217, 155);
@@ -243,4 +244,9 @@ input {
 }
 #navbar {
     background-color: var(--NavBarColor);
+}
+
+.uploadFeedback {
+    margin-bottom: 0;
+    height: 30px;
 }

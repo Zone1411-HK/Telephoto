@@ -192,8 +192,19 @@ function convertUnixToReadableDate(unix) {
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
 
-router.post('/upload', upload.array('uploadFile'), (request, response) => {
-    response.send('SUCCESS');
+const tempStorage = multer.diskStorage({
+    destination: (request, file, callback) => {
+        callback(null, path.join(__dirname, '../../frontend/temp_images'));
+    },
+    filename: (request, file, callback) => {
+        callback(null, 'temp-' + file.originalname); //?egyedi név: temp - file eredeti neve
+    }
+});
+const tempUpload = multer({ storage: tempStorage });
+router.post('/tempUpload', tempUpload.array('uploadFile'), (request, response) => {
+    response.status(200).json({
+        Message: 'Sikeres feltöltés!'
+    });
     console.log('YIPPEE');
 });
 

@@ -10,19 +10,30 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('loadFiles').addEventListener('click', frame);
 });
 
-function frame() {
+async function frame() {
     let files = document.getElementById('uploadFile').files;
-    let formData = new FormData();
-    for (const file of files) {
-        formData.append('uploadFile', file);
-    }
-    console.log(formData);
+    let uploadFeedback = document.getElementById('uploadFeedback');
 
-    fetch('http://127.0.0.1:3000/api/upload', {
-        method: 'POST',
-        body: formData
-    });
+    uploadFeedback.innerText = '';
     if (rightFileFormats(files)) {
+        let formData = new FormData();
+        for (const file of files) {
+            formData.append('uploadFile', file);
+        }
+        console.log(formData);
+
+        let response = await fetch('http://127.0.0.1:3000/api/tempUpload', {
+            method: 'POST',
+            body: formData
+        });
+        response = await response.json();
+        document.getElementById('uploadFeedback').innerText = response.Message;
+        uploadFeedback.style.color = 'var(--successGreen)';
+
+        generateCarousel(files);
+    } else {
+        uploadFeedback.innerText = 'Nem megfelelő egy vagy több fájl formátuma!';
+        uploadFeedback.style.color = 'var(--invalidRed)';
     }
 }
 
@@ -65,4 +76,93 @@ function fileFormats(format) {
         format == 'webp'
     );
 }
+
+function generateSlideForFile(file) {
+    let fileType = file.type.split('/')[1];
+    if (fileType == 'mp4' || fileType == 'avi') {
+        const video = document.createElement('video');
+        const source = document.createElement('source');
+        source.src = `temp_images/temp-${file.name}`;
+        source.type = `video/${fileType}`;
+        video.appendChild(source);
+        video.classList.add('tempVideo');
+        video.controls = true;
+        return video;
+    } else {
+        const image = document.createElement('img');
+        image.src = `/temp_images/temp-${file.name}`;
+        image.classList.add('tempImage');
+        return image;
+    }
+}
+
+function slideShow(move) {
+    let slides = document.getElementsByClassName('tempSlide');
+    let j = 0;
+    while (j < slides.length && slides[j].style.display == 'none') {
+        j++;
+    }
+    slides[j].style.display = 'none';
+    console.log();
+    if (slides[j].children[1].classList.contains('tempVideo')) {
+        slides[j].children[1].pause();
+        slides[j].children[1].currentTime = 0;
+    }
+    console.log(j + ' ' + slides.length);
+    if (j >= slides.length - 1 && move == 1) {
+        slides[0].style.display = 'block';
+    } else {
+        if (j == 0 && move == -1) {
+            slides[slides.length - 1].style.display = 'block';
+        } else {
+            slides[j + move].style.display = 'block';
+        }
+    }
+}
+
+function nextSlide() {
+    slideShow(1);
+}
+
+function previousSlide() {
+    slideShow(-1);
+}
+
+function generateCarousel(files) {
+    const carouselContent = document.getElementById('carouselContent');
+    carouselContent.replaceChildren();
+
+    for (let i = 0; i < files.length; i++) {
+        //TODO Ezeknek kell CSS-ben formázást csinálni!
+
+        const slideDiv = document.createElement('div');
+        slideDiv.classList.add('tempSlide');
+        if (i != 0) {
+            slideDiv.style.display = 'none';
+        }
+
+        const serialNumber = document.createElement('div');
+        serialNumber.classList.add('tempSerialNumber');
+        serialNumber.innerText = `${i + 1} / ${files.length}`;
+
+        const file = generateSlideForFile(files[i]);
+
+        slideDiv.appendChild(serialNumber);
+        slideDiv.appendChild(file);
+        carouselContent.appendChild(slideDiv);
+    }
+    if (files.length > 1) {
+        const previous = document.createElement('a');
+        previous.innerText = '&#10094;';
+        previous.addEventListener('click', previousSlide);
+
+        const next = document.createElement('a');
+        next.innerText = '&#10095;';
+        next.addEventListener('click', nextSlide);
+
+        carouselContent.appendChild(previous);
+        carouselContent.appendChild(next);
+    }
+}
+
 function upload() {}

@@ -606,6 +606,11 @@
                     </div>
                     <div class="modal-body">
                         <form enctype="multipart/form-data" id="myForm">
+                            <!--! Valamiért a bootstrapes carousel bénán nézett ki-->
+                            <div id="carouselContainer">
+                                <div id="carouselContent"></div>
+                                <div id="carouselControl"></div>
+                            </div>
                             <input
                                 type="file"
                                 id="uploadFile"
@@ -613,6 +618,9 @@
                                 name="uploadFile"
                                 multiple
                             />
+                            <div id="testing">
+                                <p id="uploadFeedback" class="uploadFeedback"></p>
+                            </div>
                             <button type="button" id="loadFiles">Feltölt</button>
                         </form>
                         <input type="text" id="uploadDescription" />
