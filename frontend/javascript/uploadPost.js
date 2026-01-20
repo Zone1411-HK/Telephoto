@@ -1,5 +1,3 @@
-//! SZÓLJATOK HA KELL MAGYARÁZAT, MERT ÉN BELE BOLONDULTAM MIRE MEGFEJTETTEM
-//TODO Feltöltött képek megjelenítése, Posztoláskor elmentés
 document.addEventListener('DOMContentLoaded', () => {
     /*
     const img = document.getElementById('test');
@@ -9,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     */
     document.getElementById('loadFiles').addEventListener('click', preLoadFiles);
-    document.getElementById('');
     document.getElementById('uploadPost').addEventListener('click', uploadPost);
 });
 
@@ -126,8 +123,6 @@ function generateCarousel(files) {
     carouselContent.replaceChildren();
 
     for (let i = 0; i < files.length; i++) {
-        //TODO Ezeknek kell CSS-ben formázást csinálni!
-
         const slideDiv = document.createElement('div');
         slideDiv.classList.add('tempSlide');
         if (i != 0) {
@@ -182,8 +177,11 @@ async function uploadPost() {
             fileNames.push(file.name);
         }
         console.log(renamedFiles);
-        //let username = sessionStorage.getItem('username');
+        //! Élesben ezt a kódot kell használni! let username = sessionStorage.getItem('username');
+
+        //! Csak teszthez
         let username = 'asd';
+
         let description = document.getElementById('uploadDescription').value;
         let location = document.getElementById('uploadLocation').value;
         await uploadFiles('/api/uploadPost', renamedFiles);
@@ -196,6 +194,9 @@ async function uploadPost() {
             latitude: gps.Latitude,
             longitude: gps.Longitude
         });
+        const carouselContent = document.getElementById('carouselContent');
+        carouselContent.replaceChildren();
+        document.getElementById('uploadFile').value = null;
     }
 }
 

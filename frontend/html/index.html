@@ -603,7 +603,7 @@
                         <p class="display-6">Posztolj</p>
                     </div>
                     <div class="modal-body">
-                        <form enctype="multipart/form-data" id="myForm">
+                        <form enctype="multipart/form-data" id="uploadForm">
                             <!--! Valamiért a bootstrapes carousel bénán nézett ki-->
                             <div id="carouselContainer">
                                 <div id="carouselContent"></div>
@@ -616,7 +616,7 @@
                                 name="uploadFile"
                                 multiple
                             />
-                            <div id="testing">
+                            <div id="uploadFeedbackDiv">
                                 <p id="uploadFeedback" class="uploadFeedback"></p>
                             </div>
                             <button type="button" id="loadFiles">Feltölt</button>
@@ -624,7 +624,12 @@
                         <input type="text" id="uploadDescription" />
                         <!--TODO Ide a tagaknak az inputja-->
                         <input type="text" id="uploadLocation" />
-                        <input type="button" value="Mégse" data-ms-dismiss="modal" />
+                        <input
+                            type="button"
+                            value="Mégse"
+                            data-ms-dismiss="modal"
+                            id="cancelPost"
+                        />
                         <input type="button" value="Poszt" id="uploadPost" />
                     </div>
                 </div>
