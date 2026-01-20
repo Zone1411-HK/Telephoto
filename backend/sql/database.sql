@@ -43,21 +43,14 @@ CREATE TABLE pictures(
     picture_link TEXT NOT NULL,
     FOREIGN KEY(post_id) REFERENCES posts(post_id)
 );
-//
-CREATE TABLE comments(
-	comment_id INT PRIMARY KEY AUTO_INCREMENT,
-    post_id INT,
-    user_id INT,
-    comment_content VARCHAR(500),
-    FOREIGN KEY(post_id) REFERENCES posts(post_id),
-    FOREIGN KEY(user_id) REFERENCES users(user_id)
-);
+
 //
 CREATE TABLE interactions(
  	user_id INT,
     post_id INT,
     upvote_downvote INT,
     favorite BOOLEAN,
+    comment_content VARCHAR(500),
     FOREIGN KEY(user_id) REFERENCES users(user_id),
     FOREIGN KEY(post_id) REFERENCES posts(post_id)
 );

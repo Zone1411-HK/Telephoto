@@ -63,13 +63,14 @@ function fileFormats(format) {
         format == 'jfif' ||
         format == 'png' ||
         format == 'gif' ||
-        format == 'webp'
+        format == 'webp' ||
+        format == 'hevc'
     );
 }
 
 function generateSlideForFile(file) {
     let fileType = file.type.split('/')[1];
-    if (fileType == 'mp4' || fileType == 'avi') {
+    if (fileType == 'mp4' || fileType == 'avi' || fileType == 'hevc') {
         const video = document.createElement('video');
         const source = document.createElement('source');
         source.src = `temp_images/temp-${file.name}`;
