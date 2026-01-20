@@ -30,8 +30,6 @@ CREATE TABLE posts(
     user_id INT,
     description VARCHAR(500),
     tags TEXT,
-    upvote INT DEFAULT 0,
-    downvote INT DEFAULT 0,
     location VARCHAR(176),
     latitude FLOAT,
     longitude FLOAT,
@@ -54,6 +52,16 @@ CREATE TABLE comments(
     FOREIGN KEY(post_id) REFERENCES posts(post_id),
     FOREIGN KEY(user_id) REFERENCES users(user_id)
 );
+//
+CREATE TABLE interactions(
+ 	user_id INT,
+    post_id INT,
+    upvote_downvote INT,
+    favorite BOOLEAN,
+    FOREIGN KEY(user_id) REFERENCES users(user_id),
+    FOREIGN KEY(post_id) REFERENCES posts(post_id)
+);
+
 //
 DELIMITER ;
 
