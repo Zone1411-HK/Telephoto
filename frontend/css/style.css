@@ -271,7 +271,7 @@ input {
     color: gainsboro;
 }
 
-.modal-header{
+.modal-header {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -279,7 +279,7 @@ input {
     background-color: var(--PostModalTopColor);
 }
 
-.postTextDesign{
+.postTextDesign {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -287,20 +287,20 @@ input {
     font-weight: 750;
 }
 
-.modal-body{
+.modal-body {
     background-color: var(--PostModalBottomColor);
     color: whitesmoke;
 }
 
 .modal-dialog {
-  height: 65%; /* = 90% of the .modal-backdrop block = %90 of the screen */
+    height: 65%; /* = 90% of the .modal-backdrop block = %90 of the screen */
 }
 
 .modal-content {
-  height: 75%; /* = 100% of the .modal-dialog block */
+    height: 75%; /* = 100% of the .modal-dialog block */
 }
 
-.postButtonDesign{
+.postButtonDesign {
     background-color: whitesmoke;
 }
 
@@ -325,7 +325,13 @@ input {
     justify-content: center;
 }
 
-.circle{
+.circle {
     border-radius: 50%;
     aspect-ratio: 1/1;
+}
+.modal-body {
+    background-image: url('/images/leather.png');
+    background-color: black;
+    background-position: fixed;
+    background-size: 300px 300px;
 }
