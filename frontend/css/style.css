@@ -9,6 +9,8 @@
     --interactiveBlue: rgb(6, 7, 113);
     --LoginGomb: rgb(207, 173, 193);
     --NavBarColor: rgb(203, 217, 155);
+    --PostModalTopColor: rgb(188, 188, 188);
+    --PostModalBottomColor: rgb(30, 30, 30);
 }
 
 .navbar {
@@ -20,6 +22,7 @@
     width: 100%;
     height: 5vh;
 }
+
 .navLine {
     display: flex;
     flex-direction: row;
@@ -30,6 +33,7 @@
     height: 100%;
     width: 100%;
 }
+
 .loginMain {
     display: flex;
     flex-direction: column;
@@ -39,22 +43,26 @@
     align-items: center;
     padding-bottom: 5%;
 }
+
 .login {
     display: flex;
     width: 100%;
     align-items: center;
     font-weight: 750 !important;
 }
+
 .loginDoboz {
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .loginDoboz2 {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
+
 .loginTitle {
     display: flex;
     justify-content: center;
@@ -121,9 +129,10 @@ input[type='button'] {
     border-radius: 5px;
 }
 
-.lenyitoFul {
-    /*majd valami lesz itt*/
+/*.lenyitoFul {
+    majd valami lesz itt
 }
+*/
 
 /* You won't believe what it does */
 /* https://open.spotify.com/track/51EpFns3CG9taCMQz6XDom?si=8b358a3ae3994cb1 */
@@ -151,6 +160,7 @@ input[type='button'] {
         border: 2px solid var(--invalidRed);
     }
 }
+
 .invalid {
     border: 2px solid var(--invalidRed);
 }
@@ -159,14 +169,6 @@ input[type='button'] {
     display: flex;
     justify-content: center;
 }
-
-/*
-#loginUsername {
-    position: relative;
-}
-#loginPassword {
-    position: relative;
-}*/
 
 .loginSorok label,
 input {
@@ -177,6 +179,7 @@ input {
     font-weight: 400;
     color: var(--interactiveBlue);
 }
+
 .loginRegText:hover {
     cursor: pointer;
 }
@@ -216,7 +219,7 @@ input {
 .home {
     margin-top: 5vh;
 }
-/*workie work*/
+
 #regButton {
     position: relative;
     width: 50%;
@@ -243,9 +246,11 @@ input {
     border-bottom-right-radius: 0px;
     border-top-right-radius: 0px;
 }
+
 .noBorder {
     border: 0px;
 }
+
 #navbar {
     background-color: var(--NavBarColor);
 }
@@ -254,12 +259,73 @@ input {
     margin-bottom: 0;
     height: 30px;
 }
+
 .slideShowController {
     user-select: none;
     text-decoration: none;
     color: white;
 }
+
 .slideShowController:hover {
     cursor: pointer;
     color: gainsboro;
+}
+
+.modal-header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 5%;
+    background-color: var(--PostModalTopColor);
+}
+
+.postTextDesign{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem;
+    font-weight: 750;
+}
+
+.modal-body{
+    background-color: var(--PostModalBottomColor);
+    color: whitesmoke;
+}
+
+.modal-dialog {
+  height: 65%; /* = 90% of the .modal-backdrop block = %90 of the screen */
+}
+
+.modal-content {
+  height: 75%; /* = 100% of the .modal-dialog block */
+}
+
+.postButtonDesign{
+    background-color: whitesmoke;
+}
+
+#carouselContainer {
+    width: 100%;
+    height: 240px;
+    min-height: 240px;
+}
+
+#carouselContent {
+    width: 100%;
+    height: 100%;
+}
+
+.tempSerialNumber {
+    position: absolute;
+}
+
+.tempSlide {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.circle{
+    border-radius: 50%;
+    aspect-ratio: 1/1;
 }
