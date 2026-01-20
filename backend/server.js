@@ -35,6 +35,8 @@ app.use('/api', endpoints);
 
 //!Szerver futtatása
 app.use(express.static(path.join(__dirname, '../frontend'))); //?frontend mappa tartalmának betöltése az oldal működéséhez
+
+app.use(express.static(path.join(__dirname, '../backend/node_modules'))); //! Ezért nem tudom Kardos megöl-e
 app.listen(port, ip, () => {
     console.log(`Szerver elérhetősége: http://${ip}:${port}`);
 });

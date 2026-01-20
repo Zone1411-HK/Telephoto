@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
 //!Endpoints:
 //?GET /api/test
@@ -34,7 +34,7 @@ router.get('/testsql', async (request, response) => {
         /*
         const loginSelect = await database.loginSelect();
         console.log(loginSelect.length);
-        const selectall = await database.selectall();
+        const selectall = await database.selectall(); 
         response.status(200).json({
             message: 'Ez a végpont működik.',
             results: selectall
@@ -46,6 +46,7 @@ router.get('/testsql', async (request, response) => {
         const createPost = await database.createPost('asd', 'asd', 'asd', 'asd', 0, 0);
         console.log(await database.getPostDataByPostId(3));
         */
+        test();
     } catch (error) {
         response.status(500).json({
             message: 'Ez a végpont nem működik.'
@@ -53,8 +54,7 @@ router.get('/testsql', async (request, response) => {
     }
 });
 
-//? REGISZTRÁCIÓ
-
+//! REGISZTRÁCIÓ
 //? Hash-eljük a megadott jelszót, és visszaadunk egy salt, és egy hash változót.
 function HashPassword(password) {
     //? salt: egy 16 karakteres random hex string
@@ -64,12 +64,27 @@ function HashPassword(password) {
     const hash = crypto.scryptSync(password, salt, 64).toString('hex');
     return { salt, hash };
 }
-
 function VerifyPassword(password, salt, hash) {
     const hashedPassword = crypto.scryptSync(password, salt, 64).toString('hex');
     return hashedPassword;
 }
-
+//TODO SQL LEKÉRDEZÉSSEL MEGKAPNI AZ EDDIG REGISZTRÁLT NEVEKET
+router.get('/isUsernameAvailable/:name', async (request, response) => {
+    const name = request.params.name;
+    let j = 0;
+    while (j < users.length && users[j].username != name) {
+        j++;
+    }
+    if (j == users.length) {
+        response.status(200).json({
+            available: true
+        });
+    } else {
+        response.status(200).json({
+            available: false
+        });
+    }
+});
 router.post('/registration', async (request, response) => {
     const { username, email, password } = request.body;
     const { salt, hash } = HashPassword(password);
@@ -81,8 +96,7 @@ router.post('/registration', async (request, response) => {
     });
 });
 
-//? LOGIN
-
+//! LOGIN
 router.post('/login', async (request, response) => {
     const loginSelect = await database.loginSelect();
     const { username, password } = request.body;
@@ -111,26 +125,10 @@ router.post('/login', async (request, response) => {
     }
 });
 
-//TODO SQL LEKÉRDEZÉSSEL MEGKAPNI AZ EDDIG REGISZTRÁLT NEVEKET
-router.get('/isUsernameAvailable/:name', async (request, response) => {
-    const name = request.params.name;
-    let j = 0;
-    while (j < users.length && users[j].username != name) {
-        j++;
-    }
-    if (j == users.length) {
-        response.status(200).json({
-            available: true
-        });
-    } else {
-        response.status(200).json({
-            available: false
-        });
-    }
-});
-
+//! POSZT FELTÖLTÉS
 router.post('/createPost', async (request, response) => {
-    const { username, description, tags, location, latitude, longitude } = request.body;
+    const { username, fileNames, description, tags, location, latitude, longitude } = request.body;
+    console.log(description);
     const createPost = await database.createPost(
         username,
         description,
@@ -139,8 +137,12 @@ router.post('/createPost', async (request, response) => {
         latitude,
         longitude
     );
-    console.log(createPost[0].serverStatus);
+    console.log(fileNames);
+    for (const file of fileNames) {
+        await database.createPicture(createPost[0].insertId, file);
+    }
     if (createPost[0].affectedRows > 0) {
+        clearFolder('../frontend/temp_images');
         response.status(200).json({
             Status: 'Successful post creation',
             Success: true
@@ -153,6 +155,40 @@ router.post('/createPost', async (request, response) => {
     }
 });
 
+const tempStorage = multer.diskStorage({
+    destination: (request, file, callback) => {
+        callback(null, path.join(__dirname, '../../frontend/temp_images'));
+    },
+    filename: (request, file, callback) => {
+        callback(null, 'temp-' + file.originalname); //?egyedi név: temp - file eredeti neve
+    }
+});
+const postStorage = multer.diskStorage({
+    destination: (request, file, callback) => {
+        callback(null, path.join(__dirname, '../uploads'));
+    },
+    filename: (request, file, callback) => {
+        callback(null, file.originalname); //?egyedi név: post - file eredeti neve
+    }
+});
+
+const tempUpload = multer({ storage: tempStorage });
+const postUpload = multer({ storage: postStorage });
+
+router.post('/tempUpload', tempUpload.array('uploadFile'), (request, response) => {
+    response.status(200).json({
+        Message: 'Sikeres feltöltés!'
+    });
+    console.log('YIPPEE');
+});
+
+router.post('/uploadPost', postUpload.array('uploadFile'), (request, response) => {
+    response.status(200).json({
+        Message: 'Sikeres feltöltés!'
+    });
+});
+
+//! POSZT ADATOK
 router.get('/postInfos/:postId', async (request, response) => {
     const postId = request.params.postId;
     const { userInfos, postInfos, pictureInfos } = await database.getPostDataByPostId(postId);
@@ -175,6 +211,7 @@ router.get('/postInfos/:postId', async (request, response) => {
     });
 });
 
+//! FÜGGVÉNYEK
 function convertUnixToReadableDate(unix) {
     let date = new Date(unix);
     let year = date.getUTCFullYear(date);
@@ -189,6 +226,14 @@ function convertUnixToReadableDate(unix) {
     let minute = date.getUTCMinutes(date);
     let second = date.getUTCSeconds(date);
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+}
+function clearFolder(path) {
+    fs.readdir(path).then((files) => {
+        files.forEach((file) => {
+            console.log(file);
+            fs.unlink(path + '/' + file);
+        });
+    });
 }
 
 module.exports = router;
