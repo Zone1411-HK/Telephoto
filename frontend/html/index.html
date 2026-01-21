@@ -596,7 +596,7 @@
             </div>
         </div>
 
-        <div class="modal" id="uploadModal">
+        <div class="modal" id="uploadModal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -626,8 +626,8 @@
                         <input type="text" id="uploadLocation" />
                         <input
                             type="button"
+                            data-bs-dismiss="modal"
                             value="Mégse"
-                            data-ms-dismiss="modal"
                             id="cancelPost"
                         />
                         <input type="button" value="Poszt" id="uploadPost" />
