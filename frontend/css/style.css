@@ -236,6 +236,9 @@ input {
     background-color: var(--NavBarColor);
     width: 20vw;
     padding: 0px;
+    color: var(--PostModalBottomColor);
+    font-weight: 750;
+    font-size: 1.5rem;
 }
 
 .rightNavBorder {
@@ -285,6 +288,7 @@ input {
     align-items: center;
     font-size: 2.5rem;
     font-weight: 750;
+    color:var(--PostModalBottomColor);
 }
 
 .modal-body {
@@ -293,15 +297,16 @@ input {
 }
 
 .modal-dialog {
-    height: 65%; /* = 90% of the .modal-backdrop block = %90 of the screen */
+    height: 78%; /* = 90% of the .modal-backdrop block = %90 of the screen */
 }
 
 .modal-content {
-    height: 75%; /* = 100% of the .modal-dialog block */
+    height: 88%; /* = 100% of the .modal-dialog block */
 }
 
 .postButtonDesign {
     background-color: whitesmoke;
+    border-radius: 5%;
 }
 
 #carouselContainer {
@@ -334,4 +339,10 @@ input {
     background-color: black;
     background-position: fixed;
     background-size: 300px 300px;
+}
+
+.postButtonTextDesign {
+    font-size: 1.3rem;
+    font-weight: 750;
+    color: var(--PostModalBottomColor);
 }
