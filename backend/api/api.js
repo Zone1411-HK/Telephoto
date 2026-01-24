@@ -70,87 +70,108 @@ function VerifyPassword(password, salt, hash) {
 }
 //TODO SQL LEKÉRDEZÉSSEL MEGKAPNI AZ EDDIG REGISZTRÁLT NEVEKET
 router.get('/isUsernameAvailable/:name', async (request, response) => {
-    const name = request.params.name;
-    let j = 0;
-    while (j < users.length && users[j].username != name) {
-        j++;
-    }
-    if (j == users.length) {
+    try {
+        const name = request.params.name;
+        let j = 0;
+
+        while (j < users.length && users[j].username != name) {
+            j++;
+        }
+
+        let isAvailable = j == users.length ? true : false;
         response.status(200).json({
-            available: true
+            available: isAvailable
         });
-    } else {
-        response.status(200).json({
-            available: false
+    } catch (error) {
+        response.status(500).json({
+            error: `Endpoint ERROR: isUsernameAvailable: ${error}`
         });
     }
 });
 router.post('/registration', async (request, response) => {
-    const { username, email, password } = request.body;
-    const { salt, hash } = HashPassword(password);
-    const addNewUser = await database.addNewUser(username, salt, hash, email);
-    response.status(200).json({
-        status: 'Successful registration',
-        results: addNewUser[0],
-        fields: addNewUser[1]
-    });
+    try {
+        const { username, email, password } = request.body;
+        const { salt, hash } = HashPassword(password);
+        const addNewUser = await database.addNewUser(username, salt, hash, email);
+        response.status(201).json({
+            status: 'Successful registration',
+            results: addNewUser[0],
+            fields: addNewUser[1]
+        });
+    } catch (error) {
+        response.status(500).json({
+            error: `Endpoint ERROR: registration: ${error}`
+        });
+    }
 });
 
 //! LOGIN
 router.post('/login', async (request, response) => {
-    const loginSelect = await database.loginSelect();
-    const { username, password } = request.body;
-    let isVerified = false;
-    let j = 0;
-    while (j < loginSelect.length && !isVerified) {
-        if (
-            loginSelect[j].username == username &&
-            VerifyPassword(password, loginSelect[j].password_salt, loginSelect[j].password_hash)
-        ) {
-            isVerified = true;
+    try {
+        const loginSelect = await database.loginSelect();
+        const { username, password } = request.body;
+        let isVerified = false;
+        let j = 0;
+        while (j < loginSelect.length && !isVerified) {
+            if (
+                loginSelect[j].username == username &&
+                VerifyPassword(password, loginSelect[j].password_salt, loginSelect[j].password_hash)
+            ) {
+                isVerified = true;
+            }
+            j++;
         }
-        j++;
-    }
 
-    if (isVerified) {
-        response.status(200).json({
-            status: 'Successful login',
-            isLoggedIn: true
-        });
-    } else {
-        response.status(200).json({
-            status: 'Failed login',
-            isLoggedIn: false
+        if (isVerified) {
+            response.status(200).json({
+                status: 'Successful login',
+                isLoggedIn: true
+            });
+        } else {
+            response.status(200).json({
+                status: 'Failed login',
+                isLoggedIn: false
+            });
+        }
+    } catch (error) {
+        response.status(500).json({
+            error: `Endpoint ERROR: login: ${error}`
         });
     }
 });
 
 //! POSZT FELTÖLTÉS
 router.post('/createPost', async (request, response) => {
-    const { username, fileNames, description, tags, location, latitude, longitude } = request.body;
-    console.log(description);
-    const createPost = await database.createPost(
-        username,
-        description,
-        tags,
-        location,
-        latitude,
-        longitude
-    );
-    console.log(fileNames);
-    for (const file of fileNames) {
-        await database.createPicture(createPost[0].insertId, file);
-    }
-    if (createPost[0].affectedRows > 0) {
-        clearFolder('../frontend/temp_images');
-        response.status(200).json({
-            Status: 'Successful post creation',
-            Success: true
-        });
-    } else {
-        response.status(200).json({
-            Status: 'Failed post creation',
-            Success: false
+    try {
+        const { username, fileNames, description, tags, location, latitude, longitude } =
+            request.body;
+        const createPost = await database.createPost(
+            username,
+            description,
+            tags,
+            location,
+            latitude,
+            longitude
+        );
+        console.log(fileNames);
+        for (const file of fileNames) {
+            await database.createPicture(createPost[0].insertId, file);
+        }
+        if (createPost[0].affectedRows > 0) {
+            clearFolder('../frontend/temp_images');
+            response.status(201).json({
+                Status: 'Successful post creation',
+                Success: true
+            });
+        } else {
+            response.status(500).json({
+                Status: 'Failed post creation',
+                Success: false
+            });
+        }
+    } catch (error) {
+        response.status(500).json({
+            error: `Endpoint ERROR: createPost: ${error}`
         });
     }
 });
@@ -175,40 +196,59 @@ const postStorage = multer.diskStorage({
 const tempUpload = multer({ storage: tempStorage });
 const postUpload = multer({ storage: postStorage });
 
-router.post('/tempUpload', tempUpload.array('uploadFile'), (request, response) => {
-    response.status(200).json({
-        Message: 'Sikeres feltöltés!'
-    });
-    console.log('YIPPEE');
+router.post('/tempUpload', async (request, response) => {
+    try {
+        uploadFiles(tempUpload, 'uploadFile');
+        response.status(201).json({
+            Message: 'Sikeres feltöltés!'
+        });
+    } catch (error) {
+        response.status(500).json({
+            error: `Endpoint ERROR: tempUpload: ${error}`
+        });
+    }
 });
 
-router.post('/uploadPost', postUpload.array('uploadFile'), (request, response) => {
-    response.status(200).json({
-        Message: 'Sikeres feltöltés!'
-    });
+router.post('/uploadPost', async (request, response) => {
+    try {
+        uploadFiles(postUpload, 'uploadFile');
+        response.status(201).json({
+            Message: 'Sikeres feltöltés!'
+        });
+    } catch (error) {
+        response.status(500).json({
+            error: `Endpoint ERROR: uploadPost: ${error}`
+        });
+    }
 });
 
 //! POSZT ADATOK
 router.get('/postInfos/:postId', async (request, response) => {
-    const postId = request.params.postId;
-    const { userInfos, postInfos, pictureInfos } = await database.getPostDataByPostId(postId);
-    const returnInfos = {
-        userInfos: userInfos,
-        postInfos: {
-            description: postInfos.description,
-            tags: postInfos.tags,
-            score: postInfos.upvote - postInfos.downvote,
-            location: postInfos.location,
-            latitude: postInfos.latitude,
-            longitude: postInfos.longitude,
-            creation_date: convertUnixToReadableDate(postInfos.unix_date * 1000)
-        },
-        pictureInfos: pictureInfos
-    };
-    response.status(200).json({
-        Status: 'Success',
-        Infos: returnInfos
-    });
+    try {
+        const postId = request.params.postId;
+        const { userInfos, postInfos, pictureInfos } = await database.getPostDataByPostId(postId);
+        const returnInfos = {
+            userInfos: userInfos,
+            postInfos: {
+                description: postInfos.description,
+                tags: postInfos.tags,
+                score: postInfos.upvote - postInfos.downvote,
+                location: postInfos.location,
+                latitude: postInfos.latitude,
+                longitude: postInfos.longitude,
+                creation_date: convertUnixToReadableDate(postInfos.unix_date * 1000)
+            },
+            pictureInfos: pictureInfos
+        };
+        response.status(200).json({
+            Status: 'Success',
+            Infos: returnInfos
+        });
+    } catch (error) {
+        response.status(500).json({
+            error: `Endpoint ERROR: postInfos: ${error}`
+        });
+    }
 });
 
 //! FÜGGVÉNYEK
@@ -235,5 +275,7 @@ function clearFolder(path) {
         });
     });
 }
-
+function uploadFiles(multerUpload, fileInput) {
+    multerUpload.array(fileInput);
+}
 module.exports = router;
