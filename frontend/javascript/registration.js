@@ -6,9 +6,7 @@ async function registration() {
 
         let usernameInput = document.getElementById('regUsername');
         let username = usernameInput.value;
-        const isUsernameAvailable = await PostMethodFetch('/api/isUsernameAvailable' + username, {
-            username: username
-        });
+        const isUsernameAvailable = await GetMethodFetch('/api/isUsernameAvailable/' + username);
         if (!!username && isUsernameAvailable.available) {
             usernameInput.classList.remove('invalid');
             validInputs++;
@@ -19,7 +17,7 @@ async function registration() {
 
         //? Email formátum
         //? [A-Za-z0-9]: minden nagybetű a-z-ig, minden kisbetű a-z-ig és minden szám
-        //? \(char): tartalmaznia kell az adott karaktert
+        //? \char: tartalmaznia kell az adott karaktert
         const emailRegExp = /[A-Za-z0-9]\@[A-Za-z0-9]\.[A-Za-z0-9]/;
         let emailInput = document.getElementById('regEmail');
         let email = emailInput.value;

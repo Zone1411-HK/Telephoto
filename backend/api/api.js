@@ -55,30 +55,18 @@ router.get('/testsql', async (request, response) => {
 });
 
 //! REGISZTRÁCIÓ
-//? Hash-eljük a megadott jelszót, és visszaadunk egy salt, és egy hash változót.
-function HashPassword(password) {
-    //? salt: egy 16 karakteres random hex string
-    const salt = crypto.randomBytes(16).toString('hex');
 
-    //? hash: a jelszó, és salt alapján generált 64 karakteres hex string
-    const hash = crypto.scryptSync(password, salt, 64).toString('hex');
-    return { salt, hash };
-}
-function VerifyPassword(password, salt, hash) {
-    const hashedPassword = crypto.scryptSync(password, salt, 64).toString('hex');
-    return hashedPassword;
-}
-//TODO SQL LEKÉRDEZÉSSEL MEGKAPNI AZ EDDIG REGISZTRÁLT NEVEKET
 router.get('/isUsernameAvailable/:name', async (request, response) => {
     try {
         const name = request.params.name;
+        const usernames = await database.allUsername();
         let j = 0;
 
-        while (j < users.length && users[j].username != name) {
+        while (j < usernames.length && usernames[j].username != name) {
             j++;
         }
 
-        let isAvailable = j == users.length ? true : false;
+        let isAvailable = j == usernames.length ? true : false;
         response.status(200).json({
             available: isAvailable
         });
@@ -91,7 +79,7 @@ router.get('/isUsernameAvailable/:name', async (request, response) => {
 router.post('/registration', async (request, response) => {
     try {
         const { username, email, password } = request.body;
-        const { salt, hash } = HashPassword(password);
+        const { salt, hash } = HashString(password);
         const addNewUser = await database.addNewUser(username, salt, hash, email);
         response.status(201).json({
             status: 'Successful registration',
@@ -115,7 +103,11 @@ router.post('/login', async (request, response) => {
         while (j < loginSelect.length && !isVerified) {
             if (
                 loginSelect[j].username == username &&
-                VerifyPassword(password, loginSelect[j].password_salt, loginSelect[j].password_hash)
+                VerifyHashedString(
+                    password,
+                    loginSelect[j].password_salt,
+                    loginSelect[j].password_hash
+                )
             ) {
                 isVerified = true;
             }
@@ -138,6 +130,16 @@ router.post('/login', async (request, response) => {
             error: `Endpoint ERROR: login: ${error}`
         });
     }
+});
+
+let storedUsernameHash;
+router.get('/hashUser/:username', async (request, response) => {
+    const username = request.params.username;
+    const { hash } = HashString(username);
+    storedUsernameHash = hash;
+    response.status(200).json({
+        username: hash
+    });
 });
 
 //! POSZT FELTÖLTÉS
@@ -252,6 +254,23 @@ router.get('/postInfos/:postId', async (request, response) => {
 });
 
 //! FÜGGVÉNYEK
+//? Hash-eljük a megadott stringet, és visszaadunk egy salt, és egy hash változót.
+function HashString(string) {
+    //? salt: egy 16 karakteres random string amit átkonvertálunl hex-é
+    const salt = crypto.randomBytes(16).toString('hex');
+
+    //? hash: a string, és salt alapján generált 64 karakteres string amit átkonvertálunk hex-é
+    const hash = crypto.scryptSync(string, salt, 64).toString('hex');
+    return { salt, hash };
+}
+function VerifyHashedString(string, salt, hash) {
+    if (string !== null && salt !== null) {
+        const hashedString = crypto.scryptSync(string, salt, 64).toString('hex');
+        return hashedString === hash;
+    } else {
+        return null;
+    }
+}
 function convertUnixToReadableDate(unix) {
     let date = new Date(unix);
     let year = date.getUTCFullYear(date);
@@ -278,4 +297,11 @@ function clearFolder(path) {
 function uploadFiles(multerUpload, fileInput) {
     multerUpload.array(fileInput);
 }
+
+router.get('/checkHashUserIntegrity/:storedData', async (request, response) => {
+    const storedData = request.params.storedData;
+    response.status(200).json({
+        isValid: storedData === storedUsernameHash ? true : false
+    });
+});
 module.exports = router;
