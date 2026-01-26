@@ -20,7 +20,7 @@ async function selectall() {
 async function addNewUser(username, salt, hash, email) {
     try {
         const sql = `INSERT INTO users(username, password_salt, password_hash, email, is_admin, registration_date) VALUES("${username}", "${salt}", "${hash}", "${email}", false ,NOW())`;
-        await pool.execute(sql);
+        const [result, fields] = await pool.execute(sql);
         return [result, fields];
     } catch (error) {
         console.error(error);
@@ -100,6 +100,16 @@ async function getPostDataByPostId(postId) {
         console.error(error);
     }
 }
+
+async function allUsername() {
+    try {
+        const sql = 'SELECT users.username FROM users';
+        const [rows] = await pool.execute(sql);
+        return rows;
+    } catch (error) {
+        console.error('SQL ERROR: allUsername: ' + error);
+    }
+}
 //!Export
 module.exports = {
     selectall,
@@ -108,5 +118,6 @@ module.exports = {
     getUserByUsername,
     createPost,
     getPostDataByPostId,
-    createPicture
+    createPicture,
+    allUsername
 };

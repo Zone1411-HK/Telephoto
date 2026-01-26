@@ -16,8 +16,8 @@ DELIMITER //
 CREATE TABLE users(
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50),
-    password_salt VARCHAR(16),
-    password_hash VARCHAR(64),
+    password_salt VARCHAR(32),
+    password_hash VARCHAR(128),
     email VARCHAR(100),
     profile_picture_link VARCHAR(200),
     biography VARCHAR(500),
