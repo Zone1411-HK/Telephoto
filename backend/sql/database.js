@@ -123,7 +123,7 @@ async function loadComments(postId) {
     }
 }
 
-async function isAdmim(userName) {    
+async function isAdmin(userName) {    
     try {
         const adminSql = `SELECT users.is_admin FROM users WHERE users.iusername = ${userName}`;
         const [rows] = await pool.execute(adminSql);
@@ -142,5 +142,8 @@ module.exports = {
     getUserByUsername,
     createPost,
     getPostDataByPostId,
-    createPicture
+    createPicture,
+    loadProfile,
+    loadComments,
+    isAdmin
 };

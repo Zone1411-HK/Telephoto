@@ -211,6 +211,16 @@ router.get('/postInfos/:postId', async (request, response) => {
     });
 });
 
+//! PROFIL ADATOK
+router.get('/profileInfos', async(request, response) => {
+    const data = await database.loadProfile(userId);
+    response.status(200).json({
+        status: 'Success',
+        results: data
+    });
+});
+
+
 //! FÜGGVÉNYEK
 function convertUnixToReadableDate(unix) {
     let date = new Date(unix);
