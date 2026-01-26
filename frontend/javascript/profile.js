@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-
+    getProfile();
 })
 
 const getFetch = async (url) => {
     try{
-        const response = await fetch(url);
+        const response = await fetch(url);        
         if(!response.ok){
             throw new Error("Fail XD" + response.status, response.statusText);
         }
@@ -16,8 +16,19 @@ const getFetch = async (url) => {
 
 const getProfile = async () => {
     try{
-        const response = await getFetch("/profileInfos");
+        const response = await getFetch('/api/profileInfos');
+        const data = response.results;
         console.log(response);
+        const loggedIn = 1-1;
+        const userName = data[loggedIn].username;
+        const userPic = data[loggedIn].profile_picture_link;
+        const userBio = data[loggedIn].biography;
+        const userDate = data[loggedIn].registration_date;
+        
+        console.log(userName);
+        console.log(userPic);
+        console.log(userBio);
+        console.log(userDate);
     } catch (error) {
         console.error("Hiba" + error);
     }
