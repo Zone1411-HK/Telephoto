@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="/leaflet/dist/leaflet.css" />
         <link rel="stylesheet" href="/leaflet.markercluster/dist/MarkerCluster.Default.css" />
         <link rel="stylesheet" href="/css/style.css" />
+        <link rel="stylesheet" href="/css/darkroom.css" />
         <!--!JavaScript-->
         <script src="/javascript/fetch.js"></script>
         <script src="/leaflet/dist/leaflet.js"></script>
@@ -23,6 +24,7 @@
         <script src="/javascript/index.js"></script>
         <script src="/javascript/map.js"></script>
         <script src="/javascript/uploadPost.js"></script>
+        <script src="/javascript/darkroom.js"></script>
         <!--Font Style-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -32,7 +34,7 @@
         />
     </head>
     <body>
-        <div class="container-fluid">
+        <div class="container-fluid p-0">
             <!--? Ha dolgoztok rajta nyugodtan kivehetitek az invisible-t csak zavaró volt, hogy minden látszott-->
             <div class="loginMain invisible" id="login">
                 <div class="row login">
@@ -171,387 +173,80 @@
                 </div>-->
 
             <div class="home" id="home">
-                <div class="row">
-                    <div class="col-md-3">
-                        <ul>
-                            <li>
-                                <a class="nav-link"
-                                    ><input type="button" id="top" value="Népszerű"
-                                /></a>
-                            </li>
-                            <li>
-                                <a class="nav-link"
-                                    ><input type="button" id="top" value="Toplistás"
-                                /></a>
-                            </li>
-                            <li>
-                                <a class="nav-link"
-                                    ><input type="button" id="top" value="Újak"
-                                /></a>
-                            </li>
-                            <li>
-                                <a class="nav-link"
-                                    ><input type="button" id="top" value="Közeli"
-                                /></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-9 roll">
-                        <div class="row" id="templatePost">
-                            <div class="col-md-7 border p-3">
-                                <div id="postSpace" class="postSpace border">
-                                    <div id="imageSpace" class="imageSpace border">
-                                        <img class="img-fluid" src="../images/placeholder1.jpg" />
-                                    </div>
-                                    <div id="rateSpace">
-                                        <input type="radio" name="rating" />
-                                        <input type="radio" name="rating" />
-                                    </div>
-                                    <div id="rateScoreSpace">
-                                        <p id="rateScore">1</p>
-                                    </div>
-                                    <div id="descriptionSpace" class="descriptionSpace">
-                                        <p>Lorem ipsum</p>
-                                    </div>
-                                    <div id="tagSpace" class="tagSpace">
-                                        <p id="tags" class="tags">#asd</p>
-                                    </div>
-                                    <div id="locationSpace" class="locationSpace">
-                                        <p>Tihany 50 150</p>
-                                    </div>
-                                    <div id="datetimeSpace" class="datetimeSpace">
-                                        <p>2026.01.01 18:00</p>
-                                    </div>
-                                </div>
+                <div class="chat-and-sort"></div>
+                <div class="posts-container" id="posts-container">
+                    <!--div id="ropeDiv">
+                        <hr id="rope" />
+                        <hr id="ropeTexture" />
+                    </!--div>-->
+                    <div id="posts">
+                        <div class="post">
+                            <div class="ropeDiv">
+                                <hr class="rope" />
+                                <hr class="ropeTexture" />
                             </div>
-                            <div class="col-md-5">
-                                <div id="commentSpace" class="commentSpace border p-3">
-                                    <div id="templateComment" class="border row">
-                                        <div class="col-2" id="commenterPicture">
-                                            <img
-                                                src="../images/placeholder1.jpg"
-                                                class="img-fluid"
-                                            />
-                                        </div>
-                                        <div class="col-10" id="commentContent">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing
-                                                elit. Iure perferendis quisquam animi amet, dicta
-                                                itaque hic. Sint mollitia ratione iste voluptatum
-                                                molestias, delectus veritatis, iure vel excepturi,
-                                                blanditiis eveniet ducimus.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div id="templateComment" class="border row">
-                                        <div class="col-2" id="commenterPicture">
-                                            <img
-                                                src="../images/placeholder1.jpg"
-                                                class="img-fluid"
-                                            />
-                                        </div>
-                                        <div class="col-10" id="commentContent">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing
-                                                elit. Iure perferendis quisquam animi amet, dicta
-                                                itaque hic. Sint mollitia ratione iste voluptatum
-                                                molestias, delectus veritatis, iure vel excepturi,
-                                                blanditiis eveniet ducimus.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div id="templateComment" class="border row">
-                                        <div class="col-2" id="commenterPicture">
-                                            <img
-                                                src="../images/placeholder1.jpg"
-                                                class="img-fluid"
-                                            />
-                                        </div>
-                                        <div class="col-10" id="commentContent">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing
-                                                elit. Iure perferendis quisquam animi amet, dicta
-                                                itaque hic. Sint mollitia ratione iste voluptatum
-                                                molestias, delectus veritatis, iure vel excepturi,
-                                                blanditiis eveniet ducimus.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div id="templateComment" class="border row">
-                                        <div class="col-2" id="commenterPicture">
-                                            <img
-                                                src="../images/placeholder1.jpg"
-                                                class="img-fluid"
-                                            />
-                                        </div>
-                                        <div class="col-10" id="commentContent">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing
-                                                elit. Iure perferendis quisquam animi amet, dicta
-                                                itaque hic. Sint mollitia ratione iste voluptatum
-                                                molestias, delectus veritatis, iure vel excepturi,
-                                                blanditiis eveniet ducimus.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div id="templateComment" class="border row">
-                                        <div class="col-2" id="commenterPicture">
-                                            <img
-                                                src="../images/placeholder1.jpg"
-                                                class="img-fluid"
-                                            />
-                                        </div>
-                                        <div class="col-10" id="commentContent">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing
-                                                elit. Iure perferendis quisquam animi amet, dicta
-                                                itaque hic. Sint mollitia ratione iste voluptatum
-                                                molestias, delectus veritatis, iure vel excepturi,
-                                                blanditiis eveniet ducimus.
-                                            </p>
-                                        </div>
-                                    </div>
+                            <div class="clip">
+                                <div class="imgClip"></div>
+                                <div class="imgClipTexture"></div>
+                            </div>
+                            <div class="postContent">
+                                <div class="imgDiv">
+                                    <img src="/images/placeholder1.jpg" />
                                 </div>
+                                <p>asd</p>
                             </div>
                         </div>
-                        <div class="row" id="templatePost">
-                            <div class="col-md-7 border p-3">
-                                <div id="postSpace" class="postSpace border">
-                                    <div id="imageSpace" class="imageSpace border">
-                                        <img class="img-fluid" src="../images/placeholder1.jpg" />
-                                    </div>
-                                    <div id="rateSpace">
-                                        <input type="radio" name="rating" />
-                                        <input type="radio" name="rating" />
-                                    </div>
-                                    <div id="rateScoreSpace">
-                                        <p id="rateScore">1</p>
-                                    </div>
-                                    <div id="descriptionSpace" class="descriptionSpace">
-                                        <p>Lorem ipsum</p>
-                                    </div>
-                                    <div id="tagSpace" class="tagSpace">
-                                        <p id="tags" class="tags">#asd</p>
-                                    </div>
-                                    <div id="locationSpace" class="locationSpace">
-                                        <p>Tihany 50 150</p>
-                                    </div>
-                                    <div id="datetimeSpace" class="datetimeSpace">
-                                        <p>2026.01.01 18:00</p>
-                                    </div>
-                                </div>
+                        <div class="post">
+                            <div class="ropeDiv">
+                                <hr class="rope" />
+                                <hr class="ropeTexture" />
                             </div>
-                            <div class="col-md-5">
-                                <div id="commentSpace" class="commentSpace border p-3">
-                                    <div id="templateComment" class="border row">
-                                        <div class="col-2" id="commenterPicture">
-                                            <img
-                                                src="../images/placeholder1.jpg"
-                                                class="img-fluid"
-                                            />
-                                        </div>
-                                        <div class="col-10" id="commentContent">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing
-                                                elit. Iure perferendis quisquam animi amet, dicta
-                                                itaque hic. Sint mollitia ratione iste voluptatum
-                                                molestias, delectus veritatis, iure vel excepturi,
-                                                blanditiis eveniet ducimus.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div id="templateComment" class="border row">
-                                        <div class="col-2" id="commenterPicture">
-                                            <img
-                                                src="../images/placeholder1.jpg"
-                                                class="img-fluid"
-                                            />
-                                        </div>
-                                        <div class="col-10" id="commentContent">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing
-                                                elit. Iure perferendis quisquam animi amet, dicta
-                                                itaque hic. Sint mollitia ratione iste voluptatum
-                                                molestias, delectus veritatis, iure vel excepturi,
-                                                blanditiis eveniet ducimus.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div id="templateComment" class="border row">
-                                        <div class="col-2" id="commenterPicture">
-                                            <img
-                                                src="../images/placeholder1.jpg"
-                                                class="img-fluid"
-                                            />
-                                        </div>
-                                        <div class="col-10" id="commentContent">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing
-                                                elit. Iure perferendis quisquam animi amet, dicta
-                                                itaque hic. Sint mollitia ratione iste voluptatum
-                                                molestias, delectus veritatis, iure vel excepturi,
-                                                blanditiis eveniet ducimus.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div id="templateComment" class="border row">
-                                        <div class="col-2" id="commenterPicture">
-                                            <img
-                                                src="../images/placeholder1.jpg"
-                                                class="img-fluid"
-                                            />
-                                        </div>
-                                        <div class="col-10" id="commentContent">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing
-                                                elit. Iure perferendis quisquam animi amet, dicta
-                                                itaque hic. Sint mollitia ratione iste voluptatum
-                                                molestias, delectus veritatis, iure vel excepturi,
-                                                blanditiis eveniet ducimus.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div id="templateComment" class="border row">
-                                        <div class="col-2" id="commenterPicture">
-                                            <img
-                                                src="../images/placeholder1.jpg"
-                                                class="img-fluid"
-                                            />
-                                        </div>
-                                        <div class="col-10" id="commentContent">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing
-                                                elit. Iure perferendis quisquam animi amet, dicta
-                                                itaque hic. Sint mollitia ratione iste voluptatum
-                                                molestias, delectus veritatis, iure vel excepturi,
-                                                blanditiis eveniet ducimus.
-                                            </p>
-                                        </div>
-                                    </div>
+                            <div class="clip">
+                                <div class="imgClip"></div>
+                                <div class="imgClipTexture"></div>
+                            </div>
+                            <div class="postContent">
+                                <div class="imgDiv">
+                                    <img src="/images/placeholder1.jpg" />
                                 </div>
+                                <p>asd</p>
                             </div>
                         </div>
-                        <div class="row" id="templatePost">
-                            <div class="col-md-7 border p-3">
-                                <div id="postSpace" class="postSpace border">
-                                    <div id="imageSpace" class="imageSpace border">
-                                        <img class="img-fluid" src="../images/placeholder1.jpg" />
-                                    </div>
-                                    <div id="rateSpace">
-                                        <input type="radio" name="rating" />
-                                        <input type="radio" name="rating" />
-                                    </div>
-                                    <div id="rateScoreSpace">
-                                        <p id="rateScore">1</p>
-                                    </div>
-                                    <div id="descriptionSpace" class="descriptionSpace">
-                                        <p>Lorem ipsum</p>
-                                    </div>
-                                    <div id="tagSpace" class="tagSpace">
-                                        <p id="tags" class="tags">#asd</p>
-                                    </div>
-                                    <div id="locationSpace" class="locationSpace">
-                                        <p>Tihany 50 150</p>
-                                    </div>
-                                    <div id="datetimeSpace" class="datetimeSpace">
-                                        <p>2026.01.01 18:00</p>
-                                    </div>
-                                </div>
+                        <div class="post">
+                            <div class="ropeDiv">
+                                <hr class="rope" />
+                                <hr class="ropeTexture" />
                             </div>
-                            <div class="col-md-5">
-                                <div id="commentSpace" class="commentSpace border p-3">
-                                    <div id="templateComment" class="border row">
-                                        <div class="col-2" id="commenterPicture">
-                                            <img
-                                                src="../images/placeholder1.jpg"
-                                                class="img-fluid"
-                                            />
-                                        </div>
-                                        <div class="col-10" id="commentContent">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing
-                                                elit. Iure perferendis quisquam animi amet, dicta
-                                                itaque hic. Sint mollitia ratione iste voluptatum
-                                                molestias, delectus veritatis, iure vel excepturi,
-                                                blanditiis eveniet ducimus.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div id="templateComment" class="border row">
-                                        <div class="col-2" id="commenterPicture">
-                                            <img
-                                                src="../images/placeholder1.jpg"
-                                                class="img-fluid"
-                                            />
-                                        </div>
-                                        <div class="col-10" id="commentContent">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing
-                                                elit. Iure perferendis quisquam animi amet, dicta
-                                                itaque hic. Sint mollitia ratione iste voluptatum
-                                                molestias, delectus veritatis, iure vel excepturi,
-                                                blanditiis eveniet ducimus.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div id="templateComment" class="border row">
-                                        <div class="col-2" id="commenterPicture">
-                                            <img
-                                                src="../images/placeholder1.jpg"
-                                                class="img-fluid"
-                                            />
-                                        </div>
-                                        <div class="col-10" id="commentContent">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing
-                                                elit. Iure perferendis quisquam animi amet, dicta
-                                                itaque hic. Sint mollitia ratione iste voluptatum
-                                                molestias, delectus veritatis, iure vel excepturi,
-                                                blanditiis eveniet ducimus.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div id="templateComment" class="border row">
-                                        <div class="col-2" id="commenterPicture">
-                                            <img
-                                                src="../images/placeholder1.jpg"
-                                                class="img-fluid"
-                                            />
-                                        </div>
-                                        <div class="col-10" id="commentContent">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing
-                                                elit. Iure perferendis quisquam animi amet, dicta
-                                                itaque hic. Sint mollitia ratione iste voluptatum
-                                                molestias, delectus veritatis, iure vel excepturi,
-                                                blanditiis eveniet ducimus.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div id="templateComment" class="border row">
-                                        <div class="col-2" id="commenterPicture">
-                                            <img
-                                                src="../images/placeholder1.jpg"
-                                                class="img-fluid"
-                                            />
-                                        </div>
-                                        <div class="col-10" id="commentContent">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing
-                                                elit. Iure perferendis quisquam animi amet, dicta
-                                                itaque hic. Sint mollitia ratione iste voluptatum
-                                                molestias, delectus veritatis, iure vel excepturi,
-                                                blanditiis eveniet ducimus.
-                                            </p>
-                                        </div>
-                                    </div>
+                            <div class="clip">
+                                <div class="imgClip"></div>
+                                <div class="imgClipTexture"></div>
+                            </div>
+                            <div class="postContent">
+                                <div class="imgDiv">
+                                    <img src="/images/placeholder1.jpg" />
                                 </div>
+                                <p>asd</p>
+                            </div>
+                        </div>
+                        <div class="post">
+                            <div class="ropeDiv">
+                                <hr class="rope" />
+                                <hr class="ropeTexture" />
+                            </div>
+                            <div class="clip">
+                                <div class="imgClip"></div>
+                                <div class="imgClipTexture"></div>
+                            </div>
+                            <div class="postContent">
+                                <div class="imgDiv">
+                                    <img src="/images/placeholder1.jpg" />
+                                </div>
+                                <p>asd</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <!-- Ez mi ez?
             <div class="personal">
             </div>
