@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     */
     document.getElementById('loadFiles').addEventListener('click', preLoadFiles);
     document.getElementById('uploadPost').addEventListener('click', uploadPost);
+    document.getElementById('cancelPost').addEventListener('click', cancelPost);
 });
 
 async function preLoadFiles() {
@@ -76,13 +77,13 @@ function generateSlideForFile(file) {
         source.src = `temp_images/temp-${file.name}`;
         source.type = `video/${fileType}`;
         video.appendChild(source);
-        video.classList.add('tempVideo');
+        video.classList.add('tempVideo', 'img-fluid');
         video.controls = true;
         return video;
     } else {
         const image = document.createElement('img');
         image.src = `/temp_images/temp-${file.name}`;
-        image.classList.add('tempImage');
+        image.classList.add('tempImage', 'img-fluid', 'circle');
         return image;
     }
 }
@@ -216,4 +217,10 @@ async function uploadFiles(apiUrl, files) {
     } catch (error) {
         return error;
     }
+}
+
+function cancelPost() {
+    document.getElementById('uploadFile').value = null;
+    document.getElementById('carouselContent').replaceChildren();
+    document.getElementById('uploadFeedback').innerText = '';
 }

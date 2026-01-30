@@ -46,7 +46,6 @@ router.get('/testsql', async (request, response) => {
         const createPost = await database.createPost('asd', 'asd', 'asd', 'asd', 0, 0);
         console.log(await database.getPostDataByPostId(3));
         */
-        test();
     } catch (error) {
         response.status(500).json({
             message: 'Ez a végpont nem működik.'
@@ -251,6 +250,33 @@ router.get('/postInfos/:postId', async (request, response) => {
             error: `Endpoint ERROR: postInfos: ${error}`
         });
     }
+});
+
+//! PROFIL ADATOK (nincs kész)
+router.get('/profileInfos', async (request, response) => {
+    try {
+        //const data = await database.loadProfile();
+        const data = '';
+
+        response.status(200).json({
+            status: 'Success',
+            results: data
+        });
+        console.log(data);
+    } catch (error) {
+        //console.log(error);
+    }
+});
+
+//! KOMMENT ADATOK
+router.get('/commentInfos', async (request, response) => {
+    //const data = await database.loadComments();
+    const data = '';
+    response.status(200).json({
+        status: 'Success',
+        results: data
+    });
+    console.log(data);
 });
 
 //! FÜGGVÉNYEK

@@ -101,6 +101,39 @@ async function getPostDataByPostId(postId) {
     }
 }
 
+//profil felület lekérd, comment lekérd, isadmin lekérd, 
+
+async function loadProfile(userId) {    
+    try {
+        const profileSql = `SELECT users.username, users.profile_picture_link, users.biography, users.registration_date FROM users WHERE users.user_id = ${userId}`;
+        const [rows] = await pool.execute(profileSql);
+        return rows;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function loadComments(postId) {    
+    try {
+        const commentsSql = `SELECT users.username, users.profile_picture_link, interactions.comment_content FROM interactions INNER JOIN users ON users.user_id = interactions.user_id INNER JOIN posts ON posts.post_id = interactions.post_id WHERE interactions.post_id = ${postId}`;
+        const [rows] = await pool.execute(commentsSql);
+        return rows;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function isAdmin(userName) {    
+    try {
+        const adminSql = `SELECT users.is_admin FROM users WHERE users.iusername = ${userName}`;
+        const [rows] = await pool.execute(adminSql);
+        return rows;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
 async function allUsername() {
     try {
         const sql = 'SELECT users.username FROM users';
@@ -119,5 +152,8 @@ module.exports = {
     createPost,
     getPostDataByPostId,
     createPicture,
+    loadProfile,
+    loadComments,
+    isAdmin,
     allUsername
 };

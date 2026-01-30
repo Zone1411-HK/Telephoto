@@ -9,6 +9,8 @@
     --interactiveBlue: rgb(6, 7, 113);
     --LoginGomb: rgb(207, 173, 193);
     --NavBarColor: rgb(203, 217, 155);
+    --PostModalTopColor: rgb(188, 188, 188);
+    --PostModalBottomColor: rgb(30, 30, 30);
 }
 
 .navbar {
@@ -20,6 +22,7 @@
     width: 100%;
     height: 5vh;
 }
+
 .navLine {
     display: flex;
     flex-direction: row;
@@ -30,6 +33,7 @@
     height: 100%;
     width: 100%;
 }
+
 .loginMain {
     display: flex;
     flex-direction: column;
@@ -39,22 +43,26 @@
     align-items: center;
     padding-bottom: 5%;
 }
+
 .login {
     display: flex;
     width: 100%;
     align-items: center;
     font-weight: 750 !important;
 }
+
 .loginDoboz {
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .loginDoboz2 {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
+
 .loginTitle {
     display: flex;
     justify-content: center;
@@ -121,9 +129,10 @@ input[type='button'] {
     border-radius: 5px;
 }
 
-.lenyitoFul {
-    /*majd valami lesz itt*/
+/*.lenyitoFul {
+    majd valami lesz itt
 }
+*/
 
 /* You won't believe what it does */
 /* https://open.spotify.com/track/51EpFns3CG9taCMQz6XDom?si=8b358a3ae3994cb1 */
@@ -151,6 +160,7 @@ input[type='button'] {
         border: 2px solid var(--invalidRed);
     }
 }
+
 .invalid {
     border: 2px solid var(--invalidRed);
 }
@@ -159,14 +169,6 @@ input[type='button'] {
     display: flex;
     justify-content: center;
 }
-
-/*
-#loginUsername {
-    position: relative;
-}
-#loginPassword {
-    position: relative;
-}*/
 
 .loginSorok label,
 input {
@@ -177,6 +179,7 @@ input {
     font-weight: 400;
     color: var(--interactiveBlue);
 }
+
 .loginRegText:hover {
     cursor: pointer;
 }
@@ -216,7 +219,7 @@ input {
 .home {
     margin-top: 5vh;
 }
-/*workie work*/
+
 #regButton {
     position: relative;
     width: 50%;
@@ -233,6 +236,9 @@ input {
     background-color: var(--NavBarColor);
     width: 20vw;
     padding: 0px;
+    color: var(--PostModalBottomColor);
+    font-weight: 750;
+    font-size: 1.5rem;
 }
 
 .rightNavBorder {
@@ -243,9 +249,11 @@ input {
     border-bottom-right-radius: 0px;
     border-top-right-radius: 0px;
 }
+
 .noBorder {
     border: 0px;
 }
+
 #navbar {
     background-color: var(--NavBarColor);
 }
@@ -254,12 +262,152 @@ input {
     margin-bottom: 0;
     height: 30px;
 }
+
 .slideShowController {
     user-select: none;
     text-decoration: none;
     color: white;
 }
+
 .slideShowController:hover {
     cursor: pointer;
     color: gainsboro;
+}
+#rendezesChatContainer {
+    background-color: aqua;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+#rendezesContainer {
+    height: 33vh;
+    background-color: greenyellow;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+#chatContainer {
+    background-color: red;
+    height: 57vh;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+/*? Scrollbar formázás 
+/*! FIREFOXBAN NEM MŰKÖDIK
+#chatContainer::-webkit-scrollbar {
+    background-color: brown;
+    width: 100px;
+}
+#chatContainer::-webkit-scrollbar-thumb {
+    background-color: wheat;
+    border-radius: 20px;
+}*/
+#rendezesTrending {
+    width: 40%;
+    height: 100%;
+    background-color: green;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    padding-bottom: 10px;
+}
+#rendezesEgyeb {
+    width: 60%;
+    height: 100%;
+    background-color: goldenrod;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 10px;
+    border-left: 3px solid white;
+}
+#trendingTitle {
+    font-size: 3vh;
+    margin-bottom: 0px;
+}
+.trendingButton {
+    width: 80%;
+    height: 15%;
+    font-size: 2vh;
+    background-color: lightyellow;
+}
+.egyebButton {
+    height: 25%;
+    width: 80%;
+    background-color: lightyellow;
+}
+
+#newChatDiv {
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#existingChats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 80%;
+    gap: 10px;
+}
+.chat {
+    display: flex;
+    flex-direction: row;
+    height: 20%;
+    width: 95%;
+    border: 3px solid black;
+    gap: 10px;
+}
+.lastText {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    font-size: 0.85rem;
+    color: #333333;
+    font-weight: normal;
+    margin-bottom: 0px;
+}
+.chatName {
+    font-size: 1.2rem;
+    margin-bottom: 0px;
+}
+.chatImgDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%;
+    width: 20%;
+}
+.chatImgBorder {
+    height: 80%;
+    width: 100%;
+    background-color: black;
+    clip-path: circle();
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.chatImg {
+    clip-path: circle();
+    height: 95%;
+}
+.chatTexts {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 80%;
+    height: 100%;
+    margin-bottom: 10px;
+}
+#newChat {
+    height: 90%;
+    width: 95%;
+}
+#newChatImg {
+    height: 50%;
 }
