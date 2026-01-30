@@ -291,6 +291,11 @@ input {
     height: 57vh;
     overflow-y: scroll;
     scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding-top: 5px;
 }
 /*? Scrollbar formázás 
 /*! FIREFOXBAN NEM MŰKÖDIK
@@ -339,26 +344,29 @@ input {
     background-color: lightyellow;
 }
 
-#newChatDiv {
-    height: 20%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 #existingChats {
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 80%;
+    margin-bottom: 100%;
     gap: 10px;
 }
 .chat {
+    background-color: white;
     display: flex;
     flex-direction: row;
-    height: 20%;
+    height: 15vh;
     width: 95%;
     border: 3px solid black;
     gap: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 30px;
+}
+.chat:hover {
+    background-color: lightgray;
+    cursor: pointer;
 }
 .lastText {
     overflow: hidden;
@@ -374,6 +382,7 @@ input {
 .chatName {
     font-size: 1.2rem;
     margin-bottom: 0px;
+    border-bottom: 2px solid #333333;
 }
 .chatImgDiv {
     display: flex;
@@ -395,6 +404,7 @@ input {
 .chatImg {
     clip-path: circle();
     height: 95%;
+    width: 100%;
 }
 .chatTexts {
     display: flex;
@@ -404,10 +414,22 @@ input {
     height: 100%;
     margin-bottom: 10px;
 }
-#newChat {
-    height: 90%;
+#newChatDiv {
     width: 95%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 15vh;
+    max-height: 15vh;
+}
+#newChat {
+    height: 15vh;
+    width: 100%;
+    border-radius: 30px;
+    border: 3px solid black;
+    object-fit: contain;
 }
 #newChatImg {
     height: 50%;
+    max-height: 15vh;
 }

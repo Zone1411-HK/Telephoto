@@ -1,18 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     var item = document.getElementById('posts');
-    window.addEventListener('wheel', function (e) {
-    
-        if (e.deltaY > 0){
+    item.addEventListener('wheel', function (e) {
+        if (e.deltaY > 0) {
             item.scrollLeft += 500;
-        }
-        else{
-
+        } else {
             item.scrollLeft -= 500;
-        } 
+        }
         //this.window.scrollTo(this.window.y)
-
     });
-    console.log(document.getElementById('asda'))
+    console.log(document.getElementById('asda'));
     //setTimeout(drawRope, 0.000001);
 });
 
@@ -23,9 +19,9 @@ function drawSVG() {
         let height = path.parentNode.height.baseVal.value;
         let d = `M 0 0 Q ${width / 2 - width * 0.25} ${height * 2 - height * 0.4} ${width} ${height * 0.5}`;
         path.setAttribute('d', d);
-        path.setAttribute('stroke', 'wheat')
-        path.setAttribute('stroke-width', '3')
-        path.setAttribute('fill', 'none')
+        path.setAttribute('stroke', 'wheat');
+        path.setAttribute('stroke-width', '3');
+        path.setAttribute('fill', 'none');
         console.log(width);
         console.log(height);
     }
