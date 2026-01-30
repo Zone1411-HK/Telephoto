@@ -598,11 +598,11 @@
             </div>
         </div>
 
-        <div class="modal" id="uploadModal" tabindex="-1">
-            <div class="modal-dialog">
+        <div class="modal" id="uploadModal">
+            <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <p class="display-6">Posztolj</p>
+                        <p class="display-6 postTextDesign">Poszt előnézete</p>
                     </div>
                     <div class="modal-body">
                         <form enctype="multipart/form-data" id="uploadForm">
@@ -621,18 +621,19 @@
                             <div id="uploadFeedbackDiv">
                                 <p id="uploadFeedback" class="uploadFeedback"></p>
                             </div>
-                            <button type="button" id="loadFiles">Feltölt</button>
-                        </form>
-                        <input type="text" id="uploadDescription" />
+                            <button type="button" id="loadFiles" class="postButtonDesign postButtonTextDesign">Feltölt</button>
+                        <input type="text" id="uploadDescription" placeholder="Ide írhatod a leírást" class="postButtonDesign postButtonTextDesign"/>
                         <!--TODO Ide a tagaknak az inputja-->
-                        <input type="text" id="uploadLocation" />
+                        <input type="text" id="uploadLocation" placeholder="Ide írhatod a helyet" class="postButtonDesign postButtonTextDesign"/>
                         <input
                             type="button"
                             data-bs-dismiss="modal"
                             value="Mégse"
                             id="cancelPost"
+                            class="postButtonDesign postButtonTextDesign"
                         />
-                        <input type="button" value="Poszt" id="uploadPost" />
+                        <input type="button" value="Poszt" id="uploadPost" class="postButtonDesign postButtonTextDesign"/>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -77,13 +77,13 @@ function generateSlideForFile(file) {
         source.src = `temp_images/temp-${file.name}`;
         source.type = `video/${fileType}`;
         video.appendChild(source);
-        video.classList.add('tempVideo');
+        video.classList.add('tempVideo', 'img-fluid');
         video.controls = true;
         return video;
     } else {
         const image = document.createElement('img');
         image.src = `/temp_images/temp-${file.name}`;
-        image.classList.add('tempImage');
+        image.classList.add('tempImage', 'img-fluid', 'circle');
         return image;
     }
 }
