@@ -16,7 +16,8 @@ async function login() {
                 password: password
             });
             if (response.isLoggedIn) {
-                sessionStorage.setItem('username', username);
+                const result = await GetMethodFetch('/api/hashUser/' + username);
+                sessionStorage.setItem('username', result.username);
                 document.getElementById('login').classList.add('invisible');
                 document.getElementById('home').classList.remove('invisible');
                 document.getElementById('navbar').classList.remove('invisible');
