@@ -253,6 +253,27 @@ router.get('/postInfos/:postId', async (request, response) => {
     }
 });
 
+//! PROFIL ADATOK (nincs kész)
+router.get('/profileInfos', async(request, response) => {
+    const data = await database.loadProfile(1);
+    response.status(200).json({
+        status: 'Success',
+        results: data
+    });
+    console.log(data);
+});
+
+//! KOMMENT ADATOK
+router.get('/commentInfos', async(request, response) => {
+    const data = await database.loadComments(1);
+    response.status(200).json({
+        status: 'Success',
+        results: data
+    });
+    console.log(data);
+});
+
+
 //! FÜGGVÉNYEK
 //? Hash-eljük a megadott stringet, és visszaadunk egy salt, és egy hash változót.
 function HashString(string) {
