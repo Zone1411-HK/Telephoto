@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     */
     document.getElementById('loadFiles').addEventListener('click', preLoadFiles);
     document.getElementById('uploadPost').addEventListener('click', uploadPost);
+    document.getElementById('cancelPost').addEventListener('click', cancelPost);
 });
 
 async function preLoadFiles() {
@@ -216,4 +217,10 @@ async function uploadFiles(apiUrl, files) {
     } catch (error) {
         return error;
     }
+}
+
+function cancelPost() {
+    document.getElementById('uploadFile').value = null;
+    document.getElementById('carouselContent').replaceChildren();
+    document.getElementById('uploadFeedback').innerText = '';
 }
