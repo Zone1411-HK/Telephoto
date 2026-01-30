@@ -38,3 +38,6 @@ content-type: application/json
 ###
 
 GET http://127.0.0.1:3000/api/postInfos/3
+###
+
+GET http://127.0.0.1:3000/api/isUsernameAvailable/asda
