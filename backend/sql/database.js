@@ -35,9 +35,10 @@ async function loginSelect() {
 
 async function getUserByUsername(username) {
     try {
-        const sql = `SELECT user_id FROM users WHERE username LIKE "${username}"`;
-        const [rows] = await pool.execute(sql);
-        return rows;
+        const sql = `SELECT user_id FROM users WHERE username LIKE ?`;
+        const values = [username];
+        const [rows] = await pool.execute(sql, values);
+        return rows[0].user_id;
     } catch (error) {
         console.error(error);
     }
@@ -46,7 +47,6 @@ async function getUserByUsername(username) {
 async function createPost(username, description, tags, location, latitude, longitude) {
     try {
         let userId = await getUserByUsername(username);
-        userId = userId[0].user_id;
         const sql = `INSERT INTO posts(user_id, description, tags, upvote, downvote, location, latitude, longitude, creation_date) VALUES(${userId},"${description}","${tags}",0,0,"${location}",${latitude}, ${longitude}, NOW())`;
         const [rows, fields] = await pool.execute(sql);
         return [rows, fields];
@@ -101,9 +101,9 @@ async function getPostDataByPostId(postId) {
     }
 }
 
-//profil felület lekérd, comment lekérd, isadmin lekérd, 
+//profil felület lekérd, comment lekérd, isadmin lekérd,
 
-async function loadProfile(userId) {    
+async function loadProfile(userId) {
     try {
         const profileSql = `SELECT users.username, users.profile_picture_link, users.biography, users.registration_date FROM users WHERE users.user_id = ${userId}`;
         const [rows] = await pool.execute(profileSql);
@@ -113,7 +113,7 @@ async function loadProfile(userId) {
     }
 }
 
-async function loadComments(postId) {    
+async function loadComments(postId) {
     try {
         const commentsSql = `SELECT users.username, users.profile_picture_link, interactions.comment_content FROM interactions INNER JOIN users ON users.user_id = interactions.user_id INNER JOIN posts ON posts.post_id = interactions.post_id WHERE interactions.post_id = ${postId}`;
         const [rows] = await pool.execute(commentsSql);
@@ -123,7 +123,7 @@ async function loadComments(postId) {
     }
 }
 
-async function isAdmin(userName) {    
+async function isAdmin(userName) {
     try {
         const adminSql = `SELECT users.is_admin FROM users WHERE users.iusername = ${userName}`;
         const [rows] = await pool.execute(adminSql);
@@ -132,7 +132,6 @@ async function isAdmin(userName) {
         console.error(error);
     }
 }
-
 
 async function allUsername() {
     try {
@@ -143,6 +142,87 @@ async function allUsername() {
         console.error('SQL ERROR: allUsername: ' + error);
     }
 }
+
+//? Egy adott usernek az üzenetei
+async function messagesByUser(username) {
+    let userId = await getUserByUsername(username);
+    const sql = `
+    SELECT users.username, users.profile_picture_link, messages.message, messages.message_date, chat_members.chat_id 
+    FROM messages
+    INNER JOIN chat_members ON messages.member_id = chat_members.member_id
+    INNER JOIN users ON chat_members.user_id = users.user_id
+    WHERE users.user_id = ?;`;
+    const values = [userId];
+    const [rows] = await pool.execute(sql, values);
+    return rows;
+}
+async function chatnameByChatId(chatId) {
+    try {
+        const sql = `SELECT chats.chat_name FROM chats WHERE chats.chat_id = ?;`;
+        const values = [chatId];
+        const [rows] = await pool.execute(sql, values);
+        return rows[0].chat_name;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+//? Egy adott chatnek a tagjai
+
+async function usersOfChat(chatId) {
+    try {
+        const values = [chatId];
+        const sql = `
+        SELECT users.username
+        FROM chat_members 
+        INNER JOIN users ON chat_members.user_id = users.user_id
+        INNER JOIN chats ON chat_members.chat_id = chats.chat_id
+        WHERE chats.chat_id = ?;`;
+        const [rows] = await pool.execute(sql, values);
+        return rows;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+//? Egy adott usernek a chatjei
+
+async function chatsOfUser(username) {
+    try {
+        const userId = await getUserByUsername(username);
+        const sql = `
+        SELECT chats.chat_id, chats.chat_name, chats.chat_picture_link
+        FROM chat_members 
+        INNER JOIN chats ON chat_members.chat_id = chats.chat_id
+        WHERE chat_members.user_id = ?;
+        `;
+        const values = [userId];
+        const [rows] = await pool.execute(sql, values);
+        return rows;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+//? Egy adott chatnek az üzenetei
+async function messagesOfChat(chatId) {
+    try {
+        const values = [chatId];
+        const sql = `
+        SELECT users.username, messages.message, messages.message_date  
+        FROM messages 
+        INNER JOIN chat_members ON messages.member_id = chat_members.member_id
+        INNER JOIN users ON chat_members.user_id = users.user_id
+        WHERE chat_members.chat_id = ?
+        ORDER BY messages.message_date;
+        `;
+        const [rows] = await pool.execute(sql, values);
+        return rows;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 //!Export
 module.exports = {
     selectall,
@@ -155,5 +235,10 @@ module.exports = {
     loadProfile,
     loadComments,
     isAdmin,
-    allUsername
+    allUsername,
+    messagesByUser,
+    chatnameByChatId,
+    usersOfChat,
+    chatsOfUser,
+    messagesOfChat
 };

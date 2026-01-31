@@ -279,6 +279,24 @@ router.get('/commentInfos', async (request, response) => {
     console.log(data);
 });
 
+//! FELHASZNÁLÓ CHATJEI
+router.get('/chatsOfUser/:username', async (request, response) => {
+    try {
+        const username = request.params.username;
+        const sqlData = await database.chatsOfUser(username);
+        response.status(200).json({
+            Status: 'Success',
+            Result: sqlData
+        });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/chatsOfUser" végpont nem működik!'
+        });
+    }
+});
+
 //! FÜGGVÉNYEK
 //? Hash-eljük a megadott stringet, és visszaadunk egy salt, és egy hash változót.
 function HashString(string) {

@@ -2,9 +2,9 @@ POST http://127.0.0.1:3000/api/registration HTTP/1.1
 content-type: application/json
 
 {
-    "username": "a",
-    "email": "a",
-    "password": "a"
+    "username": "mxn5",
+    "email": "asd@asd.com",
+    "password": "asd"
 }
 
 ###
@@ -28,9 +28,9 @@ content-type: application/json
 
 {
     "username": "asd",
-    "description": "",
-    "tags": "",
-    "location": "",
+    "description": "asd",
+    "tags": "asd",
+    "location": "asd",
     "latitude": 0,
     "longitude": 0
 }
@@ -41,3 +41,6 @@ GET http://127.0.0.1:3000/api/postInfos/3
 ###
 
 GET http://127.0.0.1:3000/api/isUsernameAvailable/asda
+###
+
+GET http://127.0.0.1:3000/api/chatsOfUser/mxn
