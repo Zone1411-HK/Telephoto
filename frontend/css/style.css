@@ -439,12 +439,10 @@ input {
 #openedChat {
     background-color: purple;
     height: 57vh;
-    overflow-y: scroll;
-    scrollbar-width: none;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    position: relative;
 }
 /* You won't believe what it does */
 /* https://open.spotify.com/track/51EpFns3CG9taCMQz6XDom?si=8b358a3ae3994cb1 */
@@ -453,13 +451,7 @@ input {
     height: 0 !important;
     width: 0 !important;
 }
-.openedChatNav {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 5vh;
-    background-color: blue;
-}
+
 .openedChatName {
     display: flex;
     flex-direction: row;
@@ -476,4 +468,80 @@ input {
     font-size: 1.3rem;
     margin: 0;
     color: white;
+}
+.messageRow {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+}
+.message {
+    width: 75%;
+    border-radius: 5px;
+    border: 3px solid white;
+    line-break: anywhere;
+    margin: 0;
+}
+.messageWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.messageDate {
+    color: lightgray;
+    margin: 0;
+    padding: 0;
+    font-size: 0.75rem;
+}
+
+.FromCurrentUserSide {
+    align-self: flex-end;
+}
+.FromCurrentUserColor {
+    background-color: darkolivegreen;
+}
+.FromOtherUserSide {
+    align-self: start;
+}
+.FromOtherUserColor {
+    background-color: gray;
+}
+
+.openedChatNav {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 5%;
+    background-color: blue;
+}
+.messagesDiv {
+    height: 90%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+.newMessageDiv {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 5%;
+    background-color: pink;
+}
+
+.newMessageDiv input[type='text'] {
+    width: 80%;
+    height: 100%;
+    line-break: anywhere;
+    overflow-y: scroll;
+}
+.newMessageDiv input[type='button'] {
+    width: 20%;
+    height: 100%;
 }

@@ -102,6 +102,7 @@ async function openChat() {
 
     const openedChat = document.getElementById('openedChat');
     openedChat.classList.remove('invisible');
+    openedChat.replaceChildren();
 
     const nav = document.createElement('div');
     nav.classList.add('openedChatNav');
@@ -118,7 +119,66 @@ async function openChat() {
     console.log(response);
 
     openedChat.appendChild(nav);
+
+    const messagesDiv = document.createElement('div');
+    messagesDiv.classList.add('messagesDiv');
+
     if (response.Result.length > 0) {
+        for (let i = 0; i < 5; i++) {
+            for (const obj of response.Result) {
+                const messageRow = generateMessage(
+                    obj.username == sessionStorage.getItem('username') ? true : false,
+                    obj.message,
+                    obj.message_date
+                );
+                messagesDiv.appendChild(messageRow);
+            }
+        }
     } else {
     }
+
+    const newMessageDiv = document.createElement('div');
+    newMessageDiv.classList.add('newMessageDiv');
+
+    const newMessageInput = document.createElement('input');
+    newMessageInput.type = 'text';
+    newMessageInput.placeholder = 'Új üzenet';
+    newMessageDiv.appendChild(newMessageInput);
+
+    const newMessageSend = document.createElement('input');
+    newMessageSend.type = 'button';
+    newMessageSend.value = 'Küldés';
+    newMessageDiv.appendChild(newMessageSend);
+
+    openedChat.appendChild(messagesDiv);
+    openedChat.appendChild(newMessageDiv);
+}
+
+function generateMessage(fromCurrentUser, message, date) {
+    const messageRow = document.createElement('div');
+    messageRow.classList.add('messageRow');
+
+    const messageContent = document.createElement('p');
+    messageContent.classList.add('message');
+    messageContent.innerText = message;
+
+    const messageDate = document.createElement('p');
+    messageDate.classList.add('messageDate');
+    messageDate.innerText = date;
+
+    const messageWrapper = document.createElement('div');
+    messageWrapper.classList.add('messageWrapper');
+
+    if (fromCurrentUser) {
+        messageDate.classList.add('FromCurrentUserSide');
+        messageContent.classList.add('FromCurrentUserColor', 'FromCurrentUserSide');
+    } else {
+        messageDate.classList.add('FromOtherUserSide');
+
+        messageContent.classList.add('FromOtherUserColor', 'FromOtherUserSide');
+    }
+    messageWrapper.appendChild(messageContent);
+    messageWrapper.appendChild(messageDate);
+    messageRow.appendChild(messageWrapper);
+    return messageRow;
 }
