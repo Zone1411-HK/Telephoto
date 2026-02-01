@@ -523,7 +523,7 @@ input {
     overflow-y: scroll;
     scrollbar-width: none;
     padding-top: 5%;
-    padding-bottom: 5%;
+    padding-bottom: 12vh;
     padding-left: 2%;
     padding-right: 2%;
 }
@@ -533,15 +533,27 @@ input {
     width: 100%;
     height: 5%;
     background-color: pink;
+    position: relative;
 }
 
-.newMessageDiv input[type='text'] {
-    width: 80%;
-    height: 100%;
-    line-break: anywhere;
-    overflow-y: scroll;
+.newMessageDiv textarea {
+    width: 60%;
+    max-height: 15vh;
+    position: absolute;
+    bottom: 0;
+    resize: none;
+    font-size: 0.88rem;
+    border: 3px salmon solid;
+    border-radius: 20px;
+    overflow: scroll;
+    scrollbar-width: none;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    left: 5%;
 }
 .newMessageDiv input[type='button'] {
-    width: 20%;
+    width: 25%;
     height: 100%;
+    position: absolute;
+    left: 70%;
 }

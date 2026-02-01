@@ -140,9 +140,11 @@ async function openChat() {
     const newMessageDiv = document.createElement('div');
     newMessageDiv.classList.add('newMessageDiv');
 
-    const newMessageInput = document.createElement('input');
-    newMessageInput.type = 'text';
+    const newMessageInput = document.createElement('textarea');
     newMessageInput.placeholder = 'Új üzenet';
+    newMessageInput.style.height = '100%';
+    newMessageInput.maxLength = 200;
+    newMessageInput.addEventListener('input', growHeight);
     newMessageDiv.appendChild(newMessageInput);
 
     const newMessageSend = document.createElement('input');
@@ -181,4 +183,8 @@ function generateMessage(fromCurrentUser, message, date) {
     messageWrapper.appendChild(messageDate);
     messageRow.appendChild(messageWrapper);
     return messageRow;
+}
+function growHeight() {
+    this.style.height = 0;
+    this.style.height = this.scrollHeight + 'px';
 }
