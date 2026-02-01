@@ -44,3 +44,6 @@ GET http://127.0.0.1:3000/api/isUsernameAvailable/asda
 ###
 
 GET http://127.0.0.1:3000/api/chatsOfUser/mxn
+###
+
+GET http://127.0.0.1:3000/api/messagesOfChat/1

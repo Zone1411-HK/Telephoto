@@ -297,6 +297,40 @@ router.get('/chatsOfUser/:username', async (request, response) => {
     }
 });
 
+router.get('/messagesOfChat/:chatId', async (request, response) => {
+    try {
+        const chatId = request.params.chatId;
+        const sqlData = await database.messagesOfChat(chatId);
+        response.status(200).json({
+            Status: 'Success',
+            Result: sqlData
+        });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/messagesOfChat" végpont nem működik!'
+        });
+    }
+});
+router.get('/lastMessageOfChat/:chatId', async (request, response) => {
+    try {
+        const chatId = request.params.chatId;
+        console.log('asd');
+        const sqlData = await database.lastMessageOfChat(chatId);
+        response.status(200).json({
+            Status: 'Success',
+            Result: sqlData[0]
+        });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/lastMessageOfChat" végpont nem működik!'
+        });
+    }
+});
+
 //! FÜGGVÉNYEK
 //? Hash-eljük a megadott stringet, és visszaadunk egy salt, és egy hash változót.
 function HashString(string) {

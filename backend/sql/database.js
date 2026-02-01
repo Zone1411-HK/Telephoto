@@ -223,6 +223,24 @@ async function messagesOfChat(chatId) {
     }
 }
 
+async function lastMessageOfChat(chatId) {
+    try {
+        const values = [chatId];
+        const sql = `
+        SELECT users.username, messages.message, messages.message_date  
+        FROM messages 
+        INNER JOIN chat_members ON messages.member_id = chat_members.member_id
+        INNER JOIN users ON chat_members.user_id = users.user_id
+        WHERE chat_members.chat_id = ?
+        ORDER BY messages.message_date DESC
+        LIMIT 1;
+        `;
+        const [rows] = await pool.execute(sql, values);
+        return rows;
+    } catch (error) {
+        console.error(error);
+    }
+}
 //!Export
 module.exports = {
     selectall,
@@ -240,5 +258,6 @@ module.exports = {
     chatnameByChatId,
     usersOfChat,
     chatsOfUser,
-    messagesOfChat
+    messagesOfChat,
+    lastMessageOfChat
 };

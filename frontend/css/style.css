@@ -134,12 +134,6 @@ input[type='button'] {
 }
 */
 
-/* You won't believe what it does */
-/* https://open.spotify.com/track/51EpFns3CG9taCMQz6XDom?si=8b358a3ae3994cb1 */
-.invisible {
-    display: none;
-}
-
 @keyframes invalidShake {
     0% {
         left: 0px;
@@ -351,12 +345,13 @@ input {
     height: 80%;
     margin-bottom: 100%;
     gap: 10px;
+    width: 95%;
 }
 .chat {
     background-color: white;
     display: flex;
     flex-direction: row;
-    height: 15vh;
+    height: 10vh;
     width: 95%;
     border: 3px solid black;
     gap: 10px;
@@ -369,17 +364,24 @@ input {
     cursor: pointer;
 }
 .lastText {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
+    width: 100%;
+    padding-right: 5px;
     font-size: 0.85rem;
-    color: #333333;
+    color: #555555;
     font-weight: normal;
     margin-bottom: 0px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    line-break: anywhere;
 }
 .chatName {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    line-break: anywhere;
     font-size: 1.2rem;
     margin-bottom: 0px;
     border-bottom: 2px solid #333333;
@@ -403,16 +405,17 @@ input {
 }
 .chatImg {
     clip-path: circle();
-    height: 95%;
-    width: 100%;
+    width: 94%;
+    height: 94%;
+    object-fit: cover;
 }
 .chatTexts {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    padding-top: 2%;
     width: 80%;
     height: 100%;
-    margin-bottom: 10px;
+    padding-bottom: 1%;
 }
 #newChatDiv {
     width: 95%;
@@ -432,4 +435,45 @@ input {
 #newChatImg {
     height: 50%;
     max-height: 15vh;
+}
+#openedChat {
+    background-color: purple;
+    height: 57vh;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+/* You won't believe what it does */
+/* https://open.spotify.com/track/51EpFns3CG9taCMQz6XDom?si=8b358a3ae3994cb1 */
+.invisible {
+    display: none !important;
+    height: 0 !important;
+    width: 0 !important;
+}
+.openedChatNav {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 5vh;
+    background-color: blue;
+}
+.openedChatName {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 80%;
+    border-right: 2px solid white;
+}
+.openedChatName h3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    line-break: anywhere;
+    font-size: 1.3rem;
+    margin: 0;
+    color: white;
 }
