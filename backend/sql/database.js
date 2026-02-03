@@ -28,7 +28,7 @@ async function addNewUser(username, salt, hash, email) {
 }
 
 async function loginSelect() {
-    const query = 'SELECT username, password_salt, password_hash FROM users';
+    const query = 'SELECT username, user_id, password_salt, password_hash FROM users';
     const [rows] = await pool.execute(query);
     return rows;
 }
@@ -101,9 +101,9 @@ async function getPostDataByPostId(postId) {
     }
 }
 
-//profil felület lekérd, comment lekérd, isadmin lekérd, 
+//profil felület lekérd, comment lekérd, isadmin lekérd,
 
-async function loadProfile(userId) {    
+async function loadProfile(userId) {
     try {
         const profileSql = `SELECT users.username, users.profile_picture_link, users.biography, users.registration_date FROM users WHERE users.user_id = ${userId}`;
         const [rows] = await pool.execute(profileSql);
@@ -113,7 +113,7 @@ async function loadProfile(userId) {
     }
 }
 
-async function loadComments(postId) {    
+async function loadComments(postId) {
     try {
         const commentsSql = `SELECT users.username, users.profile_picture_link, interactions.comment_content FROM interactions INNER JOIN users ON users.user_id = interactions.user_id INNER JOIN posts ON posts.post_id = interactions.post_id WHERE interactions.post_id = ${postId}`;
         const [rows] = await pool.execute(commentsSql);
@@ -123,16 +123,15 @@ async function loadComments(postId) {
     }
 }
 
-async function isAdmin(userName) {    
+async function isAdmin(userName) {
     try {
-        const adminSql = `SELECT users.is_admin FROM users WHERE users.iusername = ${userName}`;
+        const adminSql = `SELECT users.is_admin FROM users WHERE users.username = ${userName}`;
         const [rows] = await pool.execute(adminSql);
         return rows;
     } catch (error) {
         console.error(error);
     }
 }
-
 
 async function allUsername() {
     try {
@@ -141,6 +140,56 @@ async function allUsername() {
         return rows;
     } catch (error) {
         console.error('SQL ERROR: allUsername: ' + error);
+    }
+}
+
+async function userRefreshToken(refreshToken) {
+    try {
+        const sql = `
+    SELECT refresh_token
+    FROM user_refresh_token
+    WHERE refresh_token = "?"
+    `;
+        const [rows] = await pool.execute(sql, [refreshToken]);
+        console.log(rows);
+        return rows;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function hasRefreshToken(userId) {
+    try {
+        const values = [userId];
+        const sql = `
+        SELECT user_id
+        FROM user_refresh_token
+        WHERE user_id = ?`;
+        const [rows, fields] = await pool.execute(sql, values);
+        return rows.length == 0 ? false : true;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function addRefreshToken(userId, refreshToken) {
+    console.log(refreshToken);
+    if (!(await hasRefreshToken(userId))) {
+        const sql = `
+        INSERT INTO user_refresh_token(user_id, refresh_token, expiry_date)
+        VALUES(?, ?, CURRENT_TIMESTAMP() + INTERVAL 1 DAY)
+        `;
+        const [fields] = await pool.execute(sql, [userId, refreshToken]);
+        return fields;
+    } else {
+        const sql = `
+        UPDATE user_refresh_token
+        SET expiry_date = (CURRENT_TIMESTAMP() + INTERVAL 1 DAY), refresh_token = ?
+        WHERE user_id = ?
+        `;
+        const [fields] = await pool.execute(sql, [refreshToken, userId]);
+
+        return fields;
     }
 }
 //!Export
@@ -155,5 +204,7 @@ module.exports = {
     loadProfile,
     loadComments,
     isAdmin,
-    allUsername
+    allUsername,
+    userRefreshToken,
+    addRefreshToken
 };

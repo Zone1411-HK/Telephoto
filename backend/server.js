@@ -2,6 +2,7 @@
 const express = require('express'); //?npm install express
 const session = require('express-session'); //?npm install express-session
 const path = require('path');
+const cookieParser = require('cookie-parser');
 
 //!Beállítások
 const app = express();
@@ -11,6 +12,7 @@ const ip = '127.0.0.1';
 const port = 3000;
 
 app.use(express.json()); //?Middleware JSON
+app.use(cookieParser()); //?Middleware Cookie Parser
 app.set('trust proxy', 1); //?Middleware Proxy
 
 //!Session beállítása:

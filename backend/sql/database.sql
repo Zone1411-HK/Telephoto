@@ -56,6 +56,13 @@ CREATE TABLE interactions(
 );
 
 //
+
+CREATE TABLE user_refresh_token (
+    user_id INT,
+    refresh_token VARCHAR(500),
+    expiry_date TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(user_id)
+);
 DELIMITER ;
 
 

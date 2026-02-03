@@ -14,9 +14,12 @@
         "nodemon": "^3.1.10"
     },
     "dependencies": {
+        "cookie-parser": "^1.4.7",
+        "dotenv": "^17.2.3",
         "exifreader": "^4.36.0",
         "express": "^5.1.0",
         "express-session": "^1.18.2",
+        "jsonwebtoken": "^9.0.3",
         "leaflet": "^1.9.4",
         "leaflet.markercluster": "^1.5.3",
         "multer": "^2.0.2",

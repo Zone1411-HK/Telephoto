@@ -179,7 +179,6 @@ async function uploadPost() {
             fileNames.push(file.name);
         }
         console.log(renamedFiles);
-        //! Élesben ezt a kódot kell használni! let username = sessionStorage.getItem('username');
 
         //! Csak teszthez
         let username = 'asd';
