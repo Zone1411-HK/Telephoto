@@ -102,6 +102,7 @@ async function openChat() {
 
     const openedChat = document.getElementById('openedChat');
     openedChat.classList.remove('invisible');
+    openedChat.dataset.chatId = chatId;
     openedChat.replaceChildren();
 
     const nav = document.createElement('div');
@@ -124,15 +125,13 @@ async function openChat() {
     messagesDiv.classList.add('messagesDiv');
 
     if (response.Result.length > 0) {
-        for (let i = 0; i < 5; i++) {
-            for (const obj of response.Result) {
-                const messageRow = generateMessage(
-                    obj.username == sessionStorage.getItem('username') ? true : false,
-                    obj.message,
-                    obj.message_date
-                );
-                messagesDiv.appendChild(messageRow);
-            }
+        for (const obj of response.Result) {
+            const messageRow = generateMessage(
+                obj.username == sessionStorage.getItem('username') ? true : false,
+                obj.message,
+                obj.message_date
+            );
+            messagesDiv.appendChild(messageRow);
         }
     } else {
     }
@@ -141,6 +140,7 @@ async function openChat() {
     newMessageDiv.classList.add('newMessageDiv');
 
     const newMessageInput = document.createElement('textarea');
+    newMessageInput.id = 'newMessageInput';
     newMessageInput.placeholder = 'Új üzenet';
     newMessageInput.style.height = '100%';
     newMessageInput.maxLength = 200;
@@ -150,6 +150,7 @@ async function openChat() {
     const newMessageSend = document.createElement('input');
     newMessageSend.type = 'button';
     newMessageSend.value = 'Küldés';
+    newMessageSend.addEventListener('click', sendMessage);
     newMessageDiv.appendChild(newMessageSend);
 
     openedChat.appendChild(messagesDiv);
@@ -187,4 +188,20 @@ function generateMessage(fromCurrentUser, message, date) {
 function growHeight() {
     this.style.height = 0;
     this.style.height = this.scrollHeight + 'px';
+}
+
+async function sendMessage() {
+    const newMessageInput = document.getElementById('newMessageInput');
+    if (newMessageInput.value != '') {
+        const newMessage = newMessageInput.value;
+        const chatId = document.getElementById('openedChat').dataset.chatId;
+        console.log(chatId);
+        const response = await PostMethodFetch('/api/sendMessage', {
+            message: newMessage,
+            chatId: chatId
+        });
+        if ((response.Status = 'Failed')) {
+            //TODO Hiba kezelés
+        }
+    }
 }

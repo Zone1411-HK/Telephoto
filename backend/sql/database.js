@@ -241,6 +241,32 @@ async function lastMessageOfChat(chatId) {
         console.error(error);
     }
 }
+
+async function findMemberId(chat_id, user_id) {
+    const sql = `
+    SELECT member_id 
+    FROM chat_members
+    WHERE chat_id = ? AND user_id = ?
+    `;
+    const [rows] = await pool.execute(sql, [chat_id, user_id]);
+    console.log(rows);
+    return rows[0].member_id;
+}
+
+async function sendMessage(message, chatId, user_id) {
+    try {
+        const member_id = await findMemberId(chatId, user_id);
+        const values = [member_id, message];
+        const sql = `
+        INSERT INTO messages(member_id, message, message_date)
+        VALUES(?, ?, NOW())
+        `;
+        const [fields] = await pool.execute(sql, [member_id, message]);
+        return fields;
+    } catch (error) {
+        console.error(error);
+    }
+}
 //!Export
 module.exports = {
     selectall,
@@ -259,5 +285,7 @@ module.exports = {
     usersOfChat,
     chatsOfUser,
     messagesOfChat,
-    lastMessageOfChat
+    lastMessageOfChat,
+    findMemberId,
+    sendMessage
 };

@@ -331,6 +331,21 @@ router.get('/lastMessageOfChat/:chatId', async (request, response) => {
     }
 });
 
+router.post('/sendMessage', async (request, response) => {
+    try {
+        const { message, chatId } = request.body;
+        console.log(message, chatId);
+        const sqlData = await database.sendMessage(message, chatId, 1);
+        console.log(sqlData);
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/sendMessage" végpont nem működik!'
+        });
+    }
+});
+
 //! FÜGGVÉNYEK
 //? Hash-eljük a megadott stringet, és visszaadunk egy salt, és egy hash változót.
 function HashString(string) {
