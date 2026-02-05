@@ -155,6 +155,48 @@ input[type='button'] {
     }
 }
 
+@keyframes openChat {
+    0% {
+        width: 0%;
+        height: 23.5vh;
+        left: 50%;
+        right: 50%;
+        top: 0;
+    }
+    20% {
+        width: 25%;
+        left: 25%;
+        right: 25%;
+        top: 0;
+    }
+    40% {
+        width: 50%;
+        left: 12.5%;
+        right: 12.5%;
+        top: 0;
+    }
+    60% {
+        width: 75%;
+        left: 6.125%;
+        right: 6.125%;
+        top: 0;
+    }
+    80% {
+        width: 100%;
+        left: 0%;
+        right: 0%;
+        top: 0;
+    }
+    100% {
+        width: 100%;
+        height: 57vh;
+        left: 0%;
+        right: 0%;
+        top: 0%;
+        bottom: 0%;
+    }
+}
+
 .invalid {
     border: 2px solid var(--invalidRed);
 }
@@ -290,6 +332,7 @@ input {
     align-items: center;
     gap: 10px;
     padding-top: 5px;
+    z-index: 1;
 }
 /*? Scrollbar formázás 
 /*! FIREFOXBAN NEM MŰKÖDIK
@@ -437,12 +480,16 @@ input {
     max-height: 15vh;
 }
 #openedChat {
-    background-color: purple;
-    height: 57vh;
+    background-color: #eeeeee;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
+    z-index: 2;
+}
+#openedChatWrapper {
+    height: 57vh;
 }
 /* You won't believe what it does */
 /* https://open.spotify.com/track/51EpFns3CG9taCMQz6XDom?si=8b358a3ae3994cb1 */
@@ -511,11 +558,11 @@ input {
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 5%;
+    height: 5vh;
     background-color: blue;
 }
 .messagesDiv {
-    height: 90%;
+    height: 85vh;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -527,33 +574,49 @@ input {
     padding-left: 2%;
     padding-right: 2%;
 }
-.newMessageDiv {
+
+.newMessageWrapper {
     display: flex;
-    flex-direction: row;
+    justify-content: center;
     width: 100%;
-    height: 5%;
-    background-color: pink;
-    position: relative;
+    border-radius: 10px;
+    padding-top: 5px;
 }
 
-.newMessageDiv textarea {
-    width: 60%;
+.newMessageWrapper textarea {
+    min-height: 40px;
     max-height: 15vh;
-    position: absolute;
-    bottom: 0;
+    font-size: 18px;
+    line-height: 22px;
     resize: none;
-    font-size: 0.88rem;
-    border: 3px salmon solid;
-    border-radius: 20px;
-    overflow: scroll;
+    overflow-y: scroll;
     scrollbar-width: none;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    left: 5%;
+    border-radius: 10px;
+    padding-left: 3%;
+    padding-right: 15%;
+    padding-top: 0.75vh;
+    width: 95%;
+    position: relative;
+    border: none;
+    margin-bottom: 5px;
+    outline: none;
+    box-shadow: 0 0 3px 1px rgb(150, 180, 200);
 }
-.newMessageDiv input[type='button'] {
-    width: 25%;
-    height: 100%;
+.newMessageWrapper button {
+    background-color: transparent;
+    border: none;
+    aspect-ratio: 1/1;
+    width: 34px;
+    height: 34px;
+    border-radius: 500px;
     position: absolute;
-    left: 70%;
+    right: 5%;
+    bottom: 7px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.newMessageWrapper button:hover {
+    background-color: rgb(200, 230, 250);
 }

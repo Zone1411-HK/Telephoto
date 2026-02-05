@@ -100,10 +100,13 @@ async function openChat() {
     const chatContainer = document.getElementById('chatContainer');
     chatContainer.classList.add('invisible');
 
+    const chatWrapper = document.getElementById('openedChatWrapper');
+    chatWrapper.classList.remove('invisible');
+
     const openedChat = document.getElementById('openedChat');
-    openedChat.classList.remove('invisible');
     openedChat.dataset.chatId = chatId;
     openedChat.replaceChildren();
+    openedChat.style.animation = 'openChat 350ms linear 1 forwards';
 
     const nav = document.createElement('div');
     nav.classList.add('openedChatNav');
@@ -136,25 +139,10 @@ async function openChat() {
     } else {
     }
 
-    const newMessageDiv = document.createElement('div');
-    newMessageDiv.classList.add('newMessageDiv');
-
-    const newMessageInput = document.createElement('textarea');
-    newMessageInput.id = 'newMessageInput';
-    newMessageInput.placeholder = 'Új üzenet';
-    newMessageInput.style.height = '100%';
-    newMessageInput.maxLength = 200;
-    newMessageInput.addEventListener('input', growHeight);
-    newMessageDiv.appendChild(newMessageInput);
-
-    const newMessageSend = document.createElement('input');
-    newMessageSend.type = 'button';
-    newMessageSend.value = 'Küldés';
-    newMessageSend.addEventListener('click', sendMessage);
-    newMessageDiv.appendChild(newMessageSend);
-
     openedChat.appendChild(messagesDiv);
-    openedChat.appendChild(newMessageDiv);
+    const messageInput = generateMessageInput();
+    openedChat.appendChild(messageInput);
+    expandUpwards();
 }
 
 function generateMessage(fromCurrentUser, message, date) {
@@ -185,9 +173,39 @@ function generateMessage(fromCurrentUser, message, date) {
     messageRow.appendChild(messageWrapper);
     return messageRow;
 }
-function growHeight() {
+
+function generateMessageInput() {
+    const div = document.createElement('div');
+    div.classList.add('newMessageWrapper');
+    const textArea = document.createElement('textarea');
+    textArea.id = 'newMessageInput';
+    textArea.rows = 1;
+    textArea.maxLength = 200;
+    textArea.addEventListener('input', expandUpwards);
+
+    const send = document.createElement('button');
+    send.type = 'button';
+
+    const svg = document.createElement('img');
+    svg.src = '/images/send.svg';
+    svg.classList.add('img-fluid');
+
+    send.appendChild(svg);
+
+    div.appendChild(textArea);
+    div.appendChild(send);
+    return div;
+}
+
+function growHeightDiv() {
     this.style.height = 0;
     this.style.height = this.scrollHeight + 'px';
+    console.log(this.scrollHeight);
+}
+function expandUpwards() {
+    const inp = document.getElementById('newMessageInput');
+    inp.style.height = 'auto';
+    inp.style.height = Math.min(inp.scrollHeight, 200) + 'px';
 }
 
 async function sendMessage() {
