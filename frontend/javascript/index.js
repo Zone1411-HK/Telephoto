@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('home').addEventListener('click', () => {});
+    /*document.getElementById('home').addEventListener('click', () => {});
     document.getElementById('personal').addEventListener('click', () => {});
     document.getElementById('map').addEventListener('click', () => {});
     document.getElementById('profile').addEventListener('click', () => {});
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('month').addEventListener('click', () => {});
     document.getElementById('top').addEventListener('click', () => {});
     document.getElementById('new').addEventListener('click', () => {});
-    document.getElementById('near').addEventListener('click', () => {});
+    document.getElementById('near').addEventListener('click', () => {});*/
     getChats();
 });
 

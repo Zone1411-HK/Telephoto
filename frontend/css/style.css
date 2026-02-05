@@ -489,7 +489,7 @@ input {
     z-index: 2;
 }
 #openedChatWrapper {
-    height: 57vh;
+    height: auto;
 }
 /* You won't believe what it does */
 /* https://open.spotify.com/track/51EpFns3CG9taCMQz6XDom?si=8b358a3ae3994cb1 */
