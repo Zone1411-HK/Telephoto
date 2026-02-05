@@ -18,7 +18,7 @@ async function registration() {
         //? Email formátum
         //? [A-Za-z0-9]: minden nagybetű a-z-ig, minden kisbetű a-z-ig és minden szám
         //? \char: tartalmaznia kell az adott karaktert
-        const emailRegExp = /[A-Za-z0-9]\@[A-Za-z0-9]\.[A-Za-z0-9]/;
+        const emailRegExp = /^[A-Za-z0-9]+@[A-Za-z0-9]+\.[A-Za-z0-9]/;
         let emailInput = document.getElementById('regEmail');
         let email = emailInput.value;
         if (emailRegExp.test(email)) {
