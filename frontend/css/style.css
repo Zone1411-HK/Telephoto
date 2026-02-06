@@ -189,7 +189,7 @@ input[type='button'] {
     }
     100% {
         width: 100%;
-        height: 57vh;
+        height: 100%;
         left: 0%;
         right: 0%;
         top: 0%;
@@ -250,10 +250,6 @@ input {
     row-gap: 5px;
     overflow-y: scroll;
     height: 25rem;
-}
-
-.home {
-    margin-top: 5vh;
 }
 
 #regButton {
@@ -323,7 +319,7 @@ input {
     justify-content: space-evenly;
 }
 #chatContainer {
-    background-color: red;
+    background-color: white;
     height: 57vh;
     overflow-y: scroll;
     scrollbar-width: none;
@@ -387,37 +383,39 @@ input {
     align-items: center;
     height: 80%;
     margin-bottom: 100%;
-    gap: 10px;
+    gap: 20px;
     width: 95%;
 }
 .chat {
     background-color: white;
     display: flex;
     flex-direction: row;
-    height: 10vh;
-    width: 95%;
-    border: 3px solid black;
+    height: 7.5vh;
+    width: 100%;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.35);
     gap: 10px;
     padding-left: 10px;
     padding-right: 10px;
     border-radius: 30px;
 }
 .chat:hover {
-    background-color: lightgray;
+    background-color: #eeeeee;
     cursor: pointer;
 }
 .lastText {
-    width: 100%;
+    width: 95%;
     padding-right: 5px;
-    font-size: 0.85rem;
-    color: #555555;
+    font-size: 12px;
+    color: #888888;
     font-weight: normal;
     margin-bottom: 0px;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    line-height: 14px;
     overflow: hidden;
     line-break: anywhere;
+    margin-top: 0;
 }
 .chatName {
     display: -webkit-box;
@@ -426,8 +424,10 @@ input {
     overflow: hidden;
     line-break: anywhere;
     font-size: 1.2rem;
-    margin-bottom: 0px;
-    border-bottom: 2px solid #333333;
+    border-bottom: 2px solid rgb(150, 100, 100);
+    margin-bottom: 5px;
+    width: 95%;
+    color: #553333;
 }
 .chatImgDiv {
     display: flex;
@@ -438,9 +438,9 @@ input {
     width: 20%;
 }
 .chatImgBorder {
-    height: 80%;
+    height: 85%;
     width: 100%;
-    background-color: black;
+    background-color: rgb(150, 100, 100);
     clip-path: circle();
     display: flex;
     justify-content: center;
@@ -448,8 +448,10 @@ input {
 }
 .chatImg {
     clip-path: circle();
-    width: 94%;
-    height: 94%;
+    height: 100px;
+    max-height: 92%;
+    width: 100px;
+    max-width: 92%;
     object-fit: cover;
 }
 .chatTexts {
@@ -465,20 +467,28 @@ input {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 15vh;
-    max-height: 15vh;
+    height: 8.5vh;
+    margin-bottom: 10px;
 }
 #newChat {
-    height: 15vh;
+    height: 8.5vh;
     width: 100%;
     border-radius: 30px;
-    border: 3px solid black;
-    object-fit: contain;
+    background-color: rgb(190, 110, 110);
+    border: none;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.35);
+    padding: 0;
 }
-#newChatImg {
-    height: 50%;
-    max-height: 15vh;
+
+#newChat:hover {
+    background-color: rgb(170, 90, 90);
 }
+
+#newChat img {
+    height: 90%;
+    aspect-ratio: 1/1;
+}
+
 #openedChat {
     background-color: #eeeeee;
     height: 100%;
@@ -489,7 +499,7 @@ input {
     z-index: 2;
 }
 #openedChatWrapper {
-    height: auto;
+    height: 57vh;
 }
 /* You won't believe what it does */
 /* https://open.spotify.com/track/51EpFns3CG9taCMQz6XDom?si=8b358a3ae3994cb1 */
@@ -499,12 +509,41 @@ input {
     width: 0 !important;
 }
 
+.openedChatClose {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: end;
+    padding-right: 2%;
+    padding-top: 2px;
+    align-items: center;
+}
+.openedChatClose button {
+    aspect-ratio: 1/1;
+    height: 90%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+}
+.openedChatClose button:hover {
+    background-color: rgb(250, 200, 200);
+    border-radius: 50px;
+}
+.openedChatClose button img {
+    aspect-ratio: 1/1;
+    height: 100%;
+}
 .openedChatName {
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 80%;
-    border-right: 2px solid white;
+    padding-left: 5%;
+    padding-right: 3%;
+    padding-top: 2px;
 }
 .openedChatName h3 {
     display: -webkit-box;
@@ -512,9 +551,10 @@ input {
     -webkit-line-clamp: 1;
     overflow: hidden;
     line-break: anywhere;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
+    font-weight: 700;
     margin: 0;
-    color: white;
+    color: #330707;
 }
 .messageRow {
     display: flex;
@@ -524,8 +564,8 @@ input {
 }
 .message {
     width: 75%;
-    border-radius: 5px;
-    border: 3px solid white;
+    border-radius: 10px;
+    padding: 5px 5px 5px 10px;
     line-break: anywhere;
     margin: 0;
 }
@@ -535,7 +575,7 @@ input {
     flex-direction: column;
 }
 .messageDate {
-    color: lightgray;
+    color: rgb(100, 100, 100);
     margin: 0;
     padding: 0;
     font-size: 0.75rem;
@@ -543,15 +583,19 @@ input {
 
 .FromCurrentUserSide {
     align-self: flex-end;
+    border-bottom-right-radius: 0px;
 }
 .FromCurrentUserColor {
-    background-color: darkolivegreen;
+    background-color: rgb(190, 110, 110);
+    border: 2px solid rgb(170, 90, 90);
 }
 .FromOtherUserSide {
     align-self: start;
+    border-bottom-left-radius: 0px;
 }
 .FromOtherUserColor {
-    background-color: gray;
+    background-color: rgb(220, 220, 220);
+    border: 2px solid rgb(200, 200, 200);
 }
 
 .openedChatNav {
@@ -559,10 +603,12 @@ input {
     flex-direction: row;
     width: 100%;
     height: 5vh;
-    background-color: blue;
+    background-color: rgb(190, 110, 110);
+    box-shadow: -2px 0 3px 1px rgb(200, 150, 150);
+    z-index: 1;
 }
 .messagesDiv {
-    height: 85vh;
+    height: 47vh;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -573,14 +619,15 @@ input {
     padding-bottom: 12vh;
     padding-left: 2%;
     padding-right: 2%;
+    background-color: white;
 }
 
 .newMessageWrapper {
     display: flex;
     justify-content: center;
     width: 100%;
-    border-radius: 10px;
     padding-top: 5px;
+    background-color: white;
 }
 
 .newMessageWrapper textarea {
@@ -600,7 +647,7 @@ input {
     border: none;
     margin-bottom: 5px;
     outline: none;
-    box-shadow: 0 0 3px 1px rgb(150, 180, 200);
+    box-shadow: 0 0 3px 1px rgb(200, 150, 150);
 }
 .newMessageWrapper button {
     background-color: transparent;
@@ -618,5 +665,10 @@ input {
     align-items: center;
 }
 .newMessageWrapper button:hover {
-    background-color: rgb(200, 230, 250);
+    background-color: rgb(250, 200, 200);
+}
+.brandBar {
+    height: 5vh;
+    display: flex;
+    justify-content: center;
 }

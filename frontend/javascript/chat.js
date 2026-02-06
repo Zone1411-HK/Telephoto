@@ -36,7 +36,7 @@ async function getChats() {
             chatTexts.classList.add('chatTexts');
 
             const chatName = document.createElement('h3');
-            chatName.innerHTML = chat.name;
+            chatName.innerText = chat.name;
             chatName.classList.add('chatName');
             chatTexts.appendChild(chatName);
 
@@ -94,6 +94,14 @@ async function getChatData() {
     }
 }
 
+async function closeChat() {
+    const chatWrapper = document.getElementById('openedChatWrapper');
+    chatWrapper.classList.add('invisible');
+
+    const chatContainer = document.getElementById('chatContainer');
+    chatContainer.classList.remove('invisible');
+}
+
 async function openChat() {
     const chatId = this.dataset.id;
     console.log(chatId);
@@ -118,7 +126,24 @@ async function openChat() {
     chatName.innerText = this.dataset.name;
     chatNameDiv.appendChild(chatName);
 
+    const chatNameCloseDiv = document.createElement('div');
+    chatNameCloseDiv.classList.add('openedChatClose');
+
+    const closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    try {
+        closeButton.addEventListener('click', closeChat);
+    } catch (error) {}
+
+    const closeImg = document.createElement('img');
+    closeImg.src = '/images/x(2).svg';
+
+    closeButton.appendChild(closeImg);
+    chatNameCloseDiv.appendChild(closeButton);
+
     nav.appendChild(chatNameDiv);
+    nav.appendChild(chatNameCloseDiv);
+
     const response = await GetMethodFetch('/api/messagesOfChat/' + chatId);
     console.log(response);
 
@@ -143,6 +168,7 @@ async function openChat() {
     const messageInput = generateMessageInput();
     openedChat.appendChild(messageInput);
     expandUpwards();
+    console.log();
 }
 
 function generateMessage(fromCurrentUser, message, date) {
@@ -187,7 +213,7 @@ function generateMessageInput() {
     send.type = 'button';
 
     const svg = document.createElement('img');
-    svg.src = '/images/send.svg';
+    svg.src = '/images/send(1).svg';
     svg.classList.add('img-fluid');
 
     send.appendChild(svg);
