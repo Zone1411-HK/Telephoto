@@ -297,9 +297,9 @@ router.get('/chatsOfUser/:username', async (request, response) => {
     }
 });
 
-router.get('/messagesOfChat/:chatId', async (request, response) => {
+router.get('/messagesOfChat', async (request, response) => {
     try {
-        const chatId = request.params.chatId;
+        const chatId = request.session.chatId;
         const sqlData = await database.messagesOfChat(chatId);
         response.status(200).json({
             Status: 'Success',
@@ -345,7 +345,91 @@ router.post('/sendMessage', async (request, response) => {
         });
     }
 });
+router.post('/saveChatId', async (request, response) => {
+    try {
+        const { chatId } = request.body;
+        console.log(chatId);
+        request.session.chatId = chatId;
+        response.status(200).json({
+            Status: 'Success'
+        });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/saveChatId" végpont nem működik!'
+        });
+    }
+});
+router.get('/sendChatId', async (request, response) => {
+    try {
+        const chatId = request.session.chatId;
+        if (!chatId) {
+            response.status(200).json({
+                Status: 'Failed',
+                exists: false
+            });
+        } else {
+            response.status(200).json({
+                Status: 'Success',
+                exists: true,
+                Result: chatId
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/sendChatId" végpont nem működik!'
+        });
+    }
+});
 
+router.post('/removeChatId', async (request, response) => {
+    try {
+        if (!request.session.chatId) {
+            response.status(200).json({
+                Status: 'Failed',
+                Result: 'Nincs mentett chatId'
+            });
+        } else {
+            request.session.chatId = null;
+            response.status(200).json({
+                Status: 'Success',
+                Result: 'chatId törölve'
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/removeChatId" végpont nem működik!'
+        });
+    }
+});
+
+router.get('/storedChatIdInfos', async (request, response) => {
+    try {
+        if (!request.session.chatId) {
+            response.status(200).json({
+                Status: 'Failed',
+                Result: 'Nincs mentett chatId'
+            });
+        } else {
+            const chatInfos = await database.chatInfoByChatId(request.session.chatId);
+            response.status(200).json({
+                Status: 'Success',
+                Result: chatInfos.chat_name
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/removeChatId" végpont nem működik!'
+        });
+    }
+});
 //! FÜGGVÉNYEK
 //? Hash-eljük a megadott stringet, és visszaadunk egy salt, és egy hash változót.
 function HashString(string) {

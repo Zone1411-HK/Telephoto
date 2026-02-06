@@ -156,12 +156,12 @@ async function messagesByUser(username) {
     const [rows] = await pool.execute(sql, values);
     return rows;
 }
-async function chatnameByChatId(chatId) {
+async function chatInfoByChatId(chatId) {
     try {
-        const sql = `SELECT chats.chat_name FROM chats WHERE chats.chat_id = ?;`;
+        const sql = `SELECT chats.chat_id, chats.chat_name, chats.chat_picture_link FROM chats WHERE chats.chat_id = ?;`;
         const values = [chatId];
         const [rows] = await pool.execute(sql, values);
-        return rows[0].chat_name;
+        return rows[0];
     } catch (error) {
         console.error(error);
     }
@@ -281,7 +281,7 @@ module.exports = {
     isAdmin,
     allUsername,
     messagesByUser,
-    chatnameByChatId,
+    chatInfoByChatId,
     usersOfChat,
     chatsOfUser,
     messagesOfChat,

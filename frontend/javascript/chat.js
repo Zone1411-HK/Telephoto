@@ -10,6 +10,7 @@ class ChatData {
 
 async function getChats() {
     sessionStorage.setItem('username', 'mxn');
+    const doesChatIdExist = await GetMethodFetch('/api/sendChatId');
     let chatArray = await getChatData();
     if (Array.isArray(chatArray)) {
         const existingChats = document.getElementById('existingChats');
@@ -58,6 +59,10 @@ async function getChats() {
     } else {
         console.error(chatArray);
     }
+
+    if (doesChatIdExist.exists == true) {
+        openChat();
+    }
 }
 
 async function getChatData() {
@@ -95,6 +100,9 @@ async function getChatData() {
 }
 
 async function closeChat() {
+    const response = await PostMethodFetch('/api/removeChatId');
+    console.log(response);
+
     const chatWrapper = document.getElementById('openedChatWrapper');
     chatWrapper.classList.add('invisible');
 
@@ -103,8 +111,23 @@ async function closeChat() {
 }
 
 async function openChat() {
-    const chatId = this.dataset.id;
-    console.log(chatId);
+    const doesChatIdExist = await GetMethodFetch('/api/sendChatId');
+    let chatId;
+    const chatName = document.createElement('h3');
+
+    if (doesChatIdExist.exists == false) {
+        chatId = this.dataset.id;
+        const chatIdResponse = await PostMethodFetch('/api/saveChatId', {
+            chatId: chatId
+        });
+        chatName.innerText = this.dataset.name;
+        console.log(chatIdResponse);
+    } else {
+        chatId = doesChatIdExist.Result;
+        const infos = await GetMethodFetch('/api/storedChatIdInfos');
+        chatName.innerText = infos.Result;
+    }
+
     const chatContainer = document.getElementById('chatContainer');
     chatContainer.classList.add('invisible');
 
@@ -122,8 +145,6 @@ async function openChat() {
     const chatNameDiv = document.createElement('div');
     chatNameDiv.classList.add('openedChatName');
 
-    const chatName = document.createElement('h3');
-    chatName.innerText = this.dataset.name;
     chatNameDiv.appendChild(chatName);
 
     const chatNameCloseDiv = document.createElement('div');
@@ -131,9 +152,7 @@ async function openChat() {
 
     const closeButton = document.createElement('button');
     closeButton.type = 'button';
-    try {
-        closeButton.addEventListener('click', closeChat);
-    } catch (error) {}
+    closeButton.addEventListener('click', closeChat);
 
     const closeImg = document.createElement('img');
     closeImg.src = '/images/x(2).svg';
@@ -144,7 +163,7 @@ async function openChat() {
     nav.appendChild(chatNameDiv);
     nav.appendChild(chatNameCloseDiv);
 
-    const response = await GetMethodFetch('/api/messagesOfChat/' + chatId);
+    const response = await GetMethodFetch('/api/messagesOfChat');
     console.log(response);
 
     openedChat.appendChild(nav);
