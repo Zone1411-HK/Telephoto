@@ -563,9 +563,12 @@ input {
     position: relative;
 }
 .message {
-    width: 75%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+    max-width: 75%;
     border-radius: 10px;
-    padding: 5px 5px 5px 10px;
     line-break: anywhere;
     margin: 0;
 }
@@ -584,6 +587,7 @@ input {
 .FromCurrentUserSide {
     align-self: flex-end;
     border-bottom-right-radius: 0px;
+    padding: 5px 5px 0px 10px;
 }
 .FromCurrentUserColor {
     background-color: rgb(190, 110, 110);
@@ -592,6 +596,7 @@ input {
 .FromOtherUserSide {
     align-self: start;
     border-bottom-left-radius: 0px;
+    padding: 5px 10px 5px 5px;
 }
 .FromOtherUserColor {
     background-color: rgb(220, 220, 220);
@@ -616,7 +621,7 @@ input {
     overflow-y: scroll;
     scrollbar-width: none;
     padding-top: 5%;
-    padding-bottom: 12vh;
+    padding-bottom: 4vh;
     padding-left: 2%;
     padding-right: 2%;
     background-color: white;
@@ -671,4 +676,13 @@ input {
     height: 5vh;
     display: flex;
     justify-content: center;
+}
+.usernamePopup {
+    z-index: 1000;
+    position: fixed;
+    width: auto;
+    padding: 5px 10px 5px 10px;
+    opacity: 100% !important;
+    background-color: rgb(220, 220, 220);
+    border: rgb(200, 200, 200) 2px solid;
 }

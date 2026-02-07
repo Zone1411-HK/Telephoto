@@ -2,7 +2,6 @@
 const express = require('express'); //?npm install express
 const session = require('express-session'); //?npm install express-session
 const path = require('path');
-
 //!Beállítások
 const app = express();
 const router = express.Router();
@@ -31,15 +30,31 @@ router.get('/', (request, response) => {
 //!API endpoints
 app.use('/', router);
 const endpoints = require('./api/api.js');
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    socket.on('chatId', (msg) => {
+        console.log(msg);
+        io.emit('newMessage', msg);
+    });
+});
 app.use('/api', endpoints);
 
 //!Szerver futtatása
 app.use(express.static(path.join(__dirname, '../frontend'))); //?frontend mappa tartalmának betöltése az oldal működéséhez
 
-app.use(express.static(path.join(__dirname, '../backend/node_modules'))); //! Ezért nem tudom Kardos megöl-e
+app.use('/node', express.static(path.join(__dirname, '../backend/node_modules'))); //! Ezért nem tudom Kardos megöl-e
+
+http.listen(port, ip, () => {
+    console.log(`Szerver elérhetősége: http://${ip}:${port}`);
+});
+/*
 app.listen(port, ip, () => {
     console.log(`Szerver elérhetősége: http://${ip}:${port}`);
 });
+*/
 
 //?Szerver futtatása terminalból: npm run dev
 //?Szerver leállítása (MacBook és Windows): Control + C

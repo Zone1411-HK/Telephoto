@@ -9,7 +9,6 @@ class ChatData {
 }
 
 async function getChats() {
-    sessionStorage.setItem('username', 'mxn');
     const doesChatIdExist = await GetMethodFetch('/api/sendChatId');
     let chatArray = await getChatData();
     if (Array.isArray(chatArray)) {
@@ -68,15 +67,15 @@ async function getChats() {
 async function getChatData() {
     try {
         let chatArray = [];
-        const username = sessionStorage.getItem('username');
+        let username = await GetMethodFetch('/api/sendUsername');
+        username = username.Result;
+        console.log(username);
         const chatsResponse = await GetMethodFetch('/api/chatsOfUser/' + username);
         const result = chatsResponse.Result;
-        console.log(result);
         for (const obj of result) {
             const lastMessageResponse = await GetMethodFetch(
                 '/api/lastMessageOfChat/' + obj.chat_id
             );
-            console.log(lastMessageResponse);
             if (lastMessageResponse.Status == 'Success') {
                 const chat = new ChatData(
                     obj.chat_id,
@@ -101,7 +100,6 @@ async function getChatData() {
 
 async function closeChat() {
     const response = await PostMethodFetch('/api/removeChatId');
-    console.log(response);
 
     const chatWrapper = document.getElementById('openedChatWrapper');
     chatWrapper.classList.add('invisible');
@@ -121,7 +119,6 @@ async function openChat() {
             chatId: chatId
         });
         chatName.innerText = this.dataset.name;
-        console.log(chatIdResponse);
     } else {
         chatId = doesChatIdExist.Result;
         const infos = await GetMethodFetch('/api/storedChatIdInfos');
@@ -137,7 +134,6 @@ async function openChat() {
     const openedChat = document.getElementById('openedChat');
     openedChat.dataset.chatId = chatId;
     openedChat.replaceChildren();
-    openedChat.style.animation = 'openChat 350ms linear 1 forwards';
 
     const nav = document.createElement('div');
     nav.classList.add('openedChatNav');
@@ -163,40 +159,142 @@ async function openChat() {
     nav.appendChild(chatNameDiv);
     nav.appendChild(chatNameCloseDiv);
 
-    const response = await GetMethodFetch('/api/messagesOfChat');
-    console.log(response);
-
     openedChat.appendChild(nav);
-
     const messagesDiv = document.createElement('div');
     messagesDiv.classList.add('messagesDiv');
+    const response = await GetMethodFetch('/api/messagesOfChat');
 
     if (response.Result.length > 0) {
         for (const obj of response.Result) {
-            const messageRow = generateMessage(
-                obj.username == sessionStorage.getItem('username') ? true : false,
-                obj.message,
-                obj.message_date
-            );
+            const messageRow = await generateMessage(obj.username, obj.message, obj.message_date);
             messagesDiv.appendChild(messageRow);
         }
-    } else {
     }
 
     openedChat.appendChild(messagesDiv);
+
     const messageInput = generateMessageInput();
     openedChat.appendChild(messageInput);
-    expandUpwards();
-    console.log();
+    openedChat.style.animation = 'openChat 500ms linear 1 forwards';
+    setTimeout(() => {
+        openedChat.style.animation = '';
+        document.getElementsByClassName('messagesDiv')[0].scrollTop =
+            document.getElementsByClassName('messagesDiv')[0].scrollHeight;
+    }, 501);
 }
 
-function generateMessage(fromCurrentUser, message, date) {
+async function refreshChat() {
+    const doesChatIdExist = await GetMethodFetch('/api/sendChatId');
+    let chatId;
+    const chatName = document.createElement('h3');
+
+    if (doesChatIdExist.exists == false) {
+        chatId = this.dataset.id;
+        const chatIdResponse = await PostMethodFetch('/api/saveChatId', {
+            chatId: chatId
+        });
+        chatName.innerText = this.dataset.name;
+    } else {
+        chatId = doesChatIdExist.Result;
+        const infos = await GetMethodFetch('/api/storedChatIdInfos');
+        chatName.innerText = infos.Result;
+    }
+
+    const chatContainer = document.getElementById('chatContainer');
+    chatContainer.classList.add('invisible');
+
+    const chatWrapper = document.getElementById('openedChatWrapper');
+    chatWrapper.classList.remove('invisible');
+
+    const openedChat = document.getElementById('openedChat');
+    openedChat.dataset.chatId = chatId;
+    openedChat.replaceChildren();
+
+    const nav = document.createElement('div');
+    nav.classList.add('openedChatNav');
+
+    const chatNameDiv = document.createElement('div');
+    chatNameDiv.classList.add('openedChatName');
+
+    chatNameDiv.appendChild(chatName);
+
+    const chatNameCloseDiv = document.createElement('div');
+    chatNameCloseDiv.classList.add('openedChatClose');
+
+    const closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    closeButton.addEventListener('click', closeChat);
+
+    const closeImg = document.createElement('img');
+    closeImg.src = '/images/x(2).svg';
+
+    closeButton.appendChild(closeImg);
+    chatNameCloseDiv.appendChild(closeButton);
+
+    nav.appendChild(chatNameDiv);
+    nav.appendChild(chatNameCloseDiv);
+
+    openedChat.appendChild(nav);
+    const messagesDiv = document.createElement('div');
+    messagesDiv.classList.add('messagesDiv');
+    const response = await GetMethodFetch('/api/messagesOfChat');
+
+    if (response.Result.length > 0) {
+        for (const obj of response.Result) {
+            const messageRow = await generateMessage(obj.username, obj.message, obj.message_date);
+            messagesDiv.appendChild(messageRow);
+        }
+    }
+
+    openedChat.appendChild(messagesDiv);
+
+    const messageInput = generateMessageInput();
+    openedChat.appendChild(messageInput);
+
+    document.getElementsByClassName('messagesDiv')[0].scrollTop =
+        document.getElementsByClassName('messagesDiv')[0].scrollHeight;
+}
+
+function userPopup(event) {
+    const popup = document.getElementsByClassName('usernamePopup');
+    console.log(popup);
+    let username = this.dataset.username;
+    let parent = this.parentNode;
+    if (popup.length == 0) {
+        setTimeout(function () {
+            let x = event.clientX;
+            let y = event.clientY;
+            const popup = document.createElement('p');
+            popup.classList.add('usernamePopup');
+            popup.style.left = x + 'px';
+            popup.style.top = y + 'px';
+            popup.innerText = username;
+            parent.appendChild(popup);
+        }, 400);
+    }
+}
+
+function removeUserpopup() {
+    const popup = document.getElementsByClassName('usernamePopup');
+    if (popup.length != 0) {
+        for (const p of popup) {
+            p.remove();
+        }
+    }
+}
+
+async function generateMessage(userName, message, date) {
     const messageRow = document.createElement('div');
     messageRow.classList.add('messageRow');
 
     const messageContent = document.createElement('p');
     messageContent.classList.add('message');
     messageContent.innerText = message;
+    messageContent.dataset.username = userName;
+
+    //! Eléggé bugosak. Nem tudom mi legyen vele
+    //messageContent.addEventListener('mouseenter', userPopup);
+    //messageContent.addEventListener('mouseleave', removeUserpopup);
 
     const messageDate = document.createElement('p');
     messageDate.classList.add('messageDate');
@@ -205,7 +303,10 @@ function generateMessage(fromCurrentUser, message, date) {
     const messageWrapper = document.createElement('div');
     messageWrapper.classList.add('messageWrapper');
 
-    if (fromCurrentUser) {
+    let username = await GetMethodFetch('/api/sendUsername');
+    username = username.Result;
+
+    if (userName == username) {
         messageDate.classList.add('FromCurrentUserSide');
         messageContent.classList.add('FromCurrentUserColor', 'FromCurrentUserSide');
     } else {
@@ -230,6 +331,7 @@ function generateMessageInput() {
 
     const send = document.createElement('button');
     send.type = 'button';
+    send.addEventListener('click', sendMessage);
 
     const svg = document.createElement('img');
     svg.src = '/images/send(1).svg';
@@ -245,7 +347,6 @@ function generateMessageInput() {
 function growHeightDiv() {
     this.style.height = 0;
     this.style.height = this.scrollHeight + 'px';
-    console.log(this.scrollHeight);
 }
 function expandUpwards() {
     const inp = document.getElementById('newMessageInput');
@@ -257,14 +358,22 @@ async function sendMessage() {
     const newMessageInput = document.getElementById('newMessageInput');
     if (newMessageInput.value != '') {
         const newMessage = newMessageInput.value;
-        const chatId = document.getElementById('openedChat').dataset.chatId;
-        console.log(chatId);
+        const chatId = await GetMethodFetch('/api/sendChatId');
+        socket.emit('chatId', chatId.Result);
+        let username = await GetMethodFetch('/api/sendUsername');
+        username = username.Result;
         const response = await PostMethodFetch('/api/sendMessage', {
             message: newMessage,
-            chatId: chatId
+            chatId: chatId.Result,
+            username: username
         });
+
         if ((response.Status = 'Failed')) {
             //TODO Hiba kezelés
         }
     }
 }
+
+socket.on('newMessage', (msg) => {
+    refreshChat();
+});

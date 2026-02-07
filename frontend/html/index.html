@@ -10,23 +10,25 @@
         <script src="../bootstrap/js/popper.min.js"></script>
         <script src="../bootstrap/js/bootstrap.min.js"></script>
         <!--!CSS-->
-        <link rel="stylesheet" href="/leaflet/dist/leaflet.css" />
-        <link rel="stylesheet" href="/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+        <link rel="stylesheet" href="node/leaflet/dist/leaflet.css" />
+        <link rel="stylesheet" href="node/leaflet.markercluster/dist/MarkerCluster.Default.css" />
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/darkroom.css" />
         <!--!JavaScript-->
         <script src="/javascript/fetch.js"></script>
-        <script src="/leaflet/dist/leaflet.js"></script>
-        <script src="/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-        <script src="/exifreader/dist/exif-reader.js"></script>
+        <script src="node/socket.io/client-dist/socket.io.js"></script>
+        <script src="/javascript/connect.js"></script>
+        <script src="node/leaflet/dist/leaflet.js"></script>
+        <script src="node/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+        <script src="node/exifreader/dist/exif-reader.js"></script>
         <script src="/javascript/registration.js"></script>
-        <script src="/javascript/login.js"></script>
         <script src="/javascript/map.js"></script>
         <script src="/javascript/uploadPost.js"></script>
         <script src="/javascript/darkroom.js"></script>
         <script src="/javascript/profile.js"></script>
         <script src="/javascript/comment.js"></script>
         <script src="/javascript/chat.js"></script>
+        <script src="/javascript/login.js"></script>
         <script src="/javascript/index.js"></script>
 
         <!--Font Style-->
@@ -179,7 +181,7 @@
                     </ul>
                 </div>-->
 
-            <div class="home" id="home">
+            <div class="home invisible" id="home">
                 <div class="chat-and-sort">
                     <div id="rendezesContainer">
                         <div id="rendezesTrending">

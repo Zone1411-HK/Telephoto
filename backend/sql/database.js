@@ -249,13 +249,14 @@ async function findMemberId(chat_id, user_id) {
     WHERE chat_id = ? AND user_id = ?
     `;
     const [rows] = await pool.execute(sql, [chat_id, user_id]);
-    console.log(rows);
     return rows[0].member_id;
 }
 
-async function sendMessage(message, chatId, user_id) {
+async function sendMessage(message, chatId, username) {
     try {
-        const member_id = await findMemberId(chatId, user_id);
+        const user = await getUserByUsername(username);
+        console.log(user);
+        const member_id = await findMemberId(chatId, user);
         const values = [member_id, message];
         const sql = `
         INSERT INTO messages(member_id, message, message_date)

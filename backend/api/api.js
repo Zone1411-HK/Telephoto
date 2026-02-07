@@ -154,7 +154,7 @@ router.post('/createPost', async (request, response) => {
             latitude,
             longitude
         );
-        console.log(fileNames);
+        //console.log(fileNames);
         for (const file of fileNames) {
             await database.createPicture(createPost[0].insertId, file);
         }
@@ -262,7 +262,7 @@ router.get('/profileInfos', async (request, response) => {
             status: 'Success',
             results: data
         });
-        console.log(data);
+        //console.log(data);
     } catch (error) {
         //console.log(error);
     }
@@ -276,7 +276,7 @@ router.get('/commentInfos', async (request, response) => {
         status: 'Success',
         results: data
     });
-    console.log(data);
+    //console.log(data);
 });
 
 //! FELHASZNÁLÓ CHATJEI
@@ -316,7 +316,6 @@ router.get('/messagesOfChat', async (request, response) => {
 router.get('/lastMessageOfChat/:chatId', async (request, response) => {
     try {
         const chatId = request.params.chatId;
-        console.log('asd');
         const sqlData = await database.lastMessageOfChat(chatId);
         response.status(200).json({
             Status: 'Success',
@@ -333,10 +332,10 @@ router.get('/lastMessageOfChat/:chatId', async (request, response) => {
 
 router.post('/sendMessage', async (request, response) => {
     try {
-        const { message, chatId } = request.body;
-        console.log(message, chatId);
-        const sqlData = await database.sendMessage(message, chatId, 1);
-        console.log(sqlData);
+        const { message, chatId, username } = request.body;
+        //console.log(message, chatId);
+        const sqlData = await database.sendMessage(message, chatId, username);
+        //console.log(sqlData);
     } catch (error) {
         console.error(error);
         response.status(500).json({
@@ -348,7 +347,7 @@ router.post('/sendMessage', async (request, response) => {
 router.post('/saveChatId', async (request, response) => {
     try {
         const { chatId } = request.body;
-        console.log(chatId);
+        //console.log(chatId);
         request.session.chatId = chatId;
         response.status(200).json({
             Status: 'Success'
@@ -404,6 +403,67 @@ router.post('/removeChatId', async (request, response) => {
         response.status(500).json({
             Status: 'Failed',
             Message: 'A "/removeChatId" végpont nem működik!'
+        });
+    }
+});
+router.post('/saveUsername', async (request, response) => {
+    try {
+        const { username } = request.body;
+        request.session.username = username;
+        response.status(200).json({
+            Status: 'Success'
+        });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/saveUsername" végpont nem működik!'
+        });
+    }
+});
+router.get('/sendUsername', async (request, response) => {
+    try {
+        const username = request.session.username;
+        if (!username) {
+            response.status(200).json({
+                Status: 'Failed',
+                exists: false
+            });
+        } else {
+            response.status(200).json({
+                Status: 'Success',
+                exists: true,
+                Result: username
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/sendUsername" végpont nem működik!'
+        });
+    }
+});
+
+router.post('/removeUsername', async (request, response) => {
+    try {
+        if (!request.session.username) {
+            response.status(200).json({
+                Status: 'Failed',
+                Result: 'Nincs mentett username'
+            });
+        } else {
+            request.session.username = null;
+            response.status(200).json({
+                Status: 'Success',
+                Result: 'username törölve'
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/removeUsername" végpont nem működik!'
         });
     }
 });

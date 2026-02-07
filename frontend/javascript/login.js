@@ -16,12 +16,13 @@ async function login() {
                 password: password
             });
             if (response.isLoggedIn) {
-                const result = await GetMethodFetch('/api/hashUser/' + username);
-                sessionStorage.setItem('username', result.username);
+                const response = await PostMethodFetch('/api/saveUsername', { username: username });
+                console.log(response);
                 document.getElementById('login').classList.add('invisible');
                 document.getElementById('home').classList.remove('invisible');
                 document.getElementById('navbar').classList.remove('invisible');
                 console.log('success');
+                getChats();
             } else {
                 console.log('fail');
             }
