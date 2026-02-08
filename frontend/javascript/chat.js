@@ -69,7 +69,6 @@ async function getChatData() {
         let chatArray = [];
         let username = await GetMethodFetch('/api/sendUsername');
         username = username.Result;
-        console.log(username);
         const chatsResponse = await GetMethodFetch('/api/chatsOfUser/' + username);
         const result = chatsResponse.Result;
         for (const obj of result) {
@@ -108,17 +107,17 @@ async function closeChat() {
     chatContainer.classList.remove('invisible');
 }
 
-async function openChat() {
+async function generateChat(element) {
     const doesChatIdExist = await GetMethodFetch('/api/sendChatId');
     let chatId;
     const chatName = document.createElement('h3');
 
     if (doesChatIdExist.exists == false) {
-        chatId = this.dataset.id;
+        chatId = element.dataset.id;
         const chatIdResponse = await PostMethodFetch('/api/saveChatId', {
             chatId: chatId
         });
-        chatName.innerText = this.dataset.name;
+        chatName.innerText = element.dataset.name;
     } else {
         chatId = doesChatIdExist.Result;
         const infos = await GetMethodFetch('/api/storedChatIdInfos');
@@ -175,81 +174,21 @@ async function openChat() {
 
     const messageInput = generateMessageInput();
     openedChat.appendChild(messageInput);
+}
+
+async function openChat() {
+    await generateChat(this);
+    const openedChat = document.getElementById('openedChat');
     openedChat.style.animation = 'openChat 500ms linear 1 forwards';
     setTimeout(() => {
         openedChat.style.animation = '';
         document.getElementsByClassName('messagesDiv')[0].scrollTop =
             document.getElementsByClassName('messagesDiv')[0].scrollHeight;
-    }, 501);
+    }, 500);
 }
 
 async function refreshChat() {
-    const doesChatIdExist = await GetMethodFetch('/api/sendChatId');
-    let chatId;
-    const chatName = document.createElement('h3');
-
-    if (doesChatIdExist.exists == false) {
-        chatId = this.dataset.id;
-        const chatIdResponse = await PostMethodFetch('/api/saveChatId', {
-            chatId: chatId
-        });
-        chatName.innerText = this.dataset.name;
-    } else {
-        chatId = doesChatIdExist.Result;
-        const infos = await GetMethodFetch('/api/storedChatIdInfos');
-        chatName.innerText = infos.Result;
-    }
-
-    const chatContainer = document.getElementById('chatContainer');
-    chatContainer.classList.add('invisible');
-
-    const chatWrapper = document.getElementById('openedChatWrapper');
-    chatWrapper.classList.remove('invisible');
-
-    const openedChat = document.getElementById('openedChat');
-    openedChat.dataset.chatId = chatId;
-    openedChat.replaceChildren();
-
-    const nav = document.createElement('div');
-    nav.classList.add('openedChatNav');
-
-    const chatNameDiv = document.createElement('div');
-    chatNameDiv.classList.add('openedChatName');
-
-    chatNameDiv.appendChild(chatName);
-
-    const chatNameCloseDiv = document.createElement('div');
-    chatNameCloseDiv.classList.add('openedChatClose');
-
-    const closeButton = document.createElement('button');
-    closeButton.type = 'button';
-    closeButton.addEventListener('click', closeChat);
-
-    const closeImg = document.createElement('img');
-    closeImg.src = '/images/x(2).svg';
-
-    closeButton.appendChild(closeImg);
-    chatNameCloseDiv.appendChild(closeButton);
-
-    nav.appendChild(chatNameDiv);
-    nav.appendChild(chatNameCloseDiv);
-
-    openedChat.appendChild(nav);
-    const messagesDiv = document.createElement('div');
-    messagesDiv.classList.add('messagesDiv');
-    const response = await GetMethodFetch('/api/messagesOfChat');
-
-    if (response.Result.length > 0) {
-        for (const obj of response.Result) {
-            const messageRow = await generateMessage(obj.username, obj.message, obj.message_date);
-            messagesDiv.appendChild(messageRow);
-        }
-    }
-
-    openedChat.appendChild(messagesDiv);
-
-    const messageInput = generateMessageInput();
-    openedChat.appendChild(messageInput);
+    await generateChat(this);
 
     document.getElementsByClassName('messagesDiv')[0].scrollTop =
         document.getElementsByClassName('messagesDiv')[0].scrollHeight;
@@ -344,10 +283,6 @@ function generateMessageInput() {
     return div;
 }
 
-function growHeightDiv() {
-    this.style.height = 0;
-    this.style.height = this.scrollHeight + 'px';
-}
 function expandUpwards() {
     const inp = document.getElementById('newMessageInput');
     inp.style.height = 'auto';
