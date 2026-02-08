@@ -197,9 +197,8 @@ const postStorage = multer.diskStorage({
 const tempUpload = multer({ storage: tempStorage });
 const postUpload = multer({ storage: postStorage });
 
-router.post('/tempUpload', async (request, response) => {
+router.post('/tempUpload', tempUpload.array('uploadFile'), async (request, response) => {
     try {
-        uploadFiles(tempUpload, 'uploadFile');
         response.status(201).json({
             Message: 'Sikeres feltöltés!'
         });
@@ -210,9 +209,9 @@ router.post('/tempUpload', async (request, response) => {
     }
 });
 
-router.post('/uploadPost', async (request, response) => {
+router.post('/uploadPost', postUpload.array('uploadFile'), async (request, response) => {
     try {
-        uploadFiles(postUpload, 'uploadFile');
+        //uploadFiles(postUpload, 'uploadFile');
         response.status(201).json({
             Message: 'Sikeres feltöltés!'
         });
