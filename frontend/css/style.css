@@ -2,6 +2,16 @@
 /*? ID-K: uploadModal, uploadForm, carouselContainer, carouselContent, carouselControl, uploadFile, uploadFeedbackDiv, uploadFeedback, loadFiles, uploadDescription, uploadLocation, uploadPost, cancelPost |*/
 /*? Classok: tempSlide, tempSerialNumber, tempVideo, tempImage, slideShowController, uploadFeedback */
 
+/*
+rgb(200, 150, 150)
+rgb(250, 200, 200)
+rgb(220, 220, 220)
+rgb(190, 110, 110)
+rgb(170, 90, 90)
+rgb(100, 100, 100)
+rgb(150, 100, 100)
+*/
+
 :root {
     --Tojassarga: rgb(255, 224, 143);
     --invalidRed: rgb(191, 26, 26);
@@ -86,7 +96,6 @@ form {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    height: 80px;
 }
 .loginSorok {
     display: flex;
@@ -417,6 +426,7 @@ input {
     line-break: anywhere;
     margin-top: 0;
 }
+
 .chatName {
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -649,9 +659,12 @@ input {
     padding-top: 0.75vh;
     width: 95%;
     position: relative;
-    border: none;
     margin-bottom: 5px;
     outline: none;
+    border: 1px solid rgb(200, 150, 150);
+}
+
+.newMessageWrapper textarea:focus {
     box-shadow: 0 0 3px 1px rgb(200, 150, 150);
 }
 .newMessageWrapper button {

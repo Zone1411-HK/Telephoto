@@ -300,9 +300,21 @@ router.get('/messagesOfChat', async (request, response) => {
     try {
         const chatId = request.session.chatId;
         const sqlData = await database.messagesOfChat(chatId);
+        let formattedDataArr = [];
+        for (const data of sqlData) {
+            console.log();
+            const formattedDate = convertUnixToReadableDate(
+                Math.floor(data.message_date.getTime())
+            );
+            formattedDataArr.push({
+                username: data.username,
+                message: data.message,
+                message_date: formattedDate
+            });
+        }
         response.status(200).json({
             Status: 'Success',
-            Result: sqlData
+            Result: formattedDataArr
         });
     } catch (error) {
         console.error(error);
@@ -521,6 +533,11 @@ function convertUnixToReadableDate(unix) {
     let minute = date.getUTCMinutes(date);
     let second = date.getUTCSeconds(date);
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+}
+
+function formatDate(date) {
+    const year = date.getUTCFullYear();
+    const month = date.getUTCSeconds;
 }
 function clearFolder(path) {
     fs.readdir(path).then((files) => {

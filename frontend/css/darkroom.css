@@ -37,7 +37,7 @@
 #posts {
     display: flex;
     flex-direction: row;
-    padding-left: 10vw;
+    padding-left: 13vw;
     padding-right: 10vw;
     gap: 250px;
     width: 100%;
