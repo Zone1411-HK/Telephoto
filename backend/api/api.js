@@ -190,7 +190,7 @@ const postStorage = multer.diskStorage({
         callback(null, path.join(__dirname, '../uploads'));
     },
     filename: (request, file, callback) => {
-        callback(null, file.originalname); //?egyedi név: post - file eredeti neve
+        callback(null, Date.now() + '-' + file.originalname); //?egyedi név: dátum - file eredeti neve
     }
 });
 
@@ -213,10 +213,11 @@ router.post('/uploadPost', postUpload.array('uploadFile'), async (request, respo
     try {
         //uploadFiles(postUpload, 'uploadFile');
         response.status(201).json({
-            Message: 'Sikeres feltöltés!'
+            Status: 'Success'
         });
     } catch (error) {
         response.status(500).json({
+            Status: 'Failed',
             error: `Endpoint ERROR: uploadPost: ${error}`
         });
     }

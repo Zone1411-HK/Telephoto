@@ -47,7 +47,8 @@ async function getUserByUsername(username) {
 async function createPost(username, description, tags, location, latitude, longitude) {
     try {
         let userId = await getUserByUsername(username);
-        const sql = `INSERT INTO posts(user_id, description, tags, upvote, downvote, location, latitude, longitude, creation_date) VALUES(${userId},"${description}","${tags}",0,0,"${location}",${latitude}, ${longitude}, NOW())`;
+        console.log(userId);
+        const sql = `INSERT INTO posts(user_id, description, tags, location, latitude, longitude, creation_date) VALUES(${userId},"${description}","${tags}","${location}",${latitude}, ${longitude}, NOW())`;
         const [rows, fields] = await pool.execute(sql);
         return [rows, fields];
     } catch (error) {
