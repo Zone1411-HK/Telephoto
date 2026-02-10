@@ -101,10 +101,27 @@ async function getPostDataByPostId(postId) {
     }
 }
 
+
+//post sorbarendezés lekérdezásek
+async function topPosts() {
+    try {
+        const topPostsSql = `SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link, pictures.picture_link FROM posts INNER JOIN users ON users.user_id = posts.user_id INNER JOIN interactions ON interactions.post_id = posts.post_id LEFT JOIN pictures ON pictures.post_id = posts.post_id ORDER BY interactions.upvote_downvote`;
+        const [rows] = await pool.execute(topPostsSql);
+        return rows;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+///////
+
 //profil felület lekérd, comment lekérd, isadmin lekérd,
 
-async function loadProfile(userId) {
+async function loadProfile(username) {
     try {
+        let userId = await getUserByUsername(username);
+
         const profileSql = `SELECT users.username, users.profile_picture_link, users.biography, users.registration_date FROM users WHERE users.user_id = ${userId}`;
         const [rows] = await pool.execute(profileSql);
         return rows;
@@ -277,6 +294,7 @@ module.exports = {
     createPost,
     getPostDataByPostId,
     createPicture,
+    topPosts,
     loadProfile,
     loadComments,
     isAdmin,
