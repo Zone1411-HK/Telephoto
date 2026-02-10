@@ -10,23 +10,27 @@
         <script src="../bootstrap/js/popper.min.js"></script>
         <script src="../bootstrap/js/bootstrap.min.js"></script>
         <!--!CSS-->
-        <link rel="stylesheet" href="/leaflet/dist/leaflet.css" />
-        <link rel="stylesheet" href="/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+        <link rel="stylesheet" href="node/leaflet/dist/leaflet.css" />
+        <link rel="stylesheet" href="node/leaflet.markercluster/dist/MarkerCluster.Default.css" />
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/darkroom.css" />
         <!--!JavaScript-->
         <script src="/javascript/fetch.js"></script>
-        <script src="/leaflet/dist/leaflet.js"></script>
-        <script src="/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-        <script src="/exifreader/dist/exif-reader.js"></script>
+        <script src="node/socket.io/client-dist/socket.io.js"></script>
+        <script src="/javascript/connect.js"></script>
+        <script src="node/leaflet/dist/leaflet.js"></script>
+        <script src="node/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+        <script src="node/exifreader/dist/exif-reader.js"></script>
         <script src="/javascript/registration.js"></script>
-        <script src="/javascript/login.js"></script>
-        <script src="/javascript/index.js"></script>
         <script src="/javascript/map.js"></script>
         <script src="/javascript/uploadPost.js"></script>
         <script src="/javascript/darkroom.js"></script>
         <script src="/javascript/profile.js"></script>
         <script src="/javascript/comment.js"></script>
+        <script src="/javascript/chat.js"></script>
+        <script src="/javascript/login.js"></script>
+        <script src="/javascript/index.js"></script>
+
         <!--Font Style-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -37,6 +41,9 @@
     </head>
     <body>
         <div class="container-fluid p-0">
+            <div class="brandBar">
+                <h1>Telephoto</h1>
+            </div>
             <!--? Ha dolgoztok rajta nyugodtan kivehetitek az invisible-t csak zavaró volt, hogy minden látszott-->
             <div class="loginMain invisible" id="login">
                 <div class="row login">
@@ -174,7 +181,7 @@
                     </ul>
                 </div>-->
 
-            <div class="home" id="home">
+            <div class="home invisible" id="home">
                 <div class="chat-and-sort">
                     <div id="rendezesContainer">
                         <div id="rendezesTrending">
@@ -195,14 +202,14 @@
                         <div id="newChatDiv">
                             <button id="newChat" type="button">
                                 <img
-                                    src="/images/circlePlus.png"
-                                    srcset="/images/circlePlus.svg"
+                                    src="/images/plus-circle(2).svg"
                                     alt="Új chat"
                                     id="newChatImg"
                                 />
                             </button>
                         </div>
                         <div id="existingChats">
+                            <!-- TEMPLATE TESZTELÉSHEZ
                             <div class="chat">
                                 <div class="chatImgDiv">
                                     <div class="chatImgBorder">
@@ -299,7 +306,10 @@
                                     </p>
                                 </div>
                             </div>
-                        </div>
+                        --></div>
+                    </div>
+                    <div id="openedChatWrapper" class="invisible">
+                        <div id="openedChat"></div>
                     </div>
                 </div>
                 <div class="posts-container" id="posts-container">

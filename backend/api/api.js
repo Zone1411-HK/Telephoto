@@ -154,7 +154,7 @@ router.post('/createPost', async (request, response) => {
             latitude,
             longitude
         );
-        console.log(fileNames);
+        //console.log(fileNames);
         for (const file of fileNames) {
             await database.createPicture(createPost[0].insertId, file);
         }
@@ -197,9 +197,8 @@ const postStorage = multer.diskStorage({
 const tempUpload = multer({ storage: tempStorage });
 const postUpload = multer({ storage: postStorage });
 
-router.post('/tempUpload', async (request, response) => {
+router.post('/tempUpload', tempUpload.array('uploadFile'), async (request, response) => {
     try {
-        uploadFiles(tempUpload, 'uploadFile');
         response.status(201).json({
             Message: 'Sikeres feltöltés!'
         });
@@ -210,9 +209,9 @@ router.post('/tempUpload', async (request, response) => {
     }
 });
 
-router.post('/uploadPost', async (request, response) => {
+router.post('/uploadPost', postUpload.array('uploadFile'), async (request, response) => {
     try {
-        uploadFiles(postUpload, 'uploadFile');
+        //uploadFiles(postUpload, 'uploadFile');
         response.status(201).json({
             Message: 'Sikeres feltöltés!'
         });
@@ -262,7 +261,7 @@ router.get('/profileInfos', async (request, response) => {
             status: 'Success',
             results: data
         });
-        console.log(data);
+        //console.log(data);
     } catch (error) {
         //console.log(error);
     }
@@ -276,9 +275,232 @@ router.get('/commentInfos', async (request, response) => {
         status: 'Success',
         results: data
     });
-    console.log(data);
+    //console.log(data);
 });
 
+//! FELHASZNÁLÓ CHATJEI
+router.get('/chatsOfUser/:username', async (request, response) => {
+    try {
+        const username = request.params.username;
+        const sqlData = await database.chatsOfUser(username);
+        response.status(200).json({
+            Status: 'Success',
+            Result: sqlData
+        });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/chatsOfUser" végpont nem működik!'
+        });
+    }
+});
+
+router.get('/messagesOfChat', async (request, response) => {
+    try {
+        const chatId = request.session.chatId;
+        const sqlData = await database.messagesOfChat(chatId);
+        let formattedDataArr = [];
+        for (const data of sqlData) {
+            console.log();
+            const formattedDate = convertUnixToReadableDate(
+                Math.floor(data.message_date.getTime())
+            );
+            formattedDataArr.push({
+                username: data.username,
+                message: data.message,
+                message_date: formattedDate
+            });
+        }
+        response.status(200).json({
+            Status: 'Success',
+            Result: formattedDataArr
+        });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/messagesOfChat" végpont nem működik!'
+        });
+    }
+});
+router.get('/lastMessageOfChat/:chatId', async (request, response) => {
+    try {
+        const chatId = request.params.chatId;
+        const sqlData = await database.lastMessageOfChat(chatId);
+        response.status(200).json({
+            Status: 'Success',
+            Result: sqlData[0]
+        });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/lastMessageOfChat" végpont nem működik!'
+        });
+    }
+});
+
+router.post('/sendMessage', async (request, response) => {
+    try {
+        const { message, chatId, username } = request.body;
+        //console.log(message, chatId);
+        const sqlData = await database.sendMessage(message, chatId, username);
+        //console.log(sqlData);
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/sendMessage" végpont nem működik!'
+        });
+    }
+});
+router.post('/saveChatId', async (request, response) => {
+    try {
+        const { chatId } = request.body;
+        //console.log(chatId);
+        request.session.chatId = chatId;
+        response.status(200).json({
+            Status: 'Success'
+        });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/saveChatId" végpont nem működik!'
+        });
+    }
+});
+router.get('/sendChatId', async (request, response) => {
+    try {
+        const chatId = request.session.chatId;
+        if (!chatId) {
+            response.status(200).json({
+                Status: 'Failed',
+                exists: false
+            });
+        } else {
+            response.status(200).json({
+                Status: 'Success',
+                exists: true,
+                Result: chatId
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/sendChatId" végpont nem működik!'
+        });
+    }
+});
+
+router.post('/removeChatId', async (request, response) => {
+    try {
+        if (!request.session.chatId) {
+            response.status(200).json({
+                Status: 'Failed',
+                Result: 'Nincs mentett chatId'
+            });
+        } else {
+            request.session.chatId = null;
+            response.status(200).json({
+                Status: 'Success',
+                Result: 'chatId törölve'
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/removeChatId" végpont nem működik!'
+        });
+    }
+});
+router.post('/saveUsername', async (request, response) => {
+    try {
+        const { username } = request.body;
+        request.session.username = username;
+        response.status(200).json({
+            Status: 'Success'
+        });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/saveUsername" végpont nem működik!'
+        });
+    }
+});
+router.get('/sendUsername', async (request, response) => {
+    try {
+        const username = request.session.username;
+        if (!username) {
+            response.status(200).json({
+                Status: 'Failed',
+                exists: false
+            });
+        } else {
+            response.status(200).json({
+                Status: 'Success',
+                exists: true,
+                Result: username
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/sendUsername" végpont nem működik!'
+        });
+    }
+});
+
+router.post('/removeUsername', async (request, response) => {
+    try {
+        if (!request.session.username) {
+            response.status(200).json({
+                Status: 'Failed',
+                Result: 'Nincs mentett username'
+            });
+        } else {
+            request.session.username = null;
+            response.status(200).json({
+                Status: 'Success',
+                Result: 'username törölve'
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/removeUsername" végpont nem működik!'
+        });
+    }
+});
+
+router.get('/storedChatIdInfos', async (request, response) => {
+    try {
+        if (!request.session.chatId) {
+            response.status(200).json({
+                Status: 'Failed',
+                Result: 'Nincs mentett chatId'
+            });
+        } else {
+            const chatInfos = await database.chatInfoByChatId(request.session.chatId);
+            response.status(200).json({
+                Status: 'Success',
+                Result: chatInfos.chat_name
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/removeChatId" végpont nem működik!'
+        });
+    }
+});
 //! FÜGGVÉNYEK
 //? Hash-eljük a megadott stringet, és visszaadunk egy salt, és egy hash változót.
 function HashString(string) {
@@ -311,6 +533,11 @@ function convertUnixToReadableDate(unix) {
     let minute = date.getUTCMinutes(date);
     let second = date.getUTCSeconds(date);
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+}
+
+function formatDate(date) {
+    const year = date.getUTCFullYear();
+    const month = date.getUTCSeconds;
 }
 function clearFolder(path) {
     fs.readdir(path).then((files) => {

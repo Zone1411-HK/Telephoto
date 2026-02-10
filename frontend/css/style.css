@@ -2,6 +2,16 @@
 /*? ID-K: uploadModal, uploadForm, carouselContainer, carouselContent, carouselControl, uploadFile, uploadFeedbackDiv, uploadFeedback, loadFiles, uploadDescription, uploadLocation, uploadPost, cancelPost |*/
 /*? Classok: tempSlide, tempSerialNumber, tempVideo, tempImage, slideShowController, uploadFeedback */
 
+/*
+rgb(200, 150, 150)
+rgb(250, 200, 200)
+rgb(220, 220, 220)
+rgb(190, 110, 110)
+rgb(170, 90, 90)
+rgb(100, 100, 100)
+rgb(150, 100, 100)
+*/
+
 :root {
     --Tojassarga: rgb(255, 224, 143);
     --invalidRed: rgb(191, 26, 26);
@@ -86,7 +96,6 @@ form {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    height: 80px;
 }
 .loginSorok {
     display: flex;
@@ -134,12 +143,6 @@ input[type='button'] {
 }
 */
 
-/* You won't believe what it does */
-/* https://open.spotify.com/track/51EpFns3CG9taCMQz6XDom?si=8b358a3ae3994cb1 */
-.invisible {
-    display: none;
-}
-
 @keyframes invalidShake {
     0% {
         left: 0px;
@@ -158,6 +161,48 @@ input[type='button'] {
         left: 0px;
         right: 0px;
         border: 2px solid var(--invalidRed);
+    }
+}
+
+@keyframes openChat {
+    0% {
+        width: 0%;
+        height: 23.5vh;
+        left: 50%;
+        right: 50%;
+        top: 0;
+    }
+    20% {
+        width: 25%;
+        left: 25%;
+        right: 25%;
+        top: 0;
+    }
+    40% {
+        width: 50%;
+        left: 12.5%;
+        right: 12.5%;
+        top: 0;
+    }
+    60% {
+        width: 75%;
+        left: 6.125%;
+        right: 6.125%;
+        top: 0;
+    }
+    80% {
+        width: 100%;
+        left: 0%;
+        right: 0%;
+        top: 0;
+    }
+    100% {
+        width: 100%;
+        height: 100%;
+        left: 0%;
+        right: 0%;
+        top: 0%;
+        bottom: 0%;
     }
 }
 
@@ -214,10 +259,6 @@ input {
     row-gap: 5px;
     overflow-y: scroll;
     height: 25rem;
-}
-
-.home {
-    margin-top: 5vh;
 }
 
 #regButton {
@@ -287,7 +328,7 @@ input {
     justify-content: space-evenly;
 }
 #chatContainer {
-    background-color: red;
+    background-color: white;
     height: 57vh;
     overflow-y: scroll;
     scrollbar-width: none;
@@ -296,6 +337,7 @@ input {
     align-items: center;
     gap: 10px;
     padding-top: 5px;
+    z-index: 1;
 }
 /*? Scrollbar formázás 
 /*! FIREFOXBAN NEM MŰKÖDIK
@@ -350,39 +392,52 @@ input {
     align-items: center;
     height: 80%;
     margin-bottom: 100%;
-    gap: 10px;
+    gap: 20px;
+    width: 95%;
 }
 .chat {
     background-color: white;
     display: flex;
     flex-direction: row;
-    height: 15vh;
-    width: 95%;
-    border: 3px solid black;
+    height: 7.5vh;
+    width: 100%;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.35);
     gap: 10px;
     padding-left: 10px;
     padding-right: 10px;
     border-radius: 30px;
 }
 .chat:hover {
-    background-color: lightgray;
+    background-color: #eeeeee;
     cursor: pointer;
 }
 .lastText {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    font-size: 0.85rem;
-    color: #333333;
+    width: 95%;
+    padding-right: 5px;
+    font-size: 12px;
+    color: #888888;
     font-weight: normal;
     margin-bottom: 0px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 14px;
+    overflow: hidden;
+    line-break: anywhere;
+    margin-top: 0;
 }
+
 .chatName {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    line-break: anywhere;
     font-size: 1.2rem;
-    margin-bottom: 0px;
-    border-bottom: 2px solid #333333;
+    border-bottom: 2px solid rgb(150, 100, 100);
+    margin-bottom: 5px;
+    width: 95%;
+    color: #553333;
 }
 .chatImgDiv {
     display: flex;
@@ -393,9 +448,9 @@ input {
     width: 20%;
 }
 .chatImgBorder {
-    height: 80%;
+    height: 85%;
     width: 100%;
-    background-color: black;
+    background-color: rgb(150, 100, 100);
     clip-path: circle();
     display: flex;
     justify-content: center;
@@ -403,33 +458,311 @@ input {
 }
 .chatImg {
     clip-path: circle();
-    height: 95%;
-    width: 100%;
+    height: 100px;
+    max-height: 92%;
+    width: 100px;
+    max-width: 92%;
+    object-fit: cover;
 }
 .chatTexts {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    padding-top: 2%;
     width: 80%;
     height: 100%;
-    margin-bottom: 10px;
+    padding-bottom: 1%;
 }
 #newChatDiv {
     width: 95%;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 15vh;
-    max-height: 15vh;
+    height: 8.5vh;
+    margin-bottom: 10px;
 }
 #newChat {
-    height: 15vh;
+    height: 8.5vh;
     width: 100%;
     border-radius: 30px;
-    border: 3px solid black;
-    object-fit: contain;
+    background-color: rgb(190, 110, 110);
+    border: none;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.35);
+    padding: 0;
 }
-#newChatImg {
-    height: 50%;
+
+#newChat:hover {
+    background-color: rgb(170, 90, 90);
+}
+
+#newChat img {
+    height: 90%;
+    aspect-ratio: 1/1;
+}
+
+#openedChat {
+    background-color: #eeeeee;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+#openedChatWrapper {
+    height: 57vh;
+}
+/* You won't believe what it does */
+/* https://open.spotify.com/track/51EpFns3CG9taCMQz6XDom?si=8b358a3ae3994cb1 */
+.invisible {
+    display: none !important;
+    height: 0 !important;
+    width: 0 !important;
+}
+
+.openedChatClose {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: end;
+    padding-right: 2%;
+    padding-top: 2px;
+    align-items: center;
+}
+.openedChatClose button {
+    aspect-ratio: 1/1;
+    height: 90%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+}
+.openedChatClose button:hover {
+    background-color: rgb(250, 200, 200);
+    border-radius: 50px;
+}
+.openedChatClose button img {
+    aspect-ratio: 1/1;
+    height: 100%;
+}
+.openedChatName {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 80%;
+    padding-left: 5%;
+    padding-right: 3%;
+    padding-top: 2px;
+}
+.openedChatName h3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    line-break: anywhere;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    color: #330707;
+}
+.messageRow {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+}
+.message {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+    max-width: 75%;
+    border-radius: 10px;
+    line-break: anywhere;
+    margin: 0;
+}
+.messageWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.messageDate {
+    color: rgb(100, 100, 100);
+    margin: 0;
+    padding: 0;
+    font-size: 0.75rem;
+}
+
+.FromCurrentUserSide {
+    align-self: flex-end;
+    border-bottom-right-radius: 0px;
+    padding: 5px 5px 0px 10px;
+}
+.FromCurrentUserColor {
+    background-color: rgb(190, 110, 110);
+    border: 2px solid rgb(170, 90, 90);
+}
+.FromOtherUserSide {
+    align-self: start;
+    border-bottom-left-radius: 0px;
+    padding: 5px 10px 5px 5px;
+}
+.FromOtherUserColor {
+    background-color: rgb(220, 220, 220);
+    border: 2px solid rgb(200, 200, 200);
+}
+
+.openedChatNav {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 5vh;
+    background-color: rgb(190, 110, 110);
+    box-shadow: -2px 0 3px 1px rgb(200, 150, 150);
+    z-index: 1;
+}
+.messagesDiv {
+    height: 47vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    padding-top: 5%;
+    padding-bottom: 4vh;
+    padding-left: 2%;
+    padding-right: 2%;
+    background-color: white;
+}
+
+.newMessageWrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding-top: 5px;
+    background-color: white;
+}
+
+.newMessageWrapper textarea {
+    min-height: 40px;
     max-height: 15vh;
+    font-size: 18px;
+    line-height: 22px;
+    resize: none;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    border-radius: 10px;
+    padding-left: 3%;
+    padding-right: 15%;
+    padding-top: 0.75vh;
+    width: 95%;
+    position: relative;
+    margin-bottom: 5px;
+    outline: none;
+    border: 1px solid rgb(200, 150, 150);
+}
+
+.newMessageWrapper textarea:focus {
+    box-shadow: 0 0 3px 1px rgb(200, 150, 150);
+}
+.newMessageWrapper button {
+    background-color: transparent;
+    border: none;
+    aspect-ratio: 1/1;
+    width: 34px;
+    height: 34px;
+    border-radius: 500px;
+    position: absolute;
+    right: 5%;
+    bottom: 7px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.newMessageWrapper button:hover {
+    background-color: rgb(250, 200, 200);
+}
+.brandBar {
+    height: 5vh;
+    display: flex;
+    justify-content: center;
+}
+.usernamePopup {
+    z-index: 1000;
+    position: fixed;
+    width: auto;
+    padding: 5px 10px 5px 10px;
+    opacity: 100% !important;
+    background-color: rgb(220, 220, 220);
+    border: rgb(200, 200, 200) 2px solid;
+}
+.modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 5%;
+    background-color: var(--PostModalTopColor);
+
+    font-size: 2.5rem;
+    font-weight: 750;
+    color: var(--PostModalBottomColor);
+}
+
+.modal-body {
+    background-color: var(--PostModalBottomColor);
+    color: whitesmoke;
+}
+
+.modal-dialog {
+    height: 78%; /* = 90% of the .modal-backdrop block = %90 of the screen */
+}
+
+.modal-content {
+    height: 88%; /* = 100% of the .modal-dialog block */
+}
+
+.postButtonDesign {
+    background-color: whitesmoke;
+    border-radius: 5%;
+}
+
+#carouselContainer {
+    width: 100%;
+    height: 240px;
+    min-height: 240px;
+}
+
+#carouselContent {
+    width: 100%;
+    height: 100%;
+}
+
+.tempSerialNumber {
+    position: absolute;
+}
+
+.tempSlide {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.circle {
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+}
+.modal-body {
+    background-image: url('/images/leather.png');
+    background-color: black;
+    background-position: fixed;
+    background-size: 300px 300px;
+}
+
+.postButtonTextDesign {
+    font-size: 1.3rem;
+    font-weight: 750;
+    color: var(--PostModalBottomColor);
 }

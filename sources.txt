@@ -1,2 +1,3 @@
 https://www.svgrepo.com/svg/423404/plus
 https://stackoverflow.com/questions/3922739/limit-text-length-to-n-lines-using-css
+https://sidorares.github.io/node-mysql2/docs

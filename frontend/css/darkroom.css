@@ -1,14 +1,13 @@
 .home {
     display: flex;
     flex-direction: row;
-    margin-top: 5vh;
     background-color: red;
     height: 90vh;
 }
 .chat-and-sort {
     width: 20vw;
     min-width: 20vw;
-    background-color: gray;
+    background-color: white;
     height: 100%;
 }
 .posts-container {
@@ -38,19 +37,18 @@
 #posts {
     display: flex;
     flex-direction: row;
-    padding-left: 10vw;
+    padding-left: 13vw;
     padding-right: 10vw;
     gap: 250px;
     width: 100%;
     height: 95%;
     scrollbar-width: none;
     scroll-behavior: smooth;
-        scrollbar-width: none;
+    scrollbar-width: none;
     scroll-behavior: smooth;
     overflow-x: scroll;
     margin-top: 15px;
 }
-
 
 .rope {
     background-color: navajowhite;
@@ -60,12 +58,11 @@
     z-index: 2;
     margin: 0;
     width: 100%;
-        min-height: 5px;
-        position: relative;
-
+    min-height: 5px;
+    position: relative;
 }
 .ropeTexture {
-  position: relative;
+    position: relative;
     background-image: url('/images/preview.jpg');
     background-position: fixed;
     background-size: 15px 15px;
@@ -100,13 +97,12 @@
     box-shadow: 0px 0px 15px 15px #350000;
     margin-top: 35px;
 }
-.postContent{
-  height: 100%;
-  width: 100%;
-  z-index: 100;
-  background-color: white;
-      padding: 25px;
-
+.postContent {
+    height: 100%;
+    width: 100%;
+    z-index: 100;
+    background-color: white;
+    padding: 25px;
 }
 .imgDiv {
     display: flex;

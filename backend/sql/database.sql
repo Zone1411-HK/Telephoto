@@ -1,5 +1,3 @@
---TODO regisztrációnál automatikusan adjuk meg a dátumot
-
 -- Adatbázis létrehozása kezdete
 
 CREATE DATABASE telephoto
@@ -51,8 +49,32 @@ CREATE TABLE interactions(
     upvote_downvote INT,
     favorite BOOLEAN,
     comment_content VARCHAR(500),
+    type VARCHAR(20),
     FOREIGN KEY(user_id) REFERENCES users(user_id),
     FOREIGN KEY(post_id) REFERENCES posts(post_id)
+);
+//
+CREATE TABLE chats(
+    chat_id INT PRIMARY KEY AUTO_INCREMENT,
+    chat_name VARCHAR(50),
+    chat_picture_link VARCHAR(200)
+);
+//
+CREATE TABLE chat_members(
+    member_id INT PRIMARY KEY AUTO_INCREMENT,
+    chat_id INT,
+    user_id INT,
+    FOREIGN KEY(chat_id) REFERENCES chats(chat_id),
+    FOREIGN KEY(user_id) REFERENCES users(user_id)
+
+
+);
+//
+CREATE TABLE messages(
+    member_id INT,
+    message VARCHAR(200),
+    message_date DATETIME,
+    FOREIGN KEY(member_id) REFERENCES chat_members(member_id)
 );
 
 //
