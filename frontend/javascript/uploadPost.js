@@ -17,11 +17,23 @@ async function preLoadFiles() {
 
     uploadFeedback.innerText = '';
     if (rightFileFormats(files) && files.length > 0) {
-        let response = await uploadFiles('/api/tempUpload', files);
+        let renamedFiles = [];
+        for (let file of files) {
+            let renamedFile = new File(
+                [file],
+                file.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
+                {
+                    type: file.type
+                }
+            );
+            renamedFiles.push(renamedFile);
+        }
+        console.log(renamedFiles);
+        let response = await uploadFiles('/api/tempUpload', renamedFiles);
         document.getElementById('uploadFeedback').innerText = response.Message;
         uploadFeedback.style.color = 'var(--successGreen)';
 
-        generateCarousel(files);
+        generateCarousel(renamedFiles);
     } else {
         uploadFeedback.innerText = 'Nem megfelelő egy vagy több fájl formátuma!';
         uploadFeedback.style.color = 'var(--invalidRed)';
@@ -169,9 +181,13 @@ async function uploadPost() {
     if (files.length > 0 && rightFileFormats(files)) {
         let renamedFiles = [];
         for (let file of files) {
-            let renamedFile = new File([file], `${Date.now()}-${file.name}`, {
-                type: file.type
-            });
+            let renamedFile = new File(
+                [file],
+                file.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
+                {
+                    type: file.type
+                }
+            );
             renamedFiles.push(renamedFile);
         }
         let fileNames = [];
@@ -179,16 +195,13 @@ async function uploadPost() {
             fileNames.push(file.name);
         }
         console.log(renamedFiles);
-        //! Élesben ezt a kódot kell használni! let username = sessionStorage.getItem('username');
-
-        //! Csak teszthez
-        let username = 'asd';
 
         let description = document.getElementById('uploadDescription').value;
         let location = document.getElementById('uploadLocation').value;
-        await uploadFiles('/api/uploadPost', renamedFiles);
-        await PostMethodFetch('/api/createPost', {
-            username: username,
+        const usernameResponse = await GetMethodFetch('/api/sendUsername');
+        console.log(usernameResponse);
+        const createPostResponse = await PostMethodFetch('/api/createPost', {
+            username: usernameResponse.Result,
             fileNames: fileNames,
             description: description,
             tags: '',
@@ -196,6 +209,10 @@ async function uploadPost() {
             latitude: gps.Latitude,
             longitude: gps.Longitude
         });
+
+        if (createPostResponse.Success) {
+            await uploadFiles('/api/uploadPost', renamedFiles);
+        }
         const carouselContent = document.getElementById('carouselContent');
         carouselContent.replaceChildren();
         document.getElementById('uploadFile').value = null;
