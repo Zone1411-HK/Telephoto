@@ -163,9 +163,16 @@ async function generateChat(element) {
     messagesDiv.classList.add('messagesDiv');
     const response = await GetMethodFetch('/api/messagesOfChat');
 
+    const currentUsername = await GetMethodFetch('/api/sendUsername');
+
     if (response.Result.length > 0) {
         for (const obj of response.Result) {
-            const messageRow = await generateMessage(obj.username, obj.message, obj.message_date);
+            const messageRow = await generateMessage(
+                obj.username,
+                currentUsername.Result,
+                obj.message,
+                obj.message_date
+            );
             messagesDiv.appendChild(messageRow);
         }
     }
@@ -222,14 +229,14 @@ function removeUserpopup() {
     }
 }
 
-async function generateMessage(userName, message, date) {
+async function generateMessage(username, currentUsername, message, date) {
     const messageRow = document.createElement('div');
     messageRow.classList.add('messageRow');
 
     const messageContent = document.createElement('p');
     messageContent.classList.add('message');
     messageContent.innerText = message;
-    messageContent.dataset.username = userName;
+    messageContent.dataset.username = username;
 
     //! Eléggé bugosak. Nem tudom mi legyen vele
     //messageContent.addEventListener('mouseenter', userPopup);
@@ -242,10 +249,7 @@ async function generateMessage(userName, message, date) {
     const messageWrapper = document.createElement('div');
     messageWrapper.classList.add('messageWrapper');
 
-    let username = await GetMethodFetch('/api/sendUsername');
-    username = username.Result;
-
-    if (userName == username) {
+    if (username == currentUsername) {
         messageDate.classList.add('FromCurrentUserSide');
         messageContent.classList.add('FromCurrentUserColor', 'FromCurrentUserSide');
     } else {
@@ -294,9 +298,10 @@ async function sendMessage() {
     if (newMessageInput.value != '') {
         const newMessage = newMessageInput.value;
         const chatId = await GetMethodFetch('/api/sendChatId');
-        socket.emit('chatId', chatId.Result);
+        const id = chatId.Result;
         let username = await GetMethodFetch('/api/sendUsername');
         username = username.Result;
+        socket.emit('chatId', id);
         const response = await PostMethodFetch('/api/sendMessage', {
             message: newMessage,
             chatId: chatId.Result,
@@ -305,6 +310,7 @@ async function sendMessage() {
 
         if ((response.Status = 'Failed')) {
             //TODO Hiba kezelés
+        } else {
         }
     }
 }

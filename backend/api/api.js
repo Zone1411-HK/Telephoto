@@ -346,6 +346,9 @@ router.post('/sendMessage', async (request, response) => {
         const { message, chatId, username } = request.body;
         //console.log(message, chatId);
         const sqlData = await database.sendMessage(message, chatId, username);
+        response.status(200).json({
+            Status: 'Success'
+        });
         //console.log(sqlData);
     } catch (error) {
         console.error(error);
