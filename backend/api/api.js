@@ -200,7 +200,8 @@ const postUpload = multer({ storage: postStorage });
 router.post('/tempUpload', tempUpload.array('uploadFile'), async (request, response) => {
     try {
         response.status(201).json({
-            Message: 'Sikeres feltöltés!'
+            Message: 'Sikeres feltöltés!',
+            filenames: request.files
         });
     } catch (error) {
         response.status(500).json({
@@ -213,7 +214,8 @@ router.post('/uploadPost', postUpload.array('uploadFile'), async (request, respo
     try {
         //uploadFiles(postUpload, 'uploadFile');
         response.status(201).json({
-            Status: 'Success'
+            Status: 'Success',
+            filenames: request.files
         });
     } catch (error) {
         response.status(500).json({
@@ -253,25 +255,28 @@ router.get('/postInfos/:postId', async (request, response) => {
 });
 
 router.get('/topPosts', async (request, response) => {
-    const data = await database.topPosts();
-    console.log("hiba " + data);
-    response.status(200).json({
-        status: 'Success',
-        results: data
-    });    
-});
-
-
-//! PROFIL ADATOK (nincs kész)
-router.get('/profileInfos', async (request, response) => {
-    try {        
-        const data = await database.loadProfile(request.session.username);
-       
+    try {
+        const data = await database.topPosts();
+        //console.log('hiba ' + data);
         response.status(200).json({
             status: 'Success',
             results: data
         });
-        console.log(data);
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+//! PROFIL ADATOK (nincs kész)
+router.get('/profileInfos', async (request, response) => {
+    try {
+        const data = await database.loadProfile(request.session.username);
+
+        response.status(200).json({
+            status: 'Success',
+            results: data
+        });
+        //console.log(data);
     } catch (error) {
         console.log(error);
     }
@@ -279,14 +284,14 @@ router.get('/profileInfos', async (request, response) => {
 
 //! KOMMENT ADATOK
 router.post('/commentInfos', async (request, response) => {
-    const {post_id} = request.body;
+    const { post_id } = request.body;
     const data = await database.loadComments(post_id);
-    
+
     response.status(200).json({
         status: 'Success',
         results: data
     });
-    console.log(data);
+    //console.log(data);
 });
 
 //! FELHASZNÁLÓ CHATJEI

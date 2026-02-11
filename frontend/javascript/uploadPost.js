@@ -190,19 +190,23 @@ async function uploadPost() {
             );
             renamedFiles.push(renamedFile);
         }
-        let fileNames = [];
-        for (const file of renamedFiles) {
-            fileNames.push(file.name);
-        }
+
         console.log(renamedFiles);
 
         let description = document.getElementById('uploadDescription').value;
         let location = document.getElementById('uploadLocation').value;
         const usernameResponse = await GetMethodFetch('/api/sendUsername');
         console.log(usernameResponse);
+        const uploadResponse = await uploadFiles('/api/uploadPost', renamedFiles);
+        console.log(uploadResponse);
+        let uploadedFiles = [];
+        for (const object of uploadResponse.filenames) {
+            uploadedFiles.push(object.filename);
+        }
+
         const createPostResponse = await PostMethodFetch('/api/createPost', {
             username: usernameResponse.Result,
-            fileNames: fileNames,
+            fileNames: uploadedFiles,
             description: description,
             tags: '',
             location: location,
@@ -211,7 +215,6 @@ async function uploadPost() {
         });
 
         if (createPostResponse.Success) {
-            await uploadFiles('/api/uploadPost', renamedFiles);
         }
         const carouselContent = document.getElementById('carouselContent');
         carouselContent.replaceChildren();
