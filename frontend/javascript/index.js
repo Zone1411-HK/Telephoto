@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('near').addEventListener('click', () => {});
  */
     //socket.emit('test');
-    //isLoggedIn();
+    isLoggedIn();
 });
 
 //! Ha tudtok pls adjatok neki jobb nevet 🙏
@@ -37,7 +37,6 @@ async function isLoggedIn() {
         const response = await GetMethodFetch('/api/sendUsername');
         if (response.exists) {
             document.getElementById('home').classList.remove('invisible');
-            document.getElementById('navbar').classList.remove('invisible');
             document.getElementById('navbar').classList.remove('invisible');
             document.getElementById('brandBar').classList.remove('invisible');
 

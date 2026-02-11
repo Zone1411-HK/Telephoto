@@ -215,6 +215,7 @@ async function uploadPost() {
         });
 
         if (createPostResponse.Success) {
+            window.location.reload();
         }
         const carouselContent = document.getElementById('carouselContent');
         carouselContent.replaceChildren();
