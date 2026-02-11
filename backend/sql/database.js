@@ -102,18 +102,17 @@ async function getPostDataByPostId(postId) {
     }
 }
 
-
 //post sorbarendezés lekérdezásek
 async function topPosts() {
     try {
-        const topPostsSql = `SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link, pictures.picture_link FROM posts INNER JOIN users ON users.user_id = posts.user_id INNER JOIN interactions ON interactions.post_id = posts.post_id LEFT JOIN pictures ON pictures.post_id = posts.post_id ORDER BY interactions.upvote_downvote`;
+        const topPostsSql = `SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link, pictures.picture_link FROM posts LEFT JOIN users ON users.user_id = posts.user_id LEFT JOIN interactions ON interactions.post_id = posts.post_id LEFT JOIN pictures ON pictures.post_id = posts.post_id ORDER BY interactions.upvote_downvote`;
         const [rows] = await pool.execute(topPostsSql);
+        console.log(rows);
         return rows;
     } catch (error) {
         console.error(error);
     }
 }
-
 
 ///////
 

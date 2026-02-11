@@ -38,6 +38,9 @@ async function isLoggedIn() {
         if (response.exists) {
             document.getElementById('home').classList.remove('invisible');
             document.getElementById('navbar').classList.remove('invisible');
+            document.getElementById('navbar').classList.remove('invisible');
+            document.getElementById('brandBar').classList.remove('invisible');
+
             getChats();
         } else {
             document.getElementById('login').classList.remove('invisible');
