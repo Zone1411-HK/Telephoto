@@ -222,8 +222,7 @@ input[type='button'] {
     justify-content: center;
 }
 
-.loginSorok label,
-input {
+.loginSorok label input {
     position: relative;
     width: 50%;
 }
@@ -809,9 +808,13 @@ input {
 
 .tempSerialNumber {
     position: absolute;
+    left: 47.5%;
+    bottom: 0;
+    z-index: 10000000;
 }
 
 .tempSlide {
+    position: relative;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -845,4 +848,22 @@ input {
 
 .vonal {
     margin-top: 6.7%;
+}
+
+.slideShowControllerLeft {
+    position: absolute;
+    top: 25%;
+    left: 5%;
+}
+
+.slideShowControllerRight {
+    position: absolute;
+    top: 25%;
+    right: 5%;
+}
+
+.tempImage {
+    position: relative;
+    width: 35%;
+    clip-path: circle();
 }

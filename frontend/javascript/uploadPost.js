@@ -114,21 +114,29 @@ function slideShow(move) {
     }
     console.log(j + ' ' + slides.length);
     if (j >= slides.length - 1 && move == 1) {
-        slides[0].style.display = 'block';
+        slides[0].style.display = 'flex';
     } else {
         if (j == 0 && move == -1) {
-            slides[slides.length - 1].style.display = 'block';
+            slides[slides.length - 1].style.display = 'flex';
         } else {
-            slides[j + move].style.display = 'block';
+            slides[j + move].style.display = 'flex';
         }
     }
 }
 
 function nextSlide() {
+    this.style.pointerEvents = 'none';
+    setTimeout(() => {
+        this.style.pointerEvents = 'all';
+    }, 1);
     slideShow(1);
 }
 
 function previousSlide() {
+    this.style.pointerEvents = 'none';
+    setTimeout(() => {
+        this.style.pointerEvents = 'all';
+    }, 1);
     slideShow(-1);
 }
 
@@ -155,13 +163,13 @@ function generateCarousel(files) {
     }
     if (files.length > 1) {
         const previous = document.createElement('a');
-        previous.classList.add('slideShowController');
+        previous.classList.add('slideShowController', 'slideShowControllerLeft');
 
         previous.innerText = '🠈';
         previous.addEventListener('click', previousSlide);
 
         const next = document.createElement('a');
-        next.classList.add('slideShowController');
+        next.classList.add('slideShowController', 'slideShowControllerRight');
         next.innerText = '🠊';
         next.addEventListener('click', nextSlide);
 
