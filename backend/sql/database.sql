@@ -7,9 +7,7 @@ COLLATE utf8_hungarian_ci;
 -- Adatbázis létrehozása vége
 
 -- Táblák létrehozása kezdete
-
-
-DELIMITER //
+USE telephoto;
 
 CREATE TABLE users(
     user_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -22,7 +20,6 @@ CREATE TABLE users(
     is_admin BOOLEAN,
     registration_date DATETIME
 );
-//
 CREATE TABLE posts(
     post_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
@@ -34,7 +31,6 @@ CREATE TABLE posts(
     creation_date DATETIME,
     FOREIGN KEY(user_id) REFERENCES users(user_id)
 );
-//
 CREATE TABLE pictures(
 	picture_id INT PRIMARY KEY AUTO_INCREMENT,
     post_id INT,
@@ -42,7 +38,6 @@ CREATE TABLE pictures(
     FOREIGN KEY(post_id) REFERENCES posts(post_id)
 );
 
-//
 CREATE TABLE interactions(
  	user_id INT,
     post_id INT,
@@ -53,13 +48,11 @@ CREATE TABLE interactions(
     FOREIGN KEY(user_id) REFERENCES users(user_id),
     FOREIGN KEY(post_id) REFERENCES posts(post_id)
 );
-//
 CREATE TABLE chats(
     chat_id INT PRIMARY KEY AUTO_INCREMENT,
     chat_name VARCHAR(50),
     chat_picture_link VARCHAR(200)
 );
-//
 CREATE TABLE chat_members(
     member_id INT PRIMARY KEY AUTO_INCREMENT,
     chat_id INT,
@@ -69,7 +62,6 @@ CREATE TABLE chat_members(
 
 
 );
-//
 CREATE TABLE messages(
     member_id INT,
     message VARCHAR(200),
@@ -77,8 +69,6 @@ CREATE TABLE messages(
     FOREIGN KEY(member_id) REFERENCES chat_members(member_id)
 );
 
-//
-DELIMITER ;
 
 
 -- Táblák létrehozása vége
