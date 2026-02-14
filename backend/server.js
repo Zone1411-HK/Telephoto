@@ -54,6 +54,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         activeUsers--;
         console.log('user disconnected');
+        console.log('Active users: ', activeUsers);
     });
 });
 

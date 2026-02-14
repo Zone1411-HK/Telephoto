@@ -234,9 +234,38 @@
     padding-bottom: 2vh;
     border-bottom: 1px solid white;
     width: 90%;
+    height: 15vh;
     position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 5%;
 }
 
-#activeUsersChart {
-    width: 100%;
+#userTrackerColumns {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    gap: 5%;
+    width: 85%;
+    height: 100%;
+}
+
+.userTrackerColumn {
+    background-color: chartreuse;
+    width: 20%;
+    height: 0%;
+}
+
+#yAxis {
+    display: flex;
+    flex-direction: column-reverse;
+    width: 10%;
+    height: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#yAxis span {
+    height: 20%;
+    position: relative;
 }

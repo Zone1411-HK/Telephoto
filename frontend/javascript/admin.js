@@ -1,5 +1,5 @@
 let socket = io();
-//console.log(chartJS);
+let userTrackerArray = [];
 document.addEventListener('DOMContentLoaded', () => {
     setInterval(() => {
         socket.emit('requestActiveUsers');
@@ -70,7 +70,42 @@ function responsiveUsername() {
     }
 }
 
-socket.on('responseActiveUsers', (activeUsers) => {});
+function generateBarChart(arr) {
+    const yAxis = document.getElementById('yAxis');
+    yAxis.replaceChildren();
+    const nullPoint = document.createElement('span');
+    nullPoint.innerText = 0;
+    yAxis.appendChild(nullPoint);
+    let sortedArr = arr.slice();
+    sortedArr = sortArray(sortedArr);
+    let usedNums = [];
+    for (let i = 0; i < sortedArr.length; i++) {
+        if (!usedNums.includes(sortedArr[i])) {
+            const span = document.createElement('span');
+            span.innerText = sortedArr[i];
+            usedNums.push(sortedArr[i]);
+            yAxis.appendChild(span);
+        }
+    }
+
+    let maxValue = Math.max(...arr);
+    let ratio = 100 / maxValue;
+    let columns = document.querySelectorAll('.userTrackerColumn');
+    for (let i = 0; i < arr.length; i++) {
+        columns[i].style.height = ratio * arr[i] + '%';
+    }
+}
+
+socket.on('responseActiveUsers', (activeUsers) => {
+    if (userTrackerArray.length >= 5) {
+        userTrackerArray.shift();
+    }
+    userTrackerArray.push(activeUsers);
+    console.log('before: ', userTrackerArray);
+
+    generateBarChart(userTrackerArray);
+    console.log('after: ', userTrackerArray);
+});
 
 function convertUnixToReadableDate(unix) {
     let date = new Date(unix);
@@ -80,4 +115,17 @@ function convertUnixToReadableDate(unix) {
         minute = '0' + minute;
     }
     return `${hour}:${minute}`;
+}
+
+function sortArray(arr) {
+    for (let i = 0; i < arr.length - 1; i++) {
+        for (let j = i + 1; j < arr.length; j++) {
+            if (arr[j] < arr[i]) {
+                let temp = arr[j];
+                arr[j] = arr[i];
+                arr[i] = temp;
+            }
+        }
+    }
+    return arr;
 }
