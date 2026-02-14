@@ -1,4 +1,9 @@
+let socket = io();
+//console.log(chartJS);
 document.addEventListener('DOMContentLoaded', () => {
+    setInterval(() => {
+        socket.emit('requestActiveUsers');
+    }, 1000);
     let sidebar = document.getElementById('sidebar');
     toggleSidebarVisibility(sidebar);
 
@@ -63,4 +68,16 @@ function responsiveUsername() {
     } else {
         username.style.fontSize = '48px';
     }
+}
+
+socket.on('responseActiveUsers', (activeUsers) => {});
+
+function convertUnixToReadableDate(unix) {
+    let date = new Date(unix);
+    let hour = date.getUTCHours(date);
+    let minute = date.getUTCMinutes(date).toString();
+    if (minute.length == 1) {
+        minute = '0' + minute;
+    }
+    return `${hour}:${minute}`;
 }

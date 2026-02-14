@@ -187,6 +187,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-bottom: 2vh;
+    border-bottom: 1px solid white;
 }
 
 .navSearch {
@@ -225,4 +227,16 @@
 }
 .searchLabel button:hover {
     background-color: rgb(64, 80, 88);
+}
+
+#activeUsers {
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    border-bottom: 1px solid white;
+    width: 90%;
+    position: relative;
+}
+
+#activeUsersChart {
+    width: 100%;
 }

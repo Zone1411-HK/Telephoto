@@ -36,13 +36,27 @@ const endpoints = require('./api/api.js');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
+let activeUsers = 0;
+
 io.on('connection', (socket) => {
-    console.log('a user connected');
+    activeUsers++;
+    console.log('Active users: ', activeUsers);
+
+    socket.on('requestActiveUsers', () => {
+        io.emit('responseActiveUsers', activeUsers);
+    });
+
     socket.on('chatId', (msg) => {
         console.log(msg);
         io.emit('newMessage', msg);
     });
+
+    socket.on('disconnect', () => {
+        activeUsers--;
+        console.log('user disconnected');
+    });
 });
+
 app.use('/api', endpoints);
 
 //!Szerver futtatása

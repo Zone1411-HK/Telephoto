@@ -12,6 +12,7 @@
         <link href="/css/admin.css" rel="stylesheet" />
         <!--? SCRIPTS -->
         <script src="/javascript/fetch.js"></script>
+        <script src="node/socket.io/client-dist/socket.io.js"></script>
         <script src="/javascript/admin.js"></script>
     </head>
     <body>
@@ -67,6 +68,9 @@
                             </button>
                         </label>
                     </div>
+                </div>
+                <div id="activeUsers">
+                    <canvas id="activeUsersChart"></canvas>
                 </div>
             </div>
             <div id="adminContent"></div>
