@@ -114,21 +114,29 @@ function slideShow(move) {
     }
     console.log(j + ' ' + slides.length);
     if (j >= slides.length - 1 && move == 1) {
-        slides[0].style.display = 'block';
+        slides[0].style.display = 'flex';
     } else {
         if (j == 0 && move == -1) {
-            slides[slides.length - 1].style.display = 'block';
+            slides[slides.length - 1].style.display = 'flex';
         } else {
-            slides[j + move].style.display = 'block';
+            slides[j + move].style.display = 'flex';
         }
     }
 }
 
 function nextSlide() {
+    this.style.pointerEvents = 'none';
+    setTimeout(() => {
+        this.style.pointerEvents = 'all';
+    }, 1);
     slideShow(1);
 }
 
 function previousSlide() {
+    this.style.pointerEvents = 'none';
+    setTimeout(() => {
+        this.style.pointerEvents = 'all';
+    }, 1);
     slideShow(-1);
 }
 
@@ -155,13 +163,13 @@ function generateCarousel(files) {
     }
     if (files.length > 1) {
         const previous = document.createElement('a');
-        previous.classList.add('slideShowController');
+        previous.classList.add('slideShowController', 'slideShowControllerLeft');
 
         previous.innerText = '🠈';
         previous.addEventListener('click', previousSlide);
 
         const next = document.createElement('a');
-        next.classList.add('slideShowController');
+        next.classList.add('slideShowController', 'slideShowControllerRight');
         next.innerText = '🠊';
         next.addEventListener('click', nextSlide);
 
@@ -190,19 +198,23 @@ async function uploadPost() {
             );
             renamedFiles.push(renamedFile);
         }
-        let fileNames = [];
-        for (const file of renamedFiles) {
-            fileNames.push(file.name);
-        }
+
         console.log(renamedFiles);
 
         let description = document.getElementById('uploadDescription').value;
         let location = document.getElementById('uploadLocation').value;
         const usernameResponse = await GetMethodFetch('/api/sendUsername');
         console.log(usernameResponse);
+        const uploadResponse = await uploadFiles('/api/uploadPost', renamedFiles);
+        console.log(uploadResponse);
+        let uploadedFiles = [];
+        for (const object of uploadResponse.filenames) {
+            uploadedFiles.push(object.filename);
+        }
+
         const createPostResponse = await PostMethodFetch('/api/createPost', {
             username: usernameResponse.Result,
-            fileNames: fileNames,
+            fileNames: uploadedFiles,
             description: description,
             tags: '',
             location: location,
@@ -211,7 +223,7 @@ async function uploadPost() {
         });
 
         if (createPostResponse.Success) {
-            await uploadFiles('/api/uploadPost', renamedFiles);
+            window.location.reload();
         }
         const carouselContent = document.getElementById('carouselContent');
         carouselContent.replaceChildren();
