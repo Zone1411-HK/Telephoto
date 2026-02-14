@@ -47,7 +47,6 @@ async function getUserByUsername(username) {
 async function createPost(username, description, tags, location, latitude, longitude) {
     try {
         let userId = await getUserByUsername(username);
-        console.log(userId);
         const sql = `INSERT INTO posts(user_id, description, tags, location, latitude, longitude, creation_date) VALUES(${userId},"${description}","${tags}","${location}",${latitude}, ${longitude}, NOW())`;
         const [rows, fields] = await pool.execute(sql);
         return [rows, fields];
@@ -107,7 +106,6 @@ async function topPosts() {
     try {
         const topPostsSql = `SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link, pictures.picture_link FROM posts LEFT JOIN users ON users.user_id = posts.user_id LEFT JOIN interactions ON interactions.post_id = posts.post_id LEFT JOIN pictures ON pictures.post_id = posts.post_id ORDER BY interactions.upvote_downvote`;
         const [rows] = await pool.execute(topPostsSql);
-        console.log(rows);
         return rows;
     } catch (error) {
         console.error(error);
@@ -272,7 +270,6 @@ async function findMemberId(chat_id, user_id) {
 async function sendMessage(message, chatId, username) {
     try {
         const user = await getUserByUsername(username);
-        console.log(user);
         const member_id = await findMemberId(chatId, user);
         const values = [member_id, message];
         const sql = `

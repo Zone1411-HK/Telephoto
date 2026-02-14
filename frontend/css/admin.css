@@ -1,0 +1,228 @@
+#root {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    background-color: blueviolet;
+}
+
+#sidebar {
+    background-color: rgb(49, 65, 73);
+    color: white;
+    width: 12vw;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    transition: 0.25s;
+    z-index: 1;
+}
+
+#collapseSidebar {
+    position: absolute;
+    width: 3vw;
+    aspect-ratio: 1/1;
+    z-index: 100;
+    left: 10.75vw;
+    background-color: inherit;
+    border: none;
+    transition: 0.25s;
+    top: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    border-left: 2px solid rgb(235, 255, 235);
+    border-bottom: 2px solid rgb(235, 255, 235);
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+
+#collapseSidebar img {
+    width: 100%;
+}
+
+.visible {
+    display: block;
+}
+
+.invisible {
+    display: none;
+}
+
+#sidebarTitle {
+    padding-top: 1vh;
+    width: 85%;
+    min-height: 1vh;
+    font-variant: small-caps;
+}
+
+#sidebarTitle h2 {
+    border-bottom: 1px solid white;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    font-size: 5.5vh;
+    margin: 0;
+    z-index: 9;
+    font-variant: small-caps;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#adminContent {
+    background-color: rgb(235, 255, 235);
+    width: 88vw;
+    max-height: 98vw;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    transition: 0.25s;
+}
+
+#navButtons {
+    width: 90%;
+    padding-top: 2vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.navButtonWrapper {
+    padding-bottom: 2vh;
+    width: 100%;
+    border-bottom: 1px solid white;
+}
+
+.navButton {
+    transition: 0.25s;
+    width: 100%;
+    text-align: start;
+    background-color: inherit;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5vw;
+    font-variant: small-caps;
+    font-size: medium;
+    padding-left: 0.25vw;
+    padding-top: 1.25vh;
+    padding-bottom: 1.25vh;
+}
+
+.navButton:hover {
+    background-color: rgb(64, 80, 88);
+}
+
+.navButtonSVG {
+    height: 1.2rem;
+}
+
+@media (min-width: 1300px) {
+    #root {
+        width: 100vw;
+        height: 100vh;
+    }
+
+    #sidebar {
+        width: 10vw;
+    }
+
+    #collapseSidebar {
+        width: 2vw;
+        left: 9vw;
+        top: 0;
+    }
+
+    #collapseSidebar img {
+        width: 90%;
+    }
+
+    #sidebarTitle {
+        padding-top: 1vh;
+        width: 85%;
+        min-height: 1vh;
+    }
+
+    #sidebarTitle h2 {
+        width: 100%;
+        height: 100%;
+        font-size: 6.5vh;
+        margin: 0;
+    }
+
+    #adminContent {
+        width: 90vw;
+        max-height: 98vw;
+    }
+
+    #navButtons {
+        width: 100%;
+        padding-top: 2vh;
+    }
+
+    .navButtonWrapper {
+        width: 90%;
+        padding-bottom: 2vh;
+    }
+
+    .navButton {
+        width: 100%;
+        font-size: larger;
+        padding-top: 0.75vh;
+        padding-bottom: 0.75vh;
+    }
+
+    .navButtonSVG {
+        height: 1.2rem;
+    }
+}
+
+#navSearches {
+    padding-top: 2vh;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.navSearch {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding-top: 0.75vh;
+    padding-bottom: 0.75vh;
+}
+
+.searchLabel {
+    width: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    height: 3vh;
+    border-radius: 5px;
+}
+
+.searchLabel input {
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    width: 75%;
+    padding: 0;
+    padding-left: 6%;
+    font-size: 20px;
+}
+
+.searchLabel button {
+    width: 25%;
+    background-color: rgb(49, 65, 73);
+    border: 1px solid white;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.searchLabel button:hover {
+    background-color: rgb(64, 80, 88);
+}

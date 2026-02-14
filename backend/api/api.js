@@ -318,7 +318,6 @@ router.get('/messagesOfChat', async (request, response) => {
         const sqlData = await database.messagesOfChat(chatId);
         let formattedDataArr = [];
         for (const data of sqlData) {
-            console.log();
             const formattedDate = convertUnixToReadableDate(
                 Math.floor(data.message_date.getTime())
             );
@@ -561,7 +560,7 @@ function formatDate(date) {
 function clearFolder(path) {
     fs.readdir(path).then((files) => {
         files.forEach((file) => {
-            console.log(file);
+            //console.log(file);
             fs.unlink(path + '/' + file);
         });
     });

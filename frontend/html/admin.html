@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="hu">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <!--? BOOTSTRAP -->
+        <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css" />
+        <script src="../bootstrap/js/popper.min.js"></script>
+        <script src="../bootstrap/js/bootstrap.min.js"></script>
+        <!--? CSS -->
+        <link href="/css/admin.css" rel="stylesheet" />
+        <!--? SCRIPTS -->
+        <script src="/javascript/fetch.js"></script>
+        <script src="/javascript/admin.js"></script>
+    </head>
+    <body>
+        <div id="root">
+            <div id="sidebar" data-collapsed="false">
+                <button id="collapseSidebar">
+                    <img src="/images/arrow-left.svg" class="visible" />
+                    <img src="/images/arrow-right.svg" class="invisible" />
+                </button>
+                <div id="sidebarTitle">
+                    <h2 id="adminUsername">123456789</h2>
+                </div>
+                <div id="navButtons">
+                    <div class="navButtonWrapper">
+                        <button class="navButton" type="button">
+                            <img src="/images/user.svg" class="navButtonSVG" alt="" />Profilok
+                        </button>
+                        <button class="navButton" type="button">
+                            <img src="/images/post.svg" class="navButtonSVG" alt="" />Posztok
+                        </button>
+                        <button class="navButton" type="button">
+                            <img src="/images/comment.svg" class="navButtonSVG" alt="" />Kommentek
+                        </button>
+                        <button class="navButton" type="button">
+                            <img src="/images/flag.svg" class="navButtonSVG" alt="" />Jelentések
+                        </button>
+                    </div>
+                </div>
+                <div id="navSearches">
+                    <div class="navSearch">
+                        <label for="userSearch" class="searchLabel">
+                            <input
+                                type="text"
+                                id="userSearch"
+                                placeholder="Profil ID"
+                                maxlength="12"
+                            />
+                            <button type="button">
+                                <img src="/images/search.svg" />
+                            </button>
+                        </label>
+                    </div>
+                    <div class="navSearch">
+                        <label for="userSearch" class="searchLabel">
+                            <input
+                                type="text"
+                                id="userSearch"
+                                placeholder="Poszt ID"
+                                maxlength="12"
+                            />
+                            <button type="button">
+                                <img src="/images/search.svg" />
+                            </button>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div id="adminContent"></div>
+        </div>
+    </body>
+</html>
