@@ -69,6 +69,47 @@ CREATE TABLE messages(
     FOREIGN KEY(member_id) REFERENCES chat_members(member_id)
 );
 
+CREATE TABLE deleted_posts( 
+    post_id INT,
+    user_id INT,
+    description VARCHAR(500),
+    tags TEXT,
+    location VARCHAR(176),
+    latitude FLOAT,
+    longitude FLOAT,
+    creation_date DATETIME,
+    deleted_at TIMESTAMP
+);
 
+CREATE TABLE deleted_pictures(
+	picture_id INT NOT NULL,
+    post_id INT NOT NULL,
+    picture_link TEXT NOT NULL,
+        deleted_at TIMESTAMP
 
+);
+
+CREATE TRIGGER delete_post
+BEFORE DELETE ON posts
+FOR EACH ROW
+INSERT INTO deleted_posts(post_id, user_id, description, tags, location, latitude, longitude, creation_date, deleted_at)
+VALUES(OLD.post_id, OLD.user_id, OLD.description, OLD.tags, OLD.location, OLD.latitude, OLD.longitude, OLD.creation_date, NOW());
+
+CREATE TRIGGER delete_post_interactions
+BEFORE DELETE ON posts
+FOR EACH ROW
+DELETE FROM interactions 
+WHERE interactions.post_id = OLD.post_id;
+
+CREATE TRIGGER delete_post_pictures
+BEFORE DELETE ON posts
+FOR EACH ROW
+DELETE FROM pictures 
+WHERE pictures.post_id = OLD.post_id;
+
+CREATE TRIGGER save_deleted_pictures
+BEFORE DELETE ON pictures
+FOR EACH ROW 
+INSERT INTO deleted_pictures(picture_id, post_id, picture_link, deleted_at)
+VALUES(OLD.picture_id, OLD.post_id, OLD.picture_link, NOW())
 -- Táblák létrehozása vége

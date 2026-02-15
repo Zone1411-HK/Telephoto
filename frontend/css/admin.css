@@ -230,42 +230,112 @@
 }
 
 #activeUsers {
-    padding-top: 2vh;
+    padding-top: 4vh;
     padding-bottom: 2vh;
     border-bottom: 1px solid white;
     width: 90%;
-    height: 15vh;
+    height: 23vh;
     position: relative;
     display: flex;
     flex-direction: row;
+    justify-content: end;
     gap: 5%;
 }
 
-#userTrackerColumns {
-    display: flex;
-    flex-direction: row;
-    align-items: end;
-    gap: 5%;
-    width: 85%;
-    height: 100%;
+.userTrackerTooltip {
+    writing-mode: sideways-rl;
+    visibility: hidden;
+    position: absolute;
+    z-index: 100;
+    width: inherit;
+    height: inherit;
+    font-size: 100%;
+    padding-top: 10%;
+    padding-bottom: 10%;
+    background-color: rgb(50, 190, 50);
 }
 
-.userTrackerColumn {
-    background-color: chartreuse;
-    width: 20%;
-    height: 0%;
+.userTrackerColumn:hover .userTrackerTooltip {
+    visibility: visible;
+    z-index: 100;
 }
 
 #yAxis {
+    position: absolute;
+    left: 0;
     display: flex;
     flex-direction: column-reverse;
     width: 10%;
-    height: 100%;
-    justify-content: space-between;
+    height: 17.5vh;
     align-items: center;
+    top: 3.75vh;
 }
 
 #yAxis span {
     height: 20%;
+    font-size: 12px;
     position: relative;
+}
+
+#yAxisLines {
+    position: absolute;
+    width: 80%;
+    height: calc(20vh - 1px);
+    display: flex;
+    flex-direction: column;
+    left: 15%;
+    gap: 20%;
+    padding-bottom: 1.5vh;
+    top: 4vh;
+}
+
+#yAxisLines hr {
+    width: 100%;
+    margin: 0;
+    opacity: 0.75;
+    color: white;
+}
+
+#userTrackerTitle {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    position: absolute;
+    top: 1vh;
+    width: 100%;
+    text-align: center;
+    font-size: 1.5vh;
+}
+#userTrackerColumns {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    gap: 5%;
+    width: 80%;
+    left: 16.5%;
+    height: calc(15vh + 1px);
+}
+
+.userTrackerColumn {
+    background-color: rgb(70, 220, 70);
+    width: 15%;
+    height: 0%;
+    z-index: 0;
+}
+#userTrackerTimes {
+    position: absolute;
+    width: 80%;
+    z-index: 10;
+    height: 2vh;
+    left: 16.5%;
+    bottom: 1vh;
+    display: flex;
+    flex-direction: row;
+    gap: 5%;
+}
+#userTrackerTimes span {
+    width: 15%;
+    font-size: 0.65vw;
+    text-align: center;
 }

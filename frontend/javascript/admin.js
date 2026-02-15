@@ -1,9 +1,11 @@
 let socket = io();
 let userTrackerArray = [];
+let userTrackerTimeArray = [];
 document.addEventListener('DOMContentLoaded', () => {
+    socket.emit('requestActiveUsers');
     setInterval(() => {
         socket.emit('requestActiveUsers');
-    }, 1000);
+    }, 600);
     let sidebar = document.getElementById('sidebar');
     toggleSidebarVisibility(sidebar);
 
@@ -76,6 +78,9 @@ function generateBarChart(arr) {
     const nullPoint = document.createElement('span');
     nullPoint.innerText = 0;
     yAxis.appendChild(nullPoint);
+
+    let maxValue = Math.max(...arr);
+    /*
     let sortedArr = arr.slice();
     sortedArr = sortArray(sortedArr);
     let usedNums = [];
@@ -87,19 +92,42 @@ function generateBarChart(arr) {
             yAxis.appendChild(span);
         }
     }
+    */
+    for (let i = 1; i < 5; i++) {
+        const span = document.createElement('span');
+        span.innerText = maxValue * (i / 4);
+        yAxis.appendChild(span);
+    }
 
-    let maxValue = Math.max(...arr);
     let ratio = 100 / maxValue;
-    let columns = document.querySelectorAll('.userTrackerColumn');
+    let columnDiv = document.getElementById('userTrackerColumns');
+    columnDiv.replaceChildren();
+    let timeDiv = document.getElementById('userTrackerTimes');
+    timeDiv.replaceChildren();
     for (let i = 0; i < arr.length; i++) {
-        columns[i].style.height = ratio * arr[i] + '%';
+        let column = document.createElement('div');
+        column.classList.add('userTrackerColumn');
+        column.style.height = ratio * arr[i] + '%';
+
+        let tooltip = document.createElement('span');
+        tooltip.classList.add('userTrackerTooltip');
+        tooltip.innerText = arr[i];
+
+        column.appendChild(tooltip);
+        columnDiv.appendChild(column);
+
+        let span = document.createElement('span');
+        span.innerText = userTrackerTimeArray[i];
+        timeDiv.appendChild(span);
     }
 }
 
 socket.on('responseActiveUsers', (activeUsers) => {
     if (userTrackerArray.length >= 5) {
         userTrackerArray.shift();
+        userTrackerTimeArray.shift();
     }
+    userTrackerTimeArray.push(convertToTime(Date.now()));
     userTrackerArray.push(activeUsers);
     console.log('before: ', userTrackerArray);
 
@@ -107,9 +135,10 @@ socket.on('responseActiveUsers', (activeUsers) => {
     console.log('after: ', userTrackerArray);
 });
 
-function convertUnixToReadableDate(unix) {
+function convertToTime(unix) {
     let date = new Date(unix);
     let hour = date.getUTCHours(date);
+    hour++;
     let minute = date.getUTCMinutes(date).toString();
     if (minute.length == 1) {
         minute = '0' + minute;
@@ -128,4 +157,15 @@ function sortArray(arr) {
         }
     }
     return arr;
+}
+
+async function deletePost() {
+    const response = await PostMethodFetch('/api/deletePost', {
+        postId: 6
+    });
+    if (response.Status == 'Failed') {
+        console.log(response.Message);
+    } else {
+        console.log('Sikeresen törölte a posztot');
+    }
 }

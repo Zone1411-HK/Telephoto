@@ -140,9 +140,9 @@ async function loadComments(postId) {
 
 async function isAdmin(userName) {
     try {
-        const adminSql = `SELECT users.is_admin FROM users WHERE users.iusername = ${userName}`;
-        const [rows] = await pool.execute(adminSql);
-        return rows;
+        const adminSql = `SELECT users.is_admin FROM users WHERE users.username = ?`;
+        const [rows] = await pool.execute(adminSql, [userName]);
+        return rows[0].is_admin;
     } catch (error) {
         console.error(error);
     }
@@ -282,6 +282,20 @@ async function sendMessage(message, chatId, username) {
         console.error(error);
     }
 }
+
+async function deletePost(postId) {
+    try {
+        const sql = `
+        DELETE FROM posts
+        WHERE post_id = ?
+        `;
+        const [rows] = await pool.execute(sql, [postId]);
+        return rows.affectedRows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 //!Export
 module.exports = {
     selectall,
@@ -303,5 +317,6 @@ module.exports = {
     messagesOfChat,
     lastMessageOfChat,
     findMemberId,
-    sendMessage
+    sendMessage,
+    deletePost
 };

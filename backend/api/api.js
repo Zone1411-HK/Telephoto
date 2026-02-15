@@ -54,7 +54,7 @@ router.get('/testsql', async (request, response) => {
 });
 
 //! REGISZTRÁCIÓ
-
+//#region registration
 router.get('/isUsernameAvailable/:name', async (request, response) => {
     try {
         const name = request.params.name;
@@ -91,8 +91,10 @@ router.post('/registration', async (request, response) => {
         });
     }
 });
+//#endregion
 
 //! LOGIN
+//#region login
 router.post('/login', async (request, response) => {
     try {
         const loginSelect = await database.loginSelect();
@@ -130,18 +132,10 @@ router.post('/login', async (request, response) => {
         });
     }
 });
-
-let storedUsernameHash;
-router.get('/hashUser/:username', async (request, response) => {
-    const username = request.params.username;
-    const { hash } = HashString(username);
-    storedUsernameHash = hash;
-    response.status(200).json({
-        username: hash
-    });
-});
+//#endregion
 
 //! POSZT FELTÖLTÉS
+//#region Posting
 router.post('/createPost', async (request, response) => {
     try {
         const { username, fileNames, description, tags, location, latitude, longitude } =
@@ -224,6 +218,10 @@ router.post('/uploadPost', postUpload.array('uploadFile'), async (request, respo
         });
     }
 });
+//#endregion
+
+//! ADATOK
+//#region Data
 
 //! POSZT ADATOK
 router.get('/postInfos/:postId', async (request, response) => {
@@ -293,7 +291,10 @@ router.post('/commentInfos', async (request, response) => {
     });
     //console.log(data);
 });
+//#endregion
 
+//! CHAT
+//#region Chat
 //! FELHASZNÁLÓ CHATJEI
 router.get('/chatsOfUser/:username', async (request, response) => {
     try {
@@ -435,6 +436,31 @@ router.post('/removeChatId', async (request, response) => {
         });
     }
 });
+
+router.get('/storedChatIdInfos', async (request, response) => {
+    try {
+        if (!request.session.chatId) {
+            response.status(200).json({
+                Status: 'Failed',
+                Result: 'Nincs mentett chatId'
+            });
+        } else {
+            const chatInfos = await database.chatInfoByChatId(request.session.chatId);
+            response.status(200).json({
+                Status: 'Success',
+                Result: chatInfos.chat_name
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/removeChatId" végpont nem működik!'
+        });
+    }
+});
+//#endregion
+
 router.post('/saveUsername', async (request, response) => {
     try {
         const { username } = request.body;
@@ -450,6 +476,7 @@ router.post('/saveUsername', async (request, response) => {
         });
     }
 });
+
 router.get('/sendUsername', async (request, response) => {
     try {
         const username = request.session.username;
@@ -497,28 +524,28 @@ router.post('/removeUsername', async (request, response) => {
     }
 });
 
-router.get('/storedChatIdInfos', async (request, response) => {
+//! ADMIN
+//#region Admin
+router.post('/deletePost', isAdmin, async (request, response) => {
     try {
-        if (!request.session.chatId) {
+        const { postId } = request.body;
+        const affectedRows = await database.deletePost(postId);
+        if (affectedRows != 0) {
             response.status(200).json({
-                Status: 'Failed',
-                Result: 'Nincs mentett chatId'
+                Status: 'Success'
             });
         } else {
-            const chatInfos = await database.chatInfoByChatId(request.session.chatId);
             response.status(200).json({
-                Status: 'Success',
-                Result: chatInfos.chat_name
+                Status: 'Failed',
+                Message: 'Nincs ilyen id-val poszt!'
             });
         }
     } catch (error) {
-        console.error(error);
-        response.status(500).json({
-            Status: 'Failed',
-            Message: 'A "/removeChatId" végpont nem működik!'
-        });
+        throw new Error(`Hiba a "deletePost" végpontban: ${error}`);
     }
 });
+//#endregion
+
 //! FÜGGVÉNYEK
 //? Hash-eljük a megadott stringet, és visszaadunk egy salt, és egy hash változót.
 function HashString(string) {
@@ -529,6 +556,7 @@ function HashString(string) {
     const hash = crypto.scryptSync(string, salt, 64).toString('hex');
     return { salt, hash };
 }
+
 function VerifyHashedString(string, salt, hash) {
     if (string !== null && salt !== null) {
         const hashedString = crypto.scryptSync(string, salt, 64).toString('hex');
@@ -537,6 +565,7 @@ function VerifyHashedString(string, salt, hash) {
         return null;
     }
 }
+
 function convertUnixToReadableDate(unix) {
     let date = new Date(unix);
     let year = date.getUTCFullYear(date);
@@ -557,6 +586,7 @@ function formatDate(date) {
     const year = date.getUTCFullYear();
     const month = date.getUTCSeconds;
 }
+
 function clearFolder(path) {
     fs.readdir(path).then((files) => {
         files.forEach((file) => {
@@ -565,14 +595,32 @@ function clearFolder(path) {
         });
     });
 }
+
 function uploadFiles(multerUpload, fileInput) {
     multerUpload.array(fileInput);
 }
 
-router.get('/checkHashUserIntegrity/:storedData', async (request, response) => {
-    const storedData = request.params.storedData;
-    response.status(200).json({
-        isValid: storedData === storedUsernameHash ? true : false
-    });
-});
+async function isAdmin(request, response, next) {
+    try {
+        const username = request.session.username;
+        if (username != undefined) {
+            const isAdmin = await database.isAdmin(username);
+            if (isAdmin) {
+                next();
+            } else {
+                response.status(200).send({
+                    Status: 'Failed',
+                    Message: 'Önnek nincs meg a megfelelő jogosultsága!'
+                });
+            }
+        } else {
+            response.status(200).send({
+                Status: 'Failed',
+                Message: 'Nincsen elmentett felhasználónév!'
+            });
+        }
+    } catch (error) {
+        throw new Error(`Hiba az "isAdmin" middleware-ben: ${error}`);
+    }
+}
 module.exports = router;
