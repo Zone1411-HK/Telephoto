@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.emit('requestActiveUsers');
     setInterval(() => {
         socket.emit('requestActiveUsers');
-    }, 600);
+    }, 15000);
     let sidebar = document.getElementById('sidebar');
     toggleSidebarVisibility(sidebar);
 
@@ -112,6 +112,13 @@ function generateBarChart(arr) {
         let tooltip = document.createElement('span');
         tooltip.classList.add('userTrackerTooltip');
         tooltip.innerText = arr[i];
+        console.log(ratio * arr[i]);
+        if (ratio * arr[i] < 40) {
+            tooltip.style.paddingTop = '5%';
+            tooltip.style.fontSize = '0.6vw';
+        } else {
+            tooltip.style.fontSize = '0.85vw';
+        }
 
         column.appendChild(tooltip);
         columnDiv.appendChild(column);
