@@ -216,11 +216,6 @@ form {
     background-color: var(--NavBarColor);
 }
 
-.uploadFeedback {
-    margin-bottom: 0;
-    height: 30px;
-}
-
 .slideShowController {
     user-select: none;
     text-decoration: none;
@@ -332,8 +327,4 @@ form {
     opacity: 100% !important;
     background-color: rgb(220, 220, 220);
     border: rgb(200, 200, 200) 2px solid;
-}
-
-.vonal {
-    margin-top: 6.7%;
 }

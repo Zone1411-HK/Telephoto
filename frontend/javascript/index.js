@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('near').addEventListener('click', () => {});
  */
     //socket.emit('test');
-    isLoggedIn();
+    //isLoggedIn();
 });
 
 //! Ha tudtok pls adjatok neki jobb nevet 🙏

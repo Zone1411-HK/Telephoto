@@ -119,3 +119,8 @@
     bottom: 0;
     z-index: 10000000;
 }
+
+.uploadFeedback {
+    margin-bottom: 0;
+    height: 30px;
+}
