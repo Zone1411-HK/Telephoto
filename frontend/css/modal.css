@@ -1,0 +1,121 @@
+:root {
+    --Hatter: rgb(245, 240, 245);
+    --invalidRed: rgb(191, 26, 26);
+    --successGreen: rgb(50, 150, 30);
+    --interactiveBlue: rgb(6, 7, 113);
+    --LoginGomb: rgb(207, 173, 193);
+    --LoginGombBorder: rgb(187, 153, 173);
+    --LoginGombBoxShadow: rgb(217, 213, 233);
+    --NavBarColor: rgb(203, 217, 155);
+    --PostModalTopColor: rgb(188, 188, 188);
+    --PostModalBottomColor: rgb(30, 30, 30);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 5%;
+    background-color: var(--PostModalTopColor);
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--PostModalBottomColor);
+}
+
+.postTextDesign {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem;
+    font-weight: 750;
+    color: var(--PostModalBottomColor);
+}
+
+.modal-body {
+    background-color: var(--PostModalBottomColor);
+    color: whitesmoke;
+}
+
+.modal-dialog {
+    height: 57%; /* = 90% of the .modal-backdrop block = %90 of the screen */
+}
+
+.modal-content {
+    height: 88%; /* = 100% of the .modal-dialog block */
+}
+
+.postButtonDesign {
+    background-color: whitesmoke;
+    border-radius: 5px;
+    margin-top: 0.2%;
+    margin-bottom: 0.2%;
+}
+
+#carouselContainer {
+    width: 100%;
+    height: 240px;
+    min-height: 240px;
+}
+
+#carouselContent {
+    width: 100%;
+    height: 100%;
+}
+
+.slideShowControllerLeft {
+    position: absolute;
+    top: 25%;
+    left: 5%;
+}
+
+.slideShowControllerRight {
+    position: absolute;
+    top: 25%;
+    right: 5%;
+}
+
+.tempImage {
+    position: relative;
+    width: 35%;
+    clip-path: circle();
+}
+
+.tempSlide {
+    position: relative;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.circle {
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+}
+
+.modal-body {
+    background-image: url('/images/leather.png');
+    background-color: black;
+    background-position: fixed;
+    background-size: 300px 300px;
+}
+
+.postButtonTextDesign {
+    font-size: 1.3rem;
+    font-weight: 750;
+    color: var(--PostModalBottomColor);
+}
+
+#uploadModal {
+    box-shadow:
+        0,
+        0,
+        500px,
+        500px rgba(255, 255, 255, 0.7);
+}
+
+.tempSerialNumber {
+    position: absolute;
+    left: 47.5%;
+    bottom: 0;
+    z-index: 10000000;
+}
