@@ -5,6 +5,7 @@
     position: relative;
     flex-direction: row;
     background-color: blueviolet;
+    font-family: 'Josefin Sans', sans-serif;
 }
 
 #sidebar {
@@ -55,6 +56,7 @@
     width: 85%;
     min-height: 1vh;
     font-variant: small-caps;
+    height: 6vh;
 }
 
 #sidebarTitle h2 {
@@ -86,16 +88,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.navButtonWrapper {
+    height: 22vh;
     padding-bottom: 2vh;
-    width: 100%;
     border-bottom: 1px solid white;
 }
 
 .navButton {
     transition: 0.25s;
+    height: 25%;
     width: 100%;
     text-align: start;
     background-color: inherit;
@@ -114,6 +114,11 @@
     border: 1px solid transparent;
 }
 
+.navButton span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .navButton:hover {
     background-color: rgb(64, 80, 88);
     border: 1px solid aqua;
@@ -124,74 +129,17 @@
     height: 1.2rem;
 }
 
-@media (min-width: 1300px) {
-    #root {
-        width: 100vw;
-        height: 100vh;
-    }
-
-    #sidebar {
-        width: 10vw;
-    }
-
-    #collapseSidebar {
-        width: 2vw;
-        left: 9vw;
-        top: 0;
-    }
-
-    #collapseSidebar img {
-        width: 90%;
-    }
-
-    #sidebarTitle {
-        padding-top: 1vh;
-        width: 85%;
-        min-height: 1vh;
-    }
-
-    #sidebarTitle h2 {
-        width: 100%;
-        height: 100%;
-        font-size: 6.5vh;
-        margin: 0;
-    }
-
-    #adminContent {
-        width: 90vw;
-        max-height: 98vw;
-    }
-
-    #navButtons {
-        width: 100%;
-        padding-top: 2vh;
-    }
-
-    .navButtonWrapper {
-        width: 90%;
-        padding-bottom: 2vh;
-    }
-
-    .navButton {
-        width: 100%;
-        font-size: larger;
-        padding-top: 0.75vh;
-        padding-bottom: 0.75vh;
-    }
-
-    .navButtonSVG {
-        height: 1.2rem;
-    }
-}
-
 #navSearches {
     padding-top: 2vh;
     width: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: start;
     padding-bottom: 2vh;
     border-bottom: 1px solid white;
+    height: 12vh;
+    gap: 20%;
 }
 
 .navSearch {
@@ -204,11 +152,12 @@
 
 .searchLabel {
     width: 100%;
+    height: 40%;
     background-color: white;
     display: flex;
     flex-direction: row;
-    height: 3vh;
     border-radius: 5px;
+    align-items: center;
 }
 
 .searchLabel input {
@@ -233,11 +182,11 @@
 }
 
 #activeUsers {
-    padding-top: 4vh;
+    padding-top: 5vh;
     padding-bottom: 2vh;
     border-bottom: 1px solid white;
     width: 90%;
-    height: 23vh;
+    height: 24vh;
     position: relative;
     display: flex;
     flex-direction: row;
@@ -274,7 +223,7 @@
     width: 10%;
     height: 17.5vh;
     align-items: center;
-    top: 3.75vh;
+    top: 4.75vh;
 }
 
 #yAxis span {
@@ -292,7 +241,7 @@
     left: 15%;
     gap: 20%;
     padding-bottom: 1.5vh;
-    top: 4vh;
+    top: 5vh;
 }
 
 #yAxisLines hr {
@@ -308,7 +257,7 @@
     -webkit-line-clamp: 1;
     overflow: hidden;
     position: absolute;
-    top: 1vh;
+    top: 2vh;
     width: 100%;
     text-align: center;
     font-size: 1.5vh;
@@ -321,7 +270,7 @@
     gap: 5%;
     width: 80%;
     left: 16.5%;
-    height: calc(15vh + 1px);
+    height: calc(15vh + 2px);
 }
 
 .userTrackerColumn {
@@ -347,4 +296,14 @@
     width: 15%;
     font-size: 0.65vw;
     text-align: center;
+}
+
+#noar {
+    padding-top: 2vh;
+    height: 37vh;
+}
+
+#noarImg {
+    height: 100%;
+    width: 100%;
 }

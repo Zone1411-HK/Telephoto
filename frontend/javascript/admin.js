@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.emit('requestActiveUsers');
     setInterval(() => {
         socket.emit('requestActiveUsers');
-    }, 15000);
+    }, 1500);
     let sidebar = document.getElementById('sidebar');
     toggleSidebarVisibility(sidebar);
 
