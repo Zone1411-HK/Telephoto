@@ -1,3 +1,13 @@
+:root {
+    --PrimaryLight: rgb(240, 245, 255);
+    --HoverLight: rgb(220, 225, 235);
+    --SecondaryLight: rgb(240, 245, 240);
+    --PrimaryDark: rgb(49, 65, 78);
+    --SecondaryDark: rgb(54, 70, 95);
+    --HoverDark: rgb(59, 75, 100);
+    --FocusDark: rgb(69, 85, 110);
+}
+
 #root {
     width: 100vw;
     height: 100vh;
@@ -9,7 +19,7 @@
 }
 
 #sidebar {
-    background-color: rgb(49, 65, 73);
+    background-color: var(--PrimaryDark);
     color: white;
     width: 12vw;
     display: flex;
@@ -22,7 +32,7 @@
 
 #collapseSidebar {
     position: absolute;
-    width: 3vw;
+    height: 5vh;
     aspect-ratio: 1/1;
     z-index: 100;
     left: 10.75vw;
@@ -33,8 +43,8 @@
     display: flex;
     flex-direction: row;
     justify-content: end;
-    border-left: 2px solid rgb(235, 255, 235);
-    border-bottom: 2px solid rgb(235, 255, 235);
+    border-left: 2px solid var(--PrimaryLight);
+    border-bottom: 2px solid var(--PrimaryLight);
     border-bottom-left-radius: 7px;
     border-bottom-right-radius: 7px;
 }
@@ -72,16 +82,6 @@
     text-overflow: ellipsis;
 }
 
-#adminContent {
-    background-color: rgb(235, 255, 235);
-    width: 88vw;
-    max-height: 98vw;
-    display: flex;
-    position: relative;
-    flex-direction: column;
-    transition: 0.25s;
-}
-
 #navButtons {
     width: 90%;
     padding-top: 2vh;
@@ -91,6 +91,7 @@
     height: 22vh;
     padding-bottom: 2vh;
     border-bottom: 1px solid white;
+    gap: 1px;
 }
 
 .navButton {
@@ -112,6 +113,7 @@
     padding-top: 1.25vh;
     padding-bottom: 1.25vh;
     border: 1px solid transparent;
+    text-decoration: none;
 }
 
 .navButton span {
@@ -120,11 +122,15 @@
 }
 
 .navButton:hover {
-    background-color: rgb(64, 80, 88);
+    background-color: rgb(59, 75, 83);
     border: 1px solid aqua;
     color: aqua;
 }
-
+.activeNavButton {
+    background-color: rgb(69, 85, 93);
+    border: 1px solid aqua;
+    color: aqua;
+}
 .navButtonSVG {
     height: 1.2rem;
 }
@@ -148,34 +154,48 @@
     flex-direction: row;
     padding-top: 0.75vh;
     padding-bottom: 0.75vh;
+    gap: 10%;
 }
 
 .searchLabel {
     width: 100%;
-    height: 40%;
+    height: 45%;
     background-color: white;
     display: flex;
     flex-direction: row;
     border-radius: 5px;
     align-items: center;
+    border: 1px solid white;
+}
+
+.focusSearch {
+    border: 1px solid aqua;
 }
 
 .searchLabel input {
     border: none;
     outline: none;
     border-radius: 5px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
     width: 75%;
     padding: 0;
     padding-left: 6%;
     font-size: 20px;
+    height: 100%;
 }
 
 .searchLabel button {
     width: 25%;
-    background-color: rgb(49, 65, 73);
-    border: 1px solid white;
+    background-color: var(--PrimaryDark);
+    border: none;
     border-bottom-right-radius: 5px;
     border-top-right-radius: 5px;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 .searchLabel button:hover {
     background-color: rgb(64, 80, 88);
@@ -298,12 +318,127 @@
     text-align: center;
 }
 
-#noar {
-    padding-top: 2vh;
-    height: 37vh;
+#adminContent {
+    padding-top: 6vh;
+    padding-bottom: 10vh;
+    height: 100%;
+    background-color: var(--PrimaryLight);
+    width: 88vw;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    transition: 0.25s;
+    align-items: center;
+    scrollbar-color: var(--PrimaryLight) var(--PrimaryDark);
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+    gap: 5vh;
 }
 
-#noarImg {
+.adminPanel {
+    width: 65vw;
+    height: 65vh;
+    box-shadow: 0 0 5px 1px rgba(54, 70, 95, 0.5);
+    border-radius: 25px;
+}
+
+.adminPanelHeader {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 6.5vh;
+    width: 65vw;
+    border-bottom: 1px solid var(--SecondaryDark);
+}
+
+.back {
+    position: absolute;
+    left: 2.75%;
+    border: none;
+    background-color: var(--PrimaryLight);
+    height: 75%;
+    aspect-ratio: 1/1;
+    border-radius: 50px;
+}
+
+.back:hover {
+    background-color: var(--HoverLight);
+}
+
+.back img {
+    height: 50%;
+}
+
+.adminPanelHeader h3 {
+    font-size: 4vh;
+    color: var(--SecondaryDark);
+    margin: 0;
+}
+
+.adminPanelContent {
+    width: 65vw;
+    height: calc(65vh - 6.5vh);
+    padding-bottom: 30px;
+}
+
+.tableWrapper {
     height: 100%;
     width: 100%;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--SecondaryDark) var(--PrimaryLight);
+}
+
+table {
+    width: 100%;
+    text-align: center;
+    color: var(--SecondaryDark);
+    table-layout: fixed;
+}
+
+th {
+    height: 4vh;
+    font-size: 2vh;
+    min-width: 10%;
+}
+
+th div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5%;
+    height: 100%;
+}
+
+th div img {
+    height: 60%;
+}
+
+td {
+    height: 4vh;
+    font-size: 1.5vh;
+}
+
+tr {
+    border-bottom: 1px solid var(--SecondaryDark);
+    width: 100%;
+}
+tr:hover td {
+    background-color: var(--HoverLight);
+    cursor: pointer;
+}
+
+.commentContent {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-clamp: 2;
+
+    font-size: 1.25vh;
 }

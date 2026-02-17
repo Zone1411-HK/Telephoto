@@ -544,6 +544,72 @@ router.post('/deletePost', isAdmin, async (request, response) => {
         throw new Error(`Hiba a "deletePost" végpontban: ${error}`);
     }
 });
+
+router.get('/getProfilesAdmin', async (request, response) => {
+    try {
+        let resultArr = [];
+        const sqlResult = await database.adminProfiles();
+        for (const obj of sqlResult) {
+            resultArr.push({
+                userId: obj.user_id,
+                username: obj.username,
+                email: obj.email,
+                registrationDate: convertUnixToReadableDate(Date.parse(obj.registration_date)),
+                postCount: obj.post_count,
+                commentCount: obj.comment_count
+            });
+        }
+        response.status(200).json({
+            Status: 'Success',
+            Result: resultArr
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "getProfilesAdmin" végpontban: ${error}`);
+    }
+});
+router.get('/getPostsAdmin', async (request, response) => {
+    try {
+        let resultArr = [];
+        const sqlResult = await database.adminPosts();
+        for (const obj of sqlResult) {
+            resultArr.push({
+                postId: obj.post_id,
+                username: obj.username,
+                creationDate: convertUnixToReadableDate(Date.parse(obj.creation_date)),
+                upvote: obj.upvote,
+                downvote: obj.downvote,
+                pictureCount: obj.picture_count
+            });
+        }
+        response.status(200).json({
+            Status: 'Success',
+            Result: resultArr
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "getPostsAdmin" végpontban: ${error}`);
+    }
+});
+router.get('/getCommentsAdmin', async (request, response) => {
+    try {
+        let resultArr = [];
+        const sqlResult = await database.adminComments();
+        for (const obj of sqlResult) {
+            resultArr.push({
+                commentId: obj.comment_id,
+                postId: obj.post_id,
+                username: obj.username,
+                commentContent: obj.comment_content,
+                commentDate: convertUnixToReadableDate(Date.parse(obj.comment_date))
+            });
+        }
+        response.status(200).json({
+            Status: 'Success',
+            Result: resultArr
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "getCommentsAdmin" végpontban: ${error}`);
+    }
+});
 //#endregion
 
 //! FÜGGVÉNYEK

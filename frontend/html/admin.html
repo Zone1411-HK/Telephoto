@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="hu">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
+        <title>Admin</title>
         <!--? BOOTSTRAP -->
         <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css" />
         <script src="../bootstrap/js/popper.min.js"></script>
@@ -30,40 +30,52 @@
                     <img src="/images/arrow-right.svg" class="invisible" />
                 </button>
                 <div id="sidebarTitle">
-                    <h2 id="adminUsername">Pákozd</h2>
+                    <h2 id="adminUsername">Admin</h2>
                 </div>
                 <div id="navButtons">
-                    <button class="navButton" type="button">
+                    <a class="navButton" href="#profiles">
                         <img src="/images/user.svg" class="navButtonSVG" alt="" /><span
                             >Profilok</span
                         >
-                    </button>
-                    <button class="navButton" type="button">
+                    </a>
+                    <a class="navButton" href="#posts">
                         <img src="/images/post.svg" class="navButtonSVG" alt="" /><span
                             >Posztok</span
                         >
-                    </button>
-                    <button class="navButton" type="button">
+                    </a>
+                    <a class="navButton" href="#comments">
                         <img src="/images/comment.svg" class="navButtonSVG" alt="" /><span
                             >Kommentek</span
                         >
-                    </button>
-                    <button class="navButton" type="button">
+                    </a>
+                    <a class="navButton" href="#profiles">
                         <img src="/images/flag.svg" class="navButtonSVG" alt="" /><span
                             >Jelentések</span
                         >
-                    </button>
+                    </a>
                 </div>
                 <div id="navSearches">
-                    <label for="userSearch" class="searchLabel">
-                        <input type="text" id="userSearch" placeholder="Profil ID" maxlength="12" />
-                        <button type="button">
+                    <label for="profileSearchId" class="searchLabel">
+                        <input
+                            type="text"
+                            id="profileSearchId"
+                            class="searchId"
+                            placeholder="Profil ID"
+                            maxlength="12"
+                        />
+                        <button type="button" id="profileSearchButton">
                             <img src="/images/search.svg" />
                         </button>
                     </label>
-                    <label for="userSearch" class="searchLabel">
-                        <input type="text" id="userSearch" placeholder="Poszt ID" maxlength="12" />
-                        <button type="button">
+                    <label for="postSearchId" class="searchLabel">
+                        <input
+                            type="text"
+                            class="searchId"
+                            id="postSearchId"
+                            placeholder="Poszt ID"
+                            maxlength="12"
+                        />
+                        <button type="button" id="postSearchButton">
                             <img src="/images/search.svg" />
                         </button>
                     </label>
@@ -87,11 +99,84 @@
                     </div>
                     <div id="userTrackerTimes"></div>
                 </div>
-                <div id="noar">
-                    <img id="noarImg" src="/images/placeholder1.jpg" />
+            </div>
+            <div id="adminContent">
+                <div class="adminPanel" id="profiles">
+                    <div class="adminPanelHeader">
+                        <button type="button" class="back">
+                            <img src="/images/backDark.svg" />
+                        </button>
+                        <h3>Profilok</h3>
+                    </div>
+                    <div class="adminPanelContent">
+                        <div class="tableWrapper">
+                            <table id="profilesTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Felhasználónév</th>
+                                        <th>E-Mail</th>
+                                        <th>Regisztráció Dátuma</th>
+                                        <th>
+                                            <div># <img src="/images/postDark.svg" /></div>
+                                        </th>
+                                        <th>
+                                            <div># <img src="/images/commentDark.svg" /></div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="profilesTbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="adminPanel" id="posts">
+                    <div class="adminPanelHeader"><h3>Posztok</h3></div>
+                    <div class="adminPanelContent">
+                        <div class="tableWrapper">
+                            <table id="postsTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Felhasználó</th>
+                                        <th>Feltöltés dátuma</th>
+                                        <th>
+                                            <div># <img src="/images/likeDark.svg" /></div>
+                                        </th>
+                                        <th>
+                                            <div># <img src="/images/dislikeDark.svg" /></div>
+                                        </th>
+                                        <th>
+                                            <div>#<img src="/images/imageDark.svg" /></div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="postsTbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="adminPanel" id="comments">
+                    <div class="adminPanelHeader"><h3>Kommentek</h3></div>
+                    <div class="adminPanelContent">
+                        <div class="tableWrapper">
+                            <table id="commentsTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Poszt ID</th>
+                                        <th>Felhasználó</th>
+                                        <th>Komment tartalma</th>
+                                        <th>Komment dátuma</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="commentsTbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="adminContent"></div>
         </div>
     </body>
 </html>

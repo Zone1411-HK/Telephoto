@@ -104,7 +104,14 @@ async function getPostDataByPostId(postId) {
 //post sorbarendezés lekérdezásek
 async function topPosts() {
     try {
-        const topPostsSql = `SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link, pictures.picture_link FROM posts LEFT JOIN users ON users.user_id = posts.user_id LEFT JOIN interactions ON interactions.post_id = posts.post_id LEFT JOIN pictures ON pictures.post_id = posts.post_id ORDER BY interactions.upvote_downvote`;
+        const topPostsSql = `
+        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link, pictures.picture_link 
+        FROM posts 
+        LEFT JOIN users ON users.user_id = posts.user_id 
+        LEFT JOIN interactions ON interactions.post_id = posts.post_id 
+        LEFT JOIN pictures ON pictures.post_id = posts.post_id 
+        GROUP BY posts.post_id
+        ORDER BY COUNT(interactions.upvote) - COUNT(interactions.downvote)`;
         const [rows] = await pool.execute(topPostsSql);
         return rows;
     } catch (error) {
@@ -130,7 +137,7 @@ async function loadProfile(username) {
 
 async function loadComments(postId) {
     try {
-        const commentsSql = `SELECT users.username, users.profile_picture_link, interactions.comment_content FROM interactions INNER JOIN users ON users.user_id = interactions.user_id INNER JOIN posts ON posts.post_id = interactions.post_id WHERE interactions.post_id = ${postId}`;
+        const commentsSql = `SELECT users.username, users.profile_picture_link, comments.comment_content FROM comments INNER JOIN users ON users.user_id = comments.user_id INNER JOIN posts ON posts.post_id = comments.post_id WHERE comments.post_id = ${postId}`;
         const [rows] = await pool.execute(commentsSql);
         return rows;
     } catch (error) {
@@ -296,6 +303,41 @@ async function deletePost(postId) {
     }
 }
 
+async function adminProfiles() {
+    try {
+        const sql = `
+        SELECT users.user_id, users.username, users.username, users.email, users.registration_date, COUNT(DISTINCT posts.post_id) AS post_count, COUNT(DISTINCT comments.comment_id) AS comment_count
+        FROM users 
+        LEFT JOIN posts ON users.user_id = posts.user_id 
+        LEFT JOIN comments ON users.user_id = comments.user_id
+        GROUP BY users.user_id;`;
+        const [rows] = await pool.execute(sql);
+        return rows;
+    } catch (error) {}
+}
+async function adminPosts() {
+    try {
+        const sql = `
+        SELECT posts.post_id, users.username, posts.creation_date, COUNT(interactions.upvote) AS upvote, COUNT(interactions.downvote) AS downvote, COUNT(pictures.picture_id) AS picture_count
+        FROM posts 
+        LEFT JOIN users ON posts.user_id = users.user_id
+        LEFT JOIN interactions ON posts.post_id = interactions.post_id
+        LEFT JOIN pictures ON posts.post_id = pictures.post_id
+        GROUP BY posts.post_id;`;
+        const [rows] = await pool.execute(sql);
+        return rows;
+    } catch (error) {}
+}
+async function adminComments() {
+    try {
+        const sql = `
+        SELECT comments.comment_id, comments.post_id, users.username, comments.comment_content, comments.comment_date
+        FROM comments
+        LEFT JOIN users ON comments.user_id = users.user_id;`;
+        const [rows] = await pool.execute(sql);
+        return rows;
+    } catch (error) {}
+}
 //!Export
 module.exports = {
     selectall,
@@ -318,5 +360,8 @@ module.exports = {
     lastMessageOfChat,
     findMemberId,
     sendMessage,
-    deletePost
+    deletePost,
+    adminProfiles,
+    adminPosts,
+    adminComments
 };

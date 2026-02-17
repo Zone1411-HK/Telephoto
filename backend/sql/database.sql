@@ -41,13 +41,23 @@ CREATE TABLE pictures(
 CREATE TABLE interactions(
  	user_id INT,
     post_id INT,
-    upvote_downvote INT,
+    upvote BOOLEAN,
+    downvote BOOLEAN,
     favorite BOOLEAN,
-    comment_content VARCHAR(500),
-    type VARCHAR(20),
     FOREIGN KEY(user_id) REFERENCES users(user_id),
     FOREIGN KEY(post_id) REFERENCES posts(post_id)
 );
+
+CREATE TABLE comments(
+    comment_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    post_id INT NOT NULL,
+    comment_content VARCHAR(150),
+    comment_date TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(user_id),
+    FOREIGN KEY(post_id) REFERENCES posts(post_id)
+);
+
 CREATE TABLE chats(
     chat_id INT PRIMARY KEY AUTO_INCREMENT,
     chat_name VARCHAR(50),
@@ -100,6 +110,12 @@ BEFORE DELETE ON posts
 FOR EACH ROW
 DELETE FROM interactions 
 WHERE interactions.post_id = OLD.post_id;
+
+CREATE TRIGGER delete_post_comments
+BEFORE DELETE ON posts
+FOR EACH ROW
+DELETE FROM comments 
+WHERE comments.post_id = OLD.post_id;
 
 CREATE TRIGGER delete_post_pictures
 BEFORE DELETE ON posts

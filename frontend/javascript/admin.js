@@ -1,18 +1,33 @@
 let socket = io();
 let userTrackerArray = [];
 let userTrackerTimeArray = [];
-document.addEventListener('DOMContentLoaded', () => {
+
+socket.emit('requestActiveUsers');
+setInterval(() => {
     socket.emit('requestActiveUsers');
-    setInterval(() => {
-        socket.emit('requestActiveUsers');
-    }, 1500);
+}, 1500);
+
+document.addEventListener('DOMContentLoaded', () => {
+    getProfiles();
+    getPosts();
+    getComments();
+    responsiveUsername();
+
+    const navButtons = document.getElementsByClassName('navButton');
+    for (const navButton of navButtons) {
+        navButton.addEventListener('click', navButtonClick);
+    }
+
+    const searches = document.getElementsByClassName('searchId');
+    for (const search of searches) {
+        search.addEventListener('click', searchFocus);
+    }
+
     let sidebar = document.getElementById('sidebar');
     toggleSidebarVisibility(sidebar);
 
     let collapseSidebarBtn = document.getElementById('collapseSidebar');
     collapseSidebarBtn.addEventListener('click', collapseSidebar);
-
-    responsiveUsername();
 });
 
 function collapseSidebar() {
@@ -174,5 +189,99 @@ async function deletePost() {
         console.log(response.Message);
     } else {
         console.log('Sikeresen törölte a posztot');
+    }
+}
+
+function navButtonClick() {
+    const navButtons = document.getElementsByClassName('navButton');
+    for (const navButton of navButtons) {
+        console.log(navButton == this);
+        if (navButton != this) {
+            navButton.classList.remove('activeNavButton');
+        } else {
+            this.classList.add('activeNavButton');
+        }
+    }
+}
+
+function searchFocus() {
+    const searches = document.getElementsByClassName('searchId');
+    for (const search of searches) {
+        if (this == search) {
+            search.parentNode.classList.add('focusSearch');
+        } else {
+            search.parentNode.classList.remove('focusSearch');
+        }
+    }
+}
+
+async function getProfiles() {
+    try {
+        const response = await GetMethodFetch('/api/getProfilesAdmin');
+        const result = response.Result;
+        const tbody = document.getElementById('profilesTbody');
+        tbody.replaceChildren();
+        for (const obj of result) {
+            const tr = document.createElement('tr');
+            const values = Object.values(obj);
+            for (const value of values) {
+                const td = document.createElement('td');
+                td.innerText = value;
+                tr.appendChild(td);
+            }
+            tbody.appendChild(tr);
+        }
+    } catch (error) {
+        console.error('Galiba támadt');
+    }
+}
+
+async function getPosts() {
+    try {
+        const response = await GetMethodFetch('/api/getPostsAdmin');
+        const result = response.Result;
+        const tbody = document.getElementById('postsTbody');
+        tbody.replaceChildren();
+        for (const obj of result) {
+            const tr = document.createElement('tr');
+            const values = Object.values(obj);
+            for (const value of values) {
+                const td = document.createElement('td');
+                td.innerText = value;
+                tr.appendChild(td);
+            }
+            tbody.appendChild(tr);
+        }
+    } catch (error) {
+        console.error('Galiba támadt');
+    }
+}
+
+async function getComments() {
+    try {
+        const response = await GetMethodFetch('/api/getCommentsAdmin');
+        const result = response.Result;
+        const tbody = document.getElementById('commentsTbody');
+        tbody.replaceChildren();
+        for (const obj of result) {
+            const tr = document.createElement('tr');
+            const values = Object.entries(obj);
+            for (let i = 0; i < values.length; i++) {
+                const td = document.createElement('td');
+
+                if (values[i][0] == 'commentContent') {
+                    const div = document.createElement('div');
+                    div.classList.add('commentContent');
+                    div.innerText = values[i][1];
+                    td.appendChild(div);
+                } else {
+                    td.innerText = values[i][1];
+                }
+                tr.appendChild(td);
+            }
+            tbody.appendChild(tr);
+        }
+    } catch (error) {
+        console.error('Galiba támadt');
     }
 }
