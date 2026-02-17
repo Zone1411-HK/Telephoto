@@ -158,3 +158,52 @@
     z-index: 5001;
     opacity: 70%;
 }
+
+
+.tableContainer{
+    overflow: auto;
+    height: 200px;
+}
+
+.commentsTable{
+    
+}
+
+.tRow{
+    display: flex;
+    flex-direction:row;
+    align-content: center;
+    height:70px;
+}
+
+.commentingUserPic{
+    display: flex;
+ 
+    align-content: center;     
+    height:70px;
+}
+
+.commentingUserImg{
+    display: flex;
+    clip-path: circle();
+    height:70px;
+    align-content: center;
+}
+
+.commentingUser{
+    display: flex;
+    visibility: hidden;
+
+    z-index: 1;
+
+}
+
+.commentingUserPic:hover .commentingUser {
+    visibility: visible;
+    display: flex;
+}
+
+.comment{
+    display: flex;
+    align-content: center;
+}

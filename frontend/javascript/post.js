@@ -43,26 +43,16 @@ const getTopPosts = async () => {
             console.log('create' + test.creation_date);
             console.log('postid' + test.post_id); */
 
-            const response2 = await PostMethodFetch('/api/commentInfos', { post_id: test.post_id });
-            const data2 = response2.results;
-            console.log(data2);
-            for (let i = 0; i < data.length; i++) {
-                const userName = data[i].username;
-                const userPic = data[i].profile_picture_link;
-                const text = data[i].comment_content;
-                console.log('username' + userName);
-                console.log('userpic' + userPic);
-                console.log('text' + text);
-            }
-
             hangPictures(test);
+
+                       
         }
     } catch (error) {
         console.error('Hiba' + error);
     }
 };
 
-const hangPictures = (test) => {
+const hangPictures = async (test) => {
     let posts = document.getElementById('posts');
     let post = document.createElement('div');
     post.classList.add('post');
@@ -89,9 +79,52 @@ const hangPictures = (test) => {
 
     let p = document.createElement('p');
 
+    let tableContainer = document.createElement('div');
+    let commentsTable = document.createElement('table');
+    let tBody = document.createElement('tbody');
+    tableContainer.classList.add('tableContainer');
+    commentsTable.classList.add('commentsTable');
+    tBody.classList.add('tBody');
+
+    let tRow = document.createElement('tr');
+    let commentingUserPic = document.createElement('td');
+    let commentingUserImg = document.createElement('img');
+    let commentingUser = document.createElement('span');
+    let comment = document.createElement('td');    
+    tRow.classList.add('tRow');
+    commentingUserPic.classList.add('commentingUserPic');
+    commentingUserImg.classList.add('commentingUserImg');
+    commentingUser.classList.add('commentingUser');
+    comment.classList.add('comment');
+
     p.innerHTML = test.description;
     console.log(test);
     img.src = '/uploads/' + test.pic;
+
+    const response2 = await PostMethodFetch('/api/commentInfos', { post_id: test.post_id });
+        const data2 = response2.results;
+        console.log(data2);
+            for (let i = 0; i < data2.length; i++) {
+                const userName = data2[i].username;
+                const userPic = data2[i].profile_picture_link;
+                const text = data2[i].comment_content;
+                console.log('username' + userName);
+                console.log('userpic' + userPic);
+                console.log('text' + text);      
+            }    
+    
+    commentingUserImg.src = userPic;
+    commentingUser.innerHTML = userName;
+    comment.innerHTML = text;
+
+    commentingUserPic.appendChild(commentingUserImg);
+    commentingUserPic.appendChild(commentingUser);
+    tRow.appendChild(commentingUserPic);
+    tRow.appendChild(comment);
+    tBody.appendChild(tRow);
+    commentsTable.appendChild(tBody);
+    tableContainer.appendChild(commentsTable);
+    postcontent.appendChild(tableContainer);
 
     imgdiv.appendChild(img);
     postcontent.appendChild(imgdiv);
@@ -109,3 +142,5 @@ const hangPictures = (test) => {
 
     posts.appendChild(post);
 };
+
+
