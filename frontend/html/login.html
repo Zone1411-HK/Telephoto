@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>TELEPHOTO</title>
+            <!--!Bootstrap-->
+            <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css" />
+            <!--?Popper: dropdowns, popovers, tooltips-->
+            <script src="../bootstrap/js/popper.min.js"></script>
+            <script src="../bootstrap/js/bootstrap.min.js"></script>
+            <!--!CSS-->
+            <link rel="stylesheet" href="node/leaflet/dist/leaflet.css" />
+            <link rel="stylesheet" href="node/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+            <link rel="stylesheet" href="/css/style.css" />
+            <link rel="stylesheet" href="/css/darkroom.css" />
+            <link rel="stylesheet" href="/css/modal.css">
+            <link rel="stylesheet" href="/css/chat.css">
+            <link rel="stylesheet" href="/css/login.css">
+            <!--!JavaScript-->
+            <script src="/javascript/fetch.js"></script>
+            <script src="node/socket.io/client-dist/socket.io.js"></script>
+            <script src="/javascript/connect.js"></script>
+            <script src="node/leaflet/dist/leaflet.js"></script>
+            <script src="node/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+            <script src="node/exifreader/dist/exif-reader.js"></script>
+            <script src="/javascript/registration.js"></script>
+            <script src="/javascript/map.js"></script>
+            <script src="/javascript/uploadPost.js"></script>
+            <script src="/javascript/darkroom.js"></script>
+            <script src="/javascript/profile.js"></script>
+            <script src="/javascript/chat.js"></script>
+            <script src="/javascript/post.js"></script>
+            <script src="/javascript/login.js"></script>
+            <script src="/javascript/index.js"></script>
+
+            <!--Font Style-->
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+            <link
+                href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
+                rel="stylesheet"
+            />
+    </head>
+    <body>
+        <div class="loginMain invisible" id="login">
+                <div class="row login">
+                    <div class="col-md-4 col-sm-12 loginDoboz">
+                        <img
+                            src="/images/placeholder1.jpg"
+                            alt="PLACEHOLDER"
+                            class="img-fluid w-100"
+                        />
+                    </div>
+
+                    <div class="col-md-4 col-sm-12 loginDoboz2">
+                        <div class="loginTitle">
+                            <h1>TELEPHOTO</h1>
+                        </div>
+                        <div class="loginForm" id="loginForm">
+                            <form>
+                                <div class="loginSorok">
+                                    <label for="loginUsername">Felhasználónév: </label>
+                                    <input id="loginUsername" type="text" class="inputMezo" />
+                                </div>
+                                <div class="loginSorok">
+                                    <label for="loginPassword">Jelszó: </label>
+                                    <input id="loginPassword" type="password" class="inputMezo" />
+                                </div>
+
+                                <div class="loginBtn">
+                                    <input id="loginButton" type="button" value="Bejelentkezés" />
+                                </div>
+                                <hr class="vonal" />
+                                <div class="" id="regTextDiv">
+                                    <span class="loginRegText" id="regText">Regisztráció</span>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="invisible" id="regForm">
+                            <form>
+                                <div class="loginSorok">
+                                    <label for="regUsername">Felhasználónév: </label>
+                                    <input id="regUsername" type="text" class="inputMezo" />
+                                </div>
+                                <div class="loginSorok">
+                                    <label for="regEmail">Email cím: </label>
+                                    <input id="regEmail" type="text" class="inputMezo" />
+                                </div>
+                                <div class="loginSorok">
+                                    <label for="regPassword">Jelszó: </label>
+                                    <input id="regPassword" type="password" class="inputMezo" />
+                                </div>
+                                <div class="loginSorok">
+                                    <label for="regConfirmPassword">Jelszó megerősítése: </label>
+                                    <input
+                                        id="regConfirmPassword"
+                                        type="password"
+                                        class="inputMezo"
+                                    />
+                                </div>
+
+                                <div class="loginBtn">
+                                    <input id="regButton" type="button" value="Regisztráció" />
+                                </div>
+                                <hr class="vonal" />
+                                <div class="" id="loginTextDiv">
+                                    <span class="loginRegText" id="loginText">Bejelentkezés</span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-sm-12 loginDoboz">
+                        <img
+                            src="/images/placeholder2.gif"
+                            alt="PLACEHOLDER"
+                            class="img-fluid w-100"
+                        />
+                    </div>
+            </div>
+        </div>
+    </body>
+</html>
