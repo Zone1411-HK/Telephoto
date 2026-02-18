@@ -9,7 +9,9 @@
         <script src="../bootstrap/js/popper.min.js"></script>
         <script src="../bootstrap/js/bootstrap.min.js"></script>
         <!--? CSS -->
-        <link href="/css/admin.css" rel="stylesheet" />
+        <link href="/css/adminColors.css" rel="stylesheet" />
+        <link href="/css/admin.css" rel="stylesheet" media="(min-aspect-ratio: 11/10)" />
+        <link href="/css/mobileAdmin.css" rel="stylesheet" media="(max-aspect-ratio: 10.999/10)" />
         <!--? SCRIPTS -->
         <script src="/javascript/fetch.js"></script>
         <script src="node/socket.io/client-dist/socket.io.js"></script>
@@ -178,5 +180,20 @@
                 </div>
             </div>
         </div>
+
+        <nav id="navbar">
+            <a class="navButton" href="#profiles">
+                <img src="/images/user.svg" class="navButtonSVG" alt="profilok" />
+            </a>
+            <a class="navButton" href="#posts">
+                <img src="/images/post.svg" class="navButtonSVG" alt="posztok" />
+            </a>
+            <a class="navButton" href="#comments">
+                <img src="/images/comment.svg" class="navButtonSVG" alt="kommentek" />
+            </a>
+            <a class="navButton" href="#profiles">
+                <img src="/images/flag.svg" class="navButtonSVG" alt="jelentések" />
+            </a>
+        </nav>
     </body>
 </html>

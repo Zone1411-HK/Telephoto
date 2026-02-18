@@ -1,0 +1,159 @@
+#sidebar {
+    display: none;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100%;
+}
+
+#adminContent {
+    height: 95vh;
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+    gap: 5vh;
+    align-items: center;
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+}
+
+#navbar {
+    height: 5vh;
+    width: 100%;
+    background-color: var(--PrimaryDark);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.navButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.navButton:hover {
+    background-color: var(--HoverDark);
+}
+
+.navButton:active {
+    background-color: var(--HoverDark);
+}
+
+.adminPanel {
+    width: 94vw;
+    height: 65vh;
+    box-shadow: 0 0 5px 1px rgba(54, 70, 95, 0.5);
+    border-radius: 25px;
+}
+
+.adminPanelHeader {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 6.5vh;
+    width: inherit;
+    border-bottom: 1px solid var(--SecondaryDark);
+}
+
+.back {
+    position: absolute;
+    left: 2.75%;
+    border: none;
+    background-color: var(--PrimaryLight);
+    height: 75%;
+    aspect-ratio: 1/1;
+    border-radius: 50px;
+}
+
+.back:hover {
+    background-color: var(--HoverLight);
+}
+
+.back img {
+    height: 50%;
+}
+
+.adminPanelHeader h3 {
+    font-size: 4vh;
+    color: var(--SecondaryDark);
+    margin: 0;
+}
+
+.adminPanelContent {
+    width: inherit;
+    height: calc(65vh - 6.5vh);
+    padding-bottom: 30px;
+}
+
+.tableWrapper {
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--SecondaryDark) var(--PrimaryLight);
+}
+
+table {
+    width: 100%;
+    text-align: center;
+    color: var(--SecondaryDark);
+    table-layout: fixed;
+}
+
+th {
+    height: 4vh;
+    font-size: 1.5vh;
+    min-width: 10%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+th div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5%;
+    height: 100%;
+}
+
+th div img {
+    height: 60%;
+}
+
+td {
+    height: 4vh;
+    font-size: 1.35vh;
+    padding-left: 0.75vw;
+    padding-right: 0.75vw;
+    font-weight: lighter;
+}
+
+tr {
+    border-bottom: 1px solid var(--SecondaryDark);
+    width: 100%;
+}
+tr:hover td {
+    background-color: var(--HoverLight);
+    cursor: pointer;
+}
+
+.commentContent {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-clamp: 2;
+}
