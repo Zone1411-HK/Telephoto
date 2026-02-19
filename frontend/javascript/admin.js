@@ -72,18 +72,18 @@ function responsiveUsername() {
         if (length > 8) {
             if (length > 11) {
                 if (length > 15) {
-                    username.style.fontSize = '20px';
+                    username.style.fontSize = '22px';
                 } else {
-                    username.style.fontSize = '24px';
+                    username.style.fontSize = '26px';
                 }
             } else {
-                username.style.fontSize = '34px';
+                username.style.fontSize = '36px';
             }
         } else {
-            username.style.fontSize = '38px';
+            username.style.fontSize = '40px';
         }
     } else {
-        username.style.fontSize = '48px';
+        username.style.fontSize = '50px';
     }
 }
 
@@ -228,6 +228,7 @@ async function getProfiles() {
                 const td = document.createElement('td');
                 td.innerText = value;
                 tr.appendChild(td);
+                tr.addEventListener('click', openProfile);
             }
             tbody.appendChild(tr);
         }
@@ -249,6 +250,7 @@ async function getPosts() {
                 const td = document.createElement('td');
                 td.innerText = value;
                 tr.appendChild(td);
+                tr.addEventListener('click', openPost);
             }
             tbody.appendChild(tr);
         }
@@ -278,6 +280,7 @@ async function getComments() {
                     td.innerText = values[i][1];
                 }
                 tr.appendChild(td);
+                tr.addEventListener('click', openComment);
             }
             tbody.appendChild(tr);
         }
@@ -285,3 +288,9 @@ async function getComments() {
         console.error('Galiba támadt');
     }
 }
+
+async function openProfile() {}
+
+async function openPost() {}
+
+async function openComment() {}

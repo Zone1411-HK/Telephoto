@@ -61,13 +61,16 @@
     min-height: 1vh;
     font-variant: small-caps;
     height: 6vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
-#sidebarTitle h2 {
+#adminUsername {
     border-bottom: 1px solid white;
     text-align: center;
     width: 100%;
-    height: 100%;
     font-size: 5.5vh;
     margin: 0;
     z-index: 9;
@@ -374,15 +377,16 @@
 .adminPanelContent {
     width: 65vw;
     height: calc(65vh - 6.5vh);
-    padding-bottom: 30px;
 }
 
 .tableWrapper {
+    padding-bottom: 30px;
     height: 100%;
     width: 100%;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--SecondaryDark) var(--PrimaryLight);
+    display: none;
 }
 
 table {
@@ -413,12 +417,14 @@ th div img {
 
 td {
     height: 4vh;
-    font-size: 1.5vh;
+    font-size: 1.65vh;
+    font-weight: 370;
 }
 
 tr {
     border-bottom: 1px solid var(--SecondaryDark);
     width: 100%;
+    user-select: none;
 }
 tr:hover td {
     background-color: var(--HoverLight);
@@ -435,4 +441,87 @@ tr:hover td {
     line-clamp: 2;
 
     font-size: 1.25vh;
+}
+
+#adminTitleMobile {
+    display: none;
+}
+
+.openedTable {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+#profileContent {
+    width: 100%;
+    height: 87.5%;
+}
+
+#profileActions {
+    width: 100%;
+    height: 12.5%;
+    display: flex;
+    flex-direction: row;
+}
+
+.profAction {
+    height: 100%;
+    width: 33.33333%;
+}
+
+.profAction:hover {
+    cursor: pointer;
+}
+
+.profAction h3 {
+    height: 33.33%;
+    transition: 0.25s;
+    width: 100%;
+    height: 100%;
+    font-size: 6vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-variant: small-caps;
+}
+
+.profActionBan:hover h3 {
+    background-color: rgb(230, 154, 154);
+    border-color: rgb(155, 79, 79);
+    color: rgb(99, 26, 26);
+}
+
+.profActionBan h3 {
+    background-color: rgb(247, 192, 192);
+    border: 3px solid rgb(206, 106, 106);
+    color: rgb(139, 46, 46);
+    border-bottom-left-radius: 25px;
+}
+
+.profActionModify h3 {
+    background-color: rgb(250, 237, 163);
+    border: 3px solid rgb(192, 155, 54);
+    color: rgb(136, 106, 25);
+}
+
+.profActionModify:hover h3 {
+    background-color: rgb(230, 218, 155);
+    border: 3px solid rgb(182, 146, 46);
+    color: rgb(128, 99, 19);
+}
+
+.profActionClear h3 {
+    background-color: rgb(216, 247, 255);
+    border: 3px solid rgb(59, 152, 180);
+    color: rgb(59, 152, 180);
+    border-bottom-right-radius: 25px;
+}
+
+.profActionClear:hover h3 {
+    background-color: rgb(191, 230, 240);
+    border: 3px solid rgb(35, 119, 145);
+    color: rgb(37, 122, 148);
 }
