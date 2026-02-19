@@ -450,18 +450,18 @@ tr:hover td {
 .openedTable {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 58.5vh;
     width: 100%;
 }
 
 #profileContent {
     width: 100%;
-    height: 87.5%;
+    height: 52vh;
 }
 
 #profileActions {
     width: 100%;
-    height: 12.5%;
+    height: 6.5vh;
     display: flex;
     flex-direction: row;
 }
@@ -480,7 +480,7 @@ tr:hover td {
     transition: 0.25s;
     width: 100%;
     height: 100%;
-    font-size: 6vh;
+    font-size: 5vh;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -524,4 +524,35 @@ tr:hover td {
     background-color: rgb(191, 230, 240);
     border: 3px solid rgb(35, 119, 145);
     color: rgb(37, 122, 148);
+}
+
+.adminProfile {
+    background-color: yellow;
+}
+
+.reportedProfile {
+    background-color: rebeccapurple;
+}
+
+.profileHeader {
+    display: flex;
+    flex-direction: row;
+    height: 10vh;
+    gap: 3%;
+    padding-left: 5%;
+    padding-top: 1vh;
+}
+
+.profilePictureDiv {
+    height: 100%;
+    aspect-ratio: 1/1;
+}
+
+#profilePicture {
+    height: 100%;
+    clip-path: circle();
+}
+
+.profileBody {
+    height: 42vh;
 }

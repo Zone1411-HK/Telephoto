@@ -18,6 +18,7 @@ CREATE TABLE users(
     profile_picture_link VARCHAR(200),
     biography VARCHAR(500),
     is_admin BOOLEAN,
+    is_reported BOOLEAN DEFAULT FALSE,
     registration_date DATETIME
 );
 CREATE TABLE posts(
@@ -29,6 +30,7 @@ CREATE TABLE posts(
     latitude FLOAT,
     longitude FLOAT,
     creation_date DATETIME,
+    is_reported BOOLEAN DEFAULT FALSE,
     FOREIGN KEY(user_id) REFERENCES users(user_id)
 );
 CREATE TABLE pictures(
@@ -54,6 +56,7 @@ CREATE TABLE comments(
     post_id INT NOT NULL,
     comment_content VARCHAR(150),
     comment_date TIMESTAMP,
+    is_reported BOOLEAN DEFAULT FALSE,
     FOREIGN KEY(user_id) REFERENCES users(user_id),
     FOREIGN KEY(post_id) REFERENCES posts(post_id)
 );
@@ -95,7 +98,7 @@ CREATE TABLE deleted_pictures(
 	picture_id INT NOT NULL,
     post_id INT NOT NULL,
     picture_link TEXT NOT NULL,
-        deleted_at TIMESTAMP
+    deleted_at TIMESTAMP
 
 );
 

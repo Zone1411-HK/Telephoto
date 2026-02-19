@@ -127,7 +127,6 @@ function generateBarChart(arr) {
         let tooltip = document.createElement('span');
         tooltip.classList.add('userTrackerTooltip');
         tooltip.innerText = arr[i];
-        console.log(ratio * arr[i]);
         if (ratio * arr[i] < 40) {
             tooltip.style.paddingTop = '5%';
             tooltip.style.fontSize = '0.6vw';
@@ -151,10 +150,8 @@ socket.on('responseActiveUsers', (activeUsers) => {
     }
     userTrackerTimeArray.push(convertToTime(Date.now()));
     userTrackerArray.push(activeUsers);
-    console.log('before: ', userTrackerArray);
 
     generateBarChart(userTrackerArray);
-    console.log('after: ', userTrackerArray);
 });
 
 function convertToTime(unix) {
@@ -223,17 +220,28 @@ async function getProfiles() {
         tbody.replaceChildren();
         for (const obj of result) {
             const tr = document.createElement('tr');
-            const values = Object.values(obj);
-            for (const value of values) {
+            const values = Object.entries(obj);
+
+            for (let i = 0; i < values.length - 2; i++) {
                 const td = document.createElement('td');
-                td.innerText = value;
+                td.innerText = values[i][1];
+                if (values[i][0] == 'userId') {
+                    tr.dataset.userId = values[i][1];
+                }
                 tr.appendChild(td);
-                tr.addEventListener('click', openProfile);
             }
+            if (values[6][1] == true) {
+                tr.classList.add('adminProfile');
+            } else {
+                if (values[7][1] == true) {
+                    tr.classList.add('reportedProfile');
+                }
+            }
+            tr.addEventListener('click', openProfile);
             tbody.appendChild(tr);
         }
     } catch (error) {
-        console.error('Galiba támadt');
+        console.error(error);
     }
 }
 
@@ -289,7 +297,10 @@ async function getComments() {
     }
 }
 
-async function openProfile() {}
+async function openProfile() {
+    const userId = this.dataset.userId;
+    console.log(userId);
+}
 
 async function openPost() {}
 

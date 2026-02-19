@@ -556,7 +556,9 @@ router.get('/getProfilesAdmin', async (request, response) => {
                 email: obj.email,
                 registrationDate: convertUnixToReadableDate(Date.parse(obj.registration_date)),
                 postCount: obj.post_count,
-                commentCount: obj.comment_count
+                commentCount: obj.comment_count,
+                isAdmin: obj.is_admin,
+                isReported: obj.is_reported
             });
         }
         response.status(200).json({
@@ -567,6 +569,25 @@ router.get('/getProfilesAdmin', async (request, response) => {
         throw new Error(`Hiba a "getProfilesAdmin" végpontban: ${error}`);
     }
 });
+
+router.get('/getProfileData/:userId', async (request, response) => {
+    try {
+        const userId = request.params.userId;
+        const profileData = await database.adminProfileData(userId);
+        const userComments = await database.userComments(userId);
+        const userPosts = await database.userPosts(userId);
+
+        response.status(200).json({
+            Status: 'Success',
+            ProfileData: profileData,
+            userComments: userComments,
+            userPosts: userPosts
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "getProfileData" végpontban: ${error}`);
+    }
+});
+
 router.get('/getPostsAdmin', async (request, response) => {
     try {
         let resultArr = [];

@@ -306,14 +306,16 @@ async function deletePost(postId) {
 async function adminProfiles() {
     try {
         const sql = `
-        SELECT users.user_id, users.username, users.username, users.email, users.registration_date, COUNT(DISTINCT posts.post_id) AS post_count, COUNT(DISTINCT comments.comment_id) AS comment_count
+        SELECT users.user_id, users.username, users.username, users.email, users.registration_date, COUNT(DISTINCT posts.post_id) AS post_count, COUNT(DISTINCT comments.comment_id) AS comment_count, users.is_admin, users.is_reported
         FROM users 
         LEFT JOIN posts ON users.user_id = posts.user_id 
         LEFT JOIN comments ON users.user_id = comments.user_id
         GROUP BY users.user_id;`;
         const [rows] = await pool.execute(sql);
         return rows;
-    } catch (error) {}
+    } catch (error) {
+        throw new Error(error);
+    }
 }
 async function adminPosts() {
     try {
@@ -326,7 +328,9 @@ async function adminPosts() {
         GROUP BY posts.post_id;`;
         const [rows] = await pool.execute(sql);
         return rows;
-    } catch (error) {}
+    } catch (error) {
+        throw new Error(error);
+    }
 }
 async function adminComments() {
     try {
@@ -336,8 +340,51 @@ async function adminComments() {
         LEFT JOIN users ON comments.user_id = users.user_id;`;
         const [rows] = await pool.execute(sql);
         return rows;
-    } catch (error) {}
+    } catch (error) {
+        throw new Error(error);
+    }
 }
+
+async function userComments(userId) {
+    try {
+        const sql = `
+        SELECT comments.comment_id, comments.comment_content, comments.is_reported
+        FROM comments
+        WHERE comments.user_id = ?;`;
+
+        const [rows] = await pool.execute(sql, [userId]);
+        return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function userPosts(userId) {
+    try {
+        const sql = `
+        SELECT posts.post_id, posts.description, posts.is_reported
+        FROM posts
+        WHERE posts.user_id = ?;`;
+        const [rows] = await pool.execute(sql, [userId]);
+        return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function adminProfileData(userId) {
+    try {
+        const sql = `
+        SELECT users.user_id, users.username, users.email, users.profile_picture_link, users.biography, users.registration_date
+        FROM users
+        WHERE users.user_id = ?;`;
+        const [rows] = await pool.execute(sql, [userId]);
+        return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 //!Export
 module.exports = {
     selectall,
@@ -363,5 +410,8 @@ module.exports = {
     deletePost,
     adminProfiles,
     adminPosts,
-    adminComments
+    adminComments,
+    userComments,
+    userPosts,
+    adminProfileData
 };
