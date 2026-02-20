@@ -574,14 +574,10 @@ router.get('/getProfileData/:userId', async (request, response) => {
     try {
         const userId = request.params.userId;
         const profileData = await database.adminProfileData(userId);
-        const userComments = await database.userComments(userId);
-        const userPosts = await database.userPosts(userId);
 
         response.status(200).json({
             Status: 'Success',
-            ProfileData: profileData,
-            userComments: userComments,
-            userPosts: userPosts
+            ProfileData: profileData
         });
     } catch (error) {
         throw new Error(`Hiba a "getProfileData" végpontban: ${error}`);

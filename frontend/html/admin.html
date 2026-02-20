@@ -106,13 +106,13 @@
                 <div id="adminTitleMobile"><h2>Magyar Péter</h2></div>
                 <div class="adminPanel" id="profiles">
                     <div class="adminPanelHeader">
-                        <button type="button" class="back">
+                        <button type="button" class="back" id="profileBack">
                             <img src="/images/backDark.svg" />
                         </button>
                         <h3>Profilok</h3>
                     </div>
                     <div class="adminPanelContent">
-                        <div class="tableWrapper">
+                        <div class="tableWrapper" id="profilesTableDiv">
                             <table id="profilesTable">
                                 <thead>
                                     <tr>
@@ -131,19 +131,44 @@
                                 <tbody id="profilesTbody"></tbody>
                             </table>
                         </div>
-                        <div class="openedTable" id="openedProfile">
+                        <div id="openedProfile">
                             <div id="profileContent">
-                                <div class="profileHeader">
-                                    <div class="profilePictureDiv">
-                                        <img id="profilePicture" src="/images/placeholder1.jpg" />
+                                <div class="profilePicDiv">
+                                    <div class="profilePicWrapper">
+                                        <img id="profilePic" src="/images/placeholder1.jpg" />
                                     </div>
-                                    <div class="profileTitlesDiv">
-                                        <h3 id="profileNameId">temp</h3>
-                                        <span id="profileEmail">temp@temp.com</span>
-                                    </div>
-                                    <span id="regDate">2000.01.01</span>
                                 </div>
-                                <div class="profileBody"></div>
+                                <div class="profileDataDiv">
+                                    <div class="profileDataRow">
+                                        <div class="profileUsernameWrapper">
+                                            Felhasználónév:
+                                            <div id="profileUsername">Mekk Elek</div>
+                                        </div>
+                                        <div class="profileRegDateWrapper">
+                                            Regisztráció dátuma:
+                                            <div id="profileRegDate">2000. 01. 01.</div>
+                                        </div>
+                                    </div>
+                                    <div class="profileDataRow">
+                                        <div class="profileEmailWrapper">
+                                            Email:
+                                            <div id="profileEmail">mekkingMyElek@gmail.com</div>
+                                        </div>
+                                        <div class="profileIdWrapper">
+                                            Azonosító:
+                                            <div id="profileId">1</div>
+                                        </div>
+                                    </div>
+                                    <div class="profileBiographyWrapper">
+                                        <div id="profileBiography">
+                                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                            Praesentium, dolor unde, quos rerum deleniti laboriosam
+                                            voluptatem necessitatibus eligendi, impedit aspernatur
+                                            sed rem culpa hic eum voluptas corrupti itaque quasi?
+                                            Praesentium?
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div id="profileActions">
                                 <div class="profAction profActionBan">

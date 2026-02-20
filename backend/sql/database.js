@@ -375,7 +375,7 @@ async function userPosts(userId) {
 async function adminProfileData(userId) {
     try {
         const sql = `
-        SELECT users.user_id, users.username, users.email, users.profile_picture_link, users.biography, users.registration_date
+        SELECT users.user_id, users.username, users.email, users.profile_picture_link, users.biography, users.registration_date, users.is_reported, users.is_admin
         FROM users
         WHERE users.user_id = ?;`;
         const [rows] = await pool.execute(sql, [userId]);

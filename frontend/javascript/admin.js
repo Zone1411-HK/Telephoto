@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let collapseSidebarBtn = document.getElementById('collapseSidebar');
     collapseSidebarBtn.addEventListener('click', collapseSidebar);
+
+    document.getElementById('profileBack').addEventListener('click', closeProfile);
 });
 
 function collapseSidebar() {
@@ -228,15 +230,19 @@ async function getProfiles() {
                 if (values[i][0] == 'userId') {
                     tr.dataset.userId = values[i][1];
                 }
+
                 tr.appendChild(td);
             }
             if (values[6][1] == true) {
                 tr.classList.add('adminProfile');
-            } else {
-                if (values[7][1] == true) {
-                    tr.classList.add('reportedProfile');
-                }
+                tr.dataset.admin = true;
             }
+
+            if (values[7][1] == true) {
+                tr.classList.add('reportedProfile');
+                tr.dataset.reported = true;
+            }
+
             tr.addEventListener('click', openProfile);
             tbody.appendChild(tr);
         }
@@ -299,7 +305,40 @@ async function getComments() {
 
 async function openProfile() {
     const userId = this.dataset.userId;
-    console.log(userId);
+    const { Status, ProfileData } = await GetMethodFetch('/api/getProfileData/' + userId);
+    if (Status == 'Success' && ProfileData.length != 0) {
+        document.getElementById('openedProfile').style.display = 'flex';
+        document.getElementById('profilesTableDiv').style.display = 'none';
+
+        if (this.dataset.admin == 'true') {
+            document.getElementById('openedProfile').classList.add('adminProfile');
+        }
+
+        if (this.dataset.reported == 'true') {
+            document.getElementById('openedProfile').classList.add('reportedProfile');
+        }
+
+        document.getElementById('profileUsername').innerText = ProfileData[0].username;
+        document.getElementById('profileRegDate').innerText = ProfileData[0].registration_date;
+        document.getElementById('profileEmail').innerText = ProfileData[0].email;
+        document.getElementById('profileId').innerText = ProfileData[0].user_id;
+        document.getElementById('profileBiography').innerText = ProfileData[0].biography;
+        if (ProfileData[0].profile_picture_link != null) {
+            document.getElementById('profilePic').src =
+                '/uploads/' + ProfileData[0].profile_picture_link;
+        } else {
+            document.getElementById('profilePic').src = '/images/defaultProfile.svg';
+        }
+    } else {
+        alert('Valami probléma történt.\n\nKérjük próbálja meg később.');
+    }
+}
+
+function closeProfile() {
+    document.getElementById('openedProfile').style.display = 'none';
+    document.getElementById('profilesTableDiv').style.display = 'block';
+    document.getElementById('openedProfile').classList.remove('adminProfile');
+    document.getElementById('openedProfile').classList.remove('reportedProfile');
 }
 
 async function openPost() {}
