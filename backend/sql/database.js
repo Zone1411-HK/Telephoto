@@ -385,6 +385,47 @@ async function adminProfileData(userId) {
     }
 }
 
+async function updateProfile(userId, username, regDate, email, bio) {
+    try {
+        const sql = `
+        UPDATE users
+        SET users.username = ?, users.email = ?, users.biography = ?, users.registration_date = ?
+        WHERE users.user_id = ?;
+        `;
+        await pool.execute(sql, [username, email, bio, regDate, userId]);
+        return 'Success';
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function deleteProfile(userId) {
+    try {
+        const sql = `
+        DELETE FROM users
+        WHERE users.user_id = ?;
+        `;
+        await pool.execute(sql, [userId]);
+        return 'Success';
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function clearProfile(userId) {
+    try {
+        const sql = `
+        UPDATE users
+        SET users.is_reported = false
+        WHERE users.user_id = ?;
+        `;
+        await pool.execute(sql, [userId]);
+        return 'Success';
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 //!Export
 module.exports = {
     selectall,
@@ -413,5 +454,8 @@ module.exports = {
     adminComments,
     userComments,
     userPosts,
-    adminProfileData
+    adminProfileData,
+    updateProfile,
+    deleteProfile,
+    clearProfile
 };

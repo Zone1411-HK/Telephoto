@@ -142,17 +142,25 @@
                                     <div class="profileDataRow">
                                         <div class="profileUsernameWrapper">
                                             Felhasználónév:
-                                            <div id="profileUsername">Mekk Elek</div>
+                                            <input id="profileUsername" type="text" disabled class="profileData">
+                                            </input>
                                         </div>
                                         <div class="profileRegDateWrapper">
                                             Regisztráció dátuma:
-                                            <div id="profileRegDate">2000. 01. 01.</div>
+                                            <input
+                                                type="date"
+                                                id="profileRegDate"
+                                                class="profileData"
+                                                value="2026/01/01"
+                                                disabled
+                                            />
                                         </div>
                                     </div>
                                     <div class="profileDataRow">
                                         <div class="profileEmailWrapper">
                                             Email:
-                                            <div id="profileEmail">mekkingMyElek@gmail.com</div>
+                                            <input type="text" disabled id="profileEmail" class="profileData">
+                                            </input>
                                         </div>
                                         <div class="profileIdWrapper">
                                             Azonosító:
@@ -160,25 +168,24 @@
                                         </div>
                                     </div>
                                     <div class="profileBiographyWrapper">
-                                        <div id="profileBiography">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                            Praesentium, dolor unde, quos rerum deleniti laboriosam
-                                            voluptatem necessitatibus eligendi, impedit aspernatur
-                                            sed rem culpa hic eum voluptas corrupti itaque quasi?
-                                            Praesentium?
-                                        </div>
+                                        <div>Leírás:</div>
+                                        <textarea type="text" id="profileBiography" class="profileData" disabled>
+                                        </textarea>
                                     </div>
                                 </div>
                             </div>
                             <div id="profileActions">
-                                <div class="profAction profActionBan">
+                                <div class="profAction" id="profActionBan">
                                     <h3>törlés</h3>
                                 </div>
-                                <div class="profAction profActionModify">
+                                <div class="profAction" id="profActionModify">
                                     <h3>módosítás</h3>
                                 </div>
-                                <div class="profAction profActionClear">
-                                    <h3>tisztázás</h3>
+                                <div class="profAction" id="profActionConfirmModify">
+                                    <h3>megerősítés</h3>
+                                </div>
+                                <div class="profAction" id="profActionClear">
+                                    <h3 id="profActionClearH3" class="disabledButton">tisztázás</h3>
                                 </div>
                             </div>
                         </div>
@@ -247,5 +254,20 @@
                 <img src="/images/flag.svg" class="navButtonSVG" alt="jelentések" />
             </a>
         </nav>
+
+        <div id="deleteConfirmModal" class="customModal">
+            <div class="customModalContent">
+                <div class="customModalHeader">
+                    <h1>vigyázat</h1>
+                </div>
+                <div class="customModalBody">
+                    <p class="deleteWarning">Biztosan szeretné végrehajtani ezt a műveletet?<br>Ez a művelet visszafordíthatatlan</p>
+                    <div class="deleteButtons">
+                        <input type="button" value="tovább" class="deleteBtn deleteConfirmBtn" id="deleteConfirm">
+                        <input type="button" value="mégse" class="deleteBtn deleteCancelBtn" id="deleteCancel">
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

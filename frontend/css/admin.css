@@ -355,6 +355,10 @@
 }
 
 .back {
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     position: absolute;
     left: 2.75%;
     border: none;
@@ -369,7 +373,7 @@
 }
 
 .back img {
-    height: 50%;
+    width: 60%;
 }
 
 .adminPanelHeader h3 {
@@ -465,7 +469,7 @@ tr:hover td {
 
 #profileContent {
     width: 100%;
-    height: 100%;
+    height: 52vh;
     display: flex;
     flex-direction: row;
     padding-top: 10px;
@@ -501,6 +505,7 @@ tr:hover td {
     gap: 2.5%;
     padding: 1%;
     color: var(--PrimaryDark);
+    overflow: hidden;
 }
 
 .profileDataDiv div::selection {
@@ -516,27 +521,34 @@ tr:hover td {
     padding-right: 5%;
     width: 100%;
     height: 12.5%;
+    gap: 5%;
 }
 
 .profileIdWrapper,
 .profileEmailWrapper,
 .profileRegDateWrapper,
 .profileUsernameWrapper {
-    width: auto;
+    height: 100%;
+    width: 47.5%;
     display: flex;
     flex-direction: row;
+    align-items: center;
     white-space: nowrap;
     gap: 1vw;
 }
 .profileIdWrapper div,
-.profileEmailWrapper div,
-.profileRegDateWrapper div,
-.profileUsernameWrapper div {
+.profileEmailWrapper input,
+.profileRegDateWrapper input,
+.profileUsernameWrapper input {
+    border: none;
+    width: 100%;
     outline: none;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
 }
 
 .profileUsernameWrapper {
-    font-size: 2vw;
+    font-size: 1.5vw;
     font-weight: 500;
 }
 
@@ -547,18 +559,38 @@ tr:hover td {
     font-size: 1.25vw;
 }
 
+#profileId {
+    overflow: hidden;
+}
+
+#profileRegDate {
+    border: none;
+}
+
+.profileData {
+    background-color: inherit;
+}
+
 .profileBiographyWrapper {
     height: 70%;
     padding: 1%;
     border: 1px solid var(--SecondaryDark);
 }
+.profileBiographyWrapper span {
+    height: 20%;
+}
 
 #profileBiography {
+    padding-left: 0.5%;
+    padding-right: 0.5%;
     width: 100%;
-    height: 100%;
+    height: 80%;
+    max-height: 80%;
     overflow-y: auto;
     scrollbar-width: thin;
     outline: none;
+    overflow-wrap: break-word;
+    resize: none;
 }
 
 #profileActions {
@@ -571,6 +603,7 @@ tr:hover td {
 .profAction {
     height: 100%;
     width: 33.33333%;
+    user-select: none;
 }
 
 .profAction:hover {
@@ -582,50 +615,90 @@ tr:hover td {
     transition: 0.25s;
     width: 100%;
     height: 100%;
-    font-size: 5vh;
+    font-size: 2vw;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     font-variant: small-caps;
+    margin: 0;
 }
 
-.profActionBan:hover h3 {
+#profActionBan:hover h3 {
     background-color: rgb(230, 154, 154);
     border-color: rgb(155, 79, 79);
     color: rgb(99, 26, 26);
 }
 
-.profActionBan h3 {
+#profActionBan h3 {
     background-color: rgb(247, 192, 192);
     border: 3px solid rgb(206, 106, 106);
     color: rgb(139, 46, 46);
     border-bottom-left-radius: 25px;
 }
 
-.profActionModify h3 {
+#profActionModify {
+    display: flex;
+}
+
+#profActionConfirmModify {
+    display: none;
+}
+
+#profActionModify h3 {
     background-color: rgb(250, 237, 163);
     border: 3px solid rgb(192, 155, 54);
     color: rgb(136, 106, 25);
 }
 
-.profActionModify:hover h3 {
+#profActionModify:hover h3 {
     background-color: rgb(230, 218, 155);
     border: 3px solid rgb(182, 146, 46);
     color: rgb(128, 99, 19);
 }
 
-.profActionClear h3 {
+#profActionConfirmModify h3 {
+    background-color: rgb(207, 255, 187);
+    border: 3px solid rgb(101, 140, 85);
+    color: rgb(101, 140, 85);
+}
+
+#profActionConfirmModify:hover h3 {
+    background-color: rgb(162, 211, 141);
+    border: 3px solid rgb(66, 101, 52);
+    color: rgb(66, 101, 52);
+}
+
+.profActionClearEnabled {
     background-color: rgb(216, 247, 255);
     border: 3px solid rgb(59, 152, 180);
     color: rgb(59, 152, 180);
     border-bottom-right-radius: 25px;
 }
 
-.profActionClear:hover h3 {
+.profActionClearEnabled:hover {
     background-color: rgb(191, 230, 240);
     border: 3px solid rgb(35, 119, 145);
     color: rgb(37, 122, 148);
+    cursor: pointer;
+}
+
+#profActionClear {
+}
+
+.disabledButton {
+    transition: 0.25s;
+    background-color: rgb(200, 200, 200);
+    border: 3px solid rgb(100, 100, 100);
+    color: rgb(100, 100, 100);
+    border-bottom-right-radius: 25px;
+}
+
+#profActionClear:hover .disabledButton {
+    background-color: rgb(170, 170, 170);
+    border: 3px solid rgb(100, 100, 100);
+    color: rgb(100, 100, 100);
+    cursor: not-allowed;
 }
 
 .adminProfile {
@@ -645,4 +718,105 @@ tr:hover td {
 .reportedProfile div::selection {
     color: white;
     background-color: rgb(139, 46, 46);
+}
+
+.customModal {
+    transition: 0.25s;
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+    position: fixed;
+    z-index: 1000;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(34, 50, 75, 0.65);
+    top: 0;
+    padding-top: 5vh;
+}
+
+.customModalContent {
+    height: 45vh;
+    width: 50vw;
+    background-color: var(--PrimaryLight);
+    border-radius: 20px;
+    box-shadow: 0 0 10px 5px var(--PrimaryDark);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.customModalHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 50vw;
+    height: 8vh;
+    background-color: rgb(130, 27, 27);
+    color: var(--PrimaryLight);
+    font-variant: small-caps;
+}
+
+.customModalHeader h1 {
+    font-size: 5vh;
+
+    margin: 0;
+}
+
+.customModalBody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 4vh;
+    width: 50vw;
+    height: 37vh;
+    color: rgb(130, 27, 27);
+    font-variant: small-caps;
+    gap: 6vh;
+}
+
+.deleteWarning {
+    height: 10vh;
+    text-align: center;
+    color: rgb(130, 27, 27);
+    font-variant: small-caps;
+    font-size: 2.5vh;
+    margin: 0;
+}
+
+.deleteButtons {
+    width: 50vw;
+    height: 17 vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.deleteBtn {
+    width: 8vw;
+    height: 6vh;
+    font-size: 2.5vh;
+    font-variant: small-caps;
+    border-radius: 10px;
+    transition: 0.25s;
+}
+
+.deleteConfirmBtn {
+    background-color: rgb(144, 36, 36);
+    border: none;
+    color: var(--PrimaryLight);
+}
+
+.deleteConfirmBtn:hover {
+    background-color: rgb(116, 25, 25);
+}
+
+.deleteCancelBtn {
+    background-color: inherit;
+    border: 2px solid var(--PrimaryDark);
+    color: var(--PrimaryDark);
+}
+
+.deleteCancelBtn:hover {
+    background-color: rgb(192, 210, 220);
 }

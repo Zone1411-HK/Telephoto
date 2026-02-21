@@ -30,6 +30,13 @@ document.addEventListener('DOMContentLoaded', () => {
     collapseSidebarBtn.addEventListener('click', collapseSidebar);
 
     document.getElementById('profileBack').addEventListener('click', closeProfile);
+    document.getElementById('profActionModify').addEventListener('click', modifyProfile);
+    document
+        .getElementById('profActionConfirmModify')
+        .addEventListener('click', confirmModificationProfile);
+    document.getElementById('profActionBan').addEventListener('click', deleteProfile);
+    document.getElementById('deleteCancel').addEventListener('click', closeDeleteModal);
+    document.getElementById('deleteConfirm').addEventListener('click', confirmDelete);
 });
 
 function collapseSidebar() {
@@ -308,7 +315,9 @@ async function openProfile() {
     const { Status, ProfileData } = await GetMethodFetch('/api/getProfileData/' + userId);
     if (Status == 'Success' && ProfileData.length != 0) {
         document.getElementById('openedProfile').style.display = 'flex';
+        document.getElementById('openedProfile').dataset.userId = userId;
         document.getElementById('profilesTableDiv').style.display = 'none';
+        document.getElementById('profileBack').style.display = 'flex';
 
         if (this.dataset.admin == 'true') {
             document.getElementById('openedProfile').classList.add('adminProfile');
@@ -316,13 +325,32 @@ async function openProfile() {
 
         if (this.dataset.reported == 'true') {
             document.getElementById('openedProfile').classList.add('reportedProfile');
+            document.getElementById('profActionClearH3').addEventListener('click', clearProfile);
+            document.getElementById('profActionClearH3').classList.remove('disabledButton');
+            document.getElementById('profActionClearH3').classList.add('profActionClearEnabled');
+        } else {
+            document.getElementById('profActionClearH3').classList.add('disabledButton');
+            document.getElementById('profActionClearH3').removeEventListener('click', clearProfile);
+            document.getElementById('profActionClearH3').classList.remove('profActionClearEnabled');
         }
 
-        document.getElementById('profileUsername').innerText = ProfileData[0].username;
-        document.getElementById('profileRegDate').innerText = ProfileData[0].registration_date;
-        document.getElementById('profileEmail').innerText = ProfileData[0].email;
+        const date = new Date(ProfileData[0].registration_date);
+        const year = date.getUTCFullYear();
+        let month = date.getUTCMonth() + 1;
+        if (month.toString().length == 1) {
+            month = '0' + month.toString();
+        }
+
+        let day = date.getUTCDate(date);
+        if (day.toString().length == 1) {
+            day = '0' + day.toString();
+        }
+        console.log();
+        document.getElementById('profileUsername').value = ProfileData[0].username;
+        document.getElementById('profileRegDate').value = `${year}-${month}-${day}`;
+        document.getElementById('profileEmail').value = ProfileData[0].email;
         document.getElementById('profileId').innerText = ProfileData[0].user_id;
-        document.getElementById('profileBiography').innerText = ProfileData[0].biography;
+        document.getElementById('profileBiography').value = ProfileData[0].biography;
         if (ProfileData[0].profile_picture_link != null) {
             document.getElementById('profilePic').src =
                 '/uploads/' + ProfileData[0].profile_picture_link;
@@ -334,11 +362,110 @@ async function openProfile() {
     }
 }
 
+let originalData;
+
+function modifyProfile() {
+    originalData = {};
+    this.style.display = 'none';
+    document.getElementById('profActionConfirmModify').style.display = 'flex';
+    let modifyArray = document.querySelectorAll('.profileData');
+
+    for (let el of modifyArray) {
+        originalData[el.id] = el.value;
+        el.disabled = false;
+        el.style.border = '1px solid black';
+    }
+}
+
+//TODO ADMIN PROFILT CSAK SAJÁT MAGA TUDJA MÓDOSíTANI
+async function confirmModificationProfile() {
+    const emailRegExp = /^[A-Za-z0-9]+@[A-Za-z0-9]+\.[A-Za-z0-9]/;
+    let isValid = true;
+    let modifyArray = document.querySelectorAll('.profileData');
+    let data = {};
+    data.userId = document.getElementById('openedProfile').dataset.userId;
+
+    for (const el of modifyArray) {
+        data[el.id] = el.value;
+    }
+
+    if (originalData.profileUsername != data.profileUsername) {
+        const isUsernameAvailable = await GetMethodFetch(
+            '/api/isUsernameAvailable/' + data.profileUsername
+        );
+        if (!isUsernameAvailable.available || data.profileUsername.length > 50) {
+            isValid = false;
+            document.getElementById('profileUsername').style.border = '1px solid red';
+        } else {
+            document.getElementById('profileUsername').style.border = '1px solid black';
+        }
+    }
+
+    if (data.profileEmail != originalData.profileEmail) {
+        if (!emailRegExp.test(data.profileEmail) || data.profileEmail.length > 100) {
+            isValid = false;
+            document.getElementById('profileEmail').style.border = '1px solid red';
+        } else {
+            document.getElementById('profileEmail').style.border = '1px solid black';
+        }
+    }
+
+    if (data.profileBiography != originalData.profileBiography) {
+        if (data.profileBiography.length > 500) {
+            isValid = false;
+            document.getElementById('profileBiography').style.border = '1px solid red';
+        } else {
+            document.getElementById('profileBiography').style.border = '1px solid black';
+        }
+    }
+
+    if (isValid) {
+        const updateResponse = await PostMethodFetch('/api/updateProfileData', data);
+        closeProfile();
+    }
+}
+
 function closeProfile() {
+    let modifyArray = document.querySelectorAll('.profileData');
+    for (let el of modifyArray) {
+        el.disabled = true;
+        el.style.border = 'none';
+    }
+    document.getElementById('profActionModify').style.display = 'flex';
+    document.getElementById('profActionConfirmModify').style.display = 'none';
     document.getElementById('openedProfile').style.display = 'none';
     document.getElementById('profilesTableDiv').style.display = 'block';
     document.getElementById('openedProfile').classList.remove('adminProfile');
     document.getElementById('openedProfile').classList.remove('reportedProfile');
+    document.getElementById('openedProfile').removeAttribute('data-user-id');
+    document.getElementById('profileBack').style.display = 'none';
+    getProfiles();
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteConfirmModal').style.display = 'none';
+}
+
+async function deleteProfile() {
+    document.getElementById('deleteConfirmModal').style.display = 'flex';
+    document.getElementById('deleteConfirm').dataset.deleteType = 'profile';
+}
+
+async function confirmDelete() {
+    if (this.dataset.deleteType == 'profile') {
+        const userId = document.getElementById('openedProfile').dataset.userId;
+        const deleteResponse = await PostMethodFetch('/api/deleteProfile', { userId: userId });
+        console.log(deleteResponse);
+        closeDeleteModal();
+        closeProfile();
+    }
+}
+
+async function clearProfile() {
+    const userId = document.getElementById('openedProfile').dataset.userId;
+    const clearResponse = await PostMethodFetch('/api/clearProfile', { userId: userId });
+    console.log(clearResponse);
+    closeProfile();
 }
 
 async function openPost() {}

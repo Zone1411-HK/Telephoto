@@ -584,6 +584,49 @@ router.get('/getProfileData/:userId', async (request, response) => {
     }
 });
 
+router.post('/updateProfileData', async (request, response) => {
+    try {
+        const { userId, profileUsername, profileRegDate, profileEmail, profileBiography } =
+            request.body;
+        const updateProfile = await database.updateProfile(
+            userId,
+            profileUsername,
+            profileRegDate,
+            profileEmail,
+            profileBiography
+        );
+        response.status(200).json({
+            Status: updateProfile
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "updateProfileData" végpontban: ${error}`);
+    }
+});
+
+router.post('/deleteProfile', async (request, response) => {
+    try {
+        const { userId } = request.body;
+        const deleteProfile = await database.deleteProfile(userId);
+        response.status(200).json({
+            Status: deleteProfile
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "deleteProfile" végpontban: ${error}`);
+    }
+});
+
+router.post('/clearProfile', async (request, response) => {
+    try {
+        const { userId } = request.body;
+        const clearProfile = await database.clearProfile(userId);
+        response.status(200).json({
+            Status: clearProfile
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "deleteProfile" végpontban: ${error}`);
+    }
+});
+
 router.get('/getPostsAdmin', async (request, response) => {
     try {
         let resultArr = [];
