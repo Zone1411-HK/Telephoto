@@ -320,7 +320,7 @@ async function adminProfiles() {
 async function adminPosts() {
     try {
         const sql = `
-        SELECT posts.post_id, users.username, posts.creation_date, COUNT(interactions.upvote) AS upvote, COUNT(interactions.downvote) AS downvote, COUNT(pictures.picture_id) AS picture_count
+        SELECT posts.post_id, users.username, posts.creation_date, COUNT(interactions.upvote) AS upvote, COUNT(interactions.downvote) AS downvote, COUNT(pictures.picture_id) AS picture_count, posts.is_reported
         FROM posts 
         LEFT JOIN users ON posts.user_id = users.user_id
         LEFT JOIN interactions ON posts.post_id = interactions.post_id
@@ -426,6 +426,67 @@ async function clearProfile(userId) {
     }
 }
 
+async function clearPost(postId) {
+    try {
+        const sql = `
+        UPDATE posts
+        SET posts.is_reported = false
+        WHERE posts.post_id = ?;
+        `;
+        await pool.execute(sql, [postId]);
+        return 'Success';
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function adminPostData(postId) {
+    try {
+        const sql = `
+        SELECT users.user_id, users.username, posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, posts.is_reported, pictures.picture_link
+        FROM posts
+        LEFT JOIN users ON posts.user_id = users.user_id
+        LEFT JOIN pictures ON posts.post_id = pictures.post_id
+        WHERE posts.post_id = ?;`;
+        const [rows] = await pool.execute(sql, [postId]);
+        return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function updatePost(postId, description, creationDate, lat, locationName, lon, tags) {
+    try {
+        if (lat == '' || lon == '') {
+            const sql = `
+        UPDATE posts
+        SET posts.description = ?, posts.tags = ?, posts.location = ?, posts.creation_date = ? 
+        WHERE posts.post_id = ?;
+        `;
+            await pool.execute(sql, [description, tags, locationName, creationDate, postId]);
+            return 'Success';
+        } else {
+            const sql = `
+            UPDATE posts
+            SET posts.description = ?, posts.tags = ?, posts.location = ?, posts.latitude = ?, posts.longitude = ?, posts.creation_date = ? 
+            WHERE posts.post_id = ?;
+            `;
+            await pool.execute(sql, [
+                description,
+                tags,
+                locationName,
+                lat,
+                lon,
+                creationDate,
+                postId
+            ]);
+            return 'Success';
+        }
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 //!Export
 module.exports = {
     selectall,
@@ -457,5 +518,8 @@ module.exports = {
     adminProfileData,
     updateProfile,
     deleteProfile,
-    clearProfile
+    clearProfile,
+    adminPostData,
+    clearPost,
+    updatePost
 };

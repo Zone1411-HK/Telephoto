@@ -526,9 +526,10 @@ router.post('/removeUsername', async (request, response) => {
 
 //! ADMIN
 //#region Admin
-router.post('/deletePost', isAdmin, async (request, response) => {
+router.post('/deletePost', async (request, response) => {
     try {
         const { postId } = request.body;
+        console.log(postId);
         const affectedRows = await database.deletePost(postId);
         if (affectedRows != 0) {
             response.status(200).json({
@@ -623,7 +624,19 @@ router.post('/clearProfile', async (request, response) => {
             Status: clearProfile
         });
     } catch (error) {
-        throw new Error(`Hiba a "deleteProfile" végpontban: ${error}`);
+        throw new Error(`Hiba a "clearProfile" végpontban: ${error}`);
+    }
+});
+
+router.post('/clearPost', async (request, response) => {
+    try {
+        const { postId } = request.body;
+        const clearPost = await database.clearPost(postId);
+        response.status(200).json({
+            Status: clearPost
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "clearPost" végpontban: ${error}`);
     }
 });
 
@@ -638,7 +651,8 @@ router.get('/getPostsAdmin', async (request, response) => {
                 creationDate: convertUnixToReadableDate(Date.parse(obj.creation_date)),
                 upvote: obj.upvote,
                 downvote: obj.downvote,
-                pictureCount: obj.picture_count
+                pictureCount: obj.picture_count,
+                isReported: obj.is_reported
             });
         }
         response.status(200).json({
@@ -649,6 +663,70 @@ router.get('/getPostsAdmin', async (request, response) => {
         throw new Error(`Hiba a "getPostsAdmin" végpontban: ${error}`);
     }
 });
+
+router.get('/getPostData/:postId', async (request, response) => {
+    try {
+        const postId = request.params.postId;
+        const postData = await database.adminPostData(postId);
+        let pics = [];
+
+        for (const data of postData) {
+            pics.push(data.picture_link);
+        }
+
+        const data = {
+            description: postData[0].description,
+            tags: postData[0].tags,
+            location: postData[0].location,
+            latitude: postData[0].latitude,
+            longitude: postData[0].longitude,
+
+            postId: postData[0].post_id,
+            creationDate: postData[0].creation_date,
+            username: postData[0].username,
+            userId: postData[0].user_id,
+            isReported: postData[0].is_reported,
+            pictureLinks: pics
+        };
+
+        response.status(200).json({
+            Status: 'Success',
+            postData: data
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "getProfileData" végpontban: ${error}`);
+    }
+});
+
+router.post('/updatePostData', async (request, response) => {
+    try {
+        const {
+            postId,
+            postDescription,
+            postInputCreationDate,
+            postLatitude,
+            postLocationName,
+            postLongitude,
+            postTags
+        } = request.body;
+        console.log(request.body);
+        const updatePost = await database.updatePost(
+            postId,
+            postDescription,
+            postInputCreationDate,
+            postLatitude,
+            postLocationName,
+            postLongitude,
+            postTags
+        );
+        response.status(200).json({
+            Status: updatePost
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "updateProfileData" végpontban: ${error}`);
+    }
+});
+
 router.get('/getCommentsAdmin', async (request, response) => {
     try {
         let resultArr = [];

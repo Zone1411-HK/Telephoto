@@ -459,7 +459,8 @@ tr:hover td {
     display: none;
 }
 
-#openedProfile {
+#openedProfile,
+#openedPost {
     transition: 0.25s;
     display: none;
     flex-direction: column;
@@ -467,12 +468,15 @@ tr:hover td {
     width: 100%;
 }
 
-#profileContent {
+#profileContent,
+#postContent {
     width: 100%;
     height: 52vh;
     display: flex;
     flex-direction: row;
-    padding-top: 10px;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    gap: 2%;
 }
 
 .profilePicDiv {
@@ -504,7 +508,6 @@ tr:hover td {
     flex-direction: column;
     gap: 2.5%;
     padding: 1%;
-    color: var(--PrimaryDark);
     overflow: hidden;
 }
 
@@ -593,24 +596,24 @@ tr:hover td {
     resize: none;
 }
 
-#profileActions {
+.actions {
     width: 100%;
     height: 6.5vh;
     display: flex;
     flex-direction: row;
 }
 
-.profAction {
+.adminAction {
     height: 100%;
     width: 33.33333%;
     user-select: none;
 }
 
-.profAction:hover {
+.adminAction:hover {
     cursor: pointer;
 }
 
-.profAction h3 {
+.adminAction h3 {
     height: 33.33%;
     transition: 0.25s;
     width: 100%;
@@ -624,66 +627,66 @@ tr:hover td {
     margin: 0;
 }
 
-#profActionBan:hover h3 {
+.adminActionBan:hover h3 {
     background-color: rgb(230, 154, 154);
     border-color: rgb(155, 79, 79);
     color: rgb(99, 26, 26);
 }
 
-#profActionBan h3 {
+.adminActionBan h3 {
     background-color: rgb(247, 192, 192);
     border: 3px solid rgb(206, 106, 106);
     color: rgb(139, 46, 46);
     border-bottom-left-radius: 25px;
 }
 
-#profActionModify {
+.adminActionModify {
     display: flex;
 }
 
-#profActionConfirmModify {
+.adminActionConfirmModify {
     display: none;
 }
 
-#profActionModify h3 {
+.adminActionModify h3 {
     background-color: rgb(250, 237, 163);
     border: 3px solid rgb(192, 155, 54);
     color: rgb(136, 106, 25);
 }
 
-#profActionModify:hover h3 {
+.adminActionModify:hover h3 {
     background-color: rgb(230, 218, 155);
     border: 3px solid rgb(182, 146, 46);
     color: rgb(128, 99, 19);
 }
 
-#profActionConfirmModify h3 {
+.adminActionConfirmModify h3 {
     background-color: rgb(207, 255, 187);
     border: 3px solid rgb(101, 140, 85);
     color: rgb(101, 140, 85);
 }
 
-#profActionConfirmModify:hover h3 {
+.adminActionConfirmModify:hover h3 {
     background-color: rgb(162, 211, 141);
     border: 3px solid rgb(66, 101, 52);
     color: rgb(66, 101, 52);
 }
 
-.profActionClearEnabled {
+.adminActionClearEnabled {
     background-color: rgb(216, 247, 255);
     border: 3px solid rgb(59, 152, 180);
     color: rgb(59, 152, 180);
     border-bottom-right-radius: 25px;
 }
 
-.profActionClearEnabled:hover {
+.adminActionClearEnabled:hover {
     background-color: rgb(191, 230, 240);
     border: 3px solid rgb(35, 119, 145);
     color: rgb(37, 122, 148);
     cursor: pointer;
 }
 
-#profActionClear {
+#adminActionClear {
 }
 
 .disabledButton {
@@ -694,7 +697,7 @@ tr:hover td {
     border-bottom-right-radius: 25px;
 }
 
-#profActionClear:hover .disabledButton {
+.adminActionClear:hover .disabledButton {
     background-color: rgb(170, 170, 170);
     border: 3px solid rgb(100, 100, 100);
     color: rgb(100, 100, 100);
@@ -710,12 +713,17 @@ tr:hover td {
     background-color: #381760;
 }
 
-.reportedProfile {
+.reported {
     background-color: rgb(230, 154, 154);
-    color: rgb(139, 46, 46);
+    color: rgb(139, 46, 46) !important;
 }
 
-.reportedProfile div::selection {
+.reported:hover td {
+    color: rgb(230, 154, 154);
+    background-color: rgb(139, 46, 46);
+}
+
+.reported div::selection {
     color: white;
     background-color: rgb(139, 46, 46);
 }
@@ -819,4 +827,190 @@ tr:hover td {
 
 .deleteCancelBtn:hover {
     background-color: rgb(192, 210, 220);
+}
+
+#postPictureSlideshow {
+    display: flex;
+    flex-direction: row;
+    width: 47.5%;
+    justify-content: center;
+    position: relative;
+    padding-left: 1.5vw;
+}
+
+#slideshowLeft,
+#slideshowRight {
+    background-color: gray;
+    position: absolute;
+    width: 7.5%;
+    height: 100%;
+    /*? átmeneti megoldás. kellenek sötét nyilak*/
+    filter: invert(180);
+}
+#slideshowLeft:hover,
+#slideshowRight:hover {
+    background-color: rgb(200, 205, 215);
+}
+
+#slideshowLeft {
+    left: 1.5vw;
+}
+
+#slideshowRight {
+    right: 0;
+}
+
+#slideshowContent {
+    width: 85%;
+    height: 100%;
+}
+
+.pictures {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: none;
+    background-color: black;
+}
+
+.active {
+    display: flex;
+}
+
+#postDatas {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5%;
+    padding-right: 1.5%;
+}
+
+#postId {
+    width: 100%;
+    height: 7.5%;
+    font-size: 1.5vw;
+}
+
+#postUserCreationDate {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    gap: 2.5%;
+}
+
+#postUserNameId {
+    width: 53.75%;
+}
+
+#postUserNameId span {
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
+#postCreationDate {
+    width: 43.75%;
+    gap: 5%;
+}
+
+#postCreationDate input {
+    background-color: rgb(222, 230, 240);
+    border: 1px solid rgb(192, 210, 220);
+    height: 100%;
+    width: max-content;
+    flex: 1;
+    padding: 0;
+}
+
+#postUserNameId,
+#postCreationDate {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    font-size: 1.1vw;
+    height: 100%;
+}
+
+#postDescriptionTags {
+    width: 100%;
+    height: 30%;
+    display: flex;
+    flex-direction: row;
+    gap: 5%;
+}
+
+#postDescription {
+    width: 55%;
+    height: 100%;
+}
+
+#postTags {
+    width: 40%;
+    height: 100%;
+}
+
+#postTags,
+#postDescription {
+    border: 1px solid rgb(192, 210, 220);
+    background-color: rgb(222, 230, 240);
+    resize: none;
+    padding: 1.5%;
+    scrollbar-width: thin;
+}
+
+#postLocation {
+    width: 100%;
+    height: 45%;
+    display: flex;
+    flex-direction: row;
+    gap: 5%;
+}
+
+#mapWrapper {
+    width: 55%;
+    height: 100%;
+    border: 1px solid rgb(192, 210, 220);
+}
+
+#postMap {
+    outline: none;
+    height: 100%;
+    width: 100%;
+}
+
+#postLocationData {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    font-size: 1.1vw;
+    gap: 3.3%;
+    height: 100%;
+}
+
+#postLocationNameWrapper,
+#postLatitudeWrapper,
+#postLongitudeWrapper {
+    width: 100%;
+    height: 30%;
+    display: flex;
+    flex-direction: row;
+    gap: 5%;
+    align-items: center;
+}
+
+#postLocationName,
+#postLatitude,
+#postLongitude {
+    width: 100%;
+    background-color: rgb(222, 230, 240);
+    border: 1px solid rgb(192, 210, 220);
+}
+
+.postModifyData {
+    outline: none;
 }

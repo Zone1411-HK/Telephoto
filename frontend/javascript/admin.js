@@ -1,6 +1,7 @@
 let socket = io();
 let userTrackerArray = [];
 let userTrackerTimeArray = [];
+let map;
 
 socket.emit('requestActiveUsers');
 setInterval(() => {
@@ -12,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     getPosts();
     getComments();
     responsiveUsername();
-
     const navButtons = document.getElementsByClassName('navButton');
     for (const navButton of navButtons) {
         navButton.addEventListener('click', navButtonClick);
@@ -30,14 +30,73 @@ document.addEventListener('DOMContentLoaded', () => {
     collapseSidebarBtn.addEventListener('click', collapseSidebar);
 
     document.getElementById('profileBack').addEventListener('click', closeProfile);
+
+    document.getElementById('postBack').addEventListener('click', closePost);
+
     document.getElementById('profActionModify').addEventListener('click', modifyProfile);
     document
         .getElementById('profActionConfirmModify')
         .addEventListener('click', confirmModificationProfile);
+
+    document.getElementById('postActionModify').addEventListener('click', modifyPost);
+    document
+        .getElementById('postActionConfirmModify')
+        .addEventListener('click', confirmPostModification);
+
     document.getElementById('profActionBan').addEventListener('click', deleteProfile);
+
+    document.getElementById('postActionBan').addEventListener('click', deletePost);
+
     document.getElementById('deleteCancel').addEventListener('click', closeDeleteModal);
     document.getElementById('deleteConfirm').addEventListener('click', confirmDelete);
+
+    document.getElementById('slideshowLeft').addEventListener('click', previousSlide);
+    document.getElementById('slideshowRight').addEventListener('click', nextSlide);
 });
+
+function generateMap(lat, lon) {
+    let tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 20,
+        noWrap: true
+    });
+    let zoom = 0;
+    let center = [0, 0];
+    if (lat != undefined && lon != undefined) {
+        zoom = 9;
+        center[0] = lat;
+        center[1] = lon;
+        document.getElementById('postMap').style.filter = 'none';
+    } else {
+        document.getElementById('postMap').style.filter = 'grayscale(100%)';
+    }
+
+    //console.log(
+    //`zoom: ${zoom} | center: ${center} | draggable: ${draggable} | lat: ${lat} | lon: ${lon}`
+    //);
+
+    map = L.map('postMap', {
+        zoomControl: false,
+        layers: [tileLayer],
+        zoom: zoom,
+        center: center
+    });
+    map.invalidateSize();
+}
+
+function inputDate(originDate) {
+    const date = new Date(originDate);
+    const year = date.getUTCFullYear();
+    let month = date.getUTCMonth() + 1;
+    if (month.toString().length == 1) {
+        month = '0' + month.toString();
+    }
+
+    let day = date.getUTCDate(date);
+    if (day.toString().length == 1) {
+        day = '0' + day.toString();
+    }
+    return `${year}-${month}-${day}`;
+}
 
 function collapseSidebar() {
     let sidebar = document.getElementById('sidebar');
@@ -187,17 +246,6 @@ function sortArray(arr) {
     return arr;
 }
 
-async function deletePost() {
-    const response = await PostMethodFetch('/api/deletePost', {
-        postId: 6
-    });
-    if (response.Status == 'Failed') {
-        console.log(response.Message);
-    } else {
-        console.log('Sikeresen törölte a posztot');
-    }
-}
-
 function navButtonClick() {
     const navButtons = document.getElementsByClassName('navButton');
     for (const navButton of navButtons) {
@@ -246,7 +294,7 @@ async function getProfiles() {
             }
 
             if (values[7][1] == true) {
-                tr.classList.add('reportedProfile');
+                tr.classList.add('reported');
                 tr.dataset.reported = true;
             }
 
@@ -255,28 +303,6 @@ async function getProfiles() {
         }
     } catch (error) {
         console.error(error);
-    }
-}
-
-async function getPosts() {
-    try {
-        const response = await GetMethodFetch('/api/getPostsAdmin');
-        const result = response.Result;
-        const tbody = document.getElementById('postsTbody');
-        tbody.replaceChildren();
-        for (const obj of result) {
-            const tr = document.createElement('tr');
-            const values = Object.values(obj);
-            for (const value of values) {
-                const td = document.createElement('td');
-                td.innerText = value;
-                tr.appendChild(td);
-                tr.addEventListener('click', openPost);
-            }
-            tbody.appendChild(tr);
-        }
-    } catch (error) {
-        console.error('Galiba támadt');
     }
 }
 
@@ -310,6 +336,9 @@ async function getComments() {
     }
 }
 
+//! PROFILE
+//#region PROFILE
+
 async function openProfile() {
     const userId = this.dataset.userId;
     const { Status, ProfileData } = await GetMethodFetch('/api/getProfileData/' + userId);
@@ -324,30 +353,21 @@ async function openProfile() {
         }
 
         if (this.dataset.reported == 'true') {
-            document.getElementById('openedProfile').classList.add('reportedProfile');
+            document.getElementById('openedProfile').classList.add('reported');
             document.getElementById('profActionClearH3').addEventListener('click', clearProfile);
             document.getElementById('profActionClearH3').classList.remove('disabledButton');
-            document.getElementById('profActionClearH3').classList.add('profActionClearEnabled');
+            document.getElementById('profActionClearH3').classList.add('adminActionClearEnabled');
         } else {
             document.getElementById('profActionClearH3').classList.add('disabledButton');
             document.getElementById('profActionClearH3').removeEventListener('click', clearProfile);
-            document.getElementById('profActionClearH3').classList.remove('profActionClearEnabled');
+            document
+                .getElementById('profActionClearH3')
+                .classList.remove('adminActionClearEnabled');
         }
 
-        const date = new Date(ProfileData[0].registration_date);
-        const year = date.getUTCFullYear();
-        let month = date.getUTCMonth() + 1;
-        if (month.toString().length == 1) {
-            month = '0' + month.toString();
-        }
-
-        let day = date.getUTCDate(date);
-        if (day.toString().length == 1) {
-            day = '0' + day.toString();
-        }
-        console.log();
+        const dateString = inputDate(ProfileData[0].registration_date);
         document.getElementById('profileUsername').value = ProfileData[0].username;
-        document.getElementById('profileRegDate').value = `${year}-${month}-${day}`;
+        document.getElementById('profileRegDate').value = `${dateString}`;
         document.getElementById('profileEmail').value = ProfileData[0].email;
         document.getElementById('profileId').innerText = ProfileData[0].user_id;
         document.getElementById('profileBiography').value = ProfileData[0].biography;
@@ -436,29 +456,15 @@ function closeProfile() {
     document.getElementById('openedProfile').style.display = 'none';
     document.getElementById('profilesTableDiv').style.display = 'block';
     document.getElementById('openedProfile').classList.remove('adminProfile');
-    document.getElementById('openedProfile').classList.remove('reportedProfile');
+    document.getElementById('openedProfile').classList.remove('reported');
     document.getElementById('openedProfile').removeAttribute('data-user-id');
     document.getElementById('profileBack').style.display = 'none';
     getProfiles();
 }
 
-function closeDeleteModal() {
-    document.getElementById('deleteConfirmModal').style.display = 'none';
-}
-
 async function deleteProfile() {
     document.getElementById('deleteConfirmModal').style.display = 'flex';
     document.getElementById('deleteConfirm').dataset.deleteType = 'profile';
-}
-
-async function confirmDelete() {
-    if (this.dataset.deleteType == 'profile') {
-        const userId = document.getElementById('openedProfile').dataset.userId;
-        const deleteResponse = await PostMethodFetch('/api/deleteProfile', { userId: userId });
-        console.log(deleteResponse);
-        closeDeleteModal();
-        closeProfile();
-    }
 }
 
 async function clearProfile() {
@@ -468,6 +474,288 @@ async function clearProfile() {
     closeProfile();
 }
 
-async function openPost() {}
+//#endregion
+
+function closeDeleteModal() {
+    document.getElementById('deleteConfirmModal').style.display = 'none';
+    document.getElementById('deleteConfirm').dataset.deleteType = 'post';
+}
+
+async function confirmDelete() {
+    if (this.dataset.deleteType == 'profile') {
+        const userId = document.getElementById('openedProfile').dataset.userId;
+        const deleteResponse = await PostMethodFetch('/api/deleteProfile', { userId: userId });
+        console.log(deleteResponse);
+        closeProfile();
+    }
+    if (this.dataset.deleteType == 'post') {
+        const postId = document.getElementById('openedPost').dataset.postId;
+        const deleteResponse = await PostMethodFetch('/api/deletePost', { postId: postId });
+        console.log(deleteResponse);
+        closePost();
+    }
+    closeDeleteModal();
+}
+
+//! POST
+//#region POST
+
+async function getPosts() {
+    try {
+        const response = await GetMethodFetch('/api/getPostsAdmin');
+        const result = response.Result;
+        const tbody = document.getElementById('postsTbody');
+        tbody.replaceChildren();
+        for (const obj of result) {
+            const tr = document.createElement('tr');
+            const values = Object.entries(obj);
+
+            for (let i = 0; i < values.length - 1; i++) {
+                const td = document.createElement('td');
+                td.innerText = values[i][1];
+                if (values[i][0] == 'postId') {
+                    tr.dataset.postId = values[i][1];
+                }
+
+                tr.appendChild(td);
+            }
+            if (values[6][1] == true) {
+                tr.classList.add('reported');
+                tr.dataset.reported = true;
+            }
+
+            tr.addEventListener('click', openPost);
+            tbody.appendChild(tr);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function openPost() {
+    const postId = this.dataset.postId;
+    const { Status, postData } = await GetMethodFetch('/api/getPostData/' + postId);
+    if (Status == 'Success' && postData.length != 0) {
+        document.getElementById('openedPost').style.display = 'flex';
+        document.getElementById('openedPost').dataset.postId = postId;
+        document.getElementById('postsTableDiv').style.display = 'none';
+        document.getElementById('postBack').style.display = 'flex';
+
+        if (this.dataset.reported == 'true') {
+            document.getElementById('openedPost').classList.add('reported');
+            document.getElementById('postActionClearH3').addEventListener('click', clearPost);
+            document.getElementById('postActionClearH3').classList.remove('disabledButton');
+            document.getElementById('postActionClearH3').classList.add('adminActionClearEnabled');
+        } else {
+            document.getElementById('postActionClearH3').classList.add('disabledButton');
+            document.getElementById('postActionClearH3').removeEventListener('click', clearPost);
+            document
+                .getElementById('postActionClearH3')
+                .classList.remove('adminActionClearEnabled');
+        }
+
+        generateMap(postData.latitude, postData.longitude);
+
+        document.getElementById('postInputCreationDate').value = inputDate(postData.creationDate);
+        document.getElementById('postUserNameId').innerText =
+            `Felhasználó: ${postData.username} #${postData.userId}`;
+        document.getElementById('postId').innerText = `Azonosító: #${postData.postId}`;
+
+        let elArray = document.getElementsByClassName('postData');
+        for (let i = 0; i < elArray.length; i++) {
+            elArray[i].value = Object.values(postData)[i];
+        }
+
+        const slideshow = document.getElementById('slideshowContent');
+        slideshow.replaceChildren();
+
+        let pictures = Object.values(postData.pictureLinks);
+
+        let pic = document.createElement('img');
+        pic.src = '/uploads/' + pictures[0];
+        pic.classList.add('pictures', 'active');
+        slideshow.appendChild(pic);
+
+        console.log(pictures);
+
+        for (let i = 1; i < pictures.length; i++) {
+            let p = document.createElement('img');
+            p.src = '/uploads/' + pictures[i];
+            p.classList.add('pictures');
+            slideshow.appendChild(p);
+        }
+
+        //generateMap(10, 10);
+    } else {
+        alert('Valami probléma történt.\n\nKérjük próbálja meg később.');
+    }
+}
+
+function closePost() {
+    let modifyArray = document.querySelectorAll('.postModifyData');
+    for (let el of modifyArray) {
+        el.disabled = true;
+        el.style.border = '1px solid rgb(192, 210, 220)';
+    }
+    document.getElementById('postActionModify').style.display = 'flex';
+    document.getElementById('postActionConfirmModify').style.display = 'none';
+    document.getElementById('postsTableDiv').style.display = 'block';
+    document.getElementById('openedPost').style.display = 'none';
+    document.getElementById('openedPost').classList.remove('reported');
+    document.getElementById('openedPost').removeAttribute('data-post-id');
+    document.getElementById('postBack').style.display = 'none';
+    document
+        .getElementById('postMap')
+        .classList.remove(...document.getElementById('postMap').classList);
+    map.remove();
+    getPosts();
+}
+
+async function deletePost() {
+    document.getElementById('deleteConfirmModal').style.display = 'flex';
+    document.getElementById('deleteConfirm').dataset.deleteType = 'post';
+}
+
+async function clearPost() {
+    const postId = document.getElementById('openedPost').dataset.postId;
+    const clearResponse = await PostMethodFetch('/api/clearPost', { postId: postId });
+    console.log(clearResponse);
+    closePost();
+}
+
+let originalPost = {};
+
+function modifyPost() {
+    let modifiableDatas = document.querySelectorAll('.postModifyData');
+    for (const el of modifiableDatas) {
+        originalPost[el.id] = el.value;
+        el.disabled = false;
+    }
+    console.log(originalPost);
+    document.getElementById('postActionConfirmModify').style.display = 'flex';
+    this.style.display = 'none';
+    document.getElementById('postLongitude').addEventListener('input', placeMarker);
+    document.getElementById('postLatitude').addEventListener('input', placeMarker);
+}
+
+let tempMarker;
+
+function placeMarker() {
+    let val = '';
+    let dot = false;
+    for (let i = 0; i < this.value.length; i++) {
+        if (i == 0 && this.value[i] == '-') {
+            val += this.value[i];
+        }
+        if (/[0-9]/.test(this.value[i])) {
+            val += this.value[i];
+        }
+        if (!dot && this.value[i] == '.') {
+            dot = true;
+            if (i == 0 || (i == 1 && this.value[0] == '-')) {
+                val += '0' + this.value[i];
+            } else {
+                val += this.value[i];
+            }
+        }
+    }
+
+    this.value = val;
+
+    let latEl = document.getElementById('postLatitude');
+    if (latEl.value > 90) {
+        latEl.value = 90;
+    } else {
+        if (latEl.value < -90) {
+            latEl.value = -90;
+        }
+    }
+
+    let lonEl = document.getElementById('postLongitude');
+    if (lonEl.value > 180) {
+        lonEl.value = 180;
+    } else {
+        if (lonEl.value < -180) {
+            lonEl.value = -180;
+        }
+    }
+
+    let lat = latEl.value == '' || latEl.value == '-' ? null : parseFloat(latEl.value);
+    let lon = lonEl.value == '' || lonEl.value == '-' ? null : parseFloat(lonEl.value);
+    if (lat != null && lon != null) {
+        console.log('asd');
+        if (tempMarker != null) {
+            map.removeLayer(tempMarker);
+        }
+        tempMarker = new L.Marker([lat, lon]);
+        map.addLayer(tempMarker);
+    }
+}
+
+async function confirmPostModification() {
+    let modifiedArray = document.querySelectorAll('.postModifyData');
+    console.log(modifiedArray);
+    let j = 0;
+    while (j < modifiedArray.length && modifiedArray[j].value == Object.values(originalPost)[j]) {
+        j++;
+    }
+    if (j < modifiedArray.length) {
+        const modifyResponse = await PostMethodFetch('/api/updatePostData', {
+            postId: document.getElementById('openedPost').dataset.postId,
+            postInputCreationDate: modifiedArray[0].value,
+            postDescription: modifiedArray[1].value,
+            postTags: modifiedArray[2].value,
+            postLocationName: modifiedArray[3].value,
+            postLatitude: modifiedArray[4].value,
+            postLongitude: modifiedArray[5].value
+        });
+        if (modifyResponse.Status == 'Success') {
+            closePost();
+        }
+    }
+}
+
+//#endregion
 
 async function openComment() {}
+
+function slideShow(move) {
+    let slides = document.getElementsByClassName('pictures');
+    let j = 0;
+    while (j < slides.length && !slides[j].classList.contains('active')) {
+        j++;
+    }
+    slides[j].classList.remove('active');
+    console.log();
+    /*
+    if (slides[j].children[1].classList.contains('tempVideo')) {
+        slides[j].children[1].pause();
+        slides[j].children[1].currentTime = 0;
+    }*/
+    console.log(j + ' ' + slides.length);
+    if (j >= slides.length - 1 && move == 1) {
+        slides[0].classList.add('active');
+    } else {
+        if (j == 0 && move == -1) {
+            slides[slides.length - 1].classList.add('active');
+        } else {
+            slides[j + move].classList.add('active');
+        }
+    }
+}
+
+function nextSlide() {
+    this.style.pointerEvents = 'none';
+    setTimeout(() => {
+        this.style.pointerEvents = 'all';
+    }, 1);
+    slideShow(1);
+}
+
+function previousSlide() {
+    this.style.pointerEvents = 'none';
+    setTimeout(() => {
+        this.style.pointerEvents = 'all';
+    }, 1);
+    slideShow(-1);
+}
