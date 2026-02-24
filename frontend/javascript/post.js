@@ -44,8 +44,6 @@ const getTopPosts = async () => {
             console.log('postid' + test.post_id); */
 
             hangPictures(test);
-
-                       
         }
     } catch (error) {
         console.error('Hiba' + error);
@@ -90,7 +88,7 @@ const hangPictures = async (test) => {
     let commentingUserPic = document.createElement('td');
     let commentingUserImg = document.createElement('img');
     let commentingUser = document.createElement('span');
-    let comment = document.createElement('td');    
+    let comment = document.createElement('td');
     tRow.classList.add('tRow');
     commentingUserPic.classList.add('commentingUserPic');
     commentingUserImg.classList.add('commentingUserImg');
@@ -98,24 +96,29 @@ const hangPictures = async (test) => {
     comment.classList.add('comment');
 
     p.innerHTML = test.description;
-    console.log(test);
     img.src = '/uploads/' + test.pic;
 
     const response2 = await PostMethodFetch('/api/commentInfos', { post_id: test.post_id });
-        const data2 = response2.results;
-        console.log(data2);
-            for (let i = 0; i < data2.length; i++) {
-                const userName = data2[i].username;
-                const userPic = data2[i].profile_picture_link;
-                const text = data2[i].comment_content;
-                console.log('username' + userName);
-                console.log('userpic' + userPic);
-                console.log('text' + text);      
-            }    
-    
-    commentingUserImg.src = userPic;
+    const data2 = response2.results;
+    let userName;
+    let userPic;
+    let text;
+    for (let i = 0; i < data2.length; i++) {
+        userName = data2[i].username;
+        userPic = data2[i].profile_picture_link;
+        text = data2[i].comment_content;
+        console.log('username: ' + userName);
+        console.log('userpic: ' + userPic);
+        console.log('text: ' + text);
+    }
+
+    commentingUserImg.src = '/uploads/' + userPic;
     commentingUser.innerHTML = userName;
     comment.innerHTML = text;
+
+    imgdiv.appendChild(img);
+    postcontent.appendChild(imgdiv);
+    postcontent.appendChild(p);
 
     commentingUserPic.appendChild(commentingUserImg);
     commentingUserPic.appendChild(commentingUser);
@@ -125,10 +128,6 @@ const hangPictures = async (test) => {
     commentsTable.appendChild(tBody);
     tableContainer.appendChild(commentsTable);
     postcontent.appendChild(tableContainer);
-
-    imgdiv.appendChild(img);
-    postcontent.appendChild(imgdiv);
-    postcontent.appendChild(p);
 
     clip.appendChild(imgclip);
     clip.appendChild(imgcliptexture);
@@ -142,5 +141,3 @@ const hangPictures = async (test) => {
 
     posts.appendChild(post);
 };
-
-

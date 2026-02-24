@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document
         .getElementById('postActionConfirmModify')
         .addEventListener('click', confirmPostModification);
+    document.getElementById('postActionBan').addEventListener('click', deletePost);
 
     document.getElementById('commentActionModify').addEventListener('click', modifyComment);
     document

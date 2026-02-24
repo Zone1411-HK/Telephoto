@@ -137,7 +137,12 @@ async function loadProfile(username) {
 
 async function loadComments(postId) {
     try {
-        const commentsSql = `SELECT users.username, users.profile_picture_link, comments.comment_content FROM comments INNER JOIN users ON users.user_id = comments.user_id INNER JOIN posts ON posts.post_id = comments.post_id WHERE comments.post_id = ${postId}`;
+        const commentsSql = `
+        SELECT users.username, users.profile_picture_link, comments.comment_content 
+        FROM comments 
+        INNER JOIN users ON users.user_id = comments.user_id 
+        INNER JOIN posts ON posts.post_id = comments.post_id 
+        WHERE comments.post_id = ${postId}`;
         const [rows] = await pool.execute(commentsSql);
         return rows;
     } catch (error) {
