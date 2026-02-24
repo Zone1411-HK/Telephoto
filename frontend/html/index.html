@@ -14,9 +14,9 @@
         <link rel="stylesheet" href="node/leaflet.markercluster/dist/MarkerCluster.Default.css" />
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/darkroom.css" />
-        <link rel="stylesheet" href="/css/modal.css">
-        <link rel="stylesheet" href="/css/chat.css">
-        <link rel="stylesheet" href="/css/login.css">
+        <link rel="stylesheet" href="/css/modal.css" />
+        <link rel="stylesheet" href="/css/chat.css" />
+        <link rel="stylesheet" href="/css/login.css" />
         <!--!JavaScript-->
         <script src="/javascript/fetch.js"></script>
         <script src="node/socket.io/client-dist/socket.io.js"></script>
@@ -107,7 +107,7 @@
                     </ul>
                 </div>-->
 
-            <div class="home " id="home">
+            <div class="home" id="home">
                 <div class="chat-and-sort">
                     <div id="rendezesContainer">
                         <div id="rendezesTrending">
@@ -263,10 +263,13 @@
                                         <tbody class="tBody">
                                             <tr class="tRow">
                                                 <td class="commentingUserPic">
-                                                    <img class="commentingUserImg" src="/images/placeholder1.jpg" />
+                                                    <img
+                                                        class="commentingUserImg"
+                                                        src="/images/placeholder1.jpg"
+                                                    />
                                                     <span class="commentingUser">Kommentelő</span>
                                                 </td>
-                                                <td class="comment">Komment</td>                                        
+                                                <td class="comment">Komment</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -439,7 +442,7 @@
                         value="Főoldal"
                         class="navBarButton rightNavBorder"
                 /></a>
-                <a class="navbar-brand m-0"
+                <a class="navbar-brand m-0 navBarButton rightNavBorder"
                     ><input
                         type="button"
                         id="personal"
