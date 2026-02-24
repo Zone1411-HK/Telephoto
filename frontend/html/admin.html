@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="hu">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Admin</title>
+        <!--? BOOTSTRAP -->
+        <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css" />
+        <script src="../bootstrap/js/popper.min.js"></script>
+        <script src="../bootstrap/js/bootstrap.min.js"></script>
+
+        <!--? CSS -->
+        <link href="/css/adminColors.css" rel="stylesheet" />
+        <link href="/css/admin.css" rel="stylesheet" media="(min-aspect-ratio: 11/10)" />
+        <link href="/css/mobileAdmin.css" rel="stylesheet" media="(max-aspect-ratio: 10.999/10)" />
+        <link rel="stylesheet" href="node/leaflet/dist/leaflet.css" />
+        <!--? SCRIPTS -->
+        <script src="/javascript/fetch.js"></script>
+        <script src="node/socket.io/client-dist/socket.io.js"></script>
+        <script src="node/leaflet/dist/leaflet.js"></script>
+        <script src="/javascript/admin.js"></script>
+        <!--? FONTS-->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div id="root">
+            <div id="sidebar" data-collapsed="false">
+                <button id="collapseSidebar">
+                    <img src="/images/arrow-left.svg" class="visible" />
+                    <img src="/images/arrow-right.svg" class="invisible" />
+                </button>
+                <div id="sidebarTitle">
+                    <h2 id="adminUsername">Sigmin</h2>
+                </div>
+                <div id="navButtons">
+                    <a class="navButton" href="#profiles">
+                        <img src="/images/user.svg" class="navButtonSVG" alt="" /><span
+                            >Profilok</span
+                        >
+                    </a>
+                    <a class="navButton" href="#posts">
+                        <img src="/images/post.svg" class="navButtonSVG" alt="" /><span
+                            >Posztok</span
+                        >
+                    </a>
+                    <a class="navButton" href="#comments">
+                        <img src="/images/comment.svg" class="navButtonSVG" alt="" /><span
+                            >Kommentek</span
+                        >
+                    </a>
+                    <a class="navButton" href="#profiles">
+                        <img src="/images/flag.svg" class="navButtonSVG" alt="" /><span
+                            >Jelentések</span
+                        >
+                    </a>
+                </div>
+                <div id="navSearches">
+                    <label for="profileSearchId" class="searchLabel">
+                        <input
+                            type="text"
+                            id="profileSearchId"
+                            class="searchId"
+                            placeholder="Profil ID"
+                            maxlength="12"
+                        />
+                        <button type="button" id="profileSearchButton">
+                            <img src="/images/search.svg" />
+                        </button>
+                    </label>
+                    <label for="postSearchId" class="searchLabel">
+                        <input
+                            type="text"
+                            class="searchId"
+                            id="postSearchId"
+                            placeholder="Poszt ID"
+                            maxlength="12"
+                        />
+                        <button type="button" id="postSearchButton">
+                            <img src="/images/search.svg" />
+                        </button>
+                    </label>
+                </div>
+                <div id="activeUsers">
+                    <span id="userTrackerTitle">Aktív felhasználók</span>
+                    <div id="yAxis"></div>
+                    <div id="yAxisLines">
+                        <hr />
+                        <hr />
+                        <hr />
+                        <hr />
+                        <hr />
+                    </div>
+                    <div id="userTrackerColumns">
+                        <div class="userTrackerColumn"></div>
+                        <div class="userTrackerColumn"></div>
+                        <div class="userTrackerColumn"></div>
+                        <div class="userTrackerColumn"></div>
+                        <div class="userTrackerColumn"></div>
+                    </div>
+                    <div id="userTrackerTimes"></div>
+                </div>
+            </div>
+            <div id="adminContent">
+                <div id="adminTitleMobile"><h2>Magyar Péter</h2></div>
+                <div class="adminPanel" id="profiles">
+                    <div class="adminPanelHeader">
+                        <button type="button" class="back" id="profileBack">
+                            <img src="/images/backDark.svg" />
+                        </button>
+                        <h3>Profilok</h3>
+                    </div>
+                    <div class="adminPanelContent">
+                        <div class="tableWrapper" id="profilesTableDiv">
+                            <table id="profilesTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Felhasználónév</th>
+                                        <th>E-Mail</th>
+                                        <th>Regisztráció Dátuma</th>
+                                        <th>
+                                            <div># <img src="/images/postDark.svg" /></div>
+                                        </th>
+                                        <th>
+                                            <div># <img src="/images/commentDark.svg" /></div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="profilesTbody"></tbody>
+                            </table>
+                        </div>
+                        <div id="openedProfile">
+                            <div id="profileContent">
+                                <div class="profilePicDiv">
+                                    <div class="profilePicWrapper">
+                                        <img id="profilePic" src="/images/placeholder1.jpg" />
+                                    </div>
+                                </div>
+                                <div class="profileDataDiv">
+                                    <div class="profileDataRow">
+                                        <div class="profileUsernameWrapper">
+                                            Felhasználónév:
+                                            <input
+                                                id="profileUsername"
+                                                type="text"
+                                                disabled
+                                                class="profileData"
+                                            />
+                                        </div>
+                                        <div class="profileRegDateWrapper">
+                                            Regisztráció dátuma:
+                                            <input
+                                                type="date"
+                                                id="profileRegDate"
+                                                class="profileData"
+                                                value="2026/01/01"
+                                                disabled
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="profileDataRow">
+                                        <div class="profileEmailWrapper">
+                                            Email:
+                                            <input
+                                                type="text"
+                                                disabled
+                                                id="profileEmail"
+                                                class="profileData"
+                                            />
+                                        </div>
+                                        <div class="profileIdWrapper">
+                                            Azonosító:
+                                            <div id="profileId">1</div>
+                                        </div>
+                                    </div>
+                                    <div class="profileBiographyWrapper">
+                                        <div>Leírás:</div>
+                                        <textarea
+                                            type="text"
+                                            id="profileBiography"
+                                            class="profileData"
+                                            disabled
+                                        >
+                                        </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <div class="adminAction adminActionBan" id="profActionBan">
+                                    <h3>törlés</h3>
+                                </div>
+                                <div class="adminAction adminActionModify" id="profActionModify">
+                                    <h3>módosítás</h3>
+                                </div>
+                                <div
+                                    class="adminAction adminActionConfirmModify"
+                                    id="profActionConfirmModify"
+                                >
+                                    <h3>megerősítés</h3>
+                                </div>
+                                <div class="adminAction adminActionClear" id="profActionClear">
+                                    <h3
+                                        id="profActionClearH3"
+                                        class="disabledButton adminActionClearH3"
+                                    >
+                                        tisztázás
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="adminPanel" id="posts">
+                    <div class="adminPanelHeader">
+                        <button type="button" class="back" id="postBack">
+                            <img src="/images/backDark.svg" />
+                        </button>
+                        <h3>Posztok</h3>
+                    </div>
+                    <div class="adminPanelContent">
+                        <div class="tableWrapper" id="postsTableDiv">
+                            <table id="postsTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Felhasználó</th>
+                                        <th>Feltöltés dátuma</th>
+                                        <th>
+                                            <div># <img src="/images/likeDark.svg" /></div>
+                                        </th>
+                                        <th>
+                                            <div># <img src="/images/dislikeDark.svg" /></div>
+                                        </th>
+                                        <th>
+                                            <div>#<img src="/images/imageDark.svg" /></div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="postsTbody"></tbody>
+                            </table>
+                        </div>
+                        <div id="openedPost">
+                            <div id="postContent">
+                                <div id="postPictureSlideshow">
+                                    <div id="slideshowLeft">
+                                        <img src="/images/arrow-left.svg" />
+                                    </div>
+                                    <div id="slideshowContent">
+                                        <img
+                                            src="/images/placeholder1.jpg"
+                                            class="pictures active"
+                                        />
+                                        <img src="/images/placeholder2.gif" class="pictures" />
+                                        <img src="/images/test.png" class="pictures" />
+                                    </div>
+                                    <div id="slideshowRight">
+                                        <img src="/images/arrow-right.svg" />
+                                    </div>
+                                </div>
+                                <div id="postDatas">
+                                    <div id="postId">Azonosító: #1</div>
+                                    <div id="postUserCreationDate">
+                                        <div id="postUserNameId">
+                                            <span
+                                                >Felhasználó:
+                                                Orb00000000000000000000000000000000000án #600</span
+                                            >
+                                        </div>
+                                        <div id="postCreationDate">
+                                            Feltöltés:
+                                            <input
+                                                type="date"
+                                                disabled
+                                                id="postInputCreationDate"
+                                                class="postModifyData"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div id="postDescriptionTags">
+                                        <textarea
+                                            id="postDescription"
+                                            disabled
+                                            class="postData postModifyData"
+                                            placeholder="Leírás"
+                                            maxlength="500"
+                                        >
+Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sapiente cum culpa nam magni maiores voluptate alias voluptatum aperiam quasi ratione quas sint perspiciatis ipsam fuga suscipit, molestias vitae laborum natus?</textarea
+                                        >
+                                        <textarea
+                                            type="text"
+                                            id="postTags"
+                                            disabled
+                                            class="postData postModifyData"
+                                            placeholder="#Tagek"
+                                        >
+#lorem #ipsum #asd #dsa #bas #lorem #ipsum #asd #dsa #bas #lorem #ipsum #asd #dsa #bas #lorem #ipsum #asd #dsa #bas</textarea
+                                        >
+                                    </div>
+                                    <div id="postLocation">
+                                        <div id="mapWrapper">
+                                            <div id="postMap"></div>
+                                        </div>
+                                        <div id="postLocationData">
+                                            <div id="postLocationNameWrapper">
+                                                Lokáció:
+                                                <input
+                                                    type="text"
+                                                    disabled
+                                                    id="postLocationName"
+                                                    class="postData postModifyData"
+                                                    maxlength="176"
+                                                />
+                                            </div>
+                                            <div id="postLatitudeWrapper">
+                                                Szélesség:
+                                                <input
+                                                    type="text"
+                                                    disabled
+                                                    id="postLatitude"
+                                                    class="postData postModifyData"
+                                                    pattern="[0-9]"
+                                                />
+                                            </div>
+                                            <div id="postLongitudeWrapper">
+                                                Hosszúság:<input
+                                                    type="text"
+                                                    disabled
+                                                    id="postLongitude"
+                                                    class="postData postModifyData"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <div class="adminAction adminActionBan" id="postActionBan">
+                                    <h3>törlés</h3>
+                                </div>
+                                <div class="adminAction adminActionModify" id="postActionModify">
+                                    <h3>módosítás</h3>
+                                </div>
+                                <div
+                                    class="adminAction adminActionConfirmModify"
+                                    id="postActionConfirmModify"
+                                >
+                                    <h3>megerősítés</h3>
+                                </div>
+                                <div class="adminAction adminActionClear" id="postActionClear">
+                                    <h3
+                                        id="postActionClearH3"
+                                        class="disabledButton adminActionClearH3"
+                                    >
+                                        tisztázás
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="adminPanel" id="comments">
+                    <div class="adminPanelHeader"><h3>Kommentek</h3></div>
+                    <div class="adminPanelContent">
+                        <div class="tableWrapper" id="commentsTableDiv">
+                            <table id="commentsTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Poszt ID</th>
+                                        <th>Felhasználó</th>
+                                        <th>Komment tartalma</th>
+                                        <th>Komment dátuma</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="commentsTbody"></tbody>
+                            </table>
+                        </div>
+                        <div id="openedComment">
+                            <div id="commentDiv">
+                                <div id="commentDataHeader">
+                                    <div id="commentUserPost">
+                                        <div id="commentUser">Felhasználó: Béla #1</div>
+                                        <div id="commentPost">Poszt: #1</div>
+                                    </div>
+                                    <div id="commentDateDiv">
+                                        Dátum:
+                                        <input
+                                            type="date"
+                                            id="commentDate"
+                                            disabled
+                                            class="commentModifyData"
+                                        />
+                                    </div>
+                                </div>
+                                <div id="commentDataBody">
+                                    <textarea
+                                        id="commentContent"
+                                        class="commentModifyData"
+                                        disabled
+                                        maxlength="500"
+                                    >
+Lorem ipsum dolor sit amet consectetur adipisicing elit. A iusto asperiores repellendus explicabo. Tempora delectus iste nisi veritatis provident saepe placeat esse! Nostrum sed similique illum magni. Neque, explicabo laboriosam?</textarea
+                                    >
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <div class="adminAction adminActionBan" id="commentActionBan">
+                                    <h3>törlés</h3>
+                                </div>
+                                <div class="adminAction adminActionModify" id="commentActionModify">
+                                    <h3>módosítás</h3>
+                                </div>
+                                <div
+                                    class="adminAction adminActionConfirmModify"
+                                    id="commentActionConfirmModify"
+                                >
+                                    <h3>megerősítés</h3>
+                                </div>
+                                <div class="adminAction adminActionClear" id="commentActionClear">
+                                    <h3
+                                        id="commentActionClearH3"
+                                        class="disabledButton adminActionClearH3"
+                                    >
+                                        tisztázás
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav id="navbar">
+            <a class="navButton" href="#profiles">
+                <img src="/images/user.svg" class="navButtonSVG" alt="profilok" />
+            </a>
+            <a class="navButton" href="#posts">
+                <img src="/images/post.svg" class="navButtonSVG" alt="posztok" />
+            </a>
+            <a class="navButton" href="#comments">
+                <img src="/images/comment.svg" class="navButtonSVG" alt="kommentek" />
+            </a>
+            <a class="navButton" href="#profiles">
+                <img src="/images/flag.svg" class="navButtonSVG" alt="jelentések" />
+            </a>
+        </nav>
+
+        <div id="deleteConfirmModal" class="customModal">
+            <div class="customModalContent">
+                <div class="customModalHeader">
+                    <h1>vigyázat</h1>
+                </div>
+                <div class="customModalBody">
+                    <p class="deleteWarning">
+                        Biztosan szeretné végrehajtani ezt a műveletet?<br />Ez a művelet
+                        visszafordíthatatlan
+                    </p>
+                    <div class="deleteButtons">
+                        <input
+                            type="button"
+                            value="tovább"
+                            class="deleteBtn deleteConfirmBtn"
+                            id="deleteConfirm"
+                        />
+                        <input
+                            type="button"
+                            value="mégse"
+                            class="deleteBtn deleteCancelBtn"
+                            id="deleteCancel"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

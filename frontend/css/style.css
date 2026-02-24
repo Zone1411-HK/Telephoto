@@ -13,11 +13,13 @@ rgb(150, 100, 100)
 */
 
 :root {
-    --Tojassarga: rgb(255, 224, 143);
+    --Hatter: rgb(245, 240, 245);
     --invalidRed: rgb(191, 26, 26);
     --successGreen: rgb(50, 150, 30);
     --interactiveBlue: rgb(6, 7, 113);
     --LoginGomb: rgb(207, 173, 193);
+    --LoginGombBorder: rgb(187, 153, 173);
+    --LoginGombBoxShadow: rgb(217, 213, 233);
     --NavBarColor: rgb(203, 217, 155);
     --PostModalTopColor: rgb(188, 188, 188);
     --PostModalBottomColor: rgb(30, 30, 30);
@@ -89,7 +91,7 @@ body {
     font-weight: 650;
     font-style: normal;
     font-size: larger;
-    background-color: var(--Tojassarga);
+    background-color: var(--Hatter);
 }
 
 form {
@@ -97,6 +99,7 @@ form {
     flex-direction: column;
     justify-content: space-around;
 }
+
 .loginSorok {
     display: flex;
     justify-content: space-between;
@@ -107,9 +110,12 @@ form {
 #loginButton {
     position: relative;
     width: 50%;
+    height: 3.5vh;
     border-radius: 5px;
     border-color: darkslategray;
     background-color: var(--LoginGomb);
+    margin-top: 4.2%;
+    font-weight: bold;
 }
 
 .roll {
@@ -132,6 +138,7 @@ form {
 .inputMezo {
     border: 2px darkslategray solid;
     border-radius: 5px;
+    width: 50%;
 }
 
 input[type='button'] {
@@ -215,9 +222,9 @@ input[type='button'] {
     justify-content: center;
 }
 
-.loginSorok label,
-input {
+.loginSorok label input {
     position: relative;
+    width: 50%;
 }
 
 .loginRegText {
@@ -232,6 +239,7 @@ input {
 #map {
     height: 50rem;
 }
+
 .postSpace {
     display: flex;
     flex-direction: column;
@@ -264,9 +272,12 @@ input {
 #regButton {
     position: relative;
     width: 50%;
+    height: 3.5vh;
     border-radius: 5px;
     border-color: darkslategray;
     background-color: var(--LoginGomb);
+    margin-top: 4.2%;
+    font-weight: bold;
 }
 
 #navBarColor {
@@ -278,8 +289,8 @@ input {
     width: 20vw;
     padding: 0px;
     color: var(--PostModalBottomColor);
-    font-weight: 750;
-    font-size: 1.5rem;
+    font-weight: 700;
+    font-size: 1.75rem;
 }
 
 .rightNavBorder {
@@ -314,12 +325,14 @@ input {
     cursor: pointer;
     color: gainsboro;
 }
+
 #rendezesChatContainer {
     background-color: aqua;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
+
 #rendezesContainer {
     height: 33vh;
     background-color: greenyellow;
@@ -327,8 +340,9 @@ input {
     flex-direction: row;
     justify-content: space-evenly;
 }
+
 #chatContainer {
-    background-color: white;
+    background-color: var(--Hatter);
     height: 57vh;
     overflow-y: scroll;
     scrollbar-width: none;
@@ -339,6 +353,7 @@ input {
     padding-top: 5px;
     z-index: 1;
 }
+
 /*? Scrollbar formázás 
 /*! FIREFOXBAN NEM MŰKÖDIK
 #chatContainer::-webkit-scrollbar {
@@ -349,41 +364,46 @@ input {
     background-color: wheat;
     border-radius: 20px;
 }*/
+
 #rendezesTrending {
     width: 40%;
     height: 100%;
-    background-color: green;
+    background-color: var(--Hatter);
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
     padding-bottom: 10px;
 }
+
 #rendezesEgyeb {
     width: 60%;
     height: 100%;
-    background-color: goldenrod;
+    background-color: var(--Hatter);
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
     gap: 10px;
-    border-left: 3px solid white;
 }
+
 #trendingTitle {
-    font-size: 3vh;
+    font-size: 2.5vh;
     margin-bottom: 0px;
 }
+
 .trendingButton {
     width: 80%;
     height: 15%;
     font-size: 2vh;
-    background-color: lightyellow;
+    background-color: rgb(233, 247, 185);
 }
+
 .egyebButton {
     height: 25%;
     width: 80%;
-    background-color: lightyellow;
+    background-color: rgb(233, 247, 185);
+    font-size: 2vh;
 }
 
 #existingChats {
@@ -395,6 +415,7 @@ input {
     gap: 20px;
     width: 95%;
 }
+
 .chat {
     background-color: white;
     display: flex;
@@ -407,10 +428,12 @@ input {
     padding-right: 10px;
     border-radius: 30px;
 }
+
 .chat:hover {
     background-color: #eeeeee;
     cursor: pointer;
 }
+
 .lastText {
     width: 95%;
     padding-right: 5px;
@@ -439,6 +462,7 @@ input {
     width: 95%;
     color: #553333;
 }
+
 .chatImgDiv {
     display: flex;
     flex-direction: row;
@@ -447,6 +471,7 @@ input {
     height: 100%;
     width: 20%;
 }
+
 .chatImgBorder {
     height: 85%;
     width: 100%;
@@ -456,6 +481,7 @@ input {
     justify-content: center;
     align-items: center;
 }
+
 .chatImg {
     clip-path: circle();
     height: 100px;
@@ -464,6 +490,7 @@ input {
     max-width: 92%;
     object-fit: cover;
 }
+
 .chatTexts {
     display: flex;
     flex-direction: column;
@@ -472,6 +499,7 @@ input {
     height: 100%;
     padding-bottom: 1%;
 }
+
 #newChatDiv {
     width: 95%;
     display: flex;
@@ -480,18 +508,20 @@ input {
     height: 8.5vh;
     margin-bottom: 10px;
 }
+
 #newChat {
     height: 8.5vh;
     width: 100%;
     border-radius: 30px;
-    background-color: rgb(190, 110, 110);
+    background-color: var(--LoginGomb);
     border: none;
-    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 0 10px 2.5px rgba(63, 63, 63, 0.7);
     padding: 0;
+    margin-top: 5%;
 }
 
 #newChat:hover {
-    background-color: rgb(170, 90, 90);
+    background-color: rgb(185, 155, 170);
 }
 
 #newChat img {
@@ -508,9 +538,11 @@ input {
     position: relative;
     z-index: 2;
 }
+
 #openedChatWrapper {
     height: 57vh;
 }
+
 /* You won't believe what it does */
 /* https://open.spotify.com/track/51EpFns3CG9taCMQz6XDom?si=8b358a3ae3994cb1 */
 .invisible {
@@ -528,6 +560,7 @@ input {
     padding-top: 2px;
     align-items: center;
 }
+
 .openedChatClose button {
     aspect-ratio: 1/1;
     height: 90%;
@@ -538,14 +571,17 @@ input {
     background-color: transparent;
     padding: 0;
 }
+
 .openedChatClose button:hover {
     background-color: rgb(250, 200, 200);
     border-radius: 50px;
 }
+
 .openedChatClose button img {
     aspect-ratio: 1/1;
     height: 100%;
 }
+
 .openedChatName {
     display: flex;
     flex-direction: row;
@@ -555,6 +591,7 @@ input {
     padding-right: 3%;
     padding-top: 2px;
 }
+
 .openedChatName h3 {
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -566,12 +603,14 @@ input {
     margin: 0;
     color: #330707;
 }
+
 .messageRow {
     display: flex;
     flex-direction: column;
     width: 100%;
     position: relative;
 }
+
 .message {
     display: flex;
     flex-direction: row;
@@ -582,11 +621,13 @@ input {
     line-break: anywhere;
     margin: 0;
 }
+
 .messageWrapper {
     width: 100%;
     display: flex;
     flex-direction: column;
 }
+
 .messageDate {
     color: rgb(100, 100, 100);
     margin: 0;
@@ -599,15 +640,18 @@ input {
     border-bottom-right-radius: 0px;
     padding: 5px 5px 0px 10px;
 }
+
 .FromCurrentUserColor {
-    background-color: rgb(190, 110, 110);
-    border: 2px solid rgb(170, 90, 90);
+    background-color: var(--LoginGomb);
+    border: 2px solid var(--LoginGombBorder);
 }
+
 .FromOtherUserSide {
     align-self: start;
     border-bottom-left-radius: 0px;
     padding: 5px 10px 5px 5px;
 }
+
 .FromOtherUserColor {
     background-color: rgb(220, 220, 220);
     border: 2px solid rgb(200, 200, 200);
@@ -618,10 +662,11 @@ input {
     flex-direction: row;
     width: 100%;
     height: 5vh;
-    background-color: rgb(190, 110, 110);
-    box-shadow: -2px 0 3px 1px rgb(200, 150, 150);
+    background-color: var(--LoginGomb);
+    box-shadow: -3px 0 3px 1px var(--LoginGombBoxShadow);
     z-index: 1;
 }
+
 .messagesDiv {
     height: 47vh;
     width: 100%;
@@ -667,6 +712,7 @@ input {
 .newMessageWrapper textarea:focus {
     box-shadow: 0 0 3px 1px rgb(200, 150, 150);
 }
+
 .newMessageWrapper button {
     background-color: transparent;
     border: none;
@@ -682,14 +728,23 @@ input {
     justify-content: center;
     align-items: center;
 }
+
 .newMessageWrapper button:hover {
     background-color: rgb(250, 200, 200);
 }
+
 .brandBar {
     height: 5vh;
     display: flex;
     justify-content: center;
+    background-color: var(--NavBarColor);
+    padding-top: 0.5vh;
 }
+
+#brandText {
+    font-weight: 600;
+}
+
 .usernamePopup {
     z-index: 1000;
     position: fixed;
@@ -699,13 +754,22 @@ input {
     background-color: rgb(220, 220, 220);
     border: rgb(200, 200, 200) 2px solid;
 }
+
 .modal-header {
     display: flex;
     justify-content: center;
     align-items: center;
     padding-top: 5%;
     background-color: var(--PostModalTopColor);
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--PostModalBottomColor);
+}
 
+.postTextDesign {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 2.5rem;
     font-weight: 750;
     color: var(--PostModalBottomColor);
@@ -717,7 +781,7 @@ input {
 }
 
 .modal-dialog {
-    height: 78%; /* = 90% of the .modal-backdrop block = %90 of the screen */
+    height: 57%; /* = 90% of the .modal-backdrop block = %90 of the screen */
 }
 
 .modal-content {
@@ -726,7 +790,9 @@ input {
 
 .postButtonDesign {
     background-color: whitesmoke;
-    border-radius: 5%;
+    border-radius: 5px;
+    margin-top: 0.2%;
+    margin-bottom: 0.2%;
 }
 
 #carouselContainer {
@@ -742,9 +808,13 @@ input {
 
 .tempSerialNumber {
     position: absolute;
+    left: 47.5%;
+    bottom: 0;
+    z-index: 10000000;
 }
 
 .tempSlide {
+    position: relative;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -754,6 +824,7 @@ input {
     border-radius: 50%;
     aspect-ratio: 1/1;
 }
+
 .modal-body {
     background-image: url('/images/leather.png');
     background-color: black;
@@ -765,4 +836,34 @@ input {
     font-size: 1.3rem;
     font-weight: 750;
     color: var(--PostModalBottomColor);
+}
+
+#uploadModal {
+    box-shadow:
+        0,
+        0,
+        500px,
+        500px rgba(255, 255, 255, 0.7);
+}
+
+.vonal {
+    margin-top: 6.7%;
+}
+
+.slideShowControllerLeft {
+    position: absolute;
+    top: 25%;
+    left: 5%;
+}
+
+.slideShowControllerRight {
+    position: absolute;
+    top: 25%;
+    right: 5%;
+}
+
+.tempImage {
+    position: relative;
+    width: 35%;
+    clip-path: circle();
 }

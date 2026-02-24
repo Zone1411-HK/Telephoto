@@ -26,8 +26,8 @@
         <script src="/javascript/uploadPost.js"></script>
         <script src="/javascript/darkroom.js"></script>
         <script src="/javascript/profile.js"></script>
-        <script src="/javascript/comment.js"></script>
         <script src="/javascript/chat.js"></script>
+        <script src="/javascript/post.js"></script>
         <script src="/javascript/login.js"></script>
         <script src="/javascript/index.js"></script>
 
@@ -41,8 +41,8 @@
     </head>
     <body>
         <div class="container-fluid p-0">
-            <div class="brandBar">
-                <h1>Telephoto</h1>
+            <div class="brandBar invisible" id="brandBar">
+                <h1 id="brandText">Telephoto</h1>
             </div>
             <!--? Ha dolgoztok rajta nyugodtan kivehetitek az invisible-t csak zavaró volt, hogy minden látszott-->
             <div class="loginMain invisible" id="login">
@@ -73,7 +73,7 @@
                                 <div class="loginBtn">
                                     <input id="loginButton" type="button" value="Bejelentkezés" />
                                 </div>
-                                <hr />
+                                <hr class="vonal" />
                                 <div class="" id="regTextDiv">
                                     <span class="loginRegText" id="regText">Regisztráció</span>
                                 </div>
@@ -105,7 +105,7 @@
                                 <div class="loginBtn">
                                     <input id="regButton" type="button" value="Regisztráció" />
                                 </div>
-                                <hr />
+                                <hr class="vonal" />
                                 <div class="" id="loginTextDiv">
                                     <span class="loginRegText" id="loginText">Bejelentkezés</span>
                                 </div>
@@ -187,15 +187,15 @@
                         <div id="rendezesTrending">
                             <h2 id="trendingTitle">Trending</h2>
                             <input class="trendingButton" type="button" value="Ma" />
-                            <input class="trendingButton" type="button" value="Héten" />
-                            <input class="trendingButton" type="button" value="Hónapban" />
+                            <input class="trendingButton" type="button" value="A héten" />
+                            <input class="trendingButton" type="button" value="A hónapban" />
                             <input class="trendingButton" type="button" value="Idén" />
-                            <input class="trendingButton" type="button" value="Mindenkor" />
+                            <input class="trendingButton" type="button" value="Minden idő" />
                         </div>
                         <div id="rendezesEgyeb">
-                            <input class="egyebButton" type="button" value="Közeli" />
-                            <input class="egyebButton" type="button" value="Közeli" />
-                            <input class="egyebButton" type="button" value="Közeli" />
+                            <input class="egyebButton" type="button" value="Budapest" />
+                            <input class="egyebButton" type="button" value="#summervibes" />
+                            <input class="egyebButton" type="button" value="Krakkó" />
                         </div>
                     </div>
                     <div id="chatContainer">
@@ -491,7 +491,7 @@
             </div>
         </div>
 
-        <nav class="navbar navbar-expand-lg" id="navbar">
+        <nav class="navbar navbar-expand-lg invisible" id="navbar">
             <div class="container-fluid p-0" id="navBarColor">
                 <a class="navbar-brand m-0"
                     ><input

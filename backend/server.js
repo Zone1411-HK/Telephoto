@@ -26,6 +26,9 @@ app.use(
 router.get('/', (request, response) => {
     response.sendFile(path.join(__dirname, '../frontend/html/index.html'));
 });
+router.get('/admin', (request, response) => {
+    response.sendFile(path.join(__dirname, '../frontend/html/admin.html'));
+});
 
 //!API endpoints
 app.use('/', router);
@@ -33,19 +36,36 @@ const endpoints = require('./api/api.js');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
+let activeUsers = 0;
+
 io.on('connection', (socket) => {
-    console.log('a user connected');
+    activeUsers++;
+    console.log('Active users: ', activeUsers);
+
+    socket.on('requestActiveUsers', () => {
+        io.emit('responseActiveUsers', activeUsers);
+    });
+
     socket.on('chatId', (msg) => {
         console.log(msg);
         io.emit('newMessage', msg);
     });
+
+    socket.on('disconnect', () => {
+        activeUsers--;
+        console.log('user disconnected');
+        console.log('Active users: ', activeUsers);
+    });
 });
+
 app.use('/api', endpoints);
 
 //!Szerver futtatása
 app.use(express.static(path.join(__dirname, '../frontend'))); //?frontend mappa tartalmának betöltése az oldal működéséhez
 
 app.use('/node', express.static(path.join(__dirname, '../backend/node_modules'))); //! Ezért nem tudom Kardos megöl-e
+
+app.use('/uploads', express.static(path.join(__dirname, '../backend/uploads'))); //! Ezért nem tudom Kardos megöl-e 2
 
 http.listen(port, ip, () => {
     console.log(`Szerver elérhetősége: http://${ip}:${port}`);

@@ -47,7 +47,6 @@ async function getUserByUsername(username) {
 async function createPost(username, description, tags, location, latitude, longitude) {
     try {
         let userId = await getUserByUsername(username);
-        console.log(userId);
         const sql = `INSERT INTO posts(user_id, description, tags, location, latitude, longitude, creation_date) VALUES(${userId},"${description}","${tags}","${location}",${latitude}, ${longitude}, NOW())`;
         const [rows, fields] = await pool.execute(sql);
         return [rows, fields];
@@ -102,10 +101,32 @@ async function getPostDataByPostId(postId) {
     }
 }
 
+//post sorbarendezés lekérdezásek
+async function topPosts() {
+    try {
+        const topPostsSql = `
+        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link, pictures.picture_link 
+        FROM posts 
+        LEFT JOIN users ON users.user_id = posts.user_id 
+        LEFT JOIN interactions ON interactions.post_id = posts.post_id 
+        LEFT JOIN pictures ON pictures.post_id = posts.post_id 
+        GROUP BY posts.post_id
+        ORDER BY COUNT(interactions.upvote) - COUNT(interactions.downvote)`;
+        const [rows] = await pool.execute(topPostsSql);
+        return rows;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+///////
+
 //profil felület lekérd, comment lekérd, isadmin lekérd,
 
-async function loadProfile(userId) {
+async function loadProfile(username) {
     try {
+        let userId = await getUserByUsername(username);
+
         const profileSql = `SELECT users.username, users.profile_picture_link, users.biography, users.registration_date FROM users WHERE users.user_id = ${userId}`;
         const [rows] = await pool.execute(profileSql);
         return rows;
@@ -116,7 +137,7 @@ async function loadProfile(userId) {
 
 async function loadComments(postId) {
     try {
-        const commentsSql = `SELECT users.username, users.profile_picture_link, interactions.comment_content FROM interactions INNER JOIN users ON users.user_id = interactions.user_id INNER JOIN posts ON posts.post_id = interactions.post_id WHERE interactions.post_id = ${postId}`;
+        const commentsSql = `SELECT users.username, users.profile_picture_link, comments.comment_content FROM comments INNER JOIN users ON users.user_id = comments.user_id INNER JOIN posts ON posts.post_id = comments.post_id WHERE comments.post_id = ${postId}`;
         const [rows] = await pool.execute(commentsSql);
         return rows;
     } catch (error) {
@@ -126,9 +147,9 @@ async function loadComments(postId) {
 
 async function isAdmin(userName) {
     try {
-        const adminSql = `SELECT users.is_admin FROM users WHERE users.iusername = ${userName}`;
-        const [rows] = await pool.execute(adminSql);
-        return rows;
+        const adminSql = `SELECT users.is_admin FROM users WHERE users.username = ?`;
+        const [rows] = await pool.execute(adminSql, [userName]);
+        return rows[0].is_admin;
     } catch (error) {
         console.error(error);
     }
@@ -256,7 +277,6 @@ async function findMemberId(chat_id, user_id) {
 async function sendMessage(message, chatId, username) {
     try {
         const user = await getUserByUsername(username);
-        console.log(user);
         const member_id = await findMemberId(chatId, user);
         const values = [member_id, message];
         const sql = `
@@ -269,6 +289,260 @@ async function sendMessage(message, chatId, username) {
         console.error(error);
     }
 }
+
+async function deletePost(postId) {
+    try {
+        const sql = `
+        DELETE FROM posts
+        WHERE post_id = ?
+        `;
+        const [rows] = await pool.execute(sql, [postId]);
+        return rows.affectedRows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function adminProfiles() {
+    try {
+        const sql = `
+        SELECT users.user_id, users.username, users.username, users.email, users.registration_date, COUNT(DISTINCT posts.post_id) AS post_count, COUNT(DISTINCT comments.comment_id) AS comment_count, users.is_admin, users.is_reported
+        FROM users 
+        LEFT JOIN posts ON users.user_id = posts.user_id 
+        LEFT JOIN comments ON users.user_id = comments.user_id
+        GROUP BY users.user_id;`;
+        const [rows] = await pool.execute(sql);
+        return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+async function adminPosts() {
+    try {
+        const sql = `
+        SELECT posts.post_id, users.username, posts.creation_date, COUNT(interactions.upvote) AS upvote, COUNT(interactions.downvote) AS downvote, COUNT(pictures.picture_id) AS picture_count, posts.is_reported
+        FROM posts 
+        LEFT JOIN users ON posts.user_id = users.user_id
+        LEFT JOIN interactions ON posts.post_id = interactions.post_id
+        LEFT JOIN pictures ON posts.post_id = pictures.post_id
+        GROUP BY posts.post_id;`;
+        const [rows] = await pool.execute(sql);
+        return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+async function adminComments() {
+    try {
+        const sql = `
+        SELECT comments.comment_id, comments.post_id, users.username, comments.comment_content, comments.comment_date, comments.is_reported
+        FROM comments
+        LEFT JOIN users ON comments.user_id = users.user_id;`;
+        const [rows] = await pool.execute(sql);
+        return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function userComments(userId) {
+    try {
+        const sql = `
+        SELECT comments.comment_id, comments.comment_content, comments.is_reported
+        FROM comments
+        WHERE comments.user_id = ?;`;
+
+        const [rows] = await pool.execute(sql, [userId]);
+        return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function userPosts(userId) {
+    try {
+        const sql = `
+        SELECT posts.post_id, posts.description, posts.is_reported
+        FROM posts
+        WHERE posts.user_id = ?;`;
+        const [rows] = await pool.execute(sql, [userId]);
+        return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function adminProfileData(userId) {
+    try {
+        const sql = `
+        SELECT users.user_id, users.username, users.email, users.profile_picture_link, users.biography, users.registration_date, users.is_reported, users.is_admin
+        FROM users
+        WHERE users.user_id = ?;`;
+        const [rows] = await pool.execute(sql, [userId]);
+        return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function updateProfile(userId, username, regDate, email, bio) {
+    try {
+        const sql = `
+        UPDATE users
+        SET users.username = ?, users.email = ?, users.biography = ?, users.registration_date = ?
+        WHERE users.user_id = ?;
+        `;
+        await pool.execute(sql, [username, email, bio, regDate, userId]);
+        return 'Success';
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function deleteProfile(userId) {
+    try {
+        const sql = `
+        DELETE FROM users
+        WHERE users.user_id = ?;
+        `;
+        await pool.execute(sql, [userId]);
+        return 'Success';
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function clearProfile(userId) {
+    try {
+        const sql = `
+        UPDATE users
+        SET users.is_reported = false
+        WHERE users.user_id = ?;
+        `;
+        await pool.execute(sql, [userId]);
+        return 'Success';
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function clearPost(postId) {
+    try {
+        const sql = `
+        UPDATE posts
+        SET posts.is_reported = false
+        WHERE posts.post_id = ?;
+        `;
+        await pool.execute(sql, [postId]);
+        return 'Success';
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function adminPostData(postId) {
+    try {
+        const sql = `
+        SELECT users.user_id, users.username, posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, posts.is_reported, pictures.picture_link
+        FROM posts
+        LEFT JOIN users ON posts.user_id = users.user_id
+        LEFT JOIN pictures ON posts.post_id = pictures.post_id
+        WHERE posts.post_id = ?;`;
+        const [rows] = await pool.execute(sql, [postId]);
+        return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function updatePost(postId, description, creationDate, lat, locationName, lon, tags) {
+    try {
+        if (lat == '' || lon == '') {
+            const sql = `
+        UPDATE posts
+        SET posts.description = ?, posts.tags = ?, posts.location = ?, posts.creation_date = ? 
+        WHERE posts.post_id = ?;
+        `;
+            await pool.execute(sql, [description, tags, locationName, creationDate, postId]);
+            return 'Success';
+        } else {
+            const sql = `
+            UPDATE posts
+            SET posts.description = ?, posts.tags = ?, posts.location = ?, posts.latitude = ?, posts.longitude = ?, posts.creation_date = ? 
+            WHERE posts.post_id = ?;
+            `;
+            await pool.execute(sql, [
+                description,
+                tags,
+                locationName,
+                lat,
+                lon,
+                creationDate,
+                postId
+            ]);
+            return 'Success';
+        }
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function adminCommentData(commentId) {
+    try {
+        const sql = `
+        SELECT users.username, comments.user_id, comments.post_id, comments.comment_content, comments.comment_date
+        FROM comments
+        INNER JOIN users ON comments.user_id = users.user_id
+        WHERE comments.comment_id = ?;
+        `;
+        const [rows] = await pool.execute(sql, [commentId]);
+        return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function updateComment(commentId, commentDate, commentContent) {
+    try {
+        const sql = `
+            UPDATE comments
+            SET comments.comment_content = ?, comments.comment_date = ?
+            WHERE comments.comment_id = ?;
+            `;
+        await pool.execute(sql, [commentContent, commentDate, commentId]);
+        return 'Success';
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function deleteComment(commentId) {
+    try {
+        const sql = `
+        DELETE FROM comments
+        WHERE comments.comment_id = ?;
+        `;
+        await pool.execute(sql, [commentId]);
+        return 'Success';
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function clearComment(commentId) {
+    try {
+        const sql = `
+        UPDATE comments
+        SET comments.is_reported = false
+        WHERE comments.comment_id = ?;
+        `;
+        await pool.execute(sql, [commentId]);
+        return 'Success';
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 //!Export
 module.exports = {
     selectall,
@@ -278,6 +552,7 @@ module.exports = {
     createPost,
     getPostDataByPostId,
     createPicture,
+    topPosts,
     loadProfile,
     loadComments,
     isAdmin,
@@ -289,5 +564,22 @@ module.exports = {
     messagesOfChat,
     lastMessageOfChat,
     findMemberId,
-    sendMessage
+    sendMessage,
+    deletePost,
+    adminProfiles,
+    adminPosts,
+    adminComments,
+    userComments,
+    userPosts,
+    adminProfileData,
+    updateProfile,
+    deleteProfile,
+    clearProfile,
+    adminPostData,
+    clearPost,
+    updatePost,
+    adminCommentData,
+    updateComment,
+    deleteComment,
+    clearComment
 };

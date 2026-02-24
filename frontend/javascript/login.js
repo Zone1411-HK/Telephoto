@@ -21,6 +21,7 @@ async function login() {
                 document.getElementById('login').classList.add('invisible');
                 document.getElementById('home').classList.remove('invisible');
                 document.getElementById('navbar').classList.remove('invisible');
+                document.getElementById('brandBar').classList.remove('invisible');
                 console.log('success');
                 getChats();
             } else {

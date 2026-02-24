@@ -1,0 +1,9 @@
+:root {
+    --PrimaryLight: rgb(240, 245, 255);
+    --HoverLight: rgb(220, 225, 235);
+    --SecondaryLight: rgb(240, 245, 240);
+    --PrimaryDark: rgb(49, 65, 78);
+    --SecondaryDark: rgb(54, 70, 95);
+    --HoverDark: rgb(59, 75, 100);
+    --FocusDark: rgb(69, 85, 110);
+}

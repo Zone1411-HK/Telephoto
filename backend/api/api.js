@@ -54,7 +54,7 @@ router.get('/testsql', async (request, response) => {
 });
 
 //! REGISZTRÁCIÓ
-
+//#region registration
 router.get('/isUsernameAvailable/:name', async (request, response) => {
     try {
         const name = request.params.name;
@@ -91,8 +91,10 @@ router.post('/registration', async (request, response) => {
         });
     }
 });
+//#endregion
 
 //! LOGIN
+//#region login
 router.post('/login', async (request, response) => {
     try {
         const loginSelect = await database.loginSelect();
@@ -130,18 +132,10 @@ router.post('/login', async (request, response) => {
         });
     }
 });
-
-let storedUsernameHash;
-router.get('/hashUser/:username', async (request, response) => {
-    const username = request.params.username;
-    const { hash } = HashString(username);
-    storedUsernameHash = hash;
-    response.status(200).json({
-        username: hash
-    });
-});
+//#endregion
 
 //! POSZT FELTÖLTÉS
+//#region Posting
 router.post('/createPost', async (request, response) => {
     try {
         const { username, fileNames, description, tags, location, latitude, longitude } =
@@ -200,7 +194,8 @@ const postUpload = multer({ storage: postStorage });
 router.post('/tempUpload', tempUpload.array('uploadFile'), async (request, response) => {
     try {
         response.status(201).json({
-            Message: 'Sikeres feltöltés!'
+            Message: 'Sikeres feltöltés!',
+            filenames: request.files
         });
     } catch (error) {
         response.status(500).json({
@@ -213,7 +208,8 @@ router.post('/uploadPost', postUpload.array('uploadFile'), async (request, respo
     try {
         //uploadFiles(postUpload, 'uploadFile');
         response.status(201).json({
-            Status: 'Success'
+            Status: 'Success',
+            filenames: request.files
         });
     } catch (error) {
         response.status(500).json({
@@ -222,6 +218,10 @@ router.post('/uploadPost', postUpload.array('uploadFile'), async (request, respo
         });
     }
 });
+//#endregion
+
+//! ADATOK
+//#region Data
 
 //! POSZT ADATOK
 router.get('/postInfos/:postId', async (request, response) => {
@@ -252,11 +252,23 @@ router.get('/postInfos/:postId', async (request, response) => {
     }
 });
 
+router.get('/topPosts', async (request, response) => {
+    try {
+        const data = await database.topPosts();
+        //console.log('hiba ' + data);
+        response.status(200).json({
+            status: 'Success',
+            results: data
+        });
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 //! PROFIL ADATOK (nincs kész)
 router.get('/profileInfos', async (request, response) => {
     try {
-        //const data = await database.loadProfile();
-        const data = '';
+        const data = await database.loadProfile(request.session.username);
 
         response.status(200).json({
             status: 'Success',
@@ -264,21 +276,25 @@ router.get('/profileInfos', async (request, response) => {
         });
         //console.log(data);
     } catch (error) {
-        //console.log(error);
+        console.log(error);
     }
 });
 
 //! KOMMENT ADATOK
-router.get('/commentInfos', async (request, response) => {
-    //const data = await database.loadComments();
-    const data = '';
+router.post('/commentInfos', async (request, response) => {
+    const { post_id } = request.body;
+    const data = await database.loadComments(post_id);
+
     response.status(200).json({
         status: 'Success',
         results: data
     });
     //console.log(data);
 });
+//#endregion
 
+//! CHAT
+//#region Chat
 //! FELHASZNÁLÓ CHATJEI
 router.get('/chatsOfUser/:username', async (request, response) => {
     try {
@@ -303,7 +319,6 @@ router.get('/messagesOfChat', async (request, response) => {
         const sqlData = await database.messagesOfChat(chatId);
         let formattedDataArr = [];
         for (const data of sqlData) {
-            console.log();
             const formattedDate = convertUnixToReadableDate(
                 Math.floor(data.message_date.getTime())
             );
@@ -421,6 +436,31 @@ router.post('/removeChatId', async (request, response) => {
         });
     }
 });
+
+router.get('/storedChatIdInfos', async (request, response) => {
+    try {
+        if (!request.session.chatId) {
+            response.status(200).json({
+                Status: 'Failed',
+                Result: 'Nincs mentett chatId'
+            });
+        } else {
+            const chatInfos = await database.chatInfoByChatId(request.session.chatId);
+            response.status(200).json({
+                Status: 'Success',
+                Result: chatInfos.chat_name
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/removeChatId" végpont nem működik!'
+        });
+    }
+});
+//#endregion
+
 router.post('/saveUsername', async (request, response) => {
     try {
         const { username } = request.body;
@@ -436,6 +476,7 @@ router.post('/saveUsername', async (request, response) => {
         });
     }
 });
+
 router.get('/sendUsername', async (request, response) => {
     try {
         const username = request.session.username;
@@ -483,28 +524,285 @@ router.post('/removeUsername', async (request, response) => {
     }
 });
 
-router.get('/storedChatIdInfos', async (request, response) => {
+//! ADMIN
+//#region Admin
+router.post('/deletePost', async (request, response) => {
     try {
-        if (!request.session.chatId) {
+        const { postId } = request.body;
+        console.log(postId);
+        const affectedRows = await database.deletePost(postId);
+        if (affectedRows != 0) {
             response.status(200).json({
-                Status: 'Failed',
-                Result: 'Nincs mentett chatId'
+                Status: 'Success'
             });
         } else {
-            const chatInfos = await database.chatInfoByChatId(request.session.chatId);
             response.status(200).json({
-                Status: 'Success',
-                Result: chatInfos.chat_name
+                Status: 'Failed',
+                Message: 'Nincs ilyen id-val poszt!'
             });
         }
     } catch (error) {
-        console.error(error);
-        response.status(500).json({
-            Status: 'Failed',
-            Message: 'A "/removeChatId" végpont nem működik!'
-        });
+        throw new Error(`Hiba a "deletePost" végpontban: ${error}`);
     }
 });
+
+router.get('/getProfilesAdmin', async (request, response) => {
+    try {
+        let resultArr = [];
+        const sqlResult = await database.adminProfiles();
+        for (const obj of sqlResult) {
+            resultArr.push({
+                userId: obj.user_id,
+                username: obj.username,
+                email: obj.email,
+                registrationDate: convertUnixToReadableDate(Date.parse(obj.registration_date)),
+                postCount: obj.post_count,
+                commentCount: obj.comment_count,
+                isAdmin: obj.is_admin,
+                isReported: obj.is_reported
+            });
+        }
+        response.status(200).json({
+            Status: 'Success',
+            Result: resultArr
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "getProfilesAdmin" végpontban: ${error}`);
+    }
+});
+
+router.get('/getProfileData/:userId', async (request, response) => {
+    try {
+        const userId = request.params.userId;
+        const profileData = await database.adminProfileData(userId);
+
+        response.status(200).json({
+            Status: 'Success',
+            ProfileData: profileData
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "getProfileData" végpontban: ${error}`);
+    }
+});
+
+router.post('/updateProfileData', async (request, response) => {
+    try {
+        const { userId, profileUsername, profileRegDate, profileEmail, profileBiography } =
+            request.body;
+        const updateProfile = await database.updateProfile(
+            userId,
+            profileUsername,
+            profileRegDate,
+            profileEmail,
+            profileBiography
+        );
+        response.status(200).json({
+            Status: updateProfile
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "updateProfileData" végpontban: ${error}`);
+    }
+});
+
+router.post('/deleteProfile', async (request, response) => {
+    try {
+        const { userId } = request.body;
+        const deleteProfile = await database.deleteProfile(userId);
+        response.status(200).json({
+            Status: deleteProfile
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "deleteProfile" végpontban: ${error}`);
+    }
+});
+
+router.post('/clearProfile', async (request, response) => {
+    try {
+        const { userId } = request.body;
+        const clearProfile = await database.clearProfile(userId);
+        response.status(200).json({
+            Status: clearProfile
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "clearProfile" végpontban: ${error}`);
+    }
+});
+
+router.post('/clearPost', async (request, response) => {
+    try {
+        const { postId } = request.body;
+        const clearPost = await database.clearPost(postId);
+        response.status(200).json({
+            Status: clearPost
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "clearPost" végpontban: ${error}`);
+    }
+});
+
+router.get('/getPostsAdmin', async (request, response) => {
+    try {
+        let resultArr = [];
+        const sqlResult = await database.adminPosts();
+        for (const obj of sqlResult) {
+            resultArr.push({
+                postId: obj.post_id,
+                username: obj.username,
+                creationDate: convertUnixToReadableDate(Date.parse(obj.creation_date)),
+                upvote: obj.upvote,
+                downvote: obj.downvote,
+                pictureCount: obj.picture_count,
+                isReported: obj.is_reported
+            });
+        }
+        response.status(200).json({
+            Status: 'Success',
+            Result: resultArr
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "getPostsAdmin" végpontban: ${error}`);
+    }
+});
+
+router.get('/getPostData/:postId', async (request, response) => {
+    try {
+        const postId = request.params.postId;
+        const postData = await database.adminPostData(postId);
+        let pics = [];
+
+        for (const data of postData) {
+            pics.push(data.picture_link);
+        }
+
+        const data = {
+            description: postData[0].description,
+            tags: postData[0].tags,
+            location: postData[0].location,
+            latitude: postData[0].latitude,
+            longitude: postData[0].longitude,
+
+            postId: postData[0].post_id,
+            creationDate: postData[0].creation_date,
+            username: postData[0].username,
+            userId: postData[0].user_id,
+            isReported: postData[0].is_reported,
+            pictureLinks: pics
+        };
+
+        response.status(200).json({
+            Status: 'Success',
+            postData: data
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "getProfileData" végpontban: ${error}`);
+    }
+});
+
+router.post('/updatePostData', async (request, response) => {
+    try {
+        const {
+            postId,
+            postDescription,
+            postInputCreationDate,
+            postLatitude,
+            postLocationName,
+            postLongitude,
+            postTags
+        } = request.body;
+        console.log(request.body);
+        const updatePost = await database.updatePost(
+            postId,
+            postDescription,
+            postInputCreationDate,
+            postLatitude,
+            postLocationName,
+            postLongitude,
+            postTags
+        );
+        response.status(200).json({
+            Status: updatePost
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "updateProfileData" végpontban: ${error}`);
+    }
+});
+
+router.get('/getCommentsAdmin', async (request, response) => {
+    try {
+        let resultArr = [];
+        const sqlResult = await database.adminComments();
+        for (const obj of sqlResult) {
+            resultArr.push({
+                commentId: obj.comment_id,
+                postId: obj.post_id,
+                username: obj.username,
+                commentContent: obj.comment_content,
+                commentDate: convertUnixToReadableDate(Date.parse(obj.comment_date)),
+                isReported: obj.is_reported
+            });
+        }
+        response.status(200).json({
+            Status: 'Success',
+            Result: resultArr
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "getCommentsAdmin" végpontban: ${error}`);
+    }
+});
+
+router.get('/getCommentData/:commentId', async (request, response) => {
+    try {
+        const commentId = request.params.commentId;
+        const commentData = await database.adminCommentData(commentId);
+        response.status(200).json({
+            Status: 'Success',
+            commentData: commentData[0]
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "getCommentData" végpontban: ${error}`);
+    }
+});
+
+router.post('/updateCommentData', async (request, response) => {
+    try {
+        const { commentId, commentDate, commentContent } = request.body;
+        console.log(request.body);
+        const updateComment = await database.updateComment(commentId, commentDate, commentContent);
+        response.status(200).json({
+            Status: updateComment
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "updateProfileData" végpontban: ${error}`);
+    }
+});
+
+router.post('/deleteComment', async (request, response) => {
+    try {
+        const { commentId } = request.body;
+        const deleteComment = await database.deleteComment(commentId);
+        response.status(200).json({
+            Status: deleteComment
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "deleteComment" végpontban: ${error}`);
+    }
+});
+
+router.post('/clearComment', async (request, response) => {
+    try {
+        const { commentId } = request.body;
+        console.log(commentId);
+        const clearComment = await database.clearComment(commentId);
+        response.status(200).json({
+            Status: clearComment
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "clearComment" végpontban: ${error}`);
+    }
+});
+
+//#endregion
+
 //! FÜGGVÉNYEK
 //? Hash-eljük a megadott stringet, és visszaadunk egy salt, és egy hash változót.
 function HashString(string) {
@@ -515,6 +813,7 @@ function HashString(string) {
     const hash = crypto.scryptSync(string, salt, 64).toString('hex');
     return { salt, hash };
 }
+
 function VerifyHashedString(string, salt, hash) {
     if (string !== null && salt !== null) {
         const hashedString = crypto.scryptSync(string, salt, 64).toString('hex');
@@ -523,6 +822,7 @@ function VerifyHashedString(string, salt, hash) {
         return null;
     }
 }
+
 function convertUnixToReadableDate(unix) {
     let date = new Date(unix);
     let year = date.getUTCFullYear(date);
@@ -543,22 +843,41 @@ function formatDate(date) {
     const year = date.getUTCFullYear();
     const month = date.getUTCSeconds;
 }
+
 function clearFolder(path) {
     fs.readdir(path).then((files) => {
         files.forEach((file) => {
-            console.log(file);
+            //console.log(file);
             fs.unlink(path + '/' + file);
         });
     });
 }
+
 function uploadFiles(multerUpload, fileInput) {
     multerUpload.array(fileInput);
 }
 
-router.get('/checkHashUserIntegrity/:storedData', async (request, response) => {
-    const storedData = request.params.storedData;
-    response.status(200).json({
-        isValid: storedData === storedUsernameHash ? true : false
-    });
-});
+async function isAdmin(request, response, next) {
+    try {
+        const username = request.session.username;
+        if (username != undefined) {
+            const isAdmin = await database.isAdmin(username);
+            if (isAdmin) {
+                next();
+            } else {
+                response.status(200).send({
+                    Status: 'Failed',
+                    Message: 'Önnek nincs meg a megfelelő jogosultsága!'
+                });
+            }
+        } else {
+            response.status(200).send({
+                Status: 'Failed',
+                Message: 'Nincsen elmentett felhasználónév!'
+            });
+        }
+    } catch (error) {
+        throw new Error(`Hiba az "isAdmin" middleware-ben: ${error}`);
+    }
+}
 module.exports = router;
