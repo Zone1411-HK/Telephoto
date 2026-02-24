@@ -45,9 +45,14 @@ CREATE TABLE interactions(
     post_id INT,
     upvote BOOLEAN,
     downvote BOOLEAN,
-    favorite BOOLEAN,
     FOREIGN KEY(user_id) REFERENCES users(user_id),
     FOREIGN KEY(post_id) REFERENCES posts(post_id)
+);
+
+CREATE TABLE favourites(
+    user_id INT,
+    post_id INT,
+    favourite_user_id INT
 );
 
 CREATE TABLE comments(

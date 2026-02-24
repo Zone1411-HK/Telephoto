@@ -54,6 +54,17 @@ async function createPost(username, description, tags, location, latitude, longi
         console.error(error);
     }
 }
+///////EZ új
+async function createComment(username, postId, commentContent ) {
+    try{
+        let userId = await getUserByUsername(username);
+        const sql = 'INSERT INTO comments(user_id, post_id, comment_content) VALUES(?, ?, ?);';
+        const [rows] = await pool.execute(sql);
+        return [rows];
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 async function createPicture(postId, pictureLink) {
     try {
@@ -100,6 +111,30 @@ async function getPostDataByPostId(postId) {
         console.error(error);
     }
 }
+
+/////////////LIKE DISLIKE
+async function isLiked(username, postId) {
+    try{
+        let userId = await getUserByUsername(username);
+        const sql = `SELECT interactions.upvote, interactions.downvote FROM interactions WHERE interactions.user_id = ${userId} AND interactions.post_id = ${postId};`;
+        const [rows] = await pool.execute(sql);
+        return[rows];
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function like(username, postId, likeValue, dislikeValue) {
+    try{
+        let userId = await getUserByUsername(username);
+        const sql = `INSERT INTO interactions(user_id, post_id, upvote, downvote) VALUES(?, ?, ?, ?)`;
+        const [rows] = await pool.execute(sql);
+        return[rows];
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 
 //post sorbarendezés lekérdezásek
 async function topPosts() {
@@ -586,5 +621,7 @@ module.exports = {
     adminCommentData,
     updateComment,
     deleteComment,
-    clearComment
+    clearComment,
+    createComment,
+    isLiked,
 };
