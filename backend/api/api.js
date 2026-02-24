@@ -737,7 +737,8 @@ router.get('/getCommentsAdmin', async (request, response) => {
                 postId: obj.post_id,
                 username: obj.username,
                 commentContent: obj.comment_content,
-                commentDate: convertUnixToReadableDate(Date.parse(obj.comment_date))
+                commentDate: convertUnixToReadableDate(Date.parse(obj.comment_date)),
+                isReported: obj.is_reported
             });
         }
         response.status(200).json({
@@ -748,6 +749,58 @@ router.get('/getCommentsAdmin', async (request, response) => {
         throw new Error(`Hiba a "getCommentsAdmin" végpontban: ${error}`);
     }
 });
+
+router.get('/getCommentData/:commentId', async (request, response) => {
+    try {
+        const commentId = request.params.commentId;
+        const commentData = await database.adminCommentData(commentId);
+        response.status(200).json({
+            Status: 'Success',
+            commentData: commentData[0]
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "getCommentData" végpontban: ${error}`);
+    }
+});
+
+router.post('/updateCommentData', async (request, response) => {
+    try {
+        const { commentId, commentDate, commentContent } = request.body;
+        console.log(request.body);
+        const updateComment = await database.updateComment(commentId, commentDate, commentContent);
+        response.status(200).json({
+            Status: updateComment
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "updateProfileData" végpontban: ${error}`);
+    }
+});
+
+router.post('/deleteComment', async (request, response) => {
+    try {
+        const { commentId } = request.body;
+        const deleteComment = await database.deleteComment(commentId);
+        response.status(200).json({
+            Status: deleteComment
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "deleteComment" végpontban: ${error}`);
+    }
+});
+
+router.post('/clearComment', async (request, response) => {
+    try {
+        const { commentId } = request.body;
+        console.log(commentId);
+        const clearComment = await database.clearComment(commentId);
+        response.status(200).json({
+            Status: clearComment
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "clearComment" végpontban: ${error}`);
+    }
+});
+
 //#endregion
 
 //! FÜGGVÉNYEK

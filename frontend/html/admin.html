@@ -368,7 +368,7 @@ Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sapiente cum culpa nam
                 <div class="adminPanel" id="comments">
                     <div class="adminPanelHeader"><h3>Kommentek</h3></div>
                     <div class="adminPanelContent">
-                        <div class="tableWrapper">
+                        <div class="tableWrapper" id="commentsTableDiv">
                             <table id="commentsTable">
                                 <thead>
                                     <tr>
@@ -381,6 +381,57 @@ Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sapiente cum culpa nam
                                 </thead>
                                 <tbody id="commentsTbody"></tbody>
                             </table>
+                        </div>
+                        <div id="openedComment">
+                            <div id="commentDiv">
+                                <div id="commentDataHeader">
+                                    <div id="commentUserPost">
+                                        <div id="commentUser">Felhasználó: Béla #1</div>
+                                        <div id="commentPost">Poszt: #1</div>
+                                    </div>
+                                    <div id="commentDateDiv">
+                                        Dátum:
+                                        <input
+                                            type="date"
+                                            id="commentDate"
+                                            disabled
+                                            class="commentModifyData"
+                                        />
+                                    </div>
+                                </div>
+                                <div id="commentDataBody">
+                                    <textarea
+                                        id="commentContent"
+                                        class="commentModifyData"
+                                        disabled
+                                        maxlength="500"
+                                    >
+Lorem ipsum dolor sit amet consectetur adipisicing elit. A iusto asperiores repellendus explicabo. Tempora delectus iste nisi veritatis provident saepe placeat esse! Nostrum sed similique illum magni. Neque, explicabo laboriosam?</textarea
+                                    >
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <div class="adminAction adminActionBan" id="commentActionBan">
+                                    <h3>törlés</h3>
+                                </div>
+                                <div class="adminAction adminActionModify" id="commentActionModify">
+                                    <h3>módosítás</h3>
+                                </div>
+                                <div
+                                    class="adminAction adminActionConfirmModify"
+                                    id="commentActionConfirmModify"
+                                >
+                                    <h3>megerősítés</h3>
+                                </div>
+                                <div class="adminAction adminActionClear" id="commentActionClear">
+                                    <h3
+                                        id="commentActionClearH3"
+                                        class="disabledButton adminActionClearH3"
+                                    >
+                                        tisztázás
+                                    </h3>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

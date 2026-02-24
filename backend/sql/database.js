@@ -335,7 +335,7 @@ async function adminPosts() {
 async function adminComments() {
     try {
         const sql = `
-        SELECT comments.comment_id, comments.post_id, users.username, comments.comment_content, comments.comment_date
+        SELECT comments.comment_id, comments.post_id, users.username, comments.comment_content, comments.comment_date, comments.is_reported
         FROM comments
         LEFT JOIN users ON comments.user_id = users.user_id;`;
         const [rows] = await pool.execute(sql);
@@ -487,6 +487,62 @@ async function updatePost(postId, description, creationDate, lat, locationName, 
     }
 }
 
+async function adminCommentData(commentId) {
+    try {
+        const sql = `
+        SELECT users.username, comments.user_id, comments.post_id, comments.comment_content, comments.comment_date
+        FROM comments
+        INNER JOIN users ON comments.user_id = users.user_id
+        WHERE comments.comment_id = ?;
+        `;
+        const [rows] = await pool.execute(sql, [commentId]);
+        return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function updateComment(commentId, commentDate, commentContent) {
+    try {
+        const sql = `
+            UPDATE comments
+            SET comments.comment_content = ?, comments.comment_date = ?
+            WHERE comments.comment_id = ?;
+            `;
+        await pool.execute(sql, [commentContent, commentDate, commentId]);
+        return 'Success';
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function deleteComment(commentId) {
+    try {
+        const sql = `
+        DELETE FROM comments
+        WHERE comments.comment_id = ?;
+        `;
+        await pool.execute(sql, [commentId]);
+        return 'Success';
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function clearComment(commentId) {
+    try {
+        const sql = `
+        UPDATE comments
+        SET comments.is_reported = false
+        WHERE comments.comment_id = ?;
+        `;
+        await pool.execute(sql, [commentId]);
+        return 'Success';
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 //!Export
 module.exports = {
     selectall,
@@ -521,5 +577,9 @@ module.exports = {
     clearProfile,
     adminPostData,
     clearPost,
-    updatePost
+    updatePost,
+    adminCommentData,
+    updateComment,
+    deleteComment,
+    clearComment
 };

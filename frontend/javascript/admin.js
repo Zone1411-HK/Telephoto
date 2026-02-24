@@ -38,14 +38,18 @@ document.addEventListener('DOMContentLoaded', () => {
         .getElementById('profActionConfirmModify')
         .addEventListener('click', confirmModificationProfile);
 
+    document.getElementById('profActionBan').addEventListener('click', deleteProfile);
     document.getElementById('postActionModify').addEventListener('click', modifyPost);
     document
         .getElementById('postActionConfirmModify')
         .addEventListener('click', confirmPostModification);
 
-    document.getElementById('profActionBan').addEventListener('click', deleteProfile);
+    document.getElementById('commentActionModify').addEventListener('click', modifyComment);
+    document
+        .getElementById('commentActionConfirmModify')
+        .addEventListener('click', confirmCommentModification);
 
-    document.getElementById('postActionBan').addEventListener('click', deletePost);
+    document.getElementById('commentActionBan').addEventListener('click', deleteComment);
 
     document.getElementById('deleteCancel').addEventListener('click', closeDeleteModal);
     document.getElementById('deleteConfirm').addEventListener('click', confirmDelete);
@@ -54,220 +58,159 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('slideshowRight').addEventListener('click', nextSlide);
 });
 
-function generateMap(lat, lon) {
-    let tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 20,
-        noWrap: true
-    });
-    let zoom = 0;
-    let center = [0, 0];
-    if (lat != undefined && lon != undefined) {
-        zoom = 9;
-        center[0] = lat;
-        center[1] = lon;
-        document.getElementById('postMap').style.filter = 'none';
-    } else {
-        document.getElementById('postMap').style.filter = 'grayscale(100%)';
-    }
+//! COMMENT
+//#region COMMENT
 
-    //console.log(
-    //`zoom: ${zoom} | center: ${center} | draggable: ${draggable} | lat: ${lat} | lon: ${lon}`
-    //);
+async function getComments() {
+    try {
+        const response = await GetMethodFetch('/api/getCommentsAdmin');
+        const result = response.Result;
+        const tbody = document.getElementById('commentsTbody');
+        tbody.replaceChildren();
+        for (const obj of result) {
+            const tr = document.createElement('tr');
+            const values = Object.entries(obj);
+            for (let i = 0; i < values.length - 1; i++) {
+                const td = document.createElement('td');
 
-    map = L.map('postMap', {
-        zoomControl: false,
-        layers: [tileLayer],
-        zoom: zoom,
-        center: center
-    });
-    map.invalidateSize();
-}
-
-function inputDate(originDate) {
-    const date = new Date(originDate);
-    const year = date.getUTCFullYear();
-    let month = date.getUTCMonth() + 1;
-    if (month.toString().length == 1) {
-        month = '0' + month.toString();
-    }
-
-    let day = date.getUTCDate(date);
-    if (day.toString().length == 1) {
-        day = '0' + day.toString();
-    }
-    return `${year}-${month}-${day}`;
-}
-
-function collapseSidebar() {
-    let sidebar = document.getElementById('sidebar');
-    let adminContent = document.getElementById('adminContent');
-    let isCollapsed = sidebar.dataset.collapsed;
-
-    if (isCollapsed == 'true') {
-        sidebar.style.width = '10vw';
-        adminContent.style.width = '90vw';
-        sidebar.dataset.collapsed = 'false';
-        this.style.left = '9vw';
-    } else {
-        sidebar.style.width = '2vw';
-        adminContent.style.width = '98vw';
-        sidebar.dataset.collapsed = 'true';
-        this.style.left = '1vw';
-    }
-    for (const child of this.children) {
-        child.classList.toggle('visible');
-        child.classList.toggle('invisible');
-    }
-    toggleSidebarVisibility(sidebar);
-}
-
-function toggleSidebarVisibility(parent) {
-    let children = parent.children;
-    for (let i = 1; i < children.length; i++) {
-        console.log(children[i].style.visibility);
-        if (children[i].style.visibility == 'visible') {
-            children[i].style.visibility = 'hidden';
-        } else {
-            children[i].style.visibility = 'visible';
-        }
-    }
-}
-
-function responsiveUsername() {
-    let username = document.getElementById('adminUsername');
-    let length = username.innerText.length;
-    if (length > 5) {
-        if (length > 8) {
-            if (length > 11) {
-                if (length > 15) {
-                    username.style.fontSize = '22px';
+                if (values[i][0] == 'commentContent') {
+                    const div = document.createElement('div');
+                    div.classList.add('commentContent');
+                    div.innerText = values[i][1];
+                    td.appendChild(div);
                 } else {
-                    username.style.fontSize = '26px';
+                    td.innerText = values[i][1];
                 }
+                tr.appendChild(td);
+            }
+            tr.addEventListener('click', openComment);
+            console.log(values[5]);
+            if (values[5][1] == true) {
+                tr.classList.add('reported');
+                tr.dataset.reported = true;
+            }
+            tr.dataset.commentId = values[0][1];
+            console.log(tr);
+            tbody.appendChild(tr);
+        }
+    } catch (error) {
+        console.error('Galiba támadt');
+    }
+}
+
+async function openComment() {
+    try {
+        const commentId = this.dataset.commentId;
+        const { Status, commentData } = await GetMethodFetch('/api/getCommentData/' + commentId);
+        if (Status == 'Success') {
+            document.getElementById('openedComment').style.display = 'flex';
+            document.getElementById('openedComment').dataset.commentId = commentId;
+            document.getElementById('commentsTableDiv').style.display = 'none';
+            document.getElementById('commentUser').innerText =
+                `Felhasználó: ${commentData.username} #${commentData.user_id}`;
+            document.getElementById('commentPost').innerText = `Poszt: #${commentData.post_id}`;
+            document.getElementById('commentDate').value = inputDate(commentData.comment_date);
+            document.getElementById('commentContent').innerText = commentData.comment_content;
+
+            if (this.dataset.reported == 'true') {
+                document.getElementById('openedComment').classList.add('reported');
+                document
+                    .getElementById('commentActionClearH3')
+                    .addEventListener('click', clearComment);
+                document.getElementById('commentActionClearH3').classList.remove('disabledButton');
+                document
+                    .getElementById('commentActionClearH3')
+                    .classList.add('adminActionClearEnabled');
             } else {
-                username.style.fontSize = '36px';
-            }
-        } else {
-            username.style.fontSize = '40px';
-        }
-    } else {
-        username.style.fontSize = '50px';
-    }
-}
-
-function generateBarChart(arr) {
-    const yAxis = document.getElementById('yAxis');
-    yAxis.replaceChildren();
-    const nullPoint = document.createElement('span');
-    nullPoint.innerText = 0;
-    yAxis.appendChild(nullPoint);
-
-    let maxValue = Math.max(...arr);
-    /*
-    let sortedArr = arr.slice();
-    sortedArr = sortArray(sortedArr);
-    let usedNums = [];
-    for (let i = 0; i < sortedArr.length; i++) {
-        if (!usedNums.includes(sortedArr[i])) {
-            const span = document.createElement('span');
-            span.innerText = sortedArr[i];
-            usedNums.push(sortedArr[i]);
-            yAxis.appendChild(span);
-        }
-    }
-    */
-    for (let i = 1; i < 5; i++) {
-        const span = document.createElement('span');
-        span.innerText = maxValue * (i / 4);
-        yAxis.appendChild(span);
-    }
-
-    let ratio = 100 / maxValue;
-    let columnDiv = document.getElementById('userTrackerColumns');
-    columnDiv.replaceChildren();
-    let timeDiv = document.getElementById('userTrackerTimes');
-    timeDiv.replaceChildren();
-    for (let i = 0; i < arr.length; i++) {
-        let column = document.createElement('div');
-        column.classList.add('userTrackerColumn');
-        column.style.height = ratio * arr[i] + '%';
-
-        let tooltip = document.createElement('span');
-        tooltip.classList.add('userTrackerTooltip');
-        tooltip.innerText = arr[i];
-        if (ratio * arr[i] < 40) {
-            tooltip.style.paddingTop = '5%';
-            tooltip.style.fontSize = '0.6vw';
-        } else {
-            tooltip.style.fontSize = '0.85vw';
-        }
-
-        column.appendChild(tooltip);
-        columnDiv.appendChild(column);
-
-        let span = document.createElement('span');
-        span.innerText = userTrackerTimeArray[i];
-        timeDiv.appendChild(span);
-    }
-}
-
-socket.on('responseActiveUsers', (activeUsers) => {
-    if (userTrackerArray.length >= 5) {
-        userTrackerArray.shift();
-        userTrackerTimeArray.shift();
-    }
-    userTrackerTimeArray.push(convertToTime(Date.now()));
-    userTrackerArray.push(activeUsers);
-
-    generateBarChart(userTrackerArray);
-});
-
-function convertToTime(unix) {
-    let date = new Date(unix);
-    let hour = date.getUTCHours(date);
-    hour++;
-    let minute = date.getUTCMinutes(date).toString();
-    if (minute.length == 1) {
-        minute = '0' + minute;
-    }
-    return `${hour}:${minute}`;
-}
-
-function sortArray(arr) {
-    for (let i = 0; i < arr.length - 1; i++) {
-        for (let j = i + 1; j < arr.length; j++) {
-            if (arr[j] < arr[i]) {
-                let temp = arr[j];
-                arr[j] = arr[i];
-                arr[i] = temp;
+                document.getElementById('commentActionClearH3').classList.add('disabledButton');
+                document
+                    .getElementById('commentActionClearH3')
+                    .removeEventListener('click', clearComment);
+                document
+                    .getElementById('commentActionClearH3')
+                    .classList.remove('adminActionClearEnabled');
             }
         }
+    } catch (error) {
+        console.log(error);
     }
-    return arr;
 }
 
-function navButtonClick() {
-    const navButtons = document.getElementsByClassName('navButton');
-    for (const navButton of navButtons) {
-        console.log(navButton == this);
-        if (navButton != this) {
-            navButton.classList.remove('activeNavButton');
-        } else {
-            this.classList.add('activeNavButton');
+let originalComment = {};
+
+async function modifyComment() {
+    let modifiableDatas = document.querySelectorAll('.commentModifyData');
+    for (const el of modifiableDatas) {
+        originalComment[el.id] = el.value;
+        el.disabled = false;
+        el.style.backgroundColor = 'var(--PrimaryLight)';
+        el.style.color = 'var(--SecondaryDark)';
+    }
+    console.log(originalComment);
+    document.getElementById('commentActionConfirmModify').style.display = 'flex';
+    this.style.display = 'none';
+}
+
+async function confirmCommentModification() {
+    let modifiedArray = document.querySelectorAll('.commentModifyData');
+    console.log(modifiedArray);
+    let j = 0;
+    while (
+        j < modifiedArray.length &&
+        modifiedArray[j].value == Object.values(originalComment)[j]
+    ) {
+        j++;
+    }
+    if (j < modifiedArray.length) {
+        const modifyResponse = await PostMethodFetch('/api/updateCommentData', {
+            commentId: document.getElementById('openedComment').dataset.commentId,
+            commentDate: modifiedArray[0].value,
+            commentContent: modifiedArray[1].value
+        });
+        if (modifyResponse.Status == 'Success') {
+            closeComment();
         }
     }
 }
 
-function searchFocus() {
-    const searches = document.getElementsByClassName('searchId');
-    for (const search of searches) {
-        if (this == search) {
-            search.parentNode.classList.add('focusSearch');
-        } else {
-            search.parentNode.classList.remove('focusSearch');
+async function clearComment() {
+    const commentId = document.getElementById('openedComment').dataset.commentId;
+    console.log(commentId);
+    const clearResponse = await PostMethodFetch('/api/clearComment', { commentId: commentId });
+    console.log(clearResponse);
+    closeComment();
+}
+
+function closeComment() {
+    try {
+        let modifyArray = document.querySelectorAll('.commentModifyData');
+        for (let el of modifyArray) {
+            el.disabled = true;
+            el.style.border = '1px solid rgb(192, 210, 220)';
+            el.style.color = 'rgb(102, 110, 130)';
+            el.value = '';
         }
+        document.getElementById('commentActionModify').style.display = 'flex';
+        document.getElementById('commentActionConfirmModify').style.display = 'none';
+        document.getElementById('commentsTableDiv').style.display = 'block';
+        document.getElementById('openedComment').style.display = 'none';
+        document.getElementById('openedComment').classList.remove('reported');
+        document.getElementById('openedComment').removeAttribute('data-comment-id');
+        //document.getElementById('commentBack').style.display = 'none';
+        getComments();
+    } catch (error) {
+        console.error(error);
     }
 }
+
+async function deleteComment() {
+    document.getElementById('deleteConfirmModal').style.display = 'flex';
+    document.getElementById('deleteConfirm').dataset.deleteType = 'comment';
+}
+
+//#endregion
+//! PROFILE
+//#region PROFILE
 
 async function getProfiles() {
     try {
@@ -288,12 +231,12 @@ async function getProfiles() {
 
                 tr.appendChild(td);
             }
-            if (values[6][1] == true) {
+            if (values[6][1]) {
                 tr.classList.add('adminProfile');
                 tr.dataset.admin = true;
             }
 
-            if (values[7][1] == true) {
+            if (values[7][1]) {
                 tr.classList.add('reported');
                 tr.dataset.reported = true;
             }
@@ -305,39 +248,6 @@ async function getProfiles() {
         console.error(error);
     }
 }
-
-async function getComments() {
-    try {
-        const response = await GetMethodFetch('/api/getCommentsAdmin');
-        const result = response.Result;
-        const tbody = document.getElementById('commentsTbody');
-        tbody.replaceChildren();
-        for (const obj of result) {
-            const tr = document.createElement('tr');
-            const values = Object.entries(obj);
-            for (let i = 0; i < values.length; i++) {
-                const td = document.createElement('td');
-
-                if (values[i][0] == 'commentContent') {
-                    const div = document.createElement('div');
-                    div.classList.add('commentContent');
-                    div.innerText = values[i][1];
-                    td.appendChild(div);
-                } else {
-                    td.innerText = values[i][1];
-                }
-                tr.appendChild(td);
-                tr.addEventListener('click', openComment);
-            }
-            tbody.appendChild(tr);
-        }
-    } catch (error) {
-        console.error('Galiba támadt');
-    }
-}
-
-//! PROFILE
-//#region PROFILE
 
 async function openProfile() {
     const userId = this.dataset.userId;
@@ -475,27 +385,6 @@ async function clearProfile() {
 }
 
 //#endregion
-
-function closeDeleteModal() {
-    document.getElementById('deleteConfirmModal').style.display = 'none';
-    document.getElementById('deleteConfirm').dataset.deleteType = 'post';
-}
-
-async function confirmDelete() {
-    if (this.dataset.deleteType == 'profile') {
-        const userId = document.getElementById('openedProfile').dataset.userId;
-        const deleteResponse = await PostMethodFetch('/api/deleteProfile', { userId: userId });
-        console.log(deleteResponse);
-        closeProfile();
-    }
-    if (this.dataset.deleteType == 'post') {
-        const postId = document.getElementById('openedPost').dataset.postId;
-        const deleteResponse = await PostMethodFetch('/api/deletePost', { postId: postId });
-        console.log(deleteResponse);
-        closePost();
-    }
-    closeDeleteModal();
-}
 
 //! POST
 //#region POST
@@ -717,7 +606,34 @@ async function confirmPostModification() {
 
 //#endregion
 
-async function openComment() {}
+function closeDeleteModal() {
+    document.getElementById('deleteConfirmModal').style.display = 'none';
+    document.getElementById('deleteConfirm').dataset.deleteType = '';
+}
+
+async function confirmDelete() {
+    if (this.dataset.deleteType == 'profile') {
+        const userId = document.getElementById('openedProfile').dataset.userId;
+        const deleteResponse = await PostMethodFetch('/api/deleteProfile', { userId: userId });
+        console.log(deleteResponse);
+        closeProfile();
+    }
+    if (this.dataset.deleteType == 'post') {
+        const postId = document.getElementById('openedPost').dataset.postId;
+        const deleteResponse = await PostMethodFetch('/api/deletePost', { postId: postId });
+        console.log(deleteResponse);
+        closePost();
+    }
+    if (this.dataset.deleteType == 'comment') {
+        const commentId = document.getElementById('openedComment').dataset.commentId;
+        const deleteResponse = await PostMethodFetch('/api/deleteComment', {
+            commentId: commentId
+        });
+        console.log(deleteResponse);
+        closeComment();
+    }
+    closeDeleteModal();
+}
 
 function slideShow(move) {
     let slides = document.getElementsByClassName('pictures');
@@ -758,4 +674,219 @@ function previousSlide() {
         this.style.pointerEvents = 'all';
     }, 1);
     slideShow(-1);
+}
+
+function generateMap(lat, lon) {
+    let tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 20,
+        noWrap: true
+    });
+    let zoom = 0;
+    let center = [0, 0];
+    if (lat != undefined && lon != undefined) {
+        zoom = 9;
+        center[0] = lat;
+        center[1] = lon;
+        document.getElementById('postMap').style.filter = 'none';
+    } else {
+        document.getElementById('postMap').style.filter = 'grayscale(100%)';
+    }
+
+    //console.log(
+    //`zoom: ${zoom} | center: ${center} | draggable: ${draggable} | lat: ${lat} | lon: ${lon}`
+    //);
+
+    map = L.map('postMap', {
+        zoomControl: false,
+        layers: [tileLayer],
+        zoom: zoom,
+        center: center
+    });
+    map.invalidateSize();
+}
+
+function inputDate(originDate) {
+    const date = new Date(originDate);
+    const year = date.getUTCFullYear();
+    let month = date.getUTCMonth() + 1;
+    if (month.toString().length == 1) {
+        month = '0' + month.toString();
+    }
+
+    let day = date.getUTCDate(date);
+    if (day.toString().length == 1) {
+        day = '0' + day.toString();
+    }
+    return `${year}-${month}-${day}`;
+}
+
+function collapseSidebar() {
+    let sidebar = document.getElementById('sidebar');
+    let adminContent = document.getElementById('adminContent');
+    let isCollapsed = sidebar.dataset.collapsed;
+
+    if (isCollapsed == 'true') {
+        sidebar.style.width = '10vw';
+        adminContent.style.width = '90vw';
+        sidebar.dataset.collapsed = 'false';
+        this.style.left = '9vw';
+    } else {
+        sidebar.style.width = '2vw';
+        adminContent.style.width = '98vw';
+        sidebar.dataset.collapsed = 'true';
+        this.style.left = '1vw';
+    }
+    for (const child of this.children) {
+        child.classList.toggle('visible');
+        child.classList.toggle('invisible');
+    }
+    toggleSidebarVisibility(sidebar);
+}
+
+function toggleSidebarVisibility(parent) {
+    let children = parent.children;
+    for (let i = 1; i < children.length; i++) {
+        console.log(children[i].style.visibility);
+        if (children[i].style.visibility == 'visible') {
+            children[i].style.visibility = 'hidden';
+        } else {
+            children[i].style.visibility = 'visible';
+        }
+    }
+}
+
+function responsiveUsername() {
+    let username = document.getElementById('adminUsername');
+    let length = username.innerText.length;
+    if (length > 5) {
+        if (length > 8) {
+            if (length > 11) {
+                if (length > 15) {
+                    username.style.fontSize = '22px';
+                } else {
+                    username.style.fontSize = '26px';
+                }
+            } else {
+                username.style.fontSize = '36px';
+            }
+        } else {
+            username.style.fontSize = '40px';
+        }
+    } else {
+        username.style.fontSize = '50px';
+    }
+}
+
+function generateBarChart(arr) {
+    const yAxis = document.getElementById('yAxis');
+    yAxis.replaceChildren();
+    const nullPoint = document.createElement('span');
+    nullPoint.innerText = 0;
+    yAxis.appendChild(nullPoint);
+
+    let maxValue = Math.max(...arr);
+    /*
+    let sortedArr = arr.slice();
+    sortedArr = sortArray(sortedArr);
+    let usedNums = [];
+    for (let i = 0; i < sortedArr.length; i++) {
+        if (!usedNums.includes(sortedArr[i])) {
+            const span = document.createElement('span');
+            span.innerText = sortedArr[i];
+            usedNums.push(sortedArr[i]);
+            yAxis.appendChild(span);
+        }
+    }
+    */
+    for (let i = 1; i < 5; i++) {
+        const span = document.createElement('span');
+        span.innerText = maxValue * (i / 4);
+        yAxis.appendChild(span);
+    }
+
+    let ratio = 100 / maxValue;
+    let columnDiv = document.getElementById('userTrackerColumns');
+    columnDiv.replaceChildren();
+    let timeDiv = document.getElementById('userTrackerTimes');
+    timeDiv.replaceChildren();
+    for (let i = 0; i < arr.length; i++) {
+        let column = document.createElement('div');
+        column.classList.add('userTrackerColumn');
+        column.style.height = ratio * arr[i] + '%';
+
+        let tooltip = document.createElement('span');
+        tooltip.classList.add('userTrackerTooltip');
+        tooltip.innerText = arr[i];
+        if (ratio * arr[i] < 40) {
+            tooltip.style.paddingTop = '5%';
+            tooltip.style.fontSize = '0.6vw';
+        } else {
+            tooltip.style.fontSize = '0.85vw';
+        }
+
+        column.appendChild(tooltip);
+        columnDiv.appendChild(column);
+
+        let span = document.createElement('span');
+        span.innerText = userTrackerTimeArray[i];
+        timeDiv.appendChild(span);
+    }
+}
+
+socket.on('responseActiveUsers', (activeUsers) => {
+    if (userTrackerArray.length >= 5) {
+        userTrackerArray.shift();
+        userTrackerTimeArray.shift();
+    }
+    userTrackerTimeArray.push(convertToTime(Date.now()));
+    userTrackerArray.push(activeUsers);
+
+    generateBarChart(userTrackerArray);
+});
+
+function convertToTime(unix) {
+    let date = new Date(unix);
+    let hour = date.getUTCHours(date);
+    hour++;
+    let minute = date.getUTCMinutes(date).toString();
+    if (minute.length == 1) {
+        minute = '0' + minute;
+    }
+    return `${hour}:${minute}`;
+}
+
+function sortArray(arr) {
+    for (let i = 0; i < arr.length - 1; i++) {
+        for (let j = i + 1; j < arr.length; j++) {
+            if (arr[j] < arr[i]) {
+                let temp = arr[j];
+                arr[j] = arr[i];
+                arr[i] = temp;
+            }
+        }
+    }
+    return arr;
+}
+
+function navButtonClick() {
+    const navButtons = document.getElementsByClassName('navButton');
+    for (const navButton of navButtons) {
+        console.log(navButton == this);
+        if (navButton != this) {
+            navButton.classList.remove('activeNavButton');
+        } else {
+            this.classList.add('activeNavButton');
+        }
+    }
+}
+
+function searchFocus() {
+    const searches = document.getElementsByClassName('searchId');
+    for (const search of searches) {
+        if (this == search) {
+            search.parentNode.classList.add('focusSearch');
+        } else {
+            search.parentNode.classList.remove('focusSearch');
+        }
+    }
 }
