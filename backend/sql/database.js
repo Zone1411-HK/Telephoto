@@ -548,6 +548,20 @@ async function clearComment(commentId) {
     }
 }
 
+async function markers() {
+    try {
+        const sql = `
+        SELECT posts.post_id, latitude, longitude, picture_link
+        FROM posts
+        LEFT JOIN pictures ON posts.post_id = pictures.post_id
+        WHERE latitude IS NOT NULL AND longitude IS NOT NULL;`;
+        const [rows] = await pool.execute(sql);
+        return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 //!Export
 module.exports = {
     selectall,
@@ -586,5 +600,6 @@ module.exports = {
     adminCommentData,
     updateComment,
     deleteComment,
-    clearComment
+    clearComment,
+    markers
 };

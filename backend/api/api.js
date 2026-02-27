@@ -803,6 +803,23 @@ router.post('/clearComment', async (request, response) => {
 
 //#endregion
 
+//! MAP
+
+router.get('/markers', async (request, response) => {
+    try {
+        const markers = await database.markers();
+        response.status(200).json({
+            Status: 'success',
+            Markers: markers
+        });
+    } catch (error) {
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/markers" végpont nem működik!'
+        });
+    }
+});
+
 //! FÜGGVÉNYEK
 //? Hash-eljük a megadott stringet, és visszaadunk egy salt, és egy hash változót.
 function HashString(string) {

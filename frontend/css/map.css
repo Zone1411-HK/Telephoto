@@ -34,4 +34,31 @@
     left: 20px;
     top: 20px;
     cursor: pointer;
+    border: 2px solid #212e00;
+    filter: brightness(100%);
+}
+
+#goBack:hover {
+    filter: brightness(90%);
+}
+
+.customCluster {
+    background-color: #f0febe;
+    color: #212e00;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    right: -25px;
+    top: -25px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.customCluster h1 {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    text-align: center;
 }
