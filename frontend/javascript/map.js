@@ -1,6 +1,7 @@
 let map;
 document.addEventListener('DOMContentLoaded', () => {
     generateMap();
+
     /*
     let map = L.map('map', {
         zoomControl: false,
@@ -36,10 +37,19 @@ document.addEventListener('DOMContentLoaded', () => {
     //placeMarker(-0.09, 51.505, map, '/images/placeholder2.gif', markers);
 
     //map.addLayer(markers);*/
+    //#endregion
     document.getElementById('goBack').addEventListener('click', () => {
         window.location.href = '/';
     });
+
+    document.getElementById('modalClose').addEventListener('click', exitPost);
+
+    //#region Legacy Kód
 });
+
+function exitPost() {
+    document.getElementById('postModal').style.display = 'none';
+}
 
 async function generateMap() {
     map = L.map('map', {
@@ -61,20 +71,67 @@ async function generateMap() {
     await generateMarkers();
 }
 
+function clusterIcon(cluster) {
+    let markerCount = cluster.getChildCount();
+    let clusterColorClass;
+    if (markerCount < 10) {
+        clusterColorClass = 'lowDensity';
+    } else if (markerCount < 25) {
+        clusterColorClass = 'mediumDensity';
+    } else {
+        clusterColorClass = 'highDensity';
+    }
+
+    let html = `
+    <div class='customCluster ${clusterColorClass}'>
+        ${markerCount}
+    </div>`;
+    return L.divIcon({ html: html });
+}
+
+function customPopup(id, link) {
+    let html = document.createElement('div');
+    html.addEventListener('click', openPost);
+    html.dataset.postId = id;
+    html.classList.add('customPopupWrapper');
+
+    let mediaWrapper = document.createElement('div');
+    mediaWrapper.classList.add('popupMediaWrapper');
+
+    let format;
+    try {
+        format = link.split('.')[1];
+    } catch (error) {
+        format = '';
+    }
+    if (format == 'mp4' || format == 'avi' || format == 'hevc') {
+        let video = document.createElement('video');
+        let source = document.createElement('source');
+        source.type = 'video/' + format;
+        source.src = '/uploads/' + link;
+        video.appendChild(source);
+        video.pause();
+        video.controls = false;
+        video.classList.add('popupMedia');
+        mediaWrapper.appendChild(video);
+    } else {
+        let img = document.createElement('img');
+        img.src = '/uploads/' + link;
+        img.classList.add('popupMedia');
+        img.loading = 'lazy';
+        mediaWrapper.appendChild(img);
+    }
+    html.appendChild(mediaWrapper);
+    return html;
+}
+
 async function generateMarkers() {
     try {
         const { Status, Markers } = await GetMethodFetch('/api/markers');
         if (Status == 'success') {
             let markers = L.markerClusterGroup({
-                maxClusterRadius: 125,
-                iconCreateFunction: function (cluster) {
-                    let html = `
-                    <div class='customCluster'>
-                        <h1>${cluster.getChildCount()}</h1>
-                    </div>
-                    `;
-                    return L.divIcon({ html: html });
-                }
+                maxClusterRadius: 100,
+                iconCreateFunction: clusterIcon
                 /*
                 polygonOptions: {
                     color: '#212e00',
@@ -82,11 +139,26 @@ async function generateMarkers() {
                     fillColor: '#f0febe'
                 }*/
             });
+
+            /*
+            for (let i = 0; i < 1000; i++) {
+                let newMarker = L.marker([Math.random() * 180 - 90, Math.random() * 360 - 180]);
+                let newMarkerPopup = L.popup({
+                    content: `<div class='customPopupWrapper'><div class='popupImgWrapper' data-postId=''><img src='/images/placeholder2.gif' class='popupImg'/></div></div>`,
+                    closeButton: false,
+                    className: 'customPopup'
+                });
+                newMarker.bindPopup(newMarkerPopup);
+                markers.addLayer(newMarker);
+            }*/
+
             for (const marker of Markers) {
                 console.log(marker);
                 let newMarker = L.marker([marker.latitude, marker.longitude]);
                 let newMarkerPopup = L.popup({
-                    content: `<div class='' data-postId='${marker.post_id}'><img src='/uploads/${marker.picture_link}'/></div>`
+                    content: customPopup(marker.post_id, marker.picture_link),
+                    className: 'customPopup',
+                    closeButton: false
                 });
                 newMarker.bindPopup(newMarkerPopup);
                 markers.addLayer(newMarker);
@@ -105,4 +177,8 @@ async function generateMarkers() {
     //marker.addTo(map);
     markers.addLayer(marker);
     //let popUp = marker.bindPopup(`<img class="img-fluid" src="/images/placeholder2.gif">`);*/
+}
+
+function openPost() {
+    document.getElementById('postModal').style.display = 'flex';
 }

@@ -1,7 +1,12 @@
+body {
+    position: relative;
+}
+
 #root {
     height: 100vh;
     width: 100vw;
     position: relative;
+    z-index: 0;
 }
 
 #map {
@@ -43,22 +48,195 @@
 }
 
 .customCluster {
-    background-color: #f0febe;
-    color: #212e00;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     position: absolute;
-    right: -25px;
-    top: -25px;
+    right: -20px;
+    top: -20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: #212e00;
+    border-radius: 100%;
+    border: #212e00 1px solid;
+    font-size: 22px;
+    font-family: 'Josefin Sans', sans-serif;
+    filter: brightness(100%);
+}
+
+.customCluster:hover {
+    filter: brightness(80%);
+}
+
+.lowDensity {
+    background-color: #f0febe;
+    box-shadow: 0 0 3px 3px #f0febe;
+}
+
+.mediumDensity {
+    background-color: #a8ec9f;
+    box-shadow: 0 0 3px 3px #a8ec9f;
+}
+
+.highDensity {
+    background-color: #00f1ff;
+    box-shadow: 0 0 5px 2px #00f1ff;
+}
+
+.customPopup {
+    height: 160px;
+    width: 148px;
+    position: relative;
+}
+
+.customPopup .leaflet-popup-content-wrapper {
+    height: 100%;
+    width: 100%;
+    border-radius: 4px;
+    box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.25);
+}
+.customPopup .leaflet-popup-content-wrapper .leaflet-popup-content {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+.popupMedia {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
+.popupMediaWrapper {
+    height: 60%;
+    width: 100%;
+    background-color: black;
+}
+
+.customPopupWrapper {
+    height: 100%;
+    width: 100%;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.postModal {
+    display: none;
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.75);
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 3vh;
+    padding-bottom: 4vh;
+}
+
+.modalContent {
+    position: relative;
+    aspect-ratio: 35/40;
+    max-width: 96vw;
+    max-height: 90vh;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 8px 4px rgba(50, 50, 50, 0.5);
+    z-index: 101;
+    display: flex;
+    flex-direction: column;
+}
+
+.modalHeader {
+    height: 5%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    position: relative;
+}
+
+#modalClose {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: center;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-left: 1px solid rgb(200, 200, 200);
+    border-bottom: 1px solid rgb(200, 200, 200);
+    right: 0;
+    top: 0;
+    z-index: 102;
+    transition: 0.25s;
+}
+
+#modalClose:hover {
+    background-color: rgb(240, 154, 154);
+    border-left: 1px solid rgb(150, 150, 150);
+    border-bottom: 1px solid rgb(150, 150, 150);
+}
+
+#modalClose:hover svg {
+    stroke: black;
+}
+
+#modalClose svg {
+    height: 100%;
+}
+
+.post {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+}
+
+#mediaWrapper {
+    height: 50%;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding-top: 36px;
+}
+
+#mediaSlideshowContent {
+    background-color: black;
+    width: 80%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.slideshowControllerWrapper {
+    transition: 0.25s;
+    width: 10%;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
 }
 
-.customCluster h1 {
-    margin: 0;
-    height: 100%;
+.slideshowControllerWrapper:hover {
+    background-color: rgb(230, 230, 230);
+}
+
+.slideshowItem {
+    display: none;
     width: 100%;
-    text-align: center;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 3px;
+}
+
+.slideshowItemActive {
+    display: block;
 }
