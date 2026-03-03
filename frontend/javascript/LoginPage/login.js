@@ -1,5 +1,3 @@
-//TODO Bejelentkezés után tovább vinni a felhasználót a főoldalra
-
 async function login() {
     try {
         let usernameInput = document.getElementById('loginUsername');
@@ -18,12 +16,9 @@ async function login() {
             if (response.isLoggedIn) {
                 const response = await PostMethodFetch('/api/saveUsername', { username: username });
                 console.log(response);
-                document.getElementById('login').classList.add('invisible');
-                document.getElementById('home').classList.remove('invisible');
-                document.getElementById('navbar').classList.remove('invisible');
-                document.getElementById('brandBar').classList.remove('invisible');
+                window.location = '/';
                 console.log('success');
-                getChats();
+                //getChats();
             } else {
                 console.log('fail');
             }

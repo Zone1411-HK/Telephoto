@@ -548,6 +548,20 @@ async function clearComment(commentId) {
     }
 }
 
+async function searchUser(username) {
+    try {
+        const sql = `
+        SELECT user_id, username, profile_picture_link
+        FROM users
+        WHERE username LIKE ?;
+        `;
+        const [rows] = await pool.execute(sql, [`%${username}%`]);
+        return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 //!Export
 module.exports = {
     selectall,
@@ -586,5 +600,6 @@ module.exports = {
     adminCommentData,
     updateComment,
     deleteComment,
-    clearComment
+    clearComment,
+    searchUser
 };

@@ -1,3 +1,11 @@
+document.addEventListener('DOMContentLoaded', () => {
+    getChats();
+    document.getElementById('newChat').addEventListener('click', openNewChatWindow);
+    document.getElementById('newChatCancel').addEventListener('click', closeNewChatWindow);
+    document.getElementById('newChatCreate').addEventListener('click', createNewChat);
+    document.getElementById('newChatUserInput').addEventListener('input', searchUser);
+});
+
 class ChatData {
     constructor(id, name, pictureLink, lastMessage, userOfLastMessage) {
         this.id = id;
@@ -313,6 +321,113 @@ async function sendMessage() {
         } else {
         }
     }
+}
+
+function openNewChatWindow() {
+    document.getElementById('newChatModal').style.display = 'flex';
+}
+
+function closeNewChatWindow() {
+    document.getElementById('newChatModal').style.display = 'none';
+}
+
+async function searchUser() {
+    const suggestionDiv = document.getElementById('newChatUserSuggestionList');
+    if (this.value.length >= 3) {
+        const { Status, Data } = await GetMethodFetch('/api/searchUser/' + this.value);
+        if (Status == 'Success') {
+            suggestionDiv.replaceChildren();
+            for (const val of Data) {
+                const user = document.createElement('div');
+                user.classList.add('suggestedUser');
+                user.dataset.userId = val.user_id;
+                user.dataset.username = val.username;
+                user.dataset.userPic = val.profile_picture_link;
+
+                const img = document.createElement('img');
+                if (val.profile_picture_link == null) {
+                    img.src = '/user_pics/default.svg';
+                } else {
+                    img.src = '/user_pics/' + val.profile_picture_link;
+                }
+                img.classList.add('suggestedImg');
+
+                const name = document.createElement('div');
+                name.innerText = val.username;
+
+                user.appendChild(img);
+                user.appendChild(name);
+
+                user.addEventListener('click', addUser);
+
+                suggestionDiv.appendChild(user);
+            }
+        }
+    } else {
+        suggestionDiv.replaceChildren();
+    }
+}
+
+function addUser() {
+    const addedUsers = document.getElementById('newChatAddedUsers');
+
+    let isAdded = false;
+    for (const child of addedUsers.children) {
+        if (child.dataset.userId == this.dataset.userId) {
+            isAdded = true;
+            this.classList.remove('selected');
+            addedUsers.removeChild(child);
+        }
+    }
+    if (!isAdded) {
+        const user = document.createElement('div');
+        user.dataset.userId = this.dataset.userId;
+        user.classList.add('addedUser');
+
+        const img = document.createElement('img');
+        if (this.dataset.userPic == 'null') {
+            img.src = '/user_pics/default.svg';
+        } else {
+            img.src = '/user_pics/' + this.dataset.userPic;
+        }
+        img.classList.add('addedImg');
+
+        const name = document.createElement('div');
+        name.innerText = this.dataset.username;
+
+        user.appendChild(img);
+        user.appendChild(name);
+        user.addEventListener('click', removeAddedUser);
+        addedUsers.appendChild(user);
+
+        this.classList.add('selected');
+    }
+    /*
+    for(const child of addedUsers.children) {
+        if(child.dataset.userId == this.dataset.userId) {
+            addedUsers.removeChild(child);
+        }
+    }*/
+}
+
+function removeAddedUser() {
+    const suggestionDiv = document.getElementById('newChatUserSuggestionList');
+    let j = 0;
+    while (
+        j < suggestionDiv.children.length &&
+        this.dataset.userId != suggestionDiv.children[j].dataset.userId
+    ) {
+        j++;
+    }
+
+    suggestionDiv.children[j].classList.remove('selected');
+
+    const parent = this.parentNode;
+    parent.removeChild(this);
+}
+
+async function createNewChat() {
+    closeNewChatWindow();
 }
 
 socket.on('newMessage', (msg) => {

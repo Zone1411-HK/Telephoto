@@ -67,6 +67,8 @@ app.use('/node', express.static(path.join(__dirname, '../backend/node_modules'))
 
 app.use('/uploads', express.static(path.join(__dirname, '../backend/uploads'))); //! Ezért nem tudom Kardos megöl-e 2
 
+app.use('/user_pics', express.static(path.join(__dirname, '../backend/user_pics'))); //! Ezért nem tudom Kardos megöl-e 3
+
 http.listen(port, ip, () => {
     console.log(`Szerver elérhetősége: http://${ip}:${port}`);
 });

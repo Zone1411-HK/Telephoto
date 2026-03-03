@@ -14,9 +14,9 @@
         <link rel="stylesheet" href="node/leaflet.markercluster/dist/MarkerCluster.Default.css" />
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/darkroom.css" />
-        <link rel="stylesheet" href="/css/modal.css">
-        <link rel="stylesheet" href="/css/chat.css">
-        <link rel="stylesheet" href="/css/login.css">
+        <link rel="stylesheet" href="/css/modal.css" />
+        <link rel="stylesheet" href="/css/chat.css" />
+        <link rel="stylesheet" href="/css/login.css" />
         <!--!JavaScript-->
         <script src="/javascript/fetch.js"></script>
         <script src="node/socket.io/client-dist/socket.io.js"></script>
@@ -24,14 +24,12 @@
         <script src="node/leaflet/dist/leaflet.js"></script>
         <script src="node/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
         <script src="node/exifreader/dist/exif-reader.js"></script>
-        <script src="/javascript/registration.js"></script>
         <script src="/javascript/map.js"></script>
-        <script src="/javascript/uploadPost.js"></script>
-        <script src="/javascript/darkroom.js"></script>
+        <script src="/javascript/MainPage/uploadPost.js"></script>
+        <script src="/javascript/MainPage/darkroom.js"></script>
         <script src="/javascript/profile.js"></script>
-        <script src="/javascript/chat.js"></script>
-        <script src="/javascript/post.js"></script>
-        <script src="/javascript/login.js"></script>
+        <script src="/javascript/MainPage/chat.js"></script>
+        <script src="/javascript/MainPage/post.js"></script>
         <script src="/javascript/index.js"></script>
 
         <!--Font Style-->
@@ -107,7 +105,7 @@
                     </ul>
                 </div>-->
 
-            <div class="home " id="home">
+            <div class="home" id="home">
                 <div class="chat-and-sort">
                     <div id="rendezesContainer">
                         <div id="rendezesTrending">
@@ -127,11 +125,7 @@
                     <div id="chatContainer">
                         <div id="newChatDiv">
                             <button id="newChat" type="button">
-                                <img
-                                    src="/images/plus-circle(2).svg"
-                                    alt="Új chat"
-                                    id="newChatImg"
-                                />
+                                <img src="/images/plus-circle(2).svg" alt="Új chat" />
                             </button>
                         </div>
                         <div id="existingChats">
@@ -263,10 +257,13 @@
                                         <tbody class="tBody">
                                             <tr class="tRow">
                                                 <td class="commentingUserPic">
-                                                    <img class="commentingUserImg" src="/images/placeholder1.jpg" />
+                                                    <img
+                                                        class="commentingUserImg"
+                                                        src="/images/placeholder1.jpg"
+                                                    />
                                                     <span class="commentingUser">Kommentelő</span>
                                                 </td>
-                                                <td class="comment">Komment</td>                                        
+                                                <td class="comment">Komment</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -467,5 +464,50 @@
                 /></a>
             </div>
         </nav>
+
+        <div id="newChatModal">
+            <div id="newChatContainer">
+                <form id="newChatForm">
+                    <div id="newChatImgDiv">
+                        <div id="newChatImgWrapper">
+                            <img id="newChatImg" src="../images/kep.jpg" />
+                        </div>
+                        <label for="newChatImgInput" id="newChatImgLabel">
+                            Beszélgetés képe
+                            <input
+                                id="newChatImgInput"
+                                type="file"
+                                accept=".jpg, .jpeg, .jfif, .png, .webp"
+                                name="img"
+                                value="Feltöltés"
+                            />
+                        </label>
+                    </div>
+                    <input
+                        type="text"
+                        id="newChatName"
+                        name="chatName"
+                        placeholder="Beszélgetés neve"
+                        maxlength="50"
+                    />
+                    <div id="newChatUsers">
+                        <input
+                            type="text"
+                            placeholder="Kezdjen el gépelni"
+                            maxlength="50"
+                            id="newChatUserInput"
+                        />
+                        <div id="newChatUserWrapper">
+                            <div id="newChatUserSuggestionList"></div>
+                            <div id="newChatAddedUsers"></div>
+                        </div>
+                    </div>
+                </form>
+                <div id="newChatCreateCancel">
+                    <input type="button" id="newChatCancel" value="Mégse" />
+                    <input type="button" id="newChatCreate" value="Létrehozás" />
+                </div>
+            </div>
+        </div>
     </body>
 </html>

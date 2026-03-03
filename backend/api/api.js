@@ -459,6 +459,24 @@ router.get('/storedChatIdInfos', async (request, response) => {
         });
     }
 });
+
+router.get('/searchUser/:username', async (request, response) => {
+    try {
+        const username = request.params.username;
+        const users = await database.searchUser(username);
+
+        response.status(200).json({
+            Status: 'Success',
+            Data: users
+        });
+    } catch (error) {
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/searchUser" végpont nem működik!'
+        });
+    }
+});
+
 //#endregion
 
 router.post('/saveUsername', async (request, response) => {
