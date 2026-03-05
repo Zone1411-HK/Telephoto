@@ -333,6 +333,7 @@ function closeNewChatWindow() {
 
 async function searchUser() {
     const suggestionDiv = document.getElementById('newChatUserSuggestionList');
+    const addedUser = document.getElementById('newChatAddedUsers');
     if (this.value.length >= 3) {
         const { Status, Data } = await GetMethodFetch('/api/searchUser/' + this.value);
         if (Status == 'Success') {
@@ -357,8 +358,13 @@ async function searchUser() {
 
                 user.appendChild(img);
                 user.appendChild(name);
-
                 user.addEventListener('click', addUser);
+
+                for (const child of addedUser.children) {
+                    if (child.dataset.userId == user.dataset.userId) {
+                        user.classList.add('selected');
+                    }
+                }
 
                 suggestionDiv.appendChild(user);
             }
