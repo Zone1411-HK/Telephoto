@@ -562,6 +562,30 @@ async function searchUser(username) {
     }
 }
 
+async function createChat(userIds, imageName, chatName) {
+    try {
+        console.log(userIds);
+        console.log(imageName);
+        console.log(chatName);
+        const sql1 = `
+        INSERT INTO chats(chat_name, chat_picture_link)
+        VALUES(?,?)
+        `;
+        const [fields] = await pool.execute(sql1, [chatName, imageName]);
+        let chatId = fields.insertId;
+
+        for (let i = 0; i < userIds.length; i++) {
+            const sql2 = `
+            INSERT INTO chat_members(chat_id, user_id)
+            VALUES(?,?)
+            `;
+            await pool.execute(sql2, [chatId, userIds[i]]);
+        }
+        return 'Success';
+    } catch (error) {
+        throw new Error(error);
+    }
+}
 //!Export
 module.exports = {
     selectall,
@@ -601,5 +625,6 @@ module.exports = {
     updateComment,
     deleteComment,
     clearComment,
-    searchUser
+    searchUser,
+    createChat
 };

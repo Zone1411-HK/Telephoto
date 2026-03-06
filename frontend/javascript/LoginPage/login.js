@@ -14,8 +14,8 @@ async function login() {
                 password: password
             });
             if (response.isLoggedIn) {
-                const response = await PostMethodFetch('/api/saveUsername', { username: username });
-                console.log(response);
+                //const response = await PostMethodFetch('/api/saveUsername', { username: username });
+                //console.log(response);
                 window.location = '/';
                 console.log('success');
                 //getChats();
