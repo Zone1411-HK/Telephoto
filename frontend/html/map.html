@@ -31,7 +31,51 @@
     </head>
     <body>
         <div id="root">
-            <div id="goBack">
+            <div id="filter">
+                <div id="filterSVGWrapper">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="22"
+                        height="22"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#21200e"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-filter"
+                        id="filterSVG"
+                    >
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                </div>
+                <div id="filterOptions" class="openedFilter">
+                    <div class="filterOptionRow">
+                        <p>Szélességi fok</p>
+                        <div class="filterOptionInputs">
+                            <input type="text" id="minLat" class="filterLat" placeholder="min" />
+                            <input type="text" id="maxLat" class="filterLat" placeholder="max" />
+                        </div>
+                    </div>
+                    <div class="filterOptionRow">
+                        <span>Hosszúsági fok</span>
+                        <div class="filterOptionInputs">
+                            <input type="text" id="minLon" class="filterLon" placeholder="min" />
+                            <input type="text" id="maxLon" class="filterLon" placeholder="max" />
+                        </div>
+                    </div>
+                    <input type="button" value="Visszaállítás" id="resetFilter" />
+                </div>
+            </div>
+            <div id="map" tabindex="-1"></div>
+            <div id="nav">
+                <a href="/" class="navButton">Főoldal</a>
+                <a href="/map" class="navButton">Térkép</a>
+                <a href="/profile" class="navButton">Profil</a>
+            </div>
+        </div>
+        <div id="postModal" class="postModal">
+            <div id="modalClose">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -42,35 +86,13 @@
                     stroke-width="2"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    class="feather feather-corner-up-left"
+                    class="feather feather-x"
                 >
-                    <polyline points="9 14 4 9 9 4"></polyline>
-                    <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
             </div>
-            <div id="map" tabindex="-1"></div>
-            <div id="nav"></div>
-        </div>
-        <div id="postModal" class="postModal">
             <div class="modalContent">
-                <div id="modalClose">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="rgb(100,100,100)"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="feather feather-x"
-                    >
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </div>
-
                 <div class="post">
                     <div id="mediaWrapper">
                         <div class="slideshowControllerWrapper">

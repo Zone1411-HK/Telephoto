@@ -18,6 +18,8 @@ body {
 
 #nav {
     position: relative;
+    display: flex;
+    flex-direction: row;
     width: 100vw;
     height: 5vh;
     background-color: #f0febe;
@@ -25,26 +27,123 @@ body {
     box-shadow: 0px 0px 5px 0px #212e00;
 }
 
-#goBack {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    z-index: 10;
-    background-color: #f0febe;
-    border-radius: 100%;
+.navButton {
+    transition: 0.2s;
+    height: 5vh;
+    font-size: 3vh;
+    flex-grow: 1;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    text-decoration: none;
+    color: #212e00;
+    filter: brightness(100%);
+    background-color: inherit;
+}
+
+.navButton:hover {
+    background-color: #a8ec9f;
+}
+
+#filter {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    z-index: 10;
+    background-color: #f0febe;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
     left: 20px;
     top: 20px;
-    cursor: pointer;
     border: 2px solid #212e00;
     filter: brightness(100%);
 }
 
-#goBack:hover {
+#filterSVGWrapper {
+    background-color: inherit;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: inherit;
+}
+
+#filterSVGWrapper:hover {
+    filter: brightness(85%);
+}
+
+#filterOptions {
+    display: none;
+}
+
+.openedFilter {
+    height: 85%;
+    flex-direction: column;
+    justify-content: start;
+    padding: 5%;
+    gap: 5%;
+    width: 100%;
+}
+
+.filterOptionRow {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 37.5%;
+    gap: 2.5%;
+    color: #212e00;
+}
+
+.filterOptionRow input {
+    height: 100%;
+    width: 47.5%;
+    background-color: #f8fff8;
+    border: #212e00 1px solid;
+    outline: none;
+}
+
+.filterOptionInputs {
+    height: 65%;
+}
+
+.filterOptionRow p {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0;
+    height: 30%;
+    width: 100%;
+}
+
+#resetFilter {
+    width: 100%;
+    height: 20%;
+    border-radius: 0;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border: 1px solid #212e00;
+    background-color: #f8fff8;
+    filter: brightness(100%);
+}
+
+#resetFilter:hover {
     filter: brightness(90%);
+}
+
+.invalidFilter {
+    border: 1px solid red !important;
+}
+
+#filter,
+#filterSVGWrapper,
+#filterOptions {
+    transition: 0.25s;
 }
 
 .customCluster {
@@ -142,7 +241,7 @@ body {
     max-height: 90vh;
     background-color: white;
     border-radius: 5px;
-    box-shadow: 0 0 8px 4px rgba(50, 50, 50, 0.5);
+    box-shadow: 0 0 8px 4px rgba(100, 100, 100, 0.5);
     z-index: 101;
     display: flex;
     flex-direction: column;
@@ -159,30 +258,25 @@ body {
 
 #modalClose {
     position: absolute;
-    width: 32px;
-    height: 32px;
+    z-index: 5;
+    width: 40px;
+    height: 40px;
     display: flex;
     flex-direction: row;
     align-items: start;
     justify-content: center;
-    border-top-right-radius: 5px;
-    border-bottom-left-radius: 5px;
-    border-left: 1px solid rgb(200, 200, 200);
-    border-bottom: 1px solid rgb(200, 200, 200);
-    right: 0;
-    top: 0;
+    left: 20px;
+    top: 20px;
     z-index: 102;
     transition: 0.25s;
+    border: 2px solid #212e00;
+    background-color: #f0febe;
+    border-radius: 50%;
+    filter: brightness(100%);
 }
 
 #modalClose:hover {
-    background-color: rgb(240, 154, 154);
-    border-left: 1px solid rgb(150, 150, 150);
-    border-bottom: 1px solid rgb(150, 150, 150);
-}
-
-#modalClose:hover svg {
-    stroke: black;
+    filter: brightness(85%);
 }
 
 #modalClose svg {
