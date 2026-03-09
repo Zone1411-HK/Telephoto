@@ -41,11 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
             this.parentNode.style.width = '40px';
             this.parentNode.style.height = '40px';
             this.style.borderRadius = 'inherit';
+            this.style.height = '100%';
             document.getElementById('filterOptions').style.display = 'none';
 
             setTimeout(() => {
                 this.parentNode.style.borderRadius = '50%';
-                this.style.height = '100%';
             }, 250);
 
             isClosed = true;
@@ -184,6 +184,7 @@ function resetFilter() {
             map.removeLayer(boundLines[entries[0]]);
         }
     }
+    markerCluster.clearLayers();
     generateMarkers();
 }
 

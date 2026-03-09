@@ -72,6 +72,7 @@ body {
     justify-content: center;
     align-items: center;
     border-radius: inherit;
+    cursor: pointer;
 }
 
 #filterSVGWrapper:hover {
@@ -106,6 +107,7 @@ body {
     background-color: #f8fff8;
     border: #212e00 1px solid;
     outline: none;
+    text-align: center;
 }
 
 .filterOptionInputs {
