@@ -77,6 +77,15 @@ const hangPictures = async (test) => {
 
     let p = document.createElement('p');
 
+    let likeDiv = document.createElement('div');
+    let likeButton = document.createElement('input');
+    likeButton.setAttribute('type', 'button');
+    likeButton.setAttribute('id', 'likeButton');
+    let dislikeButton = document.createElement('input');
+    dislikeButton.setAttribute('type', 'button');
+    dislikeButton.setAttribute('id', 'dislikeButton');
+
+
     let tableContainer = document.createElement('div');
     let commentsTable = document.createElement('table');
     let tBody = document.createElement('tbody');
@@ -119,6 +128,11 @@ const hangPictures = async (test) => {
     imgdiv.appendChild(img);
     postcontent.appendChild(imgdiv);
     postcontent.appendChild(p);
+
+    likeRow.appendChild(likeButton);
+    likeRow.appendChild(dislikeButton);
+    postcontent.appendChild(likeDiv);
+
 
     commentingUserPic.appendChild(commentingUserImg);
     commentingUserPic.appendChild(commentingUser);
