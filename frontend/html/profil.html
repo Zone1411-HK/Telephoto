@@ -1,48 +1,210 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>TELEPHOTO</title>
-            <!--!Bootstrap-->
-            <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css" />
-            <!--?Popper: dropdowns, popovers, tooltips-->
-            <script src="../bootstrap/js/popper.min.js"></script>
-            <script src="../bootstrap/js/bootstrap.min.js"></script>
-            <!--!CSS-->
-            <link rel="stylesheet" href="node/leaflet/dist/leaflet.css" />
-            <link rel="stylesheet" href="node/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-            <link rel="stylesheet" href="/css/style.css" />
-            <link rel="stylesheet" href="/css/darkroom.css" />
-            <link rel="stylesheet" href="/css/modal.css">
-            <link rel="stylesheet" href="/css/chat.css">
-            <link rel="stylesheet" href="/css/login.css">
-            <!--!JavaScript-->
-            <script src="/javascript/fetch.js"></script>
-            <script src="node/socket.io/client-dist/socket.io.js"></script>
-            <script src="/javascript/connect.js"></script>
-            <script src="node/leaflet/dist/leaflet.js"></script>
-            <script src="node/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-            <script src="node/exifreader/dist/exif-reader.js"></script>
-            <script src="/javascript/registration.js"></script>
-            <script src="/javascript/map.js"></script>
-            <script src="/javascript/uploadPost.js"></script>
-            <script src="/javascript/darkroom.js"></script>
-            <script src="/javascript/profile.js"></script>
-            <script src="/javascript/chat.js"></script>
-            <script src="/javascript/post.js"></script>
-            <script src="/javascript/login.js"></script>
-            <script src="/javascript/index.js"></script>
+<!doctype html>
+<html lang="hu">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TELEPHOTO</title>
+        <!--!Bootstrap-->
+        <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css" />
+        <!--?Popper: dropdowns, popovers, tooltips-->
+        <script src="../bootstrap/js/popper.min.js"></script>
+        <script src="../bootstrap/js/bootstrap.min.js"></script>
+        <!--!CSS-->
+        <link rel="stylesheet" href="../css/profile.css" />
+        <!--!JavaScript-->
+        <script src="/javascript/fetch.js"></script>
+        <script src="node/socket.io/client-dist/socket.io.js"></script>
+        <script src="../javascript/profilePage/profile.js"></script>
 
-            <!--Font Style-->
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-            <link
-                href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
-                rel="stylesheet"
-            />
-</head>
-<body>
-    
-</body>
+        <!--Font Style-->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div id="root">
+            <div id="profileInfos">
+                <div id="profilePicUsername">
+                    <div id="profilePicWrapper">
+                        <img id="profilePic" src="../images/placeholder1.jpg" />
+                    </div>
+                    <div id="profileUsernameWrapper">
+                        <span id="profileUsername">Mr. Régész</span>
+                    </div>
+                </div>
+            </div>
+            <div id="postsWrapper">
+                <div id="postTypeSelect">
+                    <div class="postSVGWrapper activeType">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-home"
+                        >
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                    </div>
+                    <div class="postSVGWrapper">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#314b49ff"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-thumbs-up"
+                        >
+                            <path
+                                d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"
+                            ></path>
+                        </svg>
+                    </div>
+                    <div class="postSVGWrapper">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#314b49ff"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-thumbs-down"
+                        >
+                            <path
+                                d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"
+                            ></path>
+                        </svg>
+                    </div>
+                    <div class="postSVGWrapper">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-star"
+                        >
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                            ></polygon>
+                        </svg>
+                    </div>
+                </div>
+                <div id="posts">
+                    <div class="postRow">
+                        <div class="post">
+                            <div class="postImgWrapper">
+                                <img src="../images/placeholder2.gif" class="postImg" />
+                            </div>
+                        </div>
+                        <div class="post">
+                            <div class="postImgWrapper">
+                                <img src="../images/placeholder2.gif" class="postImg" />
+                            </div>
+                        </div>
+                        <div class="post">
+                            <div class="postImgWrapper">
+                                <img src="../images/placeholder1.jpg" class="postImg" />
+                            </div>
+                        </div>
+                        <div class="post">
+                            <div class="postImgWrapper">
+                                <img
+                                    src="../images/Screenshot 2026-03-10 162635.png"
+                                    class="postImg"
+                                />
+                            </div>
+                        </div>
+                        <div class="post">
+                            <div class="postImgWrapper">
+                                <img
+                                    src="../images/Screenshot 2026-03-10 162635.png"
+                                    class="postImg"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postRow">
+                        <div class="post">
+                            <div class="postImgWrapper">
+                                <img src="../images/placeholder2.gif" class="postImg" />
+                            </div>
+                        </div>
+                        <div class="post">
+                            <div class="postImgWrapper">
+                                <img src="../images/placeholder2.gif" class="postImg" />
+                            </div>
+                        </div>
+                        <div class="post">
+                            <div class="postImgWrapper">
+                                <img src="../images/placeholder1.jpg" class="postImg" />
+                            </div>
+                        </div>
+                        <div class="post">
+                            <div class="postImgWrapper">
+                                <img
+                                    src="../images/Screenshot 2026-03-10 162635.png"
+                                    class="postImg"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postRow">
+                        <div class="post">
+                            <div class="postImgWrapper">
+                                <img src="../images/placeholder2.gif" class="postImg" />
+                            </div>
+                        </div>
+                        <div class="post">
+                            <div class="postImgWrapper">
+                                <img src="../images/placeholder2.gif" class="postImg" />
+                            </div>
+                        </div>
+                        <div class="post">
+                            <div class="postImgWrapper">
+                                <img src="../images/placeholder1.jpg" class="postImg" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postRow">
+                        <div class="post">
+                            <div class="postImgWrapper">
+                                <img src="../images/placeholder2.gif" class="postImg" />
+                            </div>
+                        </div>
+                        <div class="post">
+                            <div class="postImgWrapper">
+                                <img src="../images/placeholder2.gif" class="postImg" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="nav">
+            <a href="/" class="navButton">Főoldal</a>
+            <a href="/map" class="navButton">Térkép</a>
+            <a href="/profile" class="navButton">Profil</a>
+        </div>
+    </body>
 </html>

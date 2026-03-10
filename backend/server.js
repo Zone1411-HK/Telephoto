@@ -22,12 +22,15 @@ app.use(
 );
 
 //!Routing
-//?Főoldal:
+//?Oldalak:
 router.get('/', (request, response) => {
     response.sendFile(path.join(__dirname, '../frontend/html/index.html'));
 });
 router.get('/admin', (request, response) => {
     response.sendFile(path.join(__dirname, '../frontend/html/admin.html'));
+});
+router.get('/profile', (request, response) => {
+    response.sendFile(path.join(__dirname, '../frontend/html/profil.html'));
 });
 
 //!API endpoints
