@@ -221,59 +221,61 @@ router.post('/uploadPost', postUpload.array('uploadFile'), async (request, respo
 //#endregion
 
 //komment kreálás + like-dislike
-router.post('/uploadComment', async(request, response) => {
-    try{
-        const {postId, commentContent} = request.body
+router.post('/uploadComment', async (request, response) => {
+    try {
+        const { postId, commentContent } = request.body;
         const username = await database.loadProfile(request.session.username);
         const createComment = await database.createComment(username, postId, commentContent);
         response.status(200).json({
             status: 'Success',
             results: createComment
-        })
+        });
     } catch (error) {
         response.status(500).json({
-            message: "Nem jó",
+            message: 'Nem jó',
             error: error.message
-        })
+        });
         console.log(error);
     }
-})
+});
 
-router.post('/interactions', async(request, response) => {
-    try{
-        const username = await database.loadProfile(request.session.username);
-        const { postId } = request.body;
-        const data = await database.isLiked(username, postId)
+router.get('/interactions/:postId', async (request, response) => {
+    try {
+        const username = request.session.username;
+        //const username = await database.loadProfile(request.session.username);
+        const postId = request.params.postId;
+        const data = await database.isLiked(username, postId);
         response.status(200).json({
             status: 'Success',
-            results: data
-        })
+            results: data == undefined ? { upvote: 0, downvote: 0 } : data
+        });
     } catch (error) {
         response.status(500).json({
-            message: "Nem jó",
+            message: 'Nem jó',
             error: error.message
-        })
+        });
         console.log(error);
     }
-})
+});
 
-router.post('/uploadInteraction', async(request, response) => {
-    try{
-        const {postId, likeValue, dislikeValue} = request.body
-        const username = await database.loadProfile(request.session.username);
+router.post('/uploadInteraction', async (request, response) => {
+    try {
+        const { postId, likeValue, dislikeValue } = request.body;
+        const username = request.session.username;
+        //const username = await database.loadProfile(request.session.username);
         const likeDislike = await database.like(username, postId, likeValue, dislikeValue);
         response.status(200).json({
-            status: 'Success',
-            results: likeDislike
-        })
+            status: likeDislike
+            //results: likeDislike
+        });
     } catch (error) {
         response.status(500).json({
-            message: "Nem jó",
+            message: 'Nem jó',
             error: error.message
-        })
+        });
         console.log(error);
     }
-})
+});
 
 //! ADATOK
 //#region Data

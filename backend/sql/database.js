@@ -35,9 +35,9 @@ async function loginSelect() {
 
 async function getUserByUsername(username) {
     try {
-        const sql = `SELECT user_id FROM users WHERE username LIKE ?`;
+        const sql = `SELECT user_id FROM users WHERE username = ?`;
         const values = [username];
-        const [rows] = await pool.execute(sql, values);
+        const [rows] = await pool.execute(sql, [username]);
         return rows[0].user_id;
     } catch (error) {
         console.error(error);
@@ -55,8 +55,8 @@ async function createPost(username, description, tags, location, latitude, longi
     }
 }
 ///////EZ új
-async function createComment(username, postId, commentContent ) {
-    try{
+async function createComment(username, postId, commentContent) {
+    try {
         let userId = await getUserByUsername(username);
         const sql = 'INSERT INTO comments(user_id, post_id, comment_content) VALUES(?, ?, ?);';
         const [rows] = await pool.execute(sql);
@@ -112,29 +112,42 @@ async function getPostDataByPostId(postId) {
     }
 }
 
-/////////////LIKE DISLIKE
+//!LIKE DISLIKE
 async function isLiked(username, postId) {
-    try{
+    try {
         let userId = await getUserByUsername(username);
-        const sql = `SELECT interactions.upvote, interactions.downvote FROM interactions WHERE interactions.user_id = ${userId} AND interactions.post_id = ${postId};`;
-        const [rows] = await pool.execute(sql);
-        return[rows];
+        const sql = `SELECT * FROM interactions WHERE interactions.user_id = ? AND interactions.post_id = ?;`;
+        const [rows] = await pool.execute(sql, [userId, postId]);
+        return rows[0];
     } catch (error) {
         console.error(error);
     }
 }
 
 async function like(username, postId, likeValue, dislikeValue) {
-    try{
+    try {
         let userId = await getUserByUsername(username);
-        const sql = `INSERT INTO interactions(user_id, post_id, upvote, downvote) VALUES(?, ?, ?, ?)`;
-        const [rows] = await pool.execute(sql);
-        return[rows];
+        let likedRow = await isLiked(username, postId);
+        if (likedRow == undefined) {
+            const sql = `INSERT INTO interactions(user_id, post_id, upvote, downvote) VALUES(?, ?, ?, ?)`;
+            await pool.execute(sql, [userId, postId, likeValue, dislikeValue]);
+            return 'success';
+        } else {
+            const sql = `
+            UPDATE interactions
+            SET upvote = ?, downvote = ?
+            WHERE interaction_id = ?;
+            `;
+            await pool.execute(sql, [likeValue, dislikeValue, likedRow.interaction_id]);
+            return 'success';
+        }
+        return 'failed';
     } catch (error) {
         console.error(error);
     }
 }
 
+//like('test', 1, true, false);
 
 //post sorbarendezés lekérdezásek
 async function topPosts() {
@@ -624,4 +637,5 @@ module.exports = {
     clearComment,
     createComment,
     isLiked,
+    like
 };

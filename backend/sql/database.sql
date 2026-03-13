@@ -41,6 +41,7 @@ CREATE TABLE pictures(
 );
 
 CREATE TABLE interactions(
+    interaction_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
  	user_id INT,
     post_id INT,
     upvote BOOLEAN,
