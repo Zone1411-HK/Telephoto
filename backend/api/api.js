@@ -277,6 +277,42 @@ router.post('/uploadInteraction', async (request, response) => {
     }
 });
 
+router.post('/favoritePost', async (request, response) => {
+    try {
+        const { postId, favoriteValue } = request.body;
+        const username = request.session.username;
+        const feedback = await database.favoritePost(username, postId, favoriteValue);
+        response.status(200).json({
+            status: feedback
+        });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            message: 'Hiba a /favoritePost végpontban',
+            error: error
+        });
+    }
+});
+
+router.get('/isFavorited/:postId', async (request, response) => {
+    try {
+        const postId = request.params.postId;
+        const username = request.session.username;
+        const isFavorited = await database.isFavorited(postId, username);
+
+        response.status(200).json({
+            status: 'success',
+            results: isFavorited == undefined ? { is_favorited: 0 } : isFavorited
+        });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            message: 'Hiba a /isFavorited végpontban',
+            error: error
+        });
+    }
+});
+
 //! ADATOK
 //#region Data
 

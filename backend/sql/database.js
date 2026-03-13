@@ -596,6 +596,42 @@ async function clearComment(commentId) {
     }
 }
 
+async function favoritePost(username, postId, favoriteValue) {
+    try {
+        let userId = await getUserByUsername(username);
+        if (favoriteValue) {
+            const sql = `
+            INSERT INTO favorites(post_id, user_id, is_favorited)
+            VALUES(?,?,?)
+            `;
+            await pool.execute(sql, [postId, userId, favoriteValue]);
+        } else {
+            const sql = `
+            DELETE FROM favorites
+            WHERE post_id = ? AND user_id = ?;
+            `;
+            await pool.execute(sql, [postId, userId]);
+        }
+        return 'success';
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function isFavorited(postId, username) {
+    try {
+        let userId = await getUserByUsername(username);
+        const sql = `
+        SELECT is_favorited 
+        FROM favorites
+        WHERE post_id = ? AND user_id = ?;`;
+        const [rows] = await pool.execute(sql, [postId, userId]);
+        return rows[0];
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 //!Export
 module.exports = {
     selectall,
@@ -637,5 +673,7 @@ module.exports = {
     clearComment,
     createComment,
     isLiked,
-    like
+    like,
+    favoritePost,
+    isFavorited
 };

@@ -82,14 +82,14 @@ const hangPictures = async (test) => {
     let p = document.createElement('p');
 
     let interactionsResult = await GetMethodFetch('/api/interactions/' + test.post_id);
-    let likeDiv = document.createElement('div');
-    likeDiv.classList.add('likeDiv');
+    let interactionRow = document.createElement('div');
+    interactionRow.classList.add('likeDiv');
 
     let likeButton = document.createElement('button');
     likeButton.setAttribute('type', 'button');
     likeButton.innerHTML =
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#314b49ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-up"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>';
-    likeButton.classList.add('likeButton');
+    likeButton.classList.add('interactionButton');
     if (interactionsResult.results.upvote == 1) {
         likeButton.dataset.liked = 'true';
         likeButton.classList.add('activeLike');
@@ -104,7 +104,7 @@ const hangPictures = async (test) => {
     dislikeButton.setAttribute('type', 'button');
     dislikeButton.innerHTML =
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#314b49ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-down"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path></svg>';
-    dislikeButton.classList.add('likeButton');
+    dislikeButton.classList.add('interactionButton');
     if (interactionsResult.results.downvote == 1) {
         dislikeButton.dataset.disliked = 'true';
         dislikeButton.classList.add('activeLike');
@@ -115,6 +115,20 @@ const hangPictures = async (test) => {
         dislike(this, test.post_id);
     });
 
+    let favoriteResult = await GetMethodFetch('/api/isFavorited/' + test.post_id);
+    let favoriteButton = document.createElement('button');
+    favoriteButton.type = 'button';
+    favoriteButton.classList.add('interactionButton');
+    favoriteButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"viewBox="0 0 24 24" fill="none" stroke="#314b49ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+    if (favoriteResult.results.is_favorited == 1) {
+        favoriteButton.dataset.favorite = 'true';
+        favoriteButton.classList.add('activeFavorite');
+    } else {
+        favoriteButton.dataset.favorite = 'false';
+    }
+    favoriteButton.addEventListener('click', function () {
+        favoritePost(this, test.post_id);
+    });
     let tableContainer = document.createElement('div');
     let commentsTable = document.createElement('table');
     let tBody = document.createElement('tbody');
@@ -158,9 +172,10 @@ const hangPictures = async (test) => {
     postcontent.appendChild(imgdiv);
     postcontent.appendChild(p);
 
-    likeDiv.appendChild(likeButton);
-    likeDiv.appendChild(dislikeButton);
-    postcontent.appendChild(likeDiv);
+    interactionRow.appendChild(likeButton);
+    interactionRow.appendChild(favoriteButton);
+    interactionRow.appendChild(dislikeButton);
+    postcontent.appendChild(interactionRow);
 
     commentingUserPic.appendChild(commentingUserImg);
     commentingUserPic.appendChild(commentingUser);
@@ -193,8 +208,8 @@ async function like(div, postId) {
         div.dataset.liked = 'true';
         div.classList.add('activeLike');
     }
-    div.parentNode.children[1].dataset.disliked = 'false';
-    div.parentNode.children[1].classList.remove('activeLike');
+    div.parentNode.children[2].dataset.disliked = 'false';
+    div.parentNode.children[2].classList.remove('activeLike');
 
     const { status } = await PostMethodFetch('/api/uploadInteraction', {
         postId: postId,
@@ -227,4 +242,19 @@ async function dislike(div, postId) {
     if (status != 'success') {
         console.log('Valami hiba történt a dislike-olás során');
     }
+}
+
+async function favoritePost(div, postId) {
+    if (div.dataset.favorite == 'true') {
+        div.dataset.favorite = 'false';
+        div.classList.remove('activeFavorite');
+    } else {
+        div.dataset.favorite = 'true';
+        div.classList.add('activeFavorite');
+    }
+    const { status } = await PostMethodFetch('/api/favoritePost', {
+        postId: postId,
+        favoriteValue: div.dataset.favorite == 'true' ? true : false
+    });
+    if (status != 'success') console.log('Valami hiba történt a poszt elmentése során!');
 }

@@ -50,10 +50,12 @@ CREATE TABLE interactions(
     FOREIGN KEY(post_id) REFERENCES posts(post_id)
 );
 
-CREATE TABLE favourites(
-    user_id INT,
-    post_id INT,
-    favourite_user_id INT
+CREATE TABLE favorites(
+  post_id INT NOT NULL,
+  user_id INT NOT NULL,
+  is_favorited BOOLEAN NOT NULL,
+  FOREIGN KEY(post_id) REFERENCES posts(post_id),
+  FOREIGN KEY(user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE comments(
