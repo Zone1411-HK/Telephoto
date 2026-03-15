@@ -548,6 +548,120 @@ async function clearComment(commentId) {
     }
 }
 
+async function appendPictures(posts) {
+    for (const post of posts) {
+        const picSql = `
+            SELECT pictures.picture_link
+            FROM pictures
+            WHERE pictures.post_id = ?;`;
+        const [rows] = await pool.execute(picSql, [post.post_id]);
+        post['pictures'] = rows;
+    }
+    return posts;
+}
+
+async function userPosted(username) {
+    try {
+        const userId = await getUserByUsername(username);
+        const sql = `
+        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.creation_date
+        FROM posts
+        WHERE user_id = ?;`;
+
+        let posts = await pool.execute(sql, [userId]);
+        posts = await appendPictures(posts[0]);
+
+        return posts;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function userLiked(username) {
+    try {
+        const userId = await getUserByUsername(username);
+        const interactionSql = `
+    SELECT post_id
+    FROM interactions
+    WHERE user_id = ? AND upvote = 1;`;
+
+        let posts = [];
+
+        const postIds = await pool.execute(interactionSql, [userId]);
+        for (const id of postIds[0]) {
+            let postSql = `
+        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.creation_date
+        FROM posts
+        WHERE post_id = ?;`;
+
+            let post = await pool.execute(postSql, [id.post_id]);
+            posts.push(post[0][0]);
+        }
+
+        posts = await appendPictures(posts);
+        return posts;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function userDisliked(username) {
+    try {
+        const userId = await getUserByUsername(username);
+        const interactionSql = `
+    SELECT post_id
+    FROM interactions
+    WHERE user_id = ? AND downvote = 1;`;
+
+        let posts = [];
+
+        const postIds = await pool.execute(interactionSql, [userId]);
+        for (const id of postIds[0]) {
+            let postSql = `
+        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.creation_date
+        FROM posts
+        WHERE post_id = ?;`;
+
+            let post = await pool.execute(postSql, [id.post_id]);
+            posts.push(post[0][0]);
+        }
+
+        posts = await appendPictures(posts);
+        return posts;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function userSaved(username) {
+    try {
+        const userId = await getUserByUsername(username);
+        const interactionSql = `
+        SELECT post_id
+        FROM favorites
+        WHERE user_id = ? AND is_favorited = 1;`;
+
+        let posts = [];
+
+        const postIds = await pool.execute(interactionSql, [userId]);
+        for (const id of postIds[0]) {
+            let postSql = `
+            SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.creation_date
+            FROM posts
+            WHERE post_id = ?;`;
+
+            let post = await pool.execute(postSql, [id.post_id]);
+            posts.push(post[0][0]);
+        }
+
+        posts = await appendPictures(posts);
+        console.log(posts);
+        return posts;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 //!Export
 module.exports = {
     selectall,
@@ -586,5 +700,9 @@ module.exports = {
     adminCommentData,
     updateComment,
     deleteComment,
-    clearComment
+    clearComment,
+    userPosted,
+    userLiked,
+    userDisliked,
+    userSaved
 };

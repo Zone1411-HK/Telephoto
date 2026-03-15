@@ -280,6 +280,75 @@ router.get('/profileInfos', async (request, response) => {
     }
 });
 
+router.get('/postsByUser', async (request, response) => {
+    try {
+        const username = request.session.username;
+        const userPosts = await database.userPosted(username);
+
+        response.status(200).json({
+            Status: 'Success',
+            posts: userPosts
+        });
+    } catch (error) {
+        console.log(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: error
+        });
+    }
+});
+router.get('/likedPosts', async (request, response) => {
+    try {
+        const username = request.session.username;
+        const likedPosts = await database.userLiked(username);
+
+        response.status(200).json({
+            Status: 'Success',
+            posts: likedPosts
+        });
+    } catch (error) {
+        console.log(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: error
+        });
+    }
+});
+router.get('/dislikedPosts', async (request, response) => {
+    try {
+        const username = request.session.username;
+        const dislikedPosts = await database.userDisliked(username);
+
+        response.status(200).json({
+            Status: 'Success',
+            posts: dislikedPosts
+        });
+    } catch (error) {
+        console.log(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: error
+        });
+    }
+});
+router.get('/savedPosts', async (request, response) => {
+    try {
+        const username = request.session.username;
+        const savedPosts = await database.userSaved(username);
+
+        response.status(200).json({
+            Status: 'Success',
+            posts: savedPosts
+        });
+    } catch (error) {
+        console.log(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: error
+        });
+    }
+});
+
 //! KOMMENT ADATOK
 router.post('/commentInfos', async (request, response) => {
     const { post_id } = request.body;

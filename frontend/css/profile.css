@@ -37,46 +37,168 @@ body {
 }
 
 #root {
-    width: 100%;
+    width: 100vw;
     height: 95vh;
-    padding: 0.5% 3% 2% 3%;
+    padding: 3.5vh 3.5vw 3.5vh 3.5vw;
     position: relative;
     display: flex;
     flex-direction: row;
-    gap: 3%;
+    gap: 3vw;
 }
 
-/*!#region Profile Infos */
+/*!#region ProfileInfos */
+
+/*? Magasság: 10% = 8.8vh, 50% = 44vh, 100% = 88vh */
 
 #profileInfos {
-    width: 39%;
-    height: 100%;
-    background-color: red;
+    width: 35vw;
+    height: 88vh;
+    background-color: #f0febe;
     position: relative;
     display: flex;
     flex-direction: column;
+    padding: 15px;
+    gap: 3.5vh;
+    overflow: hidden;
+    box-shadow: 0px 0px 4px 0px rgb(75, 75, 75);
+    border-radius: 10px;
 }
 
-#profilePicUsername {
+#profilePictureDiv {
+    position: relative;
+    background-image: url('../images/placeholder1.jpg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    height: 16vh;
+    margin-bottom: 8vh;
+    width: 100%;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+
+#profilePictureBackground {
+    position: relative;
+    backdrop-filter: blur(10px);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+
+#profilePictureWrapper {
+    position: relative;
+    aspect-ratio: 1/1;
+    height: 100%;
+    width: 100%;
+    top: 50%;
+}
+
+#profilePictureBorder {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0febe;
+    clip-path: circle();
+    padding: 2px;
+    height: 100%;
+    width: 100%;
+}
+
+#profilePicture {
+    clip-path: circle();
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
+#profileTextInfos {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 60vh;
+    gap: 3vh;
+}
+
+.profileText {
+    width: 90%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin: 0;
+}
+
+#profileNameDiv {
+    height: 3vh;
+}
+
+#profileNameDiv,
+#profileEmailDiv,
+#profileRegistrationDiv {
+    width: 100%;
     position: relative;
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
-/*#endregion Profile Infos*/
+#profileName {
+    font-size: 2.5vh;
+    color: #404e0e;
+}
+
+#profileName,
+#profileEmail,
+#profileRegistration {
+    width: 90%;
+    text-align: center;
+}
+
+#profileEmailDiv,
+#profileRegistrationDiv {
+    height: 2.5vh;
+}
+
+#profileEmail,
+#profileRegistration {
+    font-size: 2vh;
+    color: #808e4e;
+}
+
+#profileBiographyDiv {
+    position: relative;
+    height: 20vh;
+    width: 100%;
+    border: 2px solid #d0de9e;
+    padding: 3px 3px 3px 6px;
+    border-radius: 2px;
+}
+
+#profileBiography {
+    font-size: 1.75vh;
+    margin: 0;
+}
+
+/*#endregion ProfileInfos*/
 
 /*!#region Posts */
 
 #postsWrapper {
-    width: 58%;
+    width: 55vw;
     height: 100%;
     position: relative;
-    overflow-x: clip;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 1.5%;
     background-color: inherit;
-    padding: 10px;
+    margin-bottom: 25px;
+    /*padding: 10px;*/
 }
 
 #postTypeSelect {
@@ -85,9 +207,12 @@ body {
     height: 7.5%;
     display: flex;
     flex-direction: row;
-    box-shadow: 0px 2px 4px -2px rgb(75, 75, 75);
+    box-shadow: 0px 0px 4px 0px rgb(75, 75, 75);
     overflow-x: clip;
     background-color: #f0febe;
+    border-radius: 10px;
+    gap: 3px;
+    padding: 7px;
 }
 
 .postSVGWrapper {
@@ -100,6 +225,7 @@ body {
     filter: brightness(100%);
     background-color: inherit;
     transition: 0.15s;
+    border-radius: 5px;
 }
 
 .activeType {
@@ -117,12 +243,22 @@ body {
     stroke-width: 1px;
 }
 
+#postsDiv {
+    position: relative;
+    width: calc(100% - 40px);
+    height: 91%;
+    box-shadow: 0px 0px 4px 0px rgb(75, 75, 75);
+    background-color: #f0febe;
+    padding: 1px;
+    border-radius: 5px;
+}
+
 #posts {
+    width: 100%;
+    height: 100%;
     position: relative;
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: 91%;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-color: #212e00 #f0febe;
@@ -132,7 +268,6 @@ body {
     display: flex;
     flex-direction: row;
 }
-
 .post {
     position: relative;
     flex-basis: 0;
@@ -144,6 +279,8 @@ body {
     background-position-x: center;
     background-position-y: center;
     transition: 0.2s;
+    margin: 1px;
+    border-radius: 4px;
 }
 
 .postImgWrapper {
@@ -155,7 +292,7 @@ body {
     justify-content: center;
     align-items: center;
     transition: 0.35s;
-    border: 1px solid #f0febe;
+    border-radius: 4px;
 }
 
 .post:hover {

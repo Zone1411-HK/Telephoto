@@ -27,18 +27,45 @@
     <body>
         <div id="root">
             <div id="profileInfos">
-                <div id="profilePicUsername">
-                    <div id="profilePicWrapper">
-                        <img id="profilePic" src="../images/placeholder1.jpg" />
+                <div id="profilePictureDiv">
+                    <div id="profilePictureBackground">
+                        <div id="profilePictureWrapper">
+                            <div id="profilePictureBorder">
+                                <img src="../images/placeholder1.jpg" id="profilePicture" />
+                            </div>
+                        </div>
                     </div>
-                    <div id="profileUsernameWrapper">
-                        <span id="profileUsername">Mr. Régész</span>
+                </div>
+                <div id="profileTextInfos">
+                    <div id="profileNameDiv">
+                        <p id="profileName" class="profileText">
+                            Kiss BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss
+                            BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss
+                            BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss
+                            BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss
+                            BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss BélaKiss
+                            BélaKiss Béla
+                        </p>
+                    </div>
+                    <div id="profileEmailDiv">
+                        <p id="profileEmail" class="profileText">kiss.bela@gmail.com</p>
+                    </div>
+                    <div id="profileRegistrationDiv">
+                        <p id="profileRegistration" class="profileText">1984.02.11</p>
+                    </div>
+                    <div id="profileBiographyDiv">
+                        <p id="profileBiography">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic assumenda
+                            quibusdam repudiandae. Consectetur odio id alias reprehenderit beatae in
+                            enim, quo adipisci tenetur officiis corporis vitae illo porro aspernatur
+                            amet?
+                        </p>
                     </div>
                 </div>
             </div>
             <div id="postsWrapper">
                 <div id="postTypeSelect">
-                    <div class="postSVGWrapper activeType">
+                    <div class="postSVGWrapper activeType" id="postsByUser">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -55,7 +82,7 @@
                             <polyline points="9 22 9 12 15 12 15 22"></polyline>
                         </svg>
                     </div>
-                    <div class="postSVGWrapper">
+                    <div class="postSVGWrapper" id="likedPosts">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="16"
@@ -73,7 +100,7 @@
                             ></path>
                         </svg>
                     </div>
-                    <div class="postSVGWrapper">
+                    <div class="postSVGWrapper" id="dislikedPosts">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="16"
@@ -91,7 +118,7 @@
                             ></path>
                         </svg>
                     </div>
-                    <div class="postSVGWrapper">
+                    <div class="postSVGWrapper" id="savedPosts">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -110,91 +137,93 @@
                         </svg>
                     </div>
                 </div>
-                <div id="posts">
-                    <div class="postRow">
-                        <div class="post">
-                            <div class="postImgWrapper">
-                                <img src="../images/placeholder2.gif" class="postImg" />
+                <div id="postsDiv">
+                    <div id="posts">
+                        <div class="postRow">
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder2.gif" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder2.gif" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder1.jpg" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img
+                                        src="../images/Screenshot 2026-03-10 162635.png"
+                                        class="postImg"
+                                    />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img
+                                        src="../images/Screenshot 2026-03-10 162635.png"
+                                        class="postImg"
+                                    />
+                                </div>
                             </div>
                         </div>
-                        <div class="post">
-                            <div class="postImgWrapper">
-                                <img src="../images/placeholder2.gif" class="postImg" />
+                        <div class="postRow">
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder2.gif" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder2.gif" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder1.jpg" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img
+                                        src="../images/Screenshot 2026-03-10 162635.png"
+                                        class="postImg"
+                                    />
+                                </div>
                             </div>
                         </div>
-                        <div class="post">
-                            <div class="postImgWrapper">
-                                <img src="../images/placeholder1.jpg" class="postImg" />
+                        <div class="postRow">
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder2.gif" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder2.gif" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder1.jpg" class="postImg" />
+                                </div>
                             </div>
                         </div>
-                        <div class="post">
-                            <div class="postImgWrapper">
-                                <img
-                                    src="../images/Screenshot 2026-03-10 162635.png"
-                                    class="postImg"
-                                />
+                        <div class="postRow">
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder2.gif" class="postImg" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="post">
-                            <div class="postImgWrapper">
-                                <img
-                                    src="../images/Screenshot 2026-03-10 162635.png"
-                                    class="postImg"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="postRow">
-                        <div class="post">
-                            <div class="postImgWrapper">
-                                <img src="../images/placeholder2.gif" class="postImg" />
-                            </div>
-                        </div>
-                        <div class="post">
-                            <div class="postImgWrapper">
-                                <img src="../images/placeholder2.gif" class="postImg" />
-                            </div>
-                        </div>
-                        <div class="post">
-                            <div class="postImgWrapper">
-                                <img src="../images/placeholder1.jpg" class="postImg" />
-                            </div>
-                        </div>
-                        <div class="post">
-                            <div class="postImgWrapper">
-                                <img
-                                    src="../images/Screenshot 2026-03-10 162635.png"
-                                    class="postImg"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="postRow">
-                        <div class="post">
-                            <div class="postImgWrapper">
-                                <img src="../images/placeholder2.gif" class="postImg" />
-                            </div>
-                        </div>
-                        <div class="post">
-                            <div class="postImgWrapper">
-                                <img src="../images/placeholder2.gif" class="postImg" />
-                            </div>
-                        </div>
-                        <div class="post">
-                            <div class="postImgWrapper">
-                                <img src="../images/placeholder1.jpg" class="postImg" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="postRow">
-                        <div class="post">
-                            <div class="postImgWrapper">
-                                <img src="../images/placeholder2.gif" class="postImg" />
-                            </div>
-                        </div>
-                        <div class="post">
-                            <div class="postImgWrapper">
-                                <img src="../images/placeholder2.gif" class="postImg" />
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder2.gif" class="postImg" />
+                                </div>
                             </div>
                         </div>
                     </div>
