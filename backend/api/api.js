@@ -268,7 +268,8 @@ router.get('/topPosts', async (request, response) => {
 //! PROFIL ADATOK (nincs kész)
 router.get('/profileInfos', async (request, response) => {
     try {
-        const data = await database.loadProfile(request.session.username);
+        const username = request.session.username;
+        const data = await database.loadProfile(username);
 
         response.status(200).json({
             status: 'Success',

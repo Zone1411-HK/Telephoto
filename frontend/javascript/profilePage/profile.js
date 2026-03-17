@@ -2,6 +2,7 @@ const socket = io();
 document.addEventListener('DOMContentLoaded', () => {
     testing();
     loadProfile();
+    profileInfos();
     /*
     let posts = document.querySelectorAll('.post');
 
@@ -16,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('likedPosts').addEventListener('click', likedPosts);
     document.getElementById('dislikedPosts').addEventListener('click', dislikedPosts);
     document.getElementById('savedPosts').addEventListener('click', savedPosts);
+    document.getElementById('previous').addEventListener('click', previousSlide);
+    document.getElementById('next').addEventListener('click', nextSlide);
 });
 
 async function loadProfile() {
@@ -78,7 +81,6 @@ function generatePosts(posts) {
             if (posts[j].pictures.length != 0) {
                 url = '/uploads/' + posts[j].pictures[0].picture_link;
             }
-
             post.classList.add('post');
             post.style.backgroundImage = "url(\'" + url + "\')";
 
@@ -93,6 +95,10 @@ function generatePosts(posts) {
 
             postImgWrapper.appendChild(img);
             post.appendChild(postImgWrapper);
+
+            post.dataset.postId = posts[j].post_id;
+            post.addEventListener('click', openPost);
+
             row.appendChild(post);
         }
         postsDiv.appendChild(row);
@@ -111,4 +117,70 @@ async function testing() {
     const response = await PostMethodFetch('/api/saveUsername', {
         username: 'test'
     });
+}
+
+async function profileInfos() {
+    const { status, results } = await GetMethodFetch('/api/profileInfos');
+    if (status == 'Success') {
+        document.getElementById('profileName').innerText = results[0].username;
+        document.getElementById('profileEmail').innerText = results[0].email;
+        document.getElementById('profileRegistration').innerText =
+            date_yyyy_MM_dd(results[0].registration_date) + ' óta';
+        document.getElementById('profileBiography').innerText = results[0].biography;
+
+        let profilePicture =
+            results[0].profile_picture_link == null
+                ? '/profile_images/defaultPicture.svg'
+                : results[0].profile_picture_link;
+        document.getElementById('profilePicture').src = '/profile_images/' + profilePicture;
+        document.getElementById('profilePictureDiv').style.backgroundImage =
+            `url(/profile_images/${profilePicture})`;
+    }
+}
+
+async function openPost() {}
+
+function slideShow(move) {
+    let slides = document.getElementsByClassName('slideshowItem');
+    let j = 0;
+    while (j < slides.length && slides[j].style.display == 'none') {
+        j++;
+    }
+    slides[j].style.display = 'none';
+    console.log();
+    try {
+        if (slides[j].children[1].classList.contains('tempVideo')) {
+            slides[j].children[1].pause();
+            slides[j].children[1].currentTime = 0;
+        }
+    } catch (error) {}
+    console.log(j + ' ' + slides.length);
+    let finalIndex;
+    if (j >= slides.length - 1 && move == 1) {
+        finalIndex = 0;
+    } else {
+        if (j == 0 && move == -1) {
+            finalIndex = slides.length - 1;
+        } else {
+            finalIndex = j + move;
+        }
+    }
+    slides[finalIndex].style.display = 'block';
+    document.getElementById('postImages').style.backgroundImage = `url(${slides[finalIndex].src})`;
+}
+
+function nextSlide() {
+    this.style.pointerEvents = 'none';
+    setTimeout(() => {
+        this.style.pointerEvents = 'all';
+    }, 1);
+    slideShow(1);
+}
+
+function previousSlide() {
+    this.style.pointerEvents = 'none';
+    setTimeout(() => {
+        this.style.pointerEvents = 'all';
+    }, 1);
+    slideShow(-1);
 }

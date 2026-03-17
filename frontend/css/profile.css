@@ -66,7 +66,7 @@ body {
 
 #profilePictureDiv {
     position: relative;
-    background-image: url('../images/placeholder1.jpg');
+    background-image: url('/profile_images/defaultProfile.svg');
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -182,6 +182,7 @@ body {
 #profileBiography {
     font-size: 1.75vh;
     margin: 0;
+    color: #404e0e;
 }
 
 /*#endregion ProfileInfos*/
@@ -316,3 +317,174 @@ body {
 }
 
 /*#endregion Posts */
+
+/*#region Modal */
+
+#openedPostModal {
+    display: flex;
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.75);
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 3vh;
+    padding-bottom: 4vh;
+}
+
+#openedPost {
+    position: relative;
+    aspect-ratio: 35/40;
+    max-width: 96vw;
+    max-height: 90vh;
+    background-color: white;
+    box-shadow: 0 0 8px 4px rgba(100, 100, 100, 0.5);
+    padding: 10px;
+    z-index: 101;
+    display: flex;
+    flex-direction: column;
+}
+
+#closePost {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    z-index: 102;
+    left: 10px;
+    top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    filter: brightness(100%);
+    transition: 0.2s;
+}
+
+#closePost:hover {
+    filter: brightness(85%);
+}
+
+#postImages {
+    height: 50%;
+    width: 100%;
+    background-image: url('/uploads/1768924539207-olahbenjo.jpg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    user-select: none;
+}
+
+#backdropWrapper {
+    display: flex;
+    flex-direction: row;
+    backdrop-filter: blur(20px);
+    width: 100%;
+    height: 100%;
+}
+
+#previous,
+#next {
+    height: 100%;
+    width: 15%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 60px;
+    color: rgb(50, 50, 50);
+    -webkit-text-stroke: 1px white;
+    cursor: pointer;
+}
+#previous:hover,
+#next:hover {
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+#slideshow {
+    height: 100%;
+    width: 70%;
+}
+
+.slideshowItem {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: none;
+}
+
+.activeSlideshowItem {
+    display: block;
+}
+
+#postInfos {
+    height: 50%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5%;
+    padding: 2.5% 20px 5% 20px;
+    position: relative;
+}
+
+#postUser {
+    height: 10%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 2.5%;
+    align-items: center;
+}
+
+#postPictureWrapper {
+    height: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#postPictureBorder {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    clip-path: circle();
+    height: calc(100% - 2px);
+    aspect-ratio: 1/1;
+}
+
+#postUserPicture {
+    height: 95%;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+    clip-path: circle();
+    background-color: white;
+}
+
+#postUsername {
+    width: auto;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 20px;
+}
+
+#postDescription {
+    border: 1px solid gray;
+    padding: 5px;
+    height: 50%;
+    overflow: auto;
+}
+
+#locationDateWrapper {
+    position: absolute;
+    bottom: 5%;
+    left: 20px;
+}
+/*#endregion Modal*/

@@ -127,8 +127,8 @@ async function loadProfile(username) {
     try {
         let userId = await getUserByUsername(username);
 
-        const profileSql = `SELECT users.username, users.profile_picture_link, users.biography, users.registration_date FROM users WHERE users.user_id = ${userId}`;
-        const [rows] = await pool.execute(profileSql);
+        const profileSql = `SELECT users.username, users.profile_picture_link, users.biography, users.registration_date, users.email FROM users WHERE users.user_id = ?;`;
+        const [rows] = await pool.execute(profileSql, [userId]);
         return rows;
     } catch (error) {
         console.error(error);
