@@ -1,3 +1,18 @@
+<h1 align="center">TEENDŐK</h1>
+- [] Kommentek megnyitása
+- [] Új komment létrehozása
+- [] Profil felületen posztok megnyitása
+- [] Profil felület dizájn
+- [] Térkép felületen egyedi pin-ek a posztokhoz
+- [] Térkép felület csiszolása
+- [] Bejelentkezési felület csiszolása
+- [] Regisztráció visszajelzés
+- [] MOBIL NÉZET !!!!!!!!!!!!!!!
+- [] Admin sql triggerek
+- [] Főoldalon posztok rendezése
+- [] Posztokra való keresés/szűrés
+- [] Főoldalon lévő rendezési szekció átdolgozása
+
 <h1 align="center">NodeJS - Template project</h1>
 
 ## readme.md preview megnyitása:<br>
