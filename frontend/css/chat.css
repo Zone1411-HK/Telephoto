@@ -19,6 +19,7 @@
     margin-bottom: 100%;
     gap: 20px;
     width: 95%;
+    font-family: 'Josefin Sans', sans-serif;
 }
 
 .chat {
@@ -32,6 +33,7 @@
     padding-left: 10px;
     padding-right: 10px;
     border-radius: 30px;
+    font-family: 'Josefin Sans', sans-serif;
 }
 
 .chat:hover {

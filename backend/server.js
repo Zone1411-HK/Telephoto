@@ -22,12 +22,18 @@ app.use(
 );
 
 //!Routing
-//?Főoldal:
+//?Oldalak:
 router.get('/', (request, response) => {
     response.sendFile(path.join(__dirname, '../frontend/html/index.html'));
 });
 router.get('/admin', (request, response) => {
     response.sendFile(path.join(__dirname, '../frontend/html/admin.html'));
+});
+router.get('/map', (request, response) => {
+    response.sendFile(path.join(__dirname, '../frontend/html/map.html'));
+});
+router.get('/profile', (request, response) => {
+    response.sendFile(path.join(__dirname, '../frontend/html/profil.html'));
 });
 
 //!API endpoints
@@ -70,6 +76,7 @@ app.use('/uploads', express.static(path.join(__dirname, '../backend/uploads')));
 app.use('/user_pics', express.static(path.join(__dirname, '../backend/user_pics'))); //! Ezért nem tudom Kardos megöl-e 3
 
 app.use('/chat_images', express.static(path.join(__dirname, '../backend/chat_images')));
+app.use('/profile_images', express.static(path.join(__dirname, '../backend/profile_images')));
 
 http.listen(port, ip, () => {
     console.log(`Szerver elérhetősége: http://${ip}:${port}`);
