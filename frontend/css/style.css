@@ -197,6 +197,7 @@ form {
     color: var(--PostModalBottomColor);
     font-weight: 700;
     font-size: 1.75rem;
+    text-align: center;
 }
 
 .rightNavBorder {

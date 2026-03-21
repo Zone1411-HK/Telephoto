@@ -29,6 +29,9 @@ router.get('/', (request, response) => {
 router.get('/admin', (request, response) => {
     response.sendFile(path.join(__dirname, '../frontend/html/admin.html'));
 });
+router.get('/map', (request, response) => {
+    response.sendFile(path.join(__dirname, '../frontend/html/map.html'));
+});
 router.get('/profile', (request, response) => {
     response.sendFile(path.join(__dirname, '../frontend/html/profil.html'));
 });

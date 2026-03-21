@@ -1,0 +1,339 @@
+body {
+    position: relative;
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+#root {
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    z-index: 0;
+}
+
+#map {
+    position: relative;
+    width: 100vw;
+    height: 95vh;
+    z-index: 1;
+}
+
+#nav {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    height: 5vh;
+    background-color: rgb(233, 247, 185);
+    z-index: 2;
+    box-shadow: 0px 0px 5px 0px #212e00;
+}
+
+.navButton {
+    transition: 0.2s;
+    height: 5vh;
+    font-size: 3vh;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: #212e00;
+    filter: brightness(100%);
+    background-color: inherit;
+}
+
+.navButton:hover {
+    background-color: #a8ec9f;
+}
+
+#filter {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    z-index: 10;
+    background-color: rgb(233, 247, 185);
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    left: 20px;
+    top: 20px;
+    border: 2px solid #212e00;
+    filter: brightness(100%);
+}
+
+#filterSVGWrapper {
+    background-color: inherit;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: inherit;
+    cursor: pointer;
+}
+
+#filterSVGWrapper:hover {
+    filter: brightness(85%);
+}
+
+#filterOptions {
+    display: none;
+}
+
+.openedFilter {
+    height: 85%;
+    flex-direction: column;
+    justify-content: start;
+    padding: 5%;
+    gap: 5%;
+    width: 100%;
+}
+
+.filterOptionRow {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 37.5%;
+    gap: 2.5%;
+    color: #212e00;
+}
+
+.filterOptionRow input {
+    height: 100%;
+    width: 47.5%;
+    background-color: #f8fff8;
+    border: #212e00 1px solid;
+    outline: none;
+    text-align: center;
+}
+
+.filterOptionInputs {
+    height: 65%;
+}
+
+.filterOptionRow p {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0;
+    height: 30%;
+    width: 100%;
+}
+
+#resetFilter {
+    width: 100%;
+    height: 20%;
+    border-radius: 0;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border: 1px solid #212e00;
+    background-color: #f8fff8;
+    filter: brightness(100%);
+}
+
+#resetFilter:hover {
+    filter: brightness(90%);
+}
+
+.invalidFilter {
+    border: 1px solid rgb(191, 26, 26) !important;
+}
+
+#filter,
+#filterSVGWrapper,
+#filterOptions {
+    transition: 0.25s;
+}
+
+.customCluster {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: #212e00;
+    border-radius: 100%;
+    border: #212e00 1px solid;
+    font-size: 22px;
+    font-family: 'Josefin Sans', sans-serif;
+    filter: brightness(100%);
+}
+
+.customCluster:hover {
+    filter: brightness(80%);
+}
+
+.lowDensity {
+    background-color: #f0febe;
+    box-shadow: 0 0 3px 3px #f0febe;
+}
+
+.mediumDensity {
+    background-color: #a8ec9f;
+    box-shadow: 0 0 3px 3px #a8ec9f;
+}
+
+.highDensity {
+    background-color: #00f1ff;
+    box-shadow: 0 0 5px 2px #00f1ff;
+}
+
+.customPopup {
+    height: 160px;
+    width: 148px;
+    position: relative;
+}
+
+.customPopup .leaflet-popup-content-wrapper {
+    height: 100%;
+    width: 100%;
+    border-radius: 4px;
+    box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.25);
+}
+.customPopup .leaflet-popup-content-wrapper .leaflet-popup-content {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+.popupMedia {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
+.popupMediaWrapper {
+    height: 60%;
+    width: 100%;
+    background-color: black;
+}
+
+.customPopupWrapper {
+    height: 100%;
+    width: 100%;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.postModal {
+    display: none;
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.75);
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 3vh;
+    padding-bottom: 4vh;
+}
+
+.modalContent {
+    position: relative;
+    aspect-ratio: 35/40;
+    max-width: 96vw;
+    max-height: 90vh;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 8px 4px rgba(100, 100, 100, 0.5);
+    z-index: 101;
+    display: flex;
+    flex-direction: column;
+}
+
+.modalHeader {
+    height: 5%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    position: relative;
+}
+
+#modalClose {
+    position: absolute;
+    z-index: 5;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: center;
+    left: 20px;
+    top: 20px;
+    z-index: 102;
+    transition: 0.25s;
+    border: 2px solid #212e00;
+    background-color: #f0febe;
+    border-radius: 50%;
+    filter: brightness(100%);
+}
+
+#modalClose:hover {
+    filter: brightness(85%);
+}
+
+#modalClose svg {
+    height: 100%;
+}
+
+.post {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+}
+
+#mediaWrapper {
+    height: 50%;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding-top: 36px;
+}
+
+#mediaSlideshowContent {
+    background-color: black;
+    width: 80%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.slideshowControllerWrapper {
+    transition: 0.25s;
+    width: 10%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.slideshowControllerWrapper:hover {
+    background-color: rgb(230, 230, 230);
+}
+
+.slideshowItem {
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 3px;
+}
+
+.slideshowItemActive {
+    display: block;
+}
