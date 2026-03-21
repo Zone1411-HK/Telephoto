@@ -79,16 +79,16 @@ async function findUserOfPost(postId) {
 async function getPostDataByPostId(postId) {
     try {
         let user = await findUserOfPost(postId);
-        const userSql = `SELECT users.username, users.profile_picture_link FROM users WHERE users.user_id = ${user}`;
-        let userInfos = await pool.execute(userSql);
+        const userSql = `SELECT users.username, users.profile_picture_link FROM users WHERE users.user_id = ?`;
+        let userInfos = await pool.execute(userSql, [user]);
         userInfos = userInfos[0][0];
 
-        const postSql = `SELECT description, tags, upvote, downvote, location, latitude, longitude, unix_timestamp(creation_date) as unix_date FROM posts WHERE post_id = ${postId}`;
-        let postInfos = await pool.execute(postSql);
+        const postSql = `SELECT description, tags, upvote, downvote, location, latitude, longitude, unix_timestamp(creation_date) as unix_date FROM posts LEFT JOIN interactions ON posts.post_id = interactions.post_id WHERE posts.post_id = ?`;
+        let postInfos = await pool.execute(postSql, [postId]);
         postInfos = postInfos[0][0];
 
-        const pictureSql = `SELECT picture_link FROM pictures WHERE post_id = ${postId}`;
-        let pictureInfos = await pool.execute(pictureSql);
+        const pictureSql = `SELECT picture_link FROM pictures WHERE post_id = ?`;
+        let pictureInfos = await pool.execute(pictureSql, [postId]);
         pictureInfos = pictureInfos[0];
         pictureArray = [];
         pictureInfos.forEach((picture) => {

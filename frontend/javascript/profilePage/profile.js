@@ -1,7 +1,7 @@
 const socket = io();
 document.addEventListener('DOMContentLoaded', () => {
     testing();
-    loadProfile();
+    postsByUser(document.getElementById('postsByUser'));
     profileInfos();
     /*
     let posts = document.querySelectorAll('.post');
@@ -19,12 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('savedPosts').addEventListener('click', savedPosts);
     document.getElementById('previous').addEventListener('click', previousSlide);
     document.getElementById('next').addEventListener('click', nextSlide);
+    document.getElementById('closePost').addEventListener('click', closePost);
 });
-
-async function loadProfile() {
-    let el = document.getElementById('postsByUser');
-    postsByUser(el);
-}
 
 async function postsByUser() {
     const { Status, posts } = await GetMethodFetch('/api/postsByUser');
@@ -35,6 +31,7 @@ async function postsByUser() {
         } catch (error) {
             makeTypeActive(document.getElementById('postsByUser'));
         }
+        console.log('Posztok sikeresen betöltve');
     }
 }
 async function likedPosts() {
@@ -42,6 +39,7 @@ async function likedPosts() {
     if (Status == 'Success') {
         generatePosts(posts);
         makeTypeActive(this);
+        console.log('Posztok sikeresen betöltve');
     }
 }
 async function dislikedPosts() {
@@ -49,6 +47,7 @@ async function dislikedPosts() {
     if (Status == 'Success') {
         generatePosts(posts);
         makeTypeActive(this);
+        console.log('Posztok sikeresen betöltve');
     }
 }
 async function savedPosts() {
@@ -56,6 +55,7 @@ async function savedPosts() {
     if (Status == 'Success') {
         generatePosts(posts);
         makeTypeActive(this);
+        console.log('Posztok sikeresen betöltve');
     }
 }
 
@@ -81,19 +81,33 @@ function generatePosts(posts) {
             if (posts[j].pictures.length != 0) {
                 url = '/uploads/' + posts[j].pictures[0].picture_link;
             }
+
+            let format = url.split('.')[1];
+            let content;
+
+            if (format == 'mp4' || format == 'avi' || format == 'hevc') {
+                content = document.createElement('video');
+                const source = document.createElement('source');
+                source.src = url;
+                source.type = `video/${format}`;
+                content.appendChild(source);
+                content.classList.add('postImg');
+                content.controls = false;
+            } else {
+                content = document.createElement('img');
+                content.src = url;
+                content.alt = url;
+                content.loading = 'lazy';
+                content.classList.add('postImg');
+                post.style.backgroundImage = "url(\'" + url + "\')";
+            }
+
             post.classList.add('post');
-            post.style.backgroundImage = "url(\'" + url + "\')";
 
             let postImgWrapper = document.createElement('div');
             postImgWrapper.classList.add('postImgWrapper');
 
-            let img = document.createElement('img');
-            img.src = url;
-            img.alt = url;
-            img.loading = 'lazy';
-            img.classList.add('postImg');
-
-            postImgWrapper.appendChild(img);
+            postImgWrapper.appendChild(content);
             post.appendChild(postImgWrapper);
 
             post.dataset.postId = posts[j].post_id;
@@ -110,6 +124,10 @@ function makeTypeActive(element) {
     if (activeElement != undefined) {
         activeElement.classList.remove('activeType');
     }
+    document.getElementById('posts').style.animation = 'changePostSelection 1s forwards';
+    setTimeout(() => {
+        document.getElementById('posts').style.animation = '';
+    }, 1000);
     element.classList.add('activeType');
 }
 
@@ -135,10 +153,101 @@ async function profileInfos() {
         document.getElementById('profilePicture').src = '/profile_images/' + profilePicture;
         document.getElementById('profilePictureDiv').style.backgroundImage =
             `url(/profile_images/${profilePicture})`;
+        console.log('Profil adatok sikeresen betöltve');
     }
 }
 
-async function openPost() {}
+async function openPost() {
+    let postId = this.dataset.postId;
+    let modal = document.getElementById('openedPostModal');
+    let post = document.getElementById('openedPost');
+
+    modal.removeEventListener('click', closeModal);
+    modal.addEventListener('click', closeModal);
+
+    modal.style.display = 'flex';
+    post.style.animation = 'fadeInVertical 0.5s forwards';
+
+    const { Status, Infos } = await GetMethodFetch('/api/postInfos/' + postId);
+    if (Status == 'Success') {
+        console.log(Infos);
+        generateSlideshow(Infos.pictureInfos);
+        generatePostInfos(Infos.userInfos, Infos.postInfos);
+        console.log('Kiválasztott poszt sikeresen betöltve');
+    }
+}
+
+function generateSlideshow(contentArray) {
+    let slideshowElement = document.getElementById('slideshow');
+    let background = document.getElementById('postImages');
+    slideshowElement.replaceChildren();
+
+    for (let i = 0; i < contentArray.length; i++) {
+        let content = contentArray[i];
+        let format = content.split('.')[1];
+        let media;
+
+        if (format == 'mp4' || format == 'avi' || format == 'hevc') {
+            media = document.createElement('video');
+            media.muted = true;
+            media.loop = true;
+            media.controls = true;
+
+            let source = document.createElement('source');
+            source.src = '/uploads/' + content;
+            source.type = 'video/' + format;
+            media.appendChild(source);
+            media.dataset.type = 'video';
+            background.style.backgroundImage = 'url("/images/videoBackground.png")';
+        } else {
+            media = document.createElement('img');
+            media.src = '/uploads/' + content;
+            media.alt = '/uploads/' + content;
+            media.dataset.type = 'image';
+        }
+
+        media.classList.add('slideshowItem');
+
+        if (i == 0) media.classList.add('activeSlideshowItem');
+
+        slideshowElement.appendChild(media);
+    }
+}
+
+function generatePostInfos(userInfos, postInfos) {
+    document.getElementById('postUserPicture').src =
+        'profile_images/' + userInfos.profile_picture_link;
+    document.getElementById('postUsername').innerText = userInfos.username;
+    document.getElementById('postTagsSpan').innerText = postInfos.tags;
+    document.getElementById('postDescriptionSpan').innerText = postInfos.description;
+    document.getElementById('postLocationSpan').innerText = postInfos.location;
+    document.getElementById('postDateSpan').innerText = postInfos.creation_date;
+}
+
+function closeModal(e) {
+    let modal = document.getElementById('openedPostModal');
+    let clickedOutside = e.target == modal;
+
+    if (clickedOutside) {
+        let post = document.getElementById('openedPost');
+        post.style.animation = 'fadeOutVertical 0.5s forwards';
+
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 500);
+    }
+}
+
+function closePost() {
+    let modal = document.getElementById('openedPostModal');
+
+    let post = document.getElementById('openedPost');
+    post.style.animation = 'fadeOutVertical 0.5s forwards';
+
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 500);
+}
 
 function slideShow(move) {
     let slides = document.getElementsByClassName('slideshowItem');
@@ -146,16 +255,17 @@ function slideShow(move) {
     while (j < slides.length && slides[j].style.display == 'none') {
         j++;
     }
-    slides[j].style.display = 'none';
-    console.log();
-    try {
-        if (slides[j].children[1].classList.contains('tempVideo')) {
-            slides[j].children[1].pause();
-            slides[j].children[1].currentTime = 0;
-        }
-    } catch (error) {}
-    console.log(j + ' ' + slides.length);
+
+    let currentSlide = slides[j];
+    currentSlide.style.display = 'none';
+
+    if (currentSlide.dataset.type == 'video') {
+        currentSlide.pause();
+        currentSlide.currentTime = 0;
+    }
+
     let finalIndex;
+
     if (j >= slides.length - 1 && move == 1) {
         finalIndex = 0;
     } else {
@@ -166,7 +276,13 @@ function slideShow(move) {
         }
     }
     slides[finalIndex].style.display = 'block';
-    document.getElementById('postImages').style.backgroundImage = `url(${slides[finalIndex].src})`;
+    if (slides[finalIndex].dataset.type == 'image') {
+        document.getElementById('postImages').style.backgroundImage =
+            `url(${slides[finalIndex].src})`;
+    } else {
+        document.getElementById('postImages').style.backgroundImage =
+            `url("/images/videoBackground.png")`;
+    }
 }
 
 function nextSlide() {
