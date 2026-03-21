@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    testing();
     document.getElementById('mapButton').addEventListener('click', () => {
         window.location.href = '/map';
     });
@@ -26,6 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
     //isLoggedIn();
 });
 
+async function testing() {
+    const response = await PostMethodFetch('/api/saveUsername', {
+        username: 'testasd'
+    });
+}
 async function isLoggedIn() {
     try {
         const response = await GetMethodFetch('/api/sendUsername');

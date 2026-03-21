@@ -634,17 +634,24 @@ async function createChat(userIds, imageName, chatName) {
         `;
         const [fields] = await pool.execute(sql1, [chatName, imageName]);
         let chatId = fields.insertId;
+        //console.log(chatId);
+        //console.log(userIds);
 
-        for (let i = 0; i < userIds.length; i++) {
-            const sql2 = `
+        try {
+            for (let i = 0; i < userIds.length; i++) {
+                const sql2 = `
             INSERT INTO chat_members(chat_id, user_id)
             VALUES(?,?)
             `;
-            await pool.execute(sql2, [chatId, userIds[i]]);
+                let asd = await pool.execute(sql2, [chatId, userIds[i]]);
+            }
+            return 'Success';
+        } catch (error) {
+            console.log('HIBA ITT 2.');
+            //console.log(error);
         }
-        return 'Success';
     } catch (error) {
-        throw new Error(error);
+        //throw new Error(error);
     }
 }
 async function favoritePost(username, postId, favoriteValue) {

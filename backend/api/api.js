@@ -642,9 +642,8 @@ const chatUpload = multer({ storage: chatStorage });
 router.post('/createChat', chatUpload.single('img'), async (request, response) => {
     try {
         let userIds = request.body.userIds.split(',');
+        console.log(request.body.userIds);
         let imageName = request.file.filename;
-        console.log(request.file);
-        console.log(imageName);
         let { chatName } = request.body;
 
         let result = await database.createChat(userIds, imageName, chatName);
@@ -762,13 +761,16 @@ router.post('/saveUserId', async (request, response) => {
 
 router.get('/sendUserId', async (request, response) => {
     try {
-        const userId = request.session.userId;
+        let userId = request.session.userId;
         if (!userId) {
+            userId = await database.getUserByUsername(request.session.username);
+            /*
             response.status(200).json({
                 Status: 'Failed',
                 exists: false
-            });
-        } else {
+            });*/
+        }
+        if (!!userId) {
             response.status(200).json({
                 Status: 'Success',
                 exists: true,
