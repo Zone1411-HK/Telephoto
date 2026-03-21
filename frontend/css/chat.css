@@ -339,3 +339,151 @@
 .newMessageWrapper button:hover {
     background-color: rgb(250, 200, 200);
 }
+
+#newChatModal {
+    position: absolute;
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+    background-color: rgba(63, 63, 63, 0.7);
+    left: 0;
+    top: 0;
+    padding-top: 4vh;
+}
+
+#newChatContainer {
+    width: 30vw;
+    height: 80vh;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+#newChatForm {
+    padding-top: 2vh;
+    height: 70vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 2.5vh;
+}
+
+#newChatImgDiv {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 10vh;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+#newChatImgWrapper {
+    width: 25%;
+    height: 100%;
+}
+
+#newChatImg {
+    width: 95%;
+    height: 95%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    clip-path: circle();
+}
+
+#newChatImgInput {
+    display: none;
+}
+
+/*TODO SZÉPRE FORMÁZNI*/
+#newChatImgLabel {
+    transition: 0.25s;
+    width: 70%;
+    margin-left: 5%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(188, 188, 188);
+    border: 1px solid black;
+}
+
+#newChatImgLabel:hover {
+    background-color: rgb(100, 100, 100);
+}
+
+#newChatName {
+    height: 5vh;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    outline: none;
+}
+
+#newChatUsers {
+    height: 50vh;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    display: flex;
+    flex-direction: column;
+}
+
+#newChatUserInput {
+    outline: none;
+    height: 5vh;
+}
+
+#newChatUserWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 3vh;
+    height: 43vh;
+}
+
+#newChatUserSuggestionList,
+#newChatAddedUsers {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    height: calc(19vh - 2px);
+}
+
+.suggestedUser,
+.addedUser {
+    height: 20%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid gray;
+}
+
+.selected {
+    background-color: rgb(200, 220, 240);
+}
+
+#newChatCreateCancel {
+    display: flex;
+    flex-direction: row;
+    gap: 5%;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    height: 10vh;
+    padding-bottom: 3vh;
+}
+
+#newChatCreate {
+    width: 70%;
+}
+
+#newChatCancel {
+    width: 25%;
+}

@@ -548,6 +548,19 @@ async function clearComment(commentId) {
     }
 }
 
+async function searchUser(username) {
+    try {
+        const sql = `
+        SELECT user_id, username, profile_picture_link
+        FROM users
+        WHERE username LIKE ?;
+        `;
+        const [rows] = await pool.execute(sql, [`%${username}%`]);
+       return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
 async function markers() {
     try {
         const sql = `
@@ -557,6 +570,31 @@ async function markers() {
         WHERE latitude IS NOT NULL AND longitude IS NOT NULL;`;
         const [rows] = await pool.execute(sql);
         return rows;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+async function createChat(userIds, imageName, chatName) {
+    try {
+        console.log(userIds);
+        console.log(imageName);
+        console.log(chatName);
+        const sql1 = `
+        INSERT INTO chats(chat_name, chat_picture_link)
+        VALUES(?,?)
+        `;
+        const [fields] = await pool.execute(sql1, [chatName, imageName]);
+        let chatId = fields.insertId;
+
+        for (let i = 0; i < userIds.length; i++) {
+            const sql2 = `
+            INSERT INTO chat_members(chat_id, user_id)
+            VALUES(?,?)
+            `;
+            await pool.execute(sql2, [chatId, userIds[i]]);
+        }
+        return 'Success';
     } catch (error) {
         throw new Error(error);
     }
@@ -762,6 +800,8 @@ module.exports = {
     updateComment,
     deleteComment,
     clearComment,
+    searchUser,
+    createChat,
     markers,
     userPosted,
     userLiked,

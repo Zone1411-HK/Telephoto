@@ -55,6 +55,7 @@ body {
     font-style: normal;
     font-size: larger;
     background-color: var(--Hatter);
+    position: relative;
 }
 
 form {

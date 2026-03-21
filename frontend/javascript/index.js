@@ -7,10 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('profile').addEventListener('click', () => {});
     document.getElementById('postButton').addEventListener('click', () => {});
 
- */ document.getElementById('loginButton').addEventListener('click', login);
-    document.getElementById('loginText').addEventListener('click', toggleLoginRegistration);
-    document.getElementById('regButton').addEventListener('click', registration);
-    document.getElementById('regText').addEventListener('click', toggleLoginRegistration);
+ */
     /*     document.getElementById('create').addEventListener('click', () => {});
     document.getElementById('settings').addEventListener('click', () => {});
 
@@ -24,15 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
     //socket.emit('test');
     //isLoggedIn();
 });
-
-//! Ha tudtok pls adjatok neki jobb nevet 🙏
-function toggleLoginRegistration() {
-    const loginForm = document.getElementById('loginForm');
-    loginForm.classList.toggle('invisible');
-
-    const regForm = document.getElementById('regForm');
-    regForm.classList.toggle('invisible');
-}
 
 async function isLoggedIn() {
     try {

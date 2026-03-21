@@ -73,6 +73,9 @@ app.use('/node', express.static(path.join(__dirname, '../backend/node_modules'))
 
 app.use('/uploads', express.static(path.join(__dirname, '../backend/uploads'))); //! Ezért nem tudom Kardos megöl-e 2
 
+app.use('/user_pics', express.static(path.join(__dirname, '../backend/user_pics'))); //! Ezért nem tudom Kardos megöl-e 3
+
+app.use('/chat_images', express.static(path.join(__dirname, '../backend/chat_images')));
 app.use('/profile_images', express.static(path.join(__dirname, '../backend/profile_images')));
 
 http.listen(port, ip, () => {

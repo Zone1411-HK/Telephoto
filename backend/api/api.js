@@ -116,6 +116,9 @@ router.post('/login', async (request, response) => {
         }
 
         if (isVerified) {
+            const userId = await database.getUserByUsername(username);
+            request.session.username = username;
+            request.session.userId = userId;
             response.status(200).json({
                 status: 'Successful login',
                 isLoggedIn: true
@@ -529,7 +532,61 @@ router.get('/storedChatIdInfos', async (request, response) => {
         });
     }
 });
+
+const chatStorage = multer.diskStorage({
+    destination: (request, file, callback) => {
+        let fullpath = path.join(__dirname, '../chat_images');
+        fs.mkdir(fullpath, { recursive: true });
+        callback(null, fullpath);
+    },
+    filename: (request, file, callback) => {
+        callback(null, Date.now() + '-' + file.originalname); //?egyedi név: dátum - file eredeti neve
+    }
+});
+
+const chatUpload = multer({ storage: chatStorage });
+
+router.post('/createChat', chatUpload.single('img'), async (request, response) => {
+    try {
+        let userIds = request.body.userIds.split(',');
+        let imageName = request.file.filename;
+        console.log(request.file);
+        console.log(imageName);
+        let { chatName } = request.body;
+
+        let result = await database.createChat(userIds, imageName, chatName);
+
+        response.status(200).json({
+            Status: result
+        });
+    } catch (error) {
+        console.log(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/createChat" végpont nem működik!',
+            Error: error.message
+        });
+    }
+});
+
 //#endregion
+
+router.get('/searchUser/:username', async (request, response) => {
+    try {
+        const username = request.params.username;
+        const users = await database.searchUser(username);
+
+        response.status(200).json({
+            Status: 'Success',
+            Data: users
+        });
+    } catch (error) {
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/searchUser" végpont nem működik!'
+        });
+    }
+});
 
 router.post('/saveUsername', async (request, response) => {
     try {
@@ -590,6 +647,69 @@ router.post('/removeUsername', async (request, response) => {
         response.status(500).json({
             Status: 'Failed',
             Message: 'A "/removeUsername" végpont nem működik!'
+        });
+    }
+});
+
+router.post('/saveUserId', async (request, response) => {
+    try {
+        const { userId } = request.body;
+        request.session.userId = userId;
+        response.status(200).json({
+            Status: 'Success'
+        });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/saveUserId" végpont nem működik!'
+        });
+    }
+});
+
+router.get('/sendUserId', async (request, response) => {
+    try {
+        const userId = request.session.userId;
+        if (!userId) {
+            response.status(200).json({
+                Status: 'Failed',
+                exists: false
+            });
+        } else {
+            response.status(200).json({
+                Status: 'Success',
+                exists: true,
+                userId: userId
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/sendUserId" végpont nem működik!'
+        });
+    }
+});
+
+router.post('/removeUserId', async (request, response) => {
+    try {
+        if (!request.session.userId) {
+            response.status(200).json({
+                Status: 'Failed',
+                Result: 'Nincs mentett userId'
+            });
+        } else {
+            request.session.username = null;
+            response.status(200).json({
+                Status: 'Success',
+                Result: 'userId törölve'
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: 'A "/removeUserId" végpont nem működik!'
         });
     }
 });

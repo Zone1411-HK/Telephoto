@@ -1,3 +1,11 @@
+document.addEventListener('DOMContentLoaded', () => {
+    getChats();
+    document.getElementById('newChat').addEventListener('click', openNewChatWindow);
+    document.getElementById('newChatCancel').addEventListener('click', closeNewChatWindow);
+    document.getElementById('newChatCreate').addEventListener('click', createNewChat);
+    document.getElementById('newChatUserInput').addEventListener('input', searchUser);
+});
+
 class ChatData {
     constructor(id, name, pictureLink, lastMessage, userOfLastMessage) {
         this.id = id;
@@ -13,7 +21,9 @@ async function getChats() {
     let chatArray = await getChatData();
     if (Array.isArray(chatArray)) {
         const existingChats = document.getElementById('existingChats');
+        existingChats.replaceChildren();
         for (const chat of chatArray) {
+            console.log(chat);
             const chatDiv = document.createElement('div');
             chatDiv.classList.add('chat');
 
@@ -25,7 +35,7 @@ async function getChats() {
 
             const chatImg = document.createElement('img');
             chatImg.classList.add('chatImg');
-            chatImg.src = '/images/' + chat.pictureLink;
+            chatImg.src = '/chat_images/' + chat.pictureLink;
             chatImgBorder.appendChild(chatImg);
 
             chatImgDiv.appendChild(chatImgBorder);
@@ -105,6 +115,8 @@ async function closeChat() {
 
     const chatContainer = document.getElementById('chatContainer');
     chatContainer.classList.remove('invisible');
+
+    await getChats();
 }
 
 async function generateChat(element) {
@@ -312,6 +324,186 @@ async function sendMessage() {
             //TODO Hiba kezelés
         } else {
         }
+    }
+}
+
+function openNewChatWindow() {
+    document.getElementById('newChatModal').style.display = 'flex';
+}
+
+function closeNewChatWindow() {
+    document.getElementById('newChatModal').style.display = 'none';
+    document.getElementById('newChatUserSuggestionList').replaceChildren();
+    document.getElementById('newChatAddedUsers').replaceChildren();
+}
+
+async function searchUser() {
+    const suggestionDiv = document.getElementById('newChatUserSuggestionList');
+    const addedUser = document.getElementById('newChatAddedUsers');
+    let { Result } = await GetMethodFetch('/api/sendUsername');
+
+    if (this.value.length >= 3) {
+        const { Status, Data } = await GetMethodFetch('/api/searchUser/' + this.value);
+        if (Status == 'Success') {
+            suggestionDiv.replaceChildren();
+            for (const val of Data) {
+                if (val.username != Result) {
+                    const user = document.createElement('div');
+                    user.classList.add('suggestedUser');
+                    user.dataset.userId = val.user_id;
+                    user.dataset.username = val.username;
+                    user.dataset.userPic = val.profile_picture_link;
+
+                    const img = document.createElement('img');
+                    if (val.profile_picture_link == null) {
+                        img.src = '/user_pics/default.svg';
+                    } else {
+                        img.src = '/user_pics/' + val.profile_picture_link;
+                    }
+                    img.classList.add('suggestedImg');
+
+                    const name = document.createElement('div');
+                    name.innerText = val.username;
+
+                    user.appendChild(img);
+                    user.appendChild(name);
+                    user.addEventListener('click', addUser);
+
+                    for (const child of addedUser.children) {
+                        if (child.dataset.userId == user.dataset.userId) {
+                            user.classList.add('selected');
+                        }
+                    }
+
+                    suggestionDiv.appendChild(user);
+                }
+            }
+        }
+    } else {
+        suggestionDiv.replaceChildren();
+    }
+}
+
+function addUser() {
+    const addedUsers = document.getElementById('newChatAddedUsers');
+
+    let isAdded = false;
+    for (const child of addedUsers.children) {
+        if (child.dataset.userId == this.dataset.userId) {
+            isAdded = true;
+            this.classList.remove('selected');
+            addedUsers.removeChild(child);
+        }
+    }
+    if (!isAdded) {
+        const user = document.createElement('div');
+        user.dataset.userId = this.dataset.userId;
+        user.classList.add('addedUser');
+
+        const img = document.createElement('img');
+        if (this.dataset.userPic == 'null') {
+            img.src = '/user_pics/default.svg';
+        } else {
+            img.src = '/user_pics/' + this.dataset.userPic;
+        }
+        img.classList.add('addedImg');
+
+        const name = document.createElement('div');
+        name.innerText = this.dataset.username;
+
+        user.appendChild(img);
+        user.appendChild(name);
+        user.addEventListener('click', removeAddedUser);
+        addedUsers.appendChild(user);
+
+        this.classList.add('selected');
+    }
+    /*
+    for(const child of addedUsers.children) {
+        if(child.dataset.userId == this.dataset.userId) {
+            addedUsers.removeChild(child);
+        }
+    }*/
+}
+
+function removeAddedUser() {
+    const suggestionDiv = document.getElementById('newChatUserSuggestionList');
+    let j = 0;
+    while (
+        j < suggestionDiv.children.length &&
+        this.dataset.userId != suggestionDiv.children[j].dataset.userId
+    ) {
+        j++;
+    }
+
+    suggestionDiv.children[j].classList.remove('selected');
+
+    const parent = this.parentNode;
+    parent.removeChild(this);
+}
+
+async function createNewChat() {
+    const form = document.getElementById('newChatForm');
+    let formData = new FormData();
+    formData.append('chatName', document.getElementById('newChatName').value);
+
+    const addedUsers = document.querySelectorAll('.addedUser');
+
+    if (addedUsers.length != 0) {
+        let userIds = [];
+
+        for (const user of addedUsers) {
+            userIds.push(user.dataset.userId);
+        }
+
+        let { userId } = await GetMethodFetch('/api/sendUserId');
+        userIds.push(userId);
+        formData.append('userIds', userIds);
+
+        let img = document.getElementById('newChatImgInput').files[0];
+        let newImg = new File([img], img.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ''), {
+            type: img.type
+        });
+
+        formData.append('img', newImg);
+
+        let isValid = true;
+        for (const value of formData.values()) {
+            if (value == '') {
+                isValid = false;
+            }
+        }
+
+        if (isValid) {
+            const { Status } = await filePost('/api/createChat', formData);
+
+            if (Status == 'Success') {
+                form.reset();
+                closeNewChatWindow();
+                getChats();
+            } else {
+                alert('Valami hiba történt');
+            }
+        } else {
+            alert('Nem töltötte ki az adatokat');
+        }
+    } else {
+        alert('Nincs hozzáadott felhasználó!');
+    }
+}
+
+async function filePost(url, data) {
+    try {
+        let response = await fetch(url, {
+            method: 'POST',
+            body: data
+        });
+        if (!response.ok) {
+            throw new Error(response.status + ' ' + response.statusText);
+        }
+        return await response.json();
+    } catch (error) {
+        throw new Error(error);
     }
 }
 
