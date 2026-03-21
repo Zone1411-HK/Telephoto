@@ -325,3 +325,7 @@ form {
     background-color: rgb(220, 220, 220);
     border: rgb(200, 200, 200) 2px solid;
 }
+
+.navbar-brand{
+    border-right: 1px solid black;
+}
