@@ -41,13 +41,21 @@ CREATE TABLE pictures(
 );
 
 CREATE TABLE interactions(
+    interaction_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
  	user_id INT,
     post_id INT,
     upvote BOOLEAN,
     downvote BOOLEAN,
-    favorite BOOLEAN,
     FOREIGN KEY(user_id) REFERENCES users(user_id),
     FOREIGN KEY(post_id) REFERENCES posts(post_id)
+);
+
+CREATE TABLE favorites(
+  post_id INT NOT NULL,
+  user_id INT NOT NULL,
+  is_favorited BOOLEAN NOT NULL,
+  FOREIGN KEY(post_id) REFERENCES posts(post_id),
+  FOREIGN KEY(user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE comments(

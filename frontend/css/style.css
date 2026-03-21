@@ -328,6 +328,40 @@ form {
     border: rgb(200, 200, 200) 2px solid;
 }
 
-.navbar-brand{
+.navbar-brand {
     border-right: 1px solid black;
+}
+.interactionButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: inherit;
+    border: none;
+    padding: 0;
+    flex-basis: 0;
+    flex-grow: 1;
+}
+
+.interactionButton svg {
+    height: 100%;
+    height: 100%;
+    fill: none;
+    stroke: #212e00;
+}
+
+.activeLike svg {
+    fill: #212e00;
+}
+
+.activeFavorite svg {
+    fill: goldenrod;
+}
+
+.likeDiv {
+    min-height: 20px;
+    height: 5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 }
