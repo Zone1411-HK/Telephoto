@@ -873,6 +873,52 @@ router.post('/clearComment', async (request, response) => {
 
 //#endregion
 
+const profileStorage = multer.diskStorage({
+    destination: (request, file, callback) => {
+        callback(null, path.join(__dirname, '../profile_images'));
+    },
+    filename: (request, file, callback) => {
+        callback(null, Date.now() + '-' + file.originalname); //?egyedi név: dátum - file eredeti neve
+    }
+});
+
+const profileUpload = multer({ storage: profileStorage });
+
+router.post(
+    '/modifyProfilePicture',
+    profileUpload.single('profilePic'),
+    async (request, response) => {
+        const filename = request.file.filename;
+        const status = await database.updateProfilePicture(request.session.username, filename);
+
+        response.status(200).json({
+            Status: status,
+            Link: filename
+        });
+    }
+);
+
+router.post('/modifyProfileName', async (request, response) => {
+    const { username } = request.body;
+    const status = await database.updateProfileName(request.session.username, username);
+
+    response.status(200).json({
+        Status: status,
+        Name: username
+    });
+});
+
+router.post('/modifyProfileBiography', async (request, response) => {
+    const { biography } = request.body;
+    const username = request.session.username;
+    const status = await database.updateProfileBiography(username, biography);
+
+    response.status(200).json({
+        Status: status,
+        Biography: biography
+    });
+});
+
 //! FÜGGVÉNYEK
 //? Hash-eljük a megadott stringet, és visszaadunk egy salt, és egy hash változót.
 function HashString(string) {
@@ -950,4 +996,5 @@ async function isAdmin(request, response, next) {
         throw new Error(`Hiba az "isAdmin" middleware-ben: ${error}`);
     }
 }
+
 module.exports = router;

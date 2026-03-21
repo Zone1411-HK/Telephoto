@@ -33,6 +33,67 @@
                         <div id="profilePictureWrapper">
                             <div id="profilePictureBorder">
                                 <img id="profilePicture" />
+                                <label class="hidden" id="profilePictureUploadLabel">
+                                    <svg
+                                        version="1.1"
+                                        id="Layer_1"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="800px"
+                                        height="800px"
+                                        viewBox="0 0 50.00 50.00"
+                                        enable-background="new 0 0 50 50"
+                                        xml:space="preserve"
+                                        fill="#000000"
+                                        stroke="#000000"
+                                        stroke-width="1.65"
+                                    >
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0" />
+
+                                        <g
+                                            id="SVGRepo_tracerCarrier"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+
+                                        <g id="SVGRepo_iconCarrier">
+                                            <line
+                                                fill="none"
+                                                stroke="#000000"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                x1="25"
+                                                y1="10.5"
+                                                x2="25"
+                                                y2="39.5"
+                                            />
+                                            <circle
+                                                fill="none"
+                                                stroke="#000000"
+                                                cx="25"
+                                                cy="25"
+                                                r="23.667"
+                                            />
+                                            <line
+                                                fill="none"
+                                                stroke="#000000"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                x1="39.5"
+                                                y1="25"
+                                                x2="10.5"
+                                                y2="25"
+                                            />
+                                        </g>
+                                    </svg>
+                                    <input
+                                        type="file"
+                                        accept=".mp4, .avi, .jpg, .jpeg, .jfif, .png, .gif, .webp, .hevc"
+                                        id="profilePictureUpload"
+                                        class="hidden"
+                                        name="profilePic"
+                                    />
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -48,10 +109,16 @@
                         <p id="profileRegistration" class="profileText"></p>
                     </div>
                     <div id="profileBiographyDiv">
-                        <p id="profileBiography"></p>
+                        <textarea id="profileBiography" disabled maxlength="500"></textarea>
                     </div>
                     <div id="profileModifyDiv">
                         <button type="button" id="profileModify">Profil módosítása</button>
+                        <button type="button" id="cancelProfileModification" class="hidden">
+                            Elvetés
+                        </button>
+                        <button type="button" id="saveProfileModification" class="hidden">
+                            Mentés
+                        </button>
                     </div>
                 </div>
             </div>

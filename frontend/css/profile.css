@@ -172,11 +172,29 @@ body {
     width: 100%;
 }
 
-#profilePicture {
+#profilePicture,
+#profilePictureUploadLabel {
     clip-path: circle();
     height: 100%;
     width: 100%;
     object-fit: contain;
+}
+
+#profilePictureUploadLabel {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+#profilePictureUploadLabel svg {
+    stroke: #404e0e;
+    filter: brightness(100%);
+    height: 90%;
+    width: 90%;
+}
+
+#profilePictureUploadLabel:hover {
+    background-color: #808e4e;
 }
 
 #profileTextInfos {
@@ -214,6 +232,7 @@ body {
     font-size: 3.5vh;
     font-variant: small-caps;
     color: #404e0e;
+    outline: none;
 }
 
 #profileName,
@@ -239,9 +258,18 @@ body {
 }
 
 #profileBiography {
+    border: none;
+    background-color: inherit;
+    resize: none;
+    overflow-y: auto;
+    scrollbar-color: #212e00 #f0febe;
+    scrollbar-width: thin;
+    width: 100%;
+    height: 100%;
     font-size: 1.75vh;
     margin: 0;
     color: #404e0e;
+    outline: none;
 }
 
 #profileModify {
@@ -443,7 +471,6 @@ body {
     position: absolute;
     width: 30px;
     height: 30px;
-    background-color: white;
     z-index: 102;
     left: 10px;
     top: 10px;
@@ -455,8 +482,12 @@ body {
     transition: 0.2s;
 }
 
+#closePost svg {
+    stroke: white;
+}
+
 #closePost:hover {
-    filter: brightness(85%);
+    filter: brightness(50%);
 }
 
 #postImages {
@@ -583,6 +614,28 @@ body {
 }
 /*#endregion Modal*/
 
+#profileModifyDiv {
+    gap: 2.5%;
+}
+
+#saveProfileModification,
+#cancelProfileModification {
+    flex: 1 1 0;
+    background-color: #f0febe;
+    filter: brightness(90%);
+    border: none;
+    height: 66%;
+    border-radius: 4px;
+    transition: 0.2s;
+}
+#saveProfileModification:hover,
+#cancelProfileModification:hover {
+    filter: brightness(80%);
+}
+
+.hidden {
+    display: none !important;
+}
 @media (max-width: 768px) {
     #root {
         flex-direction: column;
@@ -608,4 +661,8 @@ body {
     #openedPost {
         margin-top: 15px;
     }
+}
+
+.modifyData {
+    border: 2px solid #404e0e !important;
 }

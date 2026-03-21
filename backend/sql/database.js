@@ -662,6 +662,54 @@ async function userSaved(username) {
     }
 }
 
+async function updateProfileName(username, newUsername) {
+    try {
+        const userId = await getUserByUsername(username);
+
+        const sql = `
+        UPDATE users
+        SET username = ?
+        WHERE user_id = ?;`;
+
+        await pool.execute(sql, [newUsername, userId]);
+        return 'success';
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function updateProfileBiography(username, biography) {
+    try {
+        const userId = await getUserByUsername(username);
+
+        const sql = `
+        UPDATE users
+        SET biography = ?
+        WHERE user_id = ?;`;
+
+        await pool.execute(sql, [biography, userId]);
+        return 'success';
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function updateProfilePicture(username, profileLink) {
+    try {
+        const userId = await getUserByUsername(username);
+
+        const sql = `
+        UPDATE users
+        SET profile_picture_link = ?
+        WHERE user_id = ?;`;
+
+        await pool.execute(sql, [profileLink, userId]);
+        return 'success';
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 //!Export
 module.exports = {
     selectall,
@@ -704,5 +752,8 @@ module.exports = {
     userPosted,
     userLiked,
     userDisliked,
-    userSaved
+    userSaved,
+    updateProfilePicture,
+    updateProfileName,
+    updateProfileBiography
 };

@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('previous').addEventListener('click', previousSlide);
     document.getElementById('next').addEventListener('click', nextSlide);
     document.getElementById('closePost').addEventListener('click', closePost);
+    document.getElementById('profileModify').addEventListener('click', modifyProfile);
 });
 
 async function postsByUser() {
@@ -34,6 +35,7 @@ async function postsByUser() {
         console.log('Posztok sikeresen betöltve');
     }
 }
+
 async function likedPosts() {
     const { Status, posts } = await GetMethodFetch('/api/likedPosts');
     if (Status == 'Success') {
@@ -42,6 +44,7 @@ async function likedPosts() {
         console.log('Posztok sikeresen betöltve');
     }
 }
+
 async function dislikedPosts() {
     const { Status, posts } = await GetMethodFetch('/api/dislikedPosts');
     if (Status == 'Success') {
@@ -50,6 +53,7 @@ async function dislikedPosts() {
         console.log('Posztok sikeresen betöltve');
     }
 }
+
 async function savedPosts() {
     const { Status, posts } = await GetMethodFetch('/api/savedPosts');
     if (Status == 'Success') {
@@ -124,16 +128,16 @@ function makeTypeActive(element) {
     if (activeElement != undefined) {
         activeElement.classList.remove('activeType');
     }
-    document.getElementById('posts').style.animation = 'changePostSelection 1s forwards';
+    document.getElementById('postsDiv').style.animation = 'changePostSelection 1s forwards';
     setTimeout(() => {
-        document.getElementById('posts').style.animation = '';
+        document.getElementById('postsDiv').style.animation = '';
     }, 1000);
     element.classList.add('activeType');
 }
 
 async function testing() {
     const response = await PostMethodFetch('/api/saveUsername', {
-        username: 'test'
+        username: 'testasd'
     });
 }
 
@@ -204,6 +208,7 @@ function generateSlideshow(contentArray) {
             media.src = '/uploads/' + content;
             media.alt = '/uploads/' + content;
             media.dataset.type = 'image';
+            background.style.backgroundImage = `url("/uploads/${content}")`;
         }
 
         media.classList.add('slideshowItem');
@@ -299,4 +304,126 @@ function previousSlide() {
         this.style.pointerEvents = 'all';
     }, 1);
     slideShow(-1);
+}
+
+let usernameBefore;
+let profilePicBefore;
+let biographyBefore;
+
+function modifyProfile() {
+    this.classList.add('hidden');
+    document.getElementById('saveProfileModification').classList.remove('hidden');
+    document
+        .getElementById('saveProfileModification')
+        .addEventListener('click', saveProfileChanges);
+    document.getElementById('cancelProfileModification').classList.remove('hidden');
+    document
+        .getElementById('cancelProfileModification')
+        .addEventListener('click', cancelProfileChanges);
+
+    let bio = document.getElementById('profileBiography');
+    bio.parentNode.classList.add('modifyData');
+    bio.disabled = false;
+    biographyBefore = bio.value;
+
+    let name = document.getElementById('profileName');
+    name.contentEditable = true;
+    name.classList.add('modifyData');
+    usernameBefore = name.innerText;
+
+    document.getElementById('profilePicture').classList.add('hidden');
+    profilePicBefore = document.getElementById('profilePicture').src;
+
+    let picture = document.getElementById('profilePictureUploadLabel');
+    picture.classList.remove('hidden');
+    console.log(usernameBefore + ' ' + profilePicBefore + ' ' + biographyBefore);
+}
+
+async function saveProfileChanges() {
+    let isValid = true;
+
+    let bio = document.getElementById('profileBiography');
+    let responseBio =
+        bio.value != biographyBefore
+            ? await PostMethodFetch('/api/modifyProfileBiography', { biography: bio.value })
+            : {
+                  Status: 'failed'
+              };
+
+    let name = document.getElementById('profileName');
+    let available = await GetMethodFetch('/api/isUsernameAvailable/' + name.innerText);
+    if (available.available) {
+        let responseName =
+            name.innerText != usernameBefore
+                ? await PostMethodFetch('/api/modifyProfileName', { username: name.innerText })
+                : {
+                      Status: 'failed'
+                  };
+    } else {
+        name.innerText = usernameBefore;
+    }
+
+    let picture = document.getElementById('profilePictureUpload');
+    let formdata = new FormData();
+    formdata.append('profilePic', picture.files[0]);
+
+    let responsePic =
+        picture.files.length != 0
+            ? await UploadPostMethod('/api/modifyProfilePicture', formdata)
+            : { Status: 'failed' };
+
+    let pictureEl = document.getElementById('profilePicture');
+    if (responsePic.Status == 'success') {
+        pictureEl.classList.remove('hidden');
+        pictureEl.src = '/profile_images/' + responsePic.Link;
+    }
+
+    document.getElementById('profileModify').classList.remove('hidden');
+    document.getElementById('cancelProfileModification').classList.add('hidden');
+    document.getElementById('profilePictureUploadLabel').classList.add('hidden');
+    this.classList.add('hidden');
+
+    pictureEl.classList.remove('hidden');
+
+    name.classList.remove('modifyData');
+
+    bio.disabled = true;
+    bio.parentNode.classList.remove('modifyData');
+}
+
+function cancelProfileChanges() {
+    document.getElementById('profileModify').classList.remove('hidden');
+    document.getElementById('saveProfileModification').classList.add('hidden');
+    this.classList.add('hidden');
+
+    document.getElementById('profilePictureUploadLabel').classList.add('hidden');
+    let picture = document.getElementById('profilePicture');
+    picture.classList.remove('hidden');
+    picture.src = profilePicBefore;
+
+    let name = document.getElementById('profileName');
+    name.innerText = usernameBefore;
+    name.classList.remove('modifyData');
+
+    let bio = document.getElementById('profileBiography');
+    bio.value = biographyBefore;
+    bio.disabled = true;
+    bio.parentNode.classList.remove('modifyData');
+
+    this.removeEventListener('click', cancelProfileChanges);
+}
+
+async function UploadPostMethod(url, data) {
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            body: data
+        });
+        if (!response.ok) {
+            throw new Error(`POST hiba: ${response.status} ( ${response.statusText} )`);
+        }
+        return await response.json();
+    } catch (error) {
+        throw new Error(`POST hiba: ${error.message}`);
+    }
 }
