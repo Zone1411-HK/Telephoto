@@ -888,7 +888,7 @@ router.get('/markers', async (request, response) => {
             Message: 'A "/markers" végpont nem működik!'
         });
     }
-}
+});
 const profileStorage = multer.diskStorage({
     destination: (request, file, callback) => {
         callback(null, path.join(__dirname, '../profile_images'));
