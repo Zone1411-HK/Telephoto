@@ -79,16 +79,16 @@ async function findUserOfPost(postId) {
 async function getPostDataByPostId(postId) {
     try {
         let user = await findUserOfPost(postId);
-        const userSql = `SELECT users.username, users.profile_picture_link FROM users WHERE users.user_id = ${user}`;
-        let userInfos = await pool.execute(userSql);
+        const userSql = `SELECT users.username, users.profile_picture_link FROM users WHERE users.user_id = ?`;
+        let userInfos = await pool.execute(userSql, [user]);
         userInfos = userInfos[0][0];
 
-        const postSql = `SELECT description, tags, upvote, downvote, location, latitude, longitude, unix_timestamp(creation_date) as unix_date FROM posts WHERE post_id = ${postId}`;
-        let postInfos = await pool.execute(postSql);
+        const postSql = `SELECT description, tags, upvote, downvote, location, latitude, longitude, unix_timestamp(creation_date) as unix_date FROM posts LEFT JOIN interactions ON posts.post_id = interactions.post_id WHERE posts.post_id = ?`;
+        let postInfos = await pool.execute(postSql, [postId]);
         postInfos = postInfos[0][0];
 
-        const pictureSql = `SELECT picture_link FROM pictures WHERE post_id = ${postId}`;
-        let pictureInfos = await pool.execute(pictureSql);
+        const pictureSql = `SELECT picture_link FROM pictures WHERE post_id = ?`;
+        let pictureInfos = await pool.execute(pictureSql, [postId]);
         pictureInfos = pictureInfos[0];
         pictureArray = [];
         pictureInfos.forEach((picture) => {
@@ -127,8 +127,8 @@ async function loadProfile(username) {
     try {
         let userId = await getUserByUsername(username);
 
-        const profileSql = `SELECT users.username, users.profile_picture_link, users.biography, users.registration_date FROM users WHERE users.user_id = ${userId}`;
-        const [rows] = await pool.execute(profileSql);
+        const profileSql = `SELECT users.username, users.profile_picture_link, users.biography, users.registration_date, users.email FROM users WHERE users.user_id = ?;`;
+        const [rows] = await pool.execute(profileSql, [userId]);
         return rows;
     } catch (error) {
         console.error(error);
@@ -548,6 +548,168 @@ async function clearComment(commentId) {
     }
 }
 
+async function appendPictures(posts) {
+    for (const post of posts) {
+        const picSql = `
+            SELECT pictures.picture_link
+            FROM pictures
+            WHERE pictures.post_id = ?;`;
+        const [rows] = await pool.execute(picSql, [post.post_id]);
+        post['pictures'] = rows;
+    }
+    return posts;
+}
+
+async function userPosted(username) {
+    try {
+        const userId = await getUserByUsername(username);
+        const sql = `
+        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.creation_date
+        FROM posts
+        WHERE user_id = ?;`;
+
+        let posts = await pool.execute(sql, [userId]);
+        posts = await appendPictures(posts[0]);
+
+        return posts;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function userLiked(username) {
+    try {
+        const userId = await getUserByUsername(username);
+        const interactionSql = `
+    SELECT post_id
+    FROM interactions
+    WHERE user_id = ? AND upvote = 1;`;
+
+        let posts = [];
+
+        const postIds = await pool.execute(interactionSql, [userId]);
+        for (const id of postIds[0]) {
+            let postSql = `
+        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.creation_date
+        FROM posts
+        WHERE post_id = ?;`;
+
+            let post = await pool.execute(postSql, [id.post_id]);
+            posts.push(post[0][0]);
+        }
+
+        posts = await appendPictures(posts);
+        return posts;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function userDisliked(username) {
+    try {
+        const userId = await getUserByUsername(username);
+        const interactionSql = `
+    SELECT post_id
+    FROM interactions
+    WHERE user_id = ? AND downvote = 1;`;
+
+        let posts = [];
+
+        const postIds = await pool.execute(interactionSql, [userId]);
+        for (const id of postIds[0]) {
+            let postSql = `
+        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.creation_date
+        FROM posts
+        WHERE post_id = ?;`;
+
+            let post = await pool.execute(postSql, [id.post_id]);
+            posts.push(post[0][0]);
+        }
+
+        posts = await appendPictures(posts);
+        return posts;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function userSaved(username) {
+    try {
+        const userId = await getUserByUsername(username);
+        const interactionSql = `
+        SELECT post_id
+        FROM favorites
+        WHERE user_id = ? AND is_favorited = 1;`;
+
+        let posts = [];
+
+        const postIds = await pool.execute(interactionSql, [userId]);
+        for (const id of postIds[0]) {
+            let postSql = `
+            SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.creation_date
+            FROM posts
+            WHERE post_id = ?;`;
+
+            let post = await pool.execute(postSql, [id.post_id]);
+            posts.push(post[0][0]);
+        }
+
+        posts = await appendPictures(posts);
+        console.log(posts);
+        return posts;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function updateProfileName(username, newUsername) {
+    try {
+        const userId = await getUserByUsername(username);
+
+        const sql = `
+        UPDATE users
+        SET username = ?
+        WHERE user_id = ?;`;
+
+        await pool.execute(sql, [newUsername, userId]);
+        return 'success';
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function updateProfileBiography(username, biography) {
+    try {
+        const userId = await getUserByUsername(username);
+
+        const sql = `
+        UPDATE users
+        SET biography = ?
+        WHERE user_id = ?;`;
+
+        await pool.execute(sql, [biography, userId]);
+        return 'success';
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function updateProfilePicture(username, profileLink) {
+    try {
+        const userId = await getUserByUsername(username);
+
+        const sql = `
+        UPDATE users
+        SET profile_picture_link = ?
+        WHERE user_id = ?;`;
+
+        await pool.execute(sql, [profileLink, userId]);
+        return 'success';
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 //!Export
 module.exports = {
     selectall,
@@ -586,5 +748,12 @@ module.exports = {
     adminCommentData,
     updateComment,
     deleteComment,
-    clearComment
+    clearComment,
+    userPosted,
+    userLiked,
+    userDisliked,
+    userSaved,
+    updateProfilePicture,
+    updateProfileName,
+    updateProfileBiography
 };

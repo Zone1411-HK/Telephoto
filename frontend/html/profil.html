@@ -1,48 +1,370 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>TELEPHOTO</title>
-            <!--!Bootstrap-->
-            <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css" />
-            <!--?Popper: dropdowns, popovers, tooltips-->
-            <script src="../bootstrap/js/popper.min.js"></script>
-            <script src="../bootstrap/js/bootstrap.min.js"></script>
-            <!--!CSS-->
-            <link rel="stylesheet" href="node/leaflet/dist/leaflet.css" />
-            <link rel="stylesheet" href="node/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-            <link rel="stylesheet" href="/css/style.css" />
-            <link rel="stylesheet" href="/css/darkroom.css" />
-            <link rel="stylesheet" href="/css/modal.css">
-            <link rel="stylesheet" href="/css/chat.css">
-            <link rel="stylesheet" href="/css/login.css">
-            <!--!JavaScript-->
-            <script src="/javascript/fetch.js"></script>
-            <script src="node/socket.io/client-dist/socket.io.js"></script>
-            <script src="/javascript/connect.js"></script>
-            <script src="node/leaflet/dist/leaflet.js"></script>
-            <script src="node/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-            <script src="node/exifreader/dist/exif-reader.js"></script>
-            <script src="/javascript/registration.js"></script>
-            <script src="/javascript/map.js"></script>
-            <script src="/javascript/uploadPost.js"></script>
-            <script src="/javascript/darkroom.js"></script>
-            <script src="/javascript/profile.js"></script>
-            <script src="/javascript/chat.js"></script>
-            <script src="/javascript/post.js"></script>
-            <script src="/javascript/login.js"></script>
-            <script src="/javascript/index.js"></script>
+<!doctype html>
+<html lang="hu">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TELEPHOTO</title>
+        <!--!Bootstrap-->
+        <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css" />
+        <!--?Popper: dropdowns, popovers, tooltips-->
+        <script src="../bootstrap/js/popper.min.js"></script>
+        <script src="../bootstrap/js/bootstrap.min.js"></script>
+        <!--!CSS-->
+        <link rel="stylesheet" href="../css/profile.css" />
+        <!--!JavaScript-->
+        <script src="/javascript/fetch.js"></script>
+        <script src="node/socket.io/client-dist/socket.io.js"></script>
+        <script src="../javascript/util.js"></script>
+        <script src="../javascript/profilePage/profile.js"></script>
 
-            <!--Font Style-->
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-            <link
-                href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
-                rel="stylesheet"
-            />
-</head>
-<body>
-    
-</body>
+        <!--Font Style-->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div id="root">
+            <div id="profileInfos">
+                <div id="profilePictureDiv">
+                    <div id="profilePictureBackground">
+                        <div id="profilePictureWrapper">
+                            <div id="profilePictureBorder">
+                                <img id="profilePicture" />
+                                <label class="hidden" id="profilePictureUploadLabel">
+                                    <svg
+                                        version="1.1"
+                                        id="Layer_1"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="800px"
+                                        height="800px"
+                                        viewBox="0 0 50.00 50.00"
+                                        enable-background="new 0 0 50 50"
+                                        xml:space="preserve"
+                                        fill="#000000"
+                                        stroke="#000000"
+                                        stroke-width="1.65"
+                                    >
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0" />
+
+                                        <g
+                                            id="SVGRepo_tracerCarrier"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+
+                                        <g id="SVGRepo_iconCarrier">
+                                            <line
+                                                fill="none"
+                                                stroke="#000000"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                x1="25"
+                                                y1="10.5"
+                                                x2="25"
+                                                y2="39.5"
+                                            />
+                                            <circle
+                                                fill="none"
+                                                stroke="#000000"
+                                                cx="25"
+                                                cy="25"
+                                                r="23.667"
+                                            />
+                                            <line
+                                                fill="none"
+                                                stroke="#000000"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                x1="39.5"
+                                                y1="25"
+                                                x2="10.5"
+                                                y2="25"
+                                            />
+                                        </g>
+                                    </svg>
+                                    <input
+                                        type="file"
+                                        accept=".mp4, .avi, .jpg, .jpeg, .jfif, .png, .gif, .webp, .hevc"
+                                        id="profilePictureUpload"
+                                        class="hidden"
+                                        name="profilePic"
+                                    />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="profileTextInfos">
+                    <div id="profileNameDiv">
+                        <p id="profileName" class="profileText"></p>
+                    </div>
+                    <div id="profileEmailDiv">
+                        <p id="profileEmail" class="profileText"></p>
+                    </div>
+                    <div id="profileRegistrationDiv">
+                        <p id="profileRegistration" class="profileText"></p>
+                    </div>
+                    <div id="profileBiographyDiv">
+                        <textarea id="profileBiography" disabled maxlength="500"></textarea>
+                    </div>
+                    <div id="profileModifyDiv">
+                        <button type="button" id="profileModify">Profil módosítása</button>
+                        <button type="button" id="cancelProfileModification" class="hidden">
+                            Elvetés
+                        </button>
+                        <button type="button" id="saveProfileModification" class="hidden">
+                            Mentés
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="postsWrapper">
+                <div id="postTypeSelect">
+                    <div class="postSVGWrapper activeType" id="postsByUser">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-home"
+                        >
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                    </div>
+                    <div class="postSVGWrapper" id="likedPosts">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#314b49ff"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-thumbs-up"
+                        >
+                            <path
+                                d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"
+                            ></path>
+                        </svg>
+                    </div>
+                    <div class="postSVGWrapper" id="dislikedPosts">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#314b49ff"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-thumbs-down"
+                        >
+                            <path
+                                d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"
+                            ></path>
+                        </svg>
+                    </div>
+                    <div class="postSVGWrapper" id="savedPosts">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-star"
+                        >
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                            ></polygon>
+                        </svg>
+                    </div>
+                </div>
+                <div id="postsDiv">
+                    <div id="posts">
+                        <div class="postRow">
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder2.gif" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder2.gif" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder1.jpg" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img
+                                        src="../images/Screenshot 2026-03-10 162635.png"
+                                        class="postImg"
+                                    />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img
+                                        src="../images/Screenshot 2026-03-10 162635.png"
+                                        class="postImg"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="postRow">
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder2.gif" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder2.gif" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder1.jpg" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img
+                                        src="../images/Screenshot 2026-03-10 162635.png"
+                                        class="postImg"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="postRow">
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder2.gif" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder2.gif" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder1.jpg" class="postImg" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="postRow">
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder2.gif" class="postImg" />
+                                </div>
+                            </div>
+                            <div class="post">
+                                <div class="postImgWrapper">
+                                    <img src="../images/placeholder2.gif" class="postImg" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="nav">
+            <a href="/" class="navButton">Főoldal</a>
+            <a href="../html/map.html" class="navButton">Térkép</a>
+            <a href="profil.html" class="navButton" id="profilGomb">Profil</a>
+        </div>
+
+        <div id="openedPostModal">
+            <div id="closePost">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="feather feather-x"
+                >
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
+            <div id="openedPost">
+                <div id="postImages">
+                    <div id="backdropWrapper">
+                        <div id="previous"></div>
+                        <div id="slideshow">
+                            <img
+                                src="/uploads/1768924539207-olahbenjo.jpg"
+                                class="slideshowItem activeSlideshowItem"
+                            />
+                            <img
+                                src="/uploads/1770828759761-icebluebird-e1590394594905.jpg"
+                                class="slideshowItem"
+                            />
+                            <img src="/uploads/1770828710649-gazsi.png" class="slideshowItem" />
+                            <img src="/uploads/1770891275043-asd.png" class="slideshowItem" />
+                        </div>
+                        <div id="next">></div>
+                    </div>
+                </div>
+                <div id="postInfos">
+                    <div id="postUser">
+                        <div id="postPictureWrapper">
+                            <div id="postPictureBorder">
+                                <img
+                                    id="postUserPicture"
+                                    src="/profile_images/defaultProfile.svg"
+                                />
+                            </div>
+                        </div>
+                        <span id="postUsername">Default</span>
+                    </div>
+                    <div id="postTags">
+                        <span id="postTagsSpan">#Default #Placeholder</span>
+                    </div>
+                    <div id="postDescription">
+                        <span id="postDescriptionSpan"
+                            >Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio dolorum
+                            nostrum, rerum, saepe aspernatur accusantium natus delectus ducimus
+                            blanditiis labore sapiente enim exercitationem recusandae deserunt,
+                            reiciendis ab voluptatibus distinctio commodi.</span
+                        >
+                    </div>
+                    <div id="locationDateWrapper">
+                        <div id="postLocation">
+                            <span id="postLocationSpan">Budapest</span>
+                        </div>
+                        <div id="postDate">
+                            <span id="postDateSpan">2026.03.17</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
 </html>
