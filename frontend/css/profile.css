@@ -3,6 +3,7 @@ body {
     width: 100vw;
     height: 100vh;
     background-color: #98bc7f;
+    font-family: 'Josefin Sans', sans-serif;
 }
 
 @keyframes fadeInVertical {
@@ -61,6 +62,7 @@ body {
     color: #212e00;
     filter: brightness(100%);
     background-color: inherit;
+    border-right: 1px black solid;
 }
 
 .navButton:hover {
@@ -222,6 +224,7 @@ body {
     filter: brightness(90%);
     border: 0;
     transition: 0.2s;
+    font-size: larger;
 }
 
 #profileModify:hover {
@@ -565,4 +568,13 @@ body {
     #profileModifyDiv {
         flex: 2 2 0;
     }
+}
+
+#profilGomb{
+    background-color: #f0febe;
+    filter: brightness(90%);
+}
+
+.navbar{
+    border-right: 1px black solid;
 }
