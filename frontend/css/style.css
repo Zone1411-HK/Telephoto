@@ -201,10 +201,7 @@ form {
 }
 
 .rightNavBorder {
-    border-right: 1px solid darkslategray;
-    border-left: none;
-    border-top: none;
-    border-bottom: none;
+    border: 0px;
     border-bottom-right-radius: 0px;
     border-top-right-radius: 0px;
 }
@@ -328,4 +325,8 @@ form {
     opacity: 100% !important;
     background-color: rgb(220, 220, 220);
     border: rgb(200, 200, 200) 2px solid;
+}
+
+.navbar-brand{
+    border-right: 1px solid black;
 }
