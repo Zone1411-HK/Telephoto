@@ -6,38 +6,6 @@ body {
     font-family: 'Josefin Sans', sans-serif;
 }
 
-@keyframes fadeInVertical {
-    from {
-        opacity: 0;
-        transform: translateY(25%);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0%);
-    }
-}
-@keyframes fadeOutVertical {
-    from {
-        opacity: 1;
-        transform: translateY(0%);
-    }
-    to {
-        opacity: 0;
-        transform: translateY(25%);
-    }
-}
-
-@keyframes fadeInHorizontal {
-    from {
-        opacity: 0;
-        transform: translateX(25%);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0%);
-    }
-}
-
 @keyframes zoomPost {
     from {
         transform: scale(100%);
@@ -126,7 +94,7 @@ body {
     box-shadow: 0px 0px 8px 0px rgb(75, 75, 75);
     border-radius: 10px;
     position: relative;
-    animation: fadeInVertical 1s forwards;
+    animation: fadeInUp 1s forwards;
 }
 
 #profilePictureDiv {
@@ -304,7 +272,7 @@ body {
     background-color: inherit;
     /*padding: 10px;*/
     right: 0;
-    animation: fadeInHorizontal 1s forwards;
+    animation: fadeInLeft 1s forwards;
 }
 
 #postTypeSelect {

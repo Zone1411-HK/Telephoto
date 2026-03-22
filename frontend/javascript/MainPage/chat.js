@@ -1,11 +1,3 @@
-document.addEventListener('DOMContentLoaded', () => {
-    getChats();
-    document.getElementById('newChat').addEventListener('click', openNewChatWindow);
-    document.getElementById('newChatCancel').addEventListener('click', closeNewChatWindow);
-    document.getElementById('newChatCreate').addEventListener('click', createNewChat);
-    document.getElementById('newChatUserInput').addEventListener('input', searchUser);
-});
-
 class ChatData {
     constructor(id, name, pictureLink, lastMessage, userOfLastMessage) {
         this.id = id;
@@ -14,6 +6,13 @@ class ChatData {
         this.lastMessage = lastMessage;
         this.userOfLastMessage = userOfLastMessage;
     }
+}
+
+function chatAddEventListeners() {
+    document.getElementById('newChat').addEventListener('click', openNewChatWindow);
+    document.getElementById('newChatCancel').addEventListener('click', closeNewChatWindow);
+    document.getElementById('newChatCreate').addEventListener('click', createNewChat);
+    document.getElementById('newChatUserInput').addEventListener('input', searchUser);
 }
 
 async function getChats() {

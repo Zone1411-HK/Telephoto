@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     testing();
     postsByUser(document.getElementById('postsByUser'));
     profileInfos();
+    profileAddEventListeners();
     /*
     let posts = document.querySelectorAll('.post');
 
@@ -13,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(url);
         post.style.backgroundImage = url;
     }*/
+});
+
+function profileAddEventListeners() {
     document.getElementById('postsByUser').addEventListener('click', postsByUser);
     document.getElementById('likedPosts').addEventListener('click', likedPosts);
     document.getElementById('dislikedPosts').addEventListener('click', dislikedPosts);
@@ -21,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('next').addEventListener('click', nextSlide);
     document.getElementById('closePost').addEventListener('click', closePost);
     document.getElementById('profileModify').addEventListener('click', modifyProfile);
-});
+}
 
 async function postsByUser() {
     const { Status, posts } = await GetMethodFetch('/api/postsByUser');
@@ -235,7 +239,7 @@ function closeModal(e) {
 
     if (clickedOutside) {
         let post = document.getElementById('openedPost');
-        post.style.animation = 'fadeOutVertical 0.5s forwards';
+        post.style.animation = 'fadeOutDown 0.5s forwards';
 
         setTimeout(() => {
             modal.style.display = 'none';
@@ -247,7 +251,7 @@ function closePost() {
     let modal = document.getElementById('openedPostModal');
 
     let post = document.getElementById('openedPost');
-    post.style.animation = 'fadeOutVertical 0.5s forwards';
+    post.style.animation = 'fadeOutDown 0.5s forwards';
 
     setTimeout(() => {
         modal.style.display = 'none';

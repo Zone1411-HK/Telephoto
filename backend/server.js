@@ -35,6 +35,9 @@ router.get('/map', (request, response) => {
 router.get('/profile', (request, response) => {
     response.sendFile(path.join(__dirname, '../frontend/html/profil.html'));
 });
+router.get('/login', (request, response) => {
+    response.sendFile(path.join(__dirname, '../frontend/html/login.html'));
+});
 
 //!API endpoints
 app.use('/', router);

@@ -14,58 +14,83 @@
 .loginMain {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     justify-content: center;
     align-items: center;
-    padding-bottom: 5%;
     font-family: 'Josefin Sans', sans-serif;
 }
 
 .login {
     display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-left: 5%;
+    padding-right: 5%;
+    gap: 5%;
     width: 100%;
+    height: 100%;
     align-items: center;
     font-weight: 750 !important;
     font-family: 'Josefin Sans', sans-serif;
+    position: relative;
 }
 
 .loginDoboz {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex: 4 4 0;
 }
 
 .loginDoboz2 {
     display: flex;
+    position: relative;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    flex: 3 3 0;
+    bottom: 5%;
+    height: 50%;
 }
 
 .loginTitle {
     display: flex;
     justify-content: center;
-    margin-bottom: 5%;
-    font-size: xx-large !important;
+    height: 33%;
+}
+
+.loginTitle h1 {
+    font-size: 3vw !important;
     font-weight: 750 !important;
 }
 
 .loginSorok {
     display: flex;
     justify-content: space-between;
+    gap: 5%;
     margin: 1%;
     width: 100%;
+    flex: 1 1 0;
+}
+
+.loginSorok label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 2 2 0;
+}
+
+.inputMezo {
+    flex: 3 3 0;
 }
 
 #loginButton {
     position: relative;
     width: 50%;
-    height: 3.5vh;
+    height: 100%;
     border-radius: 5px;
     border-color: darkslategray;
     background-color: var(--LoginGomb);
-    margin-top: 4.2%;
     font-weight: bold;
 }
 
@@ -82,11 +107,14 @@ input[type='button'] {
 .loginBtn {
     display: flex;
     justify-content: center;
+    margin-top: 4.2%;
+    flex: 1 1 0;
 }
 
 .loginSorok label input {
     position: relative;
     width: 50%;
+    flex: 1 1 0;
 }
 
 .loginRegText {
@@ -115,4 +143,16 @@ input[type='button'] {
 
 .invisible {
     display: none;
+}
+
+#loginForm {
+    height: 67%;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 10%;
 }

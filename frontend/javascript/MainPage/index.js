@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    testing();
+    //testing();
+    isLoggedIn();
+
     document.getElementById('mapButton').addEventListener('click', () => {
         window.location.href = '/map';
     });
@@ -35,14 +37,12 @@ async function testing() {
 async function isLoggedIn() {
     try {
         const response = await GetMethodFetch('/api/sendUsername');
+        console.log(response);
         if (response.exists) {
-            document.getElementById('home').classList.remove('invisible');
-            document.getElementById('navbar').classList.remove('invisible');
-            document.getElementById('brandBar').classList.remove('invisible');
-
             getChats();
+            chatAddEventListeners();
         } else {
-            document.getElementById('login').classList.remove('invisible');
+            window.location.href = '/login';
         }
     } catch (error) {}
 }

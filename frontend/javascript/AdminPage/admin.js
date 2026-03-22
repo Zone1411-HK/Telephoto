@@ -12,7 +12,15 @@ document.addEventListener('DOMContentLoaded', () => {
     getProfiles();
     getPosts();
     getComments();
-    responsiveUsername();
+    //responsiveUsername();
+    adminAddEventListeners();
+    loadAnimation();
+});
+
+//! COMMENT
+//#region COMMENT
+
+function adminAddEventListeners() {
     const navButtons = document.getElementsByClassName('navButton');
     for (const navButton of navButtons) {
         navButton.addEventListener('click', navButtonClick);
@@ -57,10 +65,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('slideshowLeft').addEventListener('click', previousSlide);
     document.getElementById('slideshowRight').addEventListener('click', nextSlide);
-});
+}
 
-//! COMMENT
-//#region COMMENT
+function loadAnimation() {
+    let panels = document.querySelectorAll('.adminPanel');
+    for (let i = 0; i < panels.length; i++) {
+        setTimeout(() => {
+            panels[i].style.animation = 'fadeInLeft 1s forwards';
+            panels[i].style.display = 'block';
+        }, i * 250);
+    }
+}
 
 async function getComments() {
     try {

@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function testFunction() {
     const response = await PostMethodFetch('/api/saveUsername', {
-        username: 'test'
+        username: 'testasd'
     });
 }
 
