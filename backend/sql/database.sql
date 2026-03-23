@@ -139,4 +139,43 @@ BEFORE DELETE ON pictures
 FOR EACH ROW 
 INSERT INTO deleted_pictures(picture_id, post_id, picture_link, deleted_at)
 VALUES(OLD.picture_id, OLD.post_id, OLD.picture_link, NOW())
+
+
+
+CREATE TRIGGER delete_user_favorites
+BEFORE DELETE ON users
+FOR EACH ROW
+DELETE FROM favorites 
+WHERE favorites.user_id = OLD.user_id;
+
+CREATE TRIGGER delete_user_interactions
+BEFORE DELETE ON users
+FOR EACH ROW
+DELETE FROM interactions 
+WHERE interactions.user_id = OLD.user_id;
+
+CREATE TRIGGER delete_user_comments
+BEFORE DELETE ON users
+FOR EACH ROW
+DELETE FROM comments 
+WHERE comments.user_id = OLD.user_id;
+
+CREATE TRIGGER delete_user_posts
+BEFORE DELETE ON users
+FOR EACH ROW
+DELETE FROM posts 
+WHERE posts.user_id = OLD.user_id;
+
+CREATE TRIGGER delete_user_messages
+BEFORE DELETE ON users
+FOR EACH ROW
+DELETE FROM messages 
+WHERE (SELECT member_id FROM chat_members WHERE user_id = OLD.user_id) = messages.member_id;
+
+CREATE TRIGGER delete_user_member
+BEFORE DELETE ON users
+FOR EACH ROW
+DELETE FROM chat_members 
+WHERE chat_members.user_id = OLD.user_id;
+
 -- Táblák létrehozása vége
