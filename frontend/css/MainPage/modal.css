@@ -123,3 +123,15 @@
     margin-bottom: 0;
     height: 30px;
 }
+
+
+.zoomModal{
+    width: 1440px;
+    position: absolute;
+
+}
+.zoom-modal-body{
+    width: 1440px;
+    position: absolute;
+    right: 10px;
+}

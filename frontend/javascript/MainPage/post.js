@@ -1,17 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     //testFunction();
-    getTopPosts();
-    document.querySelectorAll('img').forEach(i => {
-  i.addEventListener('click', evt => {
-    if (i.classList.contains('zoomed'))
-      i.style.transform = ''
-    else {
-      const myScale = 500 / i.clientWidth
-      i.style.transform = `scale(${myScale})`
-    }
-    i.classList.toggle('zoomed')
-  })
-})
+    getTopPosts();    
+    document.getElementById("rendezesBtn").addEventListener('click', getPosts);
 });
 
 async function testFunction() {
@@ -36,6 +26,22 @@ function base(data, i) {
 
     return object;
 }
+const getPosts = async () => {
+    try {
+        let gomb = document.getElementById("rendezesBtn").dataset.rendez;
+        const response = await GetMethodFetch(`/api/${gomb}`);
+        
+        const data = response.results;
+        //console.log(response);
+
+        for (let i = 0; i < data.length; i++) {
+            const test = base(data, i);
+            hangPictures(test);
+        }
+    } catch (error) {
+        console.error('Hiba' + error);
+    }
+};
 
 const getTopPosts = async () => {
     try {
@@ -160,6 +166,9 @@ const hangPictures = async (test) => {
 
     p.innerHTML = test.description;
     img.src = '/uploads/' + test.pic;
+    img.addEventListener('click', function () {
+        zoom(this);
+    });
 
     const response2 = await PostMethodFetch('/api/commentInfos', { post_id: test.post_id });
     const data2 = response2.results;
@@ -227,6 +236,16 @@ const hangPictures = async (test) => {
 
     posts.appendChild(post);
 };
+
+async function zoom(kep){
+    const zoomModal = document.getElementById('zoomModal');
+    const zoompic = document.getElementById('zoomModalBody');
+    console.log(kep);    
+    const nagyKep = kep.cloneNode();
+    zoompic.replaceChildren(nagyKep);
+    const myModal = new bootstrap.Modal(zoomModal);
+    myModal.show();  
+}
 
 async function like(div, postId) {
     if (div.dataset.liked == 'true') {
