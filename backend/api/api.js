@@ -227,8 +227,8 @@ router.post('/uploadPost', postUpload.array('uploadFile'), async (request, respo
 router.post('/uploadComment', async (request, response) => {
     try {
         const { postId, commentContent } = request.body;
-        const username = await database.loadProfile(request.session.username);
-        const createComment = await database.createComment(username, postId, commentContent);
+        const userId = request.session.userId;
+        const createComment = await database.createComment(userId, postId, commentContent);
         response.status(200).json({
             status: 'Success',
             results: createComment
@@ -447,9 +447,9 @@ router.get('/savedPosts', async (request, response) => {
 });
 
 //! KOMMENT ADATOK
-router.post('/commentInfos', async (request, response) => {
-    const { post_id } = request.body;
-    const data = await database.loadComments(post_id);
+router.get('/commentInfos/:postId', async (request, response) => {
+    const postId = request.params.postId;
+    const data = await database.loadComments(postId);
 
     response.status(200).json({
         status: 'Success',

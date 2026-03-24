@@ -1,0 +1,28 @@
+.hidden {
+    display: none !important;
+}
+
+.closeButton {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    z-index: 102;
+    left: 20px;
+    top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    filter: brightness(100%);
+    transition: 0.2s;
+}
+.closeButton svg {
+    height: 100%;
+    width: 100%;
+    aspect-ratio: 1/1;
+    stroke: white;
+}
+
+.closeButton:hover {
+    filter: brightness(50%);
+}

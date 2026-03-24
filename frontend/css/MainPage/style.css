@@ -358,6 +358,11 @@ form {
     padding: 0;
     flex-basis: 0;
     flex-grow: 1;
+    padding: 2px 0 2px 0;
+}
+
+.interactionButton:hover {
+    background-color: gray;
 }
 
 .interactionButton svg {
@@ -450,7 +455,7 @@ form {
     border: none;
     opacity: 50%;
     z-index: 3;
-    width: 100%;
+    width: 100vw;
     margin: 0;
     bottom: 5px;
 }
@@ -538,7 +543,7 @@ form {
 
 .tableContainer {
     overflow: auto;
-    height: 200px;
+    height: 40%;
 }
 
 .commentsTable {
@@ -580,4 +585,9 @@ form {
 .comment {
     display: flex;
     align-content: center;
+}
+
+.postContent p {
+    height: 5%;
+    margin: 0;
 }

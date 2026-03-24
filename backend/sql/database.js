@@ -55,12 +55,11 @@ async function createPost(username, description, tags, location, latitude, longi
     }
 }
 ///////EZ új
-async function createComment(username, postId, commentContent) {
+async function createComment(userId, postId, commentContent) {
     try {
-        let userId = await getUserByUsername(username);
         const sql = 'INSERT INTO comments(user_id, post_id, comment_content) VALUES(?, ?, ?);';
-        const [rows] = await pool.execute(sql);
-        return [rows];
+        const [rows] = await pool.execute(sql, [userId, postId, commentContent]);
+        return rows;
     } catch (error) {
         console.error(error);
     }
@@ -186,12 +185,12 @@ async function loadProfile(username) {
 async function loadComments(postId) {
     try {
         const commentsSql = `
-        SELECT users.username, users.profile_picture_link, comments.comment_content 
+        SELECT users.username, users.profile_picture_link, comments.comment_content, comments.comment_date
         FROM comments 
         INNER JOIN users ON users.user_id = comments.user_id 
         INNER JOIN posts ON posts.post_id = comments.post_id 
-        WHERE comments.post_id = ${postId}`;
-        const [rows] = await pool.execute(commentsSql);
+        WHERE comments.post_id = ?`;
+        const [rows] = await pool.execute(commentsSql, [postId]);
         return rows;
     } catch (error) {
         console.error(error);
