@@ -159,8 +159,64 @@ async function topPosts() {
         LEFT JOIN interactions ON interactions.post_id = posts.post_id 
         LEFT JOIN pictures ON pictures.post_id = posts.post_id 
         GROUP BY posts.post_id
-        ORDER BY COUNT(interactions.upvote) - COUNT(interactions.downvote)`;
+        ORDER BY COUNT(interactions.upvote) - COUNT(interactions.downvote)
+        DESC`;
         const [rows] = await pool.execute(topPostsSql);
+        return rows;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function newPosts() {
+    try {
+        const newPostsSql = `
+        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link, pictures.picture_link 
+        FROM posts 
+        LEFT JOIN users ON users.user_id = posts.user_id 
+        LEFT JOIN interactions ON interactions.post_id = posts.post_id 
+        LEFT JOIN pictures ON pictures.post_id = posts.post_id 
+        GROUP BY posts.post_id
+        ORDER BY posts.creation_date
+        DESC`;
+        const [rows] = await pool.execute(newPostsSql);
+        return rows;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function oldPosts() {
+    try {
+        const newPostsSql = `
+        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link, pictures.picture_link 
+        FROM posts 
+        LEFT JOIN users ON users.user_id = posts.user_id 
+        LEFT JOIN interactions ON interactions.post_id = posts.post_id 
+        LEFT JOIN pictures ON pictures.post_id = posts.post_id 
+        GROUP BY posts.post_id
+        ORDER BY posts.creation_date
+        ASC`;
+        const [rows] = await pool.execute(oldPostsSql);
+        return rows;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function cityPosts(place) {
+    try {
+        const cityPostsSql = `
+        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link, pictures.picture_link 
+        FROM posts 
+        LEFT JOIN users ON users.user_id = posts.user_id 
+        LEFT JOIN interactions ON interactions.post_id = posts.post_id 
+        LEFT JOIN pictures ON pictures.post_id = posts.post_id 
+        WHERE posts.location LIKE '%?%'
+        GROUP BY posts.post_id
+        ORDER BY posts.creation_date
+        DESC`;
+        const [rows] = await pool.execute(cityPostsSql, [place]);
         return rows;
     } catch (error) {
         console.error(error);
@@ -904,5 +960,8 @@ module.exports = {
     isLiked,
     like,
     favoritePost,
-    isFavorited
+    isFavorited,
+    newPosts,
+    oldPosts,
+    cityPosts,
 };

@@ -361,6 +361,45 @@ router.get('/topPosts', async (request, response) => {
     }
 });
 
+router.get('/newPosts', async (request, response) => {
+    try {
+        const data = await database.newPosts();
+        //console.log('hiba ' + data);
+        response.status(200).json({
+            status: 'Success',
+            results: data
+        });
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+router.get('/oldPosts', async (request, response) => {
+    try {
+        const data = await database.oldPosts();
+        //console.log('hiba ' + data);
+        response.status(200).json({
+            status: 'Success',
+            results: data
+        });
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+router.get('/cityPosts', async (request, response) => {
+    try {
+        const data = await database.cityPosts();
+        //console.log('hiba ' + data);
+        response.status(200).json({
+            status: 'Success',
+            results: data
+        });
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 //! PROFIL ADATOK (nincs kész)
 router.get('/profileInfos', async (request, response) => {
     try {
