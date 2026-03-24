@@ -345,4 +345,24 @@
     #commentModalContentWrapper {
         width: 70vw;
     }
+
+    .commentWrapper {
+        gap: 5px;
+    }
+
+    .commentUsernameWrapper {
+        width: 25%;
+    }
+
+    .commentUsername {
+        font-size: 20px;
+    }
+
+    .commentContent {
+        font-size: 14px;
+    }
+
+    .commentContentWrapper {
+        width: 75%;
+    }
 }
