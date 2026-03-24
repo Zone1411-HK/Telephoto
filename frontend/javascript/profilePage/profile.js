@@ -521,6 +521,8 @@ async function doDelete() {
             const { userId } = await GetMethodFetch('/api/sendUserId');
             const { Status } = await PostMethodFetch('/api/deleteProfile', { userId: userId });
             if (Status == 'Success') {
+                await PostMethodFetch('/api/removeUserId');
+                await PostMethodFetch('/api/removeUsername');
                 window.location.href = '/login';
             } else {
                 alert('Valami hiba történt!');
