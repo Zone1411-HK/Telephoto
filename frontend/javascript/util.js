@@ -12,3 +12,10 @@ function date_yyyy_MM_dd(originDate) {
     }
     return `${year}-${month}-${day}`;
 }
+
+async function isLoggedIn() {
+    try {
+        const response = await GetMethodFetch('/api/sendUsername');
+        return response.exists;
+    } catch (error) {}
+}

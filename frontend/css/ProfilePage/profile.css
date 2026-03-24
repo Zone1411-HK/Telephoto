@@ -27,11 +27,12 @@ body {
 @keyframes changePostSelection {
     from {
         transform: scaleY(0.5);
-        transform: translateY(0.5);
+        transform: translateY(-10px);
         transform-origin: top center;
     }
     to {
         transform: scaleY(1);
+        transform: translateY(0);
     }
 }
 
@@ -180,10 +181,6 @@ body {
     text-overflow: ellipsis;
     overflow: hidden;
     margin: 0;
-}
-
-#profileNameDiv {
-    height: 3vh;
 }
 
 #profileNameDiv,
@@ -590,7 +587,8 @@ body {
 }
 
 #saveProfileModification,
-#cancelProfileModification {
+#cancelProfileModification,
+#deleteProfile {
     flex: 1 1 0;
     background-color: #f0febe;
     filter: brightness(90%);
@@ -604,9 +602,144 @@ body {
     filter: brightness(80%);
 }
 
+#deleteProfile {
+    background-color: rgb(246, 155, 155);
+}
+
+#deleteProfile:hover {
+    background-color: rgb(206, 115, 115);
+}
+
 .hidden {
     display: none !important;
 }
+
+.customModal {
+    transition: 0.25s;
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+    position: fixed;
+    z-index: 1000;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(20, 10, 10, 0.65);
+    top: 0;
+    padding-top: 10vh;
+}
+
+.customModalContent {
+    height: 45vh;
+    width: 50vw;
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.customModalHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 50vw;
+    height: 8vh;
+    background-color: rgb(130, 27, 27);
+    color: white;
+    font-variant: small-caps;
+}
+
+.customModalHeader h1 {
+    font-size: 5vh;
+
+    margin: 0;
+}
+
+.customModalBody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 4vh;
+    width: 50vw;
+    height: 37vh;
+    color: rgb(130, 27, 27);
+    font-variant: small-caps;
+    gap: 6vh;
+}
+
+.deleteWarning {
+    height: 10vh;
+    text-align: center;
+    color: rgb(130, 27, 27);
+    font-variant: small-caps;
+    font-size: 2.5vh;
+    margin: 0;
+}
+
+.deleteButtons {
+    width: 50vw;
+    height: 17vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.deleteBtn {
+    width: 8vw;
+    height: 6vh;
+    font-size: 2.5vh;
+    font-variant: small-caps;
+    border-radius: 10px;
+    transition: 0.25s;
+}
+
+.deleteConfirmBtn {
+    background-color: rgb(144, 36, 36);
+    border: none;
+    color: white;
+}
+
+.deleteConfirmBtn:hover {
+    background-color: rgb(116, 25, 25);
+}
+
+.deleteCancelBtn {
+    background-color: inherit;
+    border: 2px solid gray;
+    color: gray;
+}
+
+.deleteCancelBtn:hover {
+    background-color: rgb(200, 200, 200);
+    color: rgb(75, 75, 75);
+}
+
+.postDeletionDiv {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    padding: 5px;
+    right: 20px;
+    bottom: 5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+
+.postDeletionDiv svg {
+    height: 100%;
+    width: 100%;
+    aspect-ratio: 1/1;
+    stroke: rgb(116, 5, 5);
+}
+
+.postDeletionDiv:hover {
+    background-color: rgb(246, 155, 155);
+}
+
 @media (max-width: 768px) {
     #root {
         flex-direction: column;

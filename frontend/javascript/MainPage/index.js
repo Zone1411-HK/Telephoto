@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     //testing();
-    isLoggedIn();
-
+    start();
     document.getElementById('mapButton').addEventListener('click', () => {
         window.location.href = '/map';
     });
@@ -29,20 +28,17 @@ document.addEventListener('DOMContentLoaded', () => {
     //isLoggedIn();
 });
 
+async function start() {
+    if (await isLoggedIn()) {
+        getChats();
+        chatAddEventListeners();
+    } else {
+        window.location.href = '/login';
+    }
+}
+
 async function testing() {
     const response = await PostMethodFetch('/api/saveUsername', {
         username: 'testasd'
     });
-}
-async function isLoggedIn() {
-    try {
-        const response = await GetMethodFetch('/api/sendUsername');
-        console.log(response);
-        if (response.exists) {
-            getChats();
-            chatAddEventListeners();
-        } else {
-            window.location.href = '/login';
-        }
-    } catch (error) {}
 }
