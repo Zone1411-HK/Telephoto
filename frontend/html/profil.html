@@ -33,7 +33,11 @@
                     <div id="profilePictureBackground">
                         <div id="profilePictureWrapper">
                             <div id="profilePictureBorder">
-                                <img id="profilePicture" />
+                                <img
+                                    id="profilePicture"
+                                    src="/profile_images/defaultProfile.svg"
+                                    alt="Profil Kép"
+                                />
                                 <label class="hidden" id="profilePictureUploadLabel">
                                     <svg
                                         version="1.1"
@@ -117,6 +121,9 @@
                         <button type="button" id="cancelProfileModification" class="hidden">
                             Elvetés
                         </button>
+                        <button type="button" id="deleteProfile" class="hidden">
+                            Profil Törlése
+                        </button>
                         <button type="button" id="saveProfileModification" class="hidden">
                             Mentés
                         </button>
@@ -198,95 +205,7 @@
                     </div>
                 </div>
                 <div id="postsDiv">
-                    <div id="posts">
-                        <div class="postRow">
-                            <div class="post">
-                                <div class="postImgWrapper">
-                                    <img src="../images/placeholder2.gif" class="postImg" />
-                                </div>
-                            </div>
-                            <div class="post">
-                                <div class="postImgWrapper">
-                                    <img src="../images/placeholder2.gif" class="postImg" />
-                                </div>
-                            </div>
-                            <div class="post">
-                                <div class="postImgWrapper">
-                                    <img src="../images/placeholder1.jpg" class="postImg" />
-                                </div>
-                            </div>
-                            <div class="post">
-                                <div class="postImgWrapper">
-                                    <img
-                                        src="../images/Screenshot 2026-03-10 162635.png"
-                                        class="postImg"
-                                    />
-                                </div>
-                            </div>
-                            <div class="post">
-                                <div class="postImgWrapper">
-                                    <img
-                                        src="../images/Screenshot 2026-03-10 162635.png"
-                                        class="postImg"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="postRow">
-                            <div class="post">
-                                <div class="postImgWrapper">
-                                    <img src="../images/placeholder2.gif" class="postImg" />
-                                </div>
-                            </div>
-                            <div class="post">
-                                <div class="postImgWrapper">
-                                    <img src="../images/placeholder2.gif" class="postImg" />
-                                </div>
-                            </div>
-                            <div class="post">
-                                <div class="postImgWrapper">
-                                    <img src="../images/placeholder1.jpg" class="postImg" />
-                                </div>
-                            </div>
-                            <div class="post">
-                                <div class="postImgWrapper">
-                                    <img
-                                        src="../images/Screenshot 2026-03-10 162635.png"
-                                        class="postImg"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="postRow">
-                            <div class="post">
-                                <div class="postImgWrapper">
-                                    <img src="../images/placeholder2.gif" class="postImg" />
-                                </div>
-                            </div>
-                            <div class="post">
-                                <div class="postImgWrapper">
-                                    <img src="../images/placeholder2.gif" class="postImg" />
-                                </div>
-                            </div>
-                            <div class="post">
-                                <div class="postImgWrapper">
-                                    <img src="../images/placeholder1.jpg" class="postImg" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="postRow">
-                            <div class="post">
-                                <div class="postImgWrapper">
-                                    <img src="../images/placeholder2.gif" class="postImg" />
-                                </div>
-                            </div>
-                            <div class="post">
-                                <div class="postImgWrapper">
-                                    <img src="../images/placeholder2.gif" class="postImg" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="posts"></div>
                 </div>
             </div>
         </div>
@@ -317,19 +236,8 @@
             <div id="openedPost">
                 <div id="postImages">
                     <div id="backdropWrapper">
-                        <div id="previous"><</div>
-                        <div id="slideshow">
-                            <img
-                                src="/uploads/1768924539207-olahbenjo.jpg"
-                                class="slideshowItem activeSlideshowItem"
-                            />
-                            <img
-                                src="/uploads/1770828759761-icebluebird-e1590394594905.jpg"
-                                class="slideshowItem"
-                            />
-                            <img src="/uploads/1770828710649-gazsi.png" class="slideshowItem" />
-                            <img src="/uploads/1770891275043-asd.png" class="slideshowItem" />
-                        </div>
+                        <div id="previous">&lt;</div>
+                        <div id="slideshow"></div>
                         <div id="next">></div>
                     </div>
                 </div>
@@ -340,6 +248,7 @@
                                 <img
                                     id="postUserPicture"
                                     src="/profile_images/defaultProfile.svg"
+                                    alt="Profil Kép"
                                 />
                             </div>
                         </div>
@@ -363,6 +272,34 @@
                         <div id="postDate">
                             <span id="postDateSpan">2026.03.17</span>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="deleteConfirmModal" class="customModal">
+            <div id="deleteModalContent" class="customModalContent">
+                <div class="customModalHeader">
+                    <h1>vigyázat</h1>
+                </div>
+                <div class="customModalBody">
+                    <p class="deleteWarning">
+                        Biztosan szeretné végrehajtani ezt a műveletet?<br />Ez a művelet
+                        visszafordíthatatlan
+                    </p>
+                    <div class="deleteButtons">
+                        <input
+                            type="button"
+                            value="mégse"
+                            class="deleteBtn deleteCancelBtn"
+                            id="deleteCancel"
+                        />
+                        <input
+                            type="button"
+                            value="tovább"
+                            class="deleteBtn deleteConfirmBtn"
+                            id="deleteConfirm"
+                        />
                     </div>
                 </div>
             </div>

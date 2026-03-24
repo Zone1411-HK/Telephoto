@@ -455,7 +455,6 @@ tr:hover td {
     word-wrap: break-word;
     text-overflow: ellipsis;
     overflow: hidden;
-    line-clamp: 2;
 
     font-size: 1.25vh;
 }
@@ -800,7 +799,7 @@ tr:hover td {
 
 .deleteButtons {
     width: 50vw;
-    height: 17 vh;
+    height: 17vh;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;

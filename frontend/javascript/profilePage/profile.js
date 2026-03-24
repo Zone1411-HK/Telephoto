@@ -1,20 +1,18 @@
 const socket = io();
 document.addEventListener('DOMContentLoaded', () => {
-    testing();
-    postsByUser(document.getElementById('postsByUser'));
-    profileInfos();
-    profileAddEventListeners();
-    /*
-    let posts = document.querySelectorAll('.post');
-
-    for (let post of posts) {
-        let src = post.children[0].children[0].src;
-        src = '../' + src.split('3000/')[1];
-        let url = "url(\'" + src + "')";
-        console.log(url);
-        post.style.backgroundImage = url;
-    }*/
+    start();
 });
+
+async function start() {
+    //testing();
+    if (await isLoggedIn()) {
+        postsByUser(document.getElementById('postsByUser'));
+        profileInfos();
+        profileAddEventListeners();
+    } else {
+        window.location.href = '/login';
+    }
+}
 
 function profileAddEventListeners() {
     document.getElementById('postsByUser').addEventListener('click', postsByUser);
@@ -25,12 +23,14 @@ function profileAddEventListeners() {
     document.getElementById('next').addEventListener('click', nextSlide);
     document.getElementById('closePost').addEventListener('click', closePost);
     document.getElementById('profileModify').addEventListener('click', modifyProfile);
+    document.getElementById('deleteCancel').addEventListener('click', hideDeleteModal);
+    document.getElementById('deleteConfirm').addEventListener('click', doDelete);
 }
 
 async function postsByUser() {
     const { Status, posts } = await GetMethodFetch('/api/postsByUser');
     if (Status == 'Success') {
-        generatePosts(posts);
+        generatePosts(posts, true);
         try {
             makeTypeActive(this);
         } catch (error) {
@@ -43,7 +43,7 @@ async function postsByUser() {
 async function likedPosts() {
     const { Status, posts } = await GetMethodFetch('/api/likedPosts');
     if (Status == 'Success') {
-        generatePosts(posts);
+        generatePosts(posts, false);
         makeTypeActive(this);
         console.log('Posztok sikeresen betöltve');
     }
@@ -52,7 +52,7 @@ async function likedPosts() {
 async function dislikedPosts() {
     const { Status, posts } = await GetMethodFetch('/api/dislikedPosts');
     if (Status == 'Success') {
-        generatePosts(posts);
+        generatePosts(posts, false);
         makeTypeActive(this);
         console.log('Posztok sikeresen betöltve');
     }
@@ -61,33 +61,67 @@ async function dislikedPosts() {
 async function savedPosts() {
     const { Status, posts } = await GetMethodFetch('/api/savedPosts');
     if (Status == 'Success') {
-        generatePosts(posts);
+        generatePosts(posts, false);
         makeTypeActive(this);
         console.log('Posztok sikeresen betöltve');
     }
 }
 
-function generatePosts(posts) {
-    const len = posts.length;
-    let finalRow;
-    if (len % 3 == 0) {
-        finalRow = 3;
-    } else if (len % 3 == 2) {
-        finalRow = 2;
+function generatePosts(posts, canDeletePost) {
+    if (canDeletePost) {
+        let postDeletionDiv = document.createElement('div');
+        postDeletionDiv.classList.add('postDeletionDiv');
+        postDeletionDiv.innerHTML = `
+        <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="feather feather-trash-2">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+        </svg>`;
+        postDeletionDiv.addEventListener('click', showDeleteModalPost);
+        document.getElementById('postInfos').appendChild(postDeletionDiv);
     } else {
-        finalRow = 1;
+        const divs = document.querySelectorAll('.postDeletionDiv');
+        if (divs.length != 0) {
+            for (const div of divs) {
+                div.remove();
+            }
+        }
     }
+
+    let postArr = [];
+    for (let i = 0; i < posts.length; i += 3) {
+        let tempArr = [];
+        let j = 0;
+        while (j < 3 && j + i != posts.length) {
+            tempArr.push(posts[i + j]);
+            j++;
+        }
+        postArr.push(tempArr);
+    }
+
     const postsDiv = document.getElementById('posts');
     postsDiv.replaceChildren();
 
-    for (let i = 0; i < len / 3; i++) {
+    for (let arrayRow of postArr) {
         let row = document.createElement('div');
         row.classList.add('postRow');
-        for (let j = i * 3; j < i * 3 + finalRow; j++) {
+
+        for (let arrayValue of arrayRow) {
             let post = document.createElement('div');
             let url = '../images/placeholder1.jpg';
-            if (posts[j].pictures.length != 0) {
-                url = '/uploads/' + posts[j].pictures[0].picture_link;
+            if (arrayValue.pictures.length != 0) {
+                url = '/uploads/' + arrayValue.pictures[0].picture_link;
             }
 
             let format = url.split('.')[1];
@@ -118,11 +152,12 @@ function generatePosts(posts) {
             postImgWrapper.appendChild(content);
             post.appendChild(postImgWrapper);
 
-            post.dataset.postId = posts[j].post_id;
+            post.dataset.postId = arrayValue.post_id;
             post.addEventListener('click', openPost);
 
             row.appendChild(post);
         }
+
         postsDiv.appendChild(row);
     }
 }
@@ -165,8 +200,10 @@ async function profileInfos() {
     }
 }
 
+let openedPostId;
+
 async function openPost() {
-    let postId = this.dataset.postId;
+    openedPostId = this.dataset.postId;
     let modal = document.getElementById('openedPostModal');
     let post = document.getElementById('openedPost');
 
@@ -174,9 +211,9 @@ async function openPost() {
     modal.addEventListener('click', closeModal);
 
     modal.style.display = 'flex';
-    post.style.animation = 'fadeInVertical 0.5s forwards';
+    post.style.animation = 'fadeInUp 0.5s forwards';
 
-    const { Status, Infos } = await GetMethodFetch('/api/postInfos/' + postId);
+    const { Status, Infos } = await GetMethodFetch('/api/postInfos/' + openedPostId);
     if (Status == 'Success') {
         console.log(Infos);
         generateSlideshow(Infos.pictureInfos);
@@ -212,6 +249,7 @@ function generateSlideshow(contentArray) {
             media.src = '/uploads/' + content;
             media.alt = '/uploads/' + content;
             media.dataset.type = 'image';
+            console.log(content);
             background.style.backgroundImage = `url("/uploads/${content}")`;
         }
 
@@ -320,6 +358,10 @@ function modifyProfile() {
     document
         .getElementById('saveProfileModification')
         .addEventListener('click', saveProfileChanges);
+
+    document.getElementById('deleteProfile').classList.remove('hidden');
+    document.getElementById('deleteProfile').addEventListener('click', showDeleteModalProfile);
+
     document.getElementById('cancelProfileModification').classList.remove('hidden');
     document
         .getElementById('cancelProfileModification')
@@ -390,6 +432,7 @@ async function saveProfileChanges() {
     pictureEl.classList.remove('hidden');
 
     name.classList.remove('modifyData');
+    name.contentEditable = false;
 
     bio.disabled = true;
     bio.parentNode.classList.remove('modifyData');
@@ -408,6 +451,7 @@ function cancelProfileChanges() {
     let name = document.getElementById('profileName');
     name.innerText = usernameBefore;
     name.classList.remove('modifyData');
+    name.contentEditable = false;
 
     let bio = document.getElementById('profileBiography');
     bio.value = biographyBefore;
@@ -429,5 +473,62 @@ async function UploadPostMethod(url, data) {
         return await response.json();
     } catch (error) {
         throw new Error(`POST hiba: ${error.message}`);
+    }
+}
+
+function showDeleteModal() {
+    document.getElementById('deleteConfirmModal').style.display = 'flex';
+    document.getElementById('deleteModalContent').style.animation = 'fadeInUp 1s forwards';
+}
+
+let deletionType;
+
+function showDeleteModalPost() {
+    deletionType = 'Post';
+    showDeleteModal();
+}
+
+function showDeleteModalProfile() {
+    deletionType = 'Profile';
+    showDeleteModal();
+}
+
+function hideDeleteModal() {
+    deletionType = '';
+    document.getElementById('deleteModalContent').style.animation = 'fadeOutDown 0.5s forwards';
+    setTimeout(() => {
+        document.getElementById('deleteConfirmModal').style.display = 'none';
+    }, 500);
+}
+
+async function doDelete() {
+    console.log(deletionType);
+    if (deletionType == 'Post') {
+        try {
+            const { Status } = await PostMethodFetch('/api/deletePost', { postId: openedPostId });
+            if (Status == 'Success') {
+                hideDeleteModal();
+                closePost();
+                postsByUser();
+            } else {
+                alert('Valami hiba történt!');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    } else if (deletionType == 'Profile') {
+        try {
+            const { userId } = await GetMethodFetch('/api/sendUserId');
+            const { Status } = await PostMethodFetch('/api/deleteProfile', { userId: userId });
+            if (Status == 'Success') {
+                window.location.href = '/login';
+            } else {
+                alert('Valami hiba történt!');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    } else {
+        alert('Valami hiba történt!');
     }
 }

@@ -381,7 +381,7 @@ router.get('/postsByUser', async (request, response) => {
     try {
         const username = request.session.username;
         const userPosts = await database.userPosted(username);
-
+        console.log(userPosts);
         response.status(200).json({
             Status: 'Success',
             posts: userPosts

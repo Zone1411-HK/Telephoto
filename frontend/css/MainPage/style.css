@@ -48,7 +48,7 @@ body {
     height: 100vh;
     width: 100vw;
     font-family: 'Josefin Sans', sans-serif;
-    font-optical-sizing: auto;
+    /*font-optical-sizing: auto;*/
     font-weight: 650;
     font-style: normal;
     font-size: larger;
@@ -443,7 +443,7 @@ form {
 .ropeTexture {
     position: relative;
     background-image: url('/images/preview.jpg');
-    background-position: fixed;
+    background-position: center center;
     background-size: 15px 15px;
     height: 5px;
     min-height: 5px;

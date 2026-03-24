@@ -98,7 +98,7 @@
 .modal-body {
     background-image: url('/images/leather.png');
     background-color: black;
-    background-position: fixed;
+    background-position: center center;
     background-size: 300px 300px;
 }
 
@@ -109,11 +109,7 @@
 }
 
 #uploadModal {
-    box-shadow:
-        0,
-        0,
-        500px,
-        500px rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 500px 500px rgba(255, 255, 255, 0.7);
 }
 
 .tempSerialNumber {
