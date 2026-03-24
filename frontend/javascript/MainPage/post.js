@@ -55,7 +55,7 @@ const getTopPosts = async () => {
 };
 
 const hangPictures = async (test) => {
-    let posts = document.getElementById('posts');
+    let posts = document.getElementById('posts-container');
     let post = document.createElement('div');
     post.classList.add('post');
 
@@ -196,6 +196,23 @@ const hangPictures = async (test) => {
     post.appendChild(clip);
     post.appendChild(postcontent);
     post.dataset.postId = test.post_id;
+
+    const options = {
+        root: posts,
+        threshold: 0
+    };
+
+    const callback = (entries) => {
+        entries.forEach((element) => {
+            if (element.isIntersecting) {
+                let postContent = element.target.children[2];
+                postContent.style.animation = 'fadeInUp 0.5s forwards';
+            }
+        });
+    };
+    const observer = new IntersectionObserver(callback, options);
+
+    observer.observe(post);
 
     posts.appendChild(post);
 };

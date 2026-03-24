@@ -119,15 +119,6 @@ form {
         border: 2px solid var(--invalidRed);
     }
 }
-.posts-container {
-    display: flex;
-    flex-direction: column;
-    overflow-x: scroll;
-    width: 80vw;
-    height: 100%;
-    scrollbar-width: none;
-    scroll-behavior: smooth;
-}
 
 @keyframes openChat {
     0% {
@@ -409,12 +400,16 @@ form {
 
 .posts-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     overflow-x: scroll;
     width: 80vw;
     height: 100%;
+    gap: 10vw;
+    padding-left: 12.5vw;
+    padding-right: 5vw;
     scrollbar-width: none;
     scroll-behavior: smooth;
+    margin-top: 1vh;
 }
 
 #posts {
@@ -490,7 +485,7 @@ form {
     z-index: 100;
     background-color: white;
     padding: 25px;
-    animation: fadeInUp 1s forwards;
+    /*animation: fadeInUp 1s forwards;*/
     box-shadow: 0px 0px 15px 15px #350000;
 }
 

@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    var item = document.getElementById('posts');
+    var item = document.getElementById('posts-container');
     item.addEventListener('wheel', function (e) {
         if (e.deltaY > 0) {
             item.scrollLeft += 500;
