@@ -1,8 +1,5 @@
 <h1 align="center">TEENDŐK</h1>
 <ul>
-   <li>Kommentek megnyitása</li>
-   <li>Új komment létrehozása</li>
-   <li>Profil felületen posztok megnyitása</li>
    <li>Profil felület dizájn</li>
    <li>Térkép felületen egyedi pin-ek a posztokhoz</li>
    <li>Térkép felület csiszolása</li>
