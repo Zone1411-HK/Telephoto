@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     //testFunction();
-    getTopPosts();    
-    document.getElementById("rendezesBtn").addEventListener('click', getPosts);
+    getTopPosts();
+    //document.getElementById("rendezesBtn").addEventListener('click', getPosts);
 });
 
 async function testFunction() {
@@ -28,9 +28,9 @@ function base(data, i) {
 }
 const getPosts = async () => {
     try {
-        let gomb = document.getElementById("rendezesBtn").dataset.rendez;
+        let gomb = document.getElementById('rendezesBtn').dataset.rendez;
         const response = await GetMethodFetch(`/api/${gomb}`);
-        
+
         const data = response.results;
         //console.log(response);
 
@@ -237,14 +237,14 @@ const hangPictures = async (test) => {
     posts.appendChild(post);
 };
 
-async function zoom(kep){
+async function zoom(kep) {
     const zoomModal = document.getElementById('zoomModal');
+    zoomModal.classList.remove('hidden');
     const zoompic = document.getElementById('zoomModalBody');
-    console.log(kep);    
+    console.log(kep);
     const nagyKep = kep.cloneNode();
+    nagyKep.classList.add('zoomImg');
     zoompic.replaceChildren(nagyKep);
-    const myModal = new bootstrap.Modal(zoomModal);
-    myModal.show();  
 }
 
 async function like(div, postId) {
