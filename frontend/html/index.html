@@ -38,80 +38,68 @@
         />
     </head>
     <body>
-        <div class="container-fluid p-0">
-            <div class="brandBar" id="brandBar">
-                <h1 id="brandText">Telephoto</h1>
-            </div>
+        <div id="root">
             <!--? Ha dolgoztok rajta nyugodtan kivehetitek az invisible-t csak zavaró volt, hogy minden látszott-->
+            <!--
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a
+                            class="nav-link dropdown-toggle"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            id="lenyitoFul"
+                        >
+                            Népszerű
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item"
+                                    ><input type="button" id="today" value="Ma"
+                                /></a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"
+                                    ><input type="button" id="week" value="A Héten"
+                                /></a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"
+                                    ><input type="button" id="month" value="A Hónapban"
+                                /></a>
+                            </li>
+                        </ul>
+                    </li>
 
-            <!--/*
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item dropdown">
-                            <a
-                                class="nav-link dropdown-toggle"
-                                role="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                                id="lenyitoFul"
-                            >
-                                Népszerű
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item"
-                                        ><input type="button" id="today" value="Ma"
-                                    /></a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item"
-                                        ><input type="button" id="week" value="A Héten"
-                                    /></a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item"
-                                        ><input type="button" id="month" value="A Hónapban"
-                                    /></a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                                ><input type="button" id="top" value="Toplistás"
-                            /></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link"><input type="button" id="new" value="Újak" /></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link"><input type="button" id="near" value="Közeli" /></a>
-                        </li>
-                    </ul>
-                </div>-->
+                    <li class="nav-item">
+                        <a class="nav-link"><input type="button" id="top" value="Toplistás" /></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"><input type="button" id="new" value="Újak" /></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"><input type="button" id="near" value="Közeli" /></a>
+                    </li>
+                </ul>
+            </div>
+            -->
 
             <div class="home" id="home">
                 <div class="chat-and-sort">
+                    <div id="titleWrapper">
+                        <h1 id="title">Telephoto</h1>
+                    </div>
                     <div id="rendezesContainer">
                         <div id="rendezesTrending">
                             <h2 id="trendingTitle">Trending</h2>
-                            <input class="trendingButton" type="button" value="Ma" />
-                            <input class="trendingButton" type="button" value="A héten" />
-                            <input class="trendingButton" type="button" value="A hónapban" />
-                            <input class="trendingButton" type="button" value="Idén" />
-                            <input class="trendingButton" type="button" value="Bármikor" />
+                            <div id="rendezesButtonWrapper">
+                                <input class="trendingButton" type="button" value="Ma" />
+                                <input class="trendingButton" type="button" value="A héten" />
+                                <input class="trendingButton" type="button" value="A hónapban" />
+                                <input class="trendingButton" type="button" value="Idén" />
+                                <input class="trendingButton" type="button" value="Bármikor" />
+                            </div>
                         </div>
                         <div id="rendezesEgyeb">
                             <input class="egyebButton" type="button" value="📍Budapest" />
@@ -125,242 +113,46 @@
                                 <img src="/images/plus-circle(2).svg" alt="Új chat" />
                             </button>
                         </div>
-                        <div id="existingChats">
-                            <!-- TEMPLATE TESZTELÉSHEZ
-                            <div class="chat">
-                                <div class="chatImgDiv">
-                                    <div class="chatImgBorder">
-                                        <img class="chatImg" src="/images/placeholder2.gif" />
-                                    </div>
-                                </div>
-                                <div class="chatTexts">
-                                    <h3 class="chatName">Name</h3>
-                                    <p class="lastText">
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                        Natus, ut temporibus tempore sit iste similique velit quam
-                                        accusantium dolor dolorum aliquid! Officia recusandae optio
-                                        eaque sequi libero ea. Optio, nostrum.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="chat">
-                                <div class="chatImgDiv">
-                                    <div class="chatImgBorder">
-                                        <img class="chatImg" src="/images/placeholder2.gif" />
-                                    </div>
-                                </div>
-                                <div class="chatTexts">
-                                    <h3 class="chatName">Name</h3>
-                                    <p class="lastText">
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                        Natus, ut temporibus tempore sit iste similique velit quam
-                                        accusantium dolor dolorum aliquid! Officia recusandae optio
-                                        eaque sequi libero ea. Optio, nostrum.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="chat">
-                                <div class="chatImgDiv">
-                                    <div class="chatImgBorder">
-                                        <img class="chatImg" src="/images/placeholder2.gif" />
-                                    </div>
-                                </div>
-                                <div class="chatTexts">
-                                    <h3 class="chatName">Name</h3>
-                                    <p class="lastText">
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                        Natus, ut temporibus tempore sit iste similique velit quam
-                                        accusantium dolor dolorum aliquid! Officia recusandae optio
-                                        eaque sequi libero ea. Optio, nostrum.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="chat">
-                                <div class="chatImgDiv">
-                                    <div class="chatImgBorder">
-                                        <img class="chatImg" src="/images/placeholder2.gif" />
-                                    </div>
-                                </div>
-                                <div class="chatTexts">
-                                    <h3 class="chatName">Name</h3>
-                                    <p class="lastText">
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                        Natus, ut temporibus tempore sit iste similique velit quam
-                                        accusantium dolor dolorum aliquid! Officia recusandae optio
-                                        eaque sequi libero ea. Optio, nostrum.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="chat">
-                                <div class="chatImgDiv">
-                                    <div class="chatImgBorder">
-                                        <img class="chatImg" src="/images/placeholder2.gif" />
-                                    </div>
-                                </div>
-                                <div class="chatTexts">
-                                    <h3 class="chatName">Name</h3>
-                                    <p class="lastText">
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                        Natus, ut temporibus tempore sit iste similique velit quam
-                                        accusantium dolor dolorum aliquid! Officia recusandae optio
-                                        eaque sequi libero ea. Optio, nostrum.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="chat">
-                                <div class="chatImgDiv">
-                                    <div class="chatImgBorder">
-                                        <img class="chatImg" src="/images/placeholder2.gif" />
-                                    </div>
-                                </div>
-                                <div class="chatTexts">
-                                    <h3 class="chatName">Name</h3>
-                                    <p class="lastText">
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                        Natus, ut temporibus tempore sit iste similique velit quam
-                                        accusantium dolor dolorum aliquid! Officia recusandae optio
-                                        eaque sequi libero ea. Optio, nostrum.
-                                    </p>
-                                </div>
-                            </div>
-                        --></div>
+                        <div id="existingChats"></div>
                     </div>
                     <div id="openedChatWrapper" class="invisible">
                         <div id="openedChat"></div>
                     </div>
                 </div>
                 <div class="posts-container" id="posts-container">
-                    <!--div id="ropeDiv">
-                        <hr id="rope" />
-                        <hr id="ropeTexture" />
-                    </!--div>-->
-                    <!--
-                        <div class="post">
-                            <div class="ropeDiv">
-                                <hr class="rope" />
-                                <hr class="ropeTexture" />
-                            </div>
-                            <div class="clip">
-                                <div class="imgClip"></div>
-                                <div class="imgClipTexture"></div>
-                            </div>
-                            <div class="postContent">
-                                <div class="imgDiv">
-                                    <img src="/images/placeholder1.jpg" />
-                                </div>
-                                <p>asd</p>
-                                <div class="tableContainer">
-                                    <table class="commentsTable">
-                                        <tbody class="tBody">
-                                            <tr class="tRow">
-                                                <td class="commentingUserPic">
-                                                    <img
-                                                        class="commentingUserImg"
-                                                        src="/images/placeholder1.jpg"
-                                                    />
-                                                    <span class="commentingUser">Kommentelő</span>
-                                                </td>
-                                                <td class="comment">Komment</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="post">
-                            <div class="ropeDiv">
-                                <hr class="rope" />
-                                <hr class="ropeTexture" />
-                            </div>
-                            <div class="clip">
-                                <div class="imgClip"></div>
-                                <div class="imgClipTexture"></div>
-                            </div>
-                            <div class="postContent">
-                                <div class="imgDiv">
-                                    <img src="/images/placeholder1.jpg" />
-                                </div>
-                                <p>asd</p>
-                            </div>
-                        </div>
-                        <div class="post">
-                            <div class="ropeDiv">
-                                <hr class="rope" />
-                                <hr class="ropeTexture" />
-                            </div>
-                            <div class="clip">
-                                <div class="imgClip"></div>
-                                <div class="imgClipTexture"></div>
-                            </div>
-                            <div class="postContent">
-                                <div class="imgDiv">
-                                    <img src="/images/placeholder1.jpg" />
-                                </div>
-                                <p>asd</p>
-                            </div>
-                        </div>
-                        <div class="post">
-                            <div class="ropeDiv">
-                                <hr class="rope" />
-                                <hr class="ropeTexture" />
-                            </div>
-                            <div class="clip">
-                                <div class="imgClip"></div>
-                                <div class="imgClipTexture"></div>
-                            </div>
-                            <div class="postContent">
-                                <div class="imgDiv">
-                                    <img src="/images/placeholder1.jpg" />
-                                </div>
-                                <p>asd</p>
-                            </div>
-                        </div>
-                    -->
                 </div>
             </div>
-            <!-- Ez mi ez?
-            <div class="personal">
-            </div>
-            -->
+                    <nav class="navbar navbar-expand-lg" id="navbar">
+            <div class="container-fluid p-0" id="navBarColor">
+                <a class="navbar-brand m-0"
+                    ><input
+                        type="button"
+                        id="homepage"
+                        value="Főoldal"
+                        class="navBarButton rightNavBorder"
+                /></a>
 
-            <div class="map invisible">
-                <div id="map"></div>
-                <div class="row">
-                    <div class="col-12"></div>
-                </div>
+                <a class="navbar-brand m-0"
+                    ><input
+                        type="button"
+                        id="mapButton"
+                        value="Térkép"
+                        class="navBarButton rightNavBorder"
+                /></a>
+                <a class="navbar-brand m-0"
+                    ><input
+                        type="button"
+                        id="postButton"
+                        value="Posztolás"
+                        class="navBarButton rightNavBorder"
+                        data-bs-toggle="modal"
+                        data-bs-target="#uploadModal"
+                /></a>
+                <a class="navbar-brand m-0"
+                    ><input type="button" id="profile" value="Profil" class="navBarButton noBorder"
+                /></a>
             </div>
-
-            <div class="profile invisible">
-                <div class="row profileBase">
-                    <div class="col-md-4 adatok roll">
-                        <div class="col-md-8">
-                            <h2>Név</h2>
-                            <h2>Hely</h2>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="button" id="create" value="Új poszt" />
-                            <input type="button" id="settings" value="Beállítások" />
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                            varius dapibus iaculis. Nulla dignissim consectetur odio, a egestas ex
-                            semper vel. Sed sagittis velit ut elit interdum sagittis. Praesent
-                            ultricies leo a sem tincidunt, vel pretium est bibendum. Donec tortor
-                            velit, pulvinar sit amet massa et, auctor sagittis ipsum. Mauris lacinia
-                            id metus at accumsan. Cras felis sem, volutpat nec erat id, consectetur
-                            sodales velit. Maecenas sed tristique sem. Aenean et elit nec ipsum
-                            tempor pharetra et nec erat. Sed semper purus mattis, tristique ante id,
-                            convallis mi. Aliquam erat volutpat. Pellentesque dignissim eu orci in
-                            commodo. Vivamus a lacus tristique, facilisis nunc et, placerat tellus.
-                            Vestibulum vel nulla sed ipsum gravida auctor. Praesent id neque eget
-                            ipsum ullamcorper efficitur dictum vel magna. Sed faucibus nisi mi.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </nav>
 
         <div class="modal" id="uploadModal">
             <div class="modal-dialog modal-xl">
@@ -424,37 +216,6 @@
             </div>
         </div>
 
-        <nav class="navbar navbar-expand-lg" id="navbar">
-            <div class="container-fluid p-0" id="navBarColor">
-                <a class="navbar-brand m-0"
-                    ><input
-                        type="button"
-                        id="homepage"
-                        value="Főoldal"
-                        class="navBarButton rightNavBorder"
-                /></a>
-
-                <a class="navbar-brand m-0"
-                    ><input
-                        type="button"
-                        id="mapButton"
-                        value="Térkép"
-                        class="navBarButton rightNavBorder"
-                /></a>
-                <a class="navbar-brand m-0"
-                    ><input
-                        type="button"
-                        id="postButton"
-                        value="Posztolás"
-                        class="navBarButton rightNavBorder"
-                        data-bs-toggle="modal"
-                        data-bs-target="#uploadModal"
-                /></a>
-                <a class="navbar-brand m-0"
-                    ><input type="button" id="profile" value="Profil" class="navBarButton noBorder"
-                /></a>
-            </div>
-        </nav>
 
         <div id="newChatModal">
             <div id="newChatContainer">

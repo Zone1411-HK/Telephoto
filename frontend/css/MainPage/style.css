@@ -239,23 +239,21 @@ form {
 }
 
 #rendezesChatContainer {
-    background-color: aqua;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
 #rendezesContainer {
-    height: 33vh;
-    background-color: greenyellow;
+    height: 35%;
+    max-height: 35%;
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+    flex-direction: column;
+    gap: 10px;
 }
 
 #chatContainer {
-    background-color: var(--Hatter);
-    height: 57vh;
+    height: 55%;
     overflow-y: scroll;
     scrollbar-width: none;
     display: flex;
@@ -278,44 +276,62 @@ form {
 }*/
 
 #rendezesTrending {
-    width: 40%;
-    height: 100%;
-    background-color: var(--Hatter);
+    width: 100%;
+    height: fit-content;
+
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    padding-bottom: 10px;
+    gap: 10px;
 }
 
 #rendezesEgyeb {
-    width: 60%;
-    height: 100%;
-    background-color: var(--Hatter);
+    width: 100%;
+    height: fit-content;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
     align-items: center;
     gap: 10px;
 }
 
+#rendezesButtonWrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+}
+
 #trendingTitle {
-    font-size: 2.5vh;
+    font-size: 1.5vw;
     margin-bottom: 0px;
+    text-align: center;
 }
 
 .trendingButton {
-    width: 80%;
-    height: 15%;
-    font-size: 2vh;
+    width: 30%;
+    font-size: 1vw;
+    font-weight: 350;
+    border: 1px solid rgb(183, 197, 135);
     background-color: rgb(233, 247, 185);
+    transition: 0.2s;
+    max-height: 50%;
+}
+
+.trendingButton:hover,
+.egyebButton:hover {
+    background-color: rgb(183, 197, 135);
 }
 
 .egyebButton {
-    height: 25%;
-    width: 80%;
+    height: 30%;
+    max-height: 30%;
+    width: 90%;
     background-color: rgb(233, 247, 185);
-    font-size: 2vh;
+    border: 1px solid rgb(183, 197, 135);
+    font-size: 1.25vw;
+    font-weight: 350;
+
+    transition: 0.2s;
 }
 
 .brandBar {
@@ -386,16 +402,20 @@ form {
 .home {
     display: flex;
     flex-direction: row;
-    height: 90vh;
+    height: 95vh;
+    position: relative;
 }
 
 .chat-and-sort {
     width: 20vw;
     min-width: 20vw;
-    background-color: white;
+    background-color: rgb(233, 247, 185);
     height: 100%;
     transform-origin: left;
     animation: fadeInRight 1s forwards;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .posts-container {
@@ -580,4 +600,21 @@ form {
 .comment {
     display: flex;
     align-content: center;
+}
+
+#titleWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 10%;
+}
+
+#title {
+    font-size: 3.5vh;
+    margin: 0;
+    width: 90%;
+    border-bottom: 1px solid rgb(183, 197, 135);
+    text-align: center;
+    color: #212e00;
 }
