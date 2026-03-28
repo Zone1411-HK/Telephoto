@@ -16,8 +16,8 @@
     flex-direction: column;
     align-items: center;
     height: 80%;
-    margin-bottom: 100%;
-    gap: 20px;
+    min-height: 80%;
+    gap: 10px;
     width: 95%;
     font-family: 'Josefin Sans', sans-serif;
 }
@@ -26,14 +26,14 @@
     background-color: white;
     display: flex;
     flex-direction: row;
-    height: 7.5vh;
-    width: 100%;
-    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.35);
+    height: 15%;
+    width: 95%;
     gap: 10px;
     padding-left: 10px;
     padding-right: 10px;
-    border-radius: 30px;
+    border-radius: 3px;
     font-family: 'Josefin Sans', sans-serif;
+    border: 1px solid rgb(183, 197, 135);
 }
 
 .chat:hover {
@@ -65,7 +65,7 @@
     line-break: anywhere;
     font-size: 1.2rem;
     border-bottom: 2px solid rgb(150, 100, 100);
-    margin-bottom: 5px;
+    margin: 0;
     width: 95%;
     color: #553333;
 }
@@ -103,7 +103,8 @@
     flex-direction: column;
     padding-top: 2%;
     width: 80%;
-    height: 100%;
+    height: fit-content;
+    max-height: 100%;
     padding-bottom: 1%;
 }
 
@@ -112,28 +113,32 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 8.5vh;
+    height: 10%;
     margin-bottom: 10px;
 }
 
 #newChat {
-    height: 8.5vh;
+    height: 100%;
     width: 100%;
-    border-radius: 30px;
-    background-color: var(--LoginGomb);
-    border: none;
-    box-shadow: 0 0 10px 2.5px rgba(63, 63, 63, 0.7);
+    border-radius: 3px;
+    background-color: rgb(213, 227, 165);
+    border: 1px solid rgb(183, 197, 135);
     padding: 0;
     margin-top: 5%;
+    filter: brightness(100%);
+    transition: 0.25s;
 }
 
 #newChat:hover {
-    background-color: rgb(185, 155, 170);
+    background-color: rgb(183, 197, 135);
+    border: 1px solid rgb(133, 147, 85);
 }
 
-#newChat img {
-    height: 90%;
+#newChat svg {
+    height: 100%;
+    width: 100%;
     aspect-ratio: 1/1;
+    stroke: rgb(133, 147, 85);
 }
 
 #openedChat {

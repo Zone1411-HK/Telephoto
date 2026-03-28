@@ -348,14 +348,40 @@ router.get('/postInfos/:postId', async (request, response) => {
     }
 });
 
-router.get('/topPosts', async (request, response) => {
+const postTypeOffset = {
+    offset: 0,
+    type: ''
+};
+
+router.post('/setOffset', async (request, response) => {
+    const { type, offset } = request.body;
+    if (type == 'reset') {
+        postTypeOffset.offset = 0;
+    } else {
+        postTypeOffset.type = type;
+        postTypeOffset.offset += offset;
+    }
+
+    response.status(200).json({ status: 'success', result: postTypeOffset });
+});
+
+router.get('/topPosts/:timeFrame', async (request, response) => {
     try {
-        const data = await database.topPosts();
-        //console.log('hiba ' + data);
-        response.status(200).json({
-            status: 'Success',
-            results: data
-        });
+        const timeFrame = request.params.timeFrame;
+        const data = await database.topPosts(timeFrame, postTypeOffset.offset);
+        console.log(data);
+
+        console.log(postTypeOffset);
+        if (data != null) {
+            response.status(200).json({
+                status: 'Success',
+                results: data
+            });
+        } else {
+            response.status(200).json({
+                status: 'failed'
+            });
+        }
     } catch (error) {
         console.log(error);
     }

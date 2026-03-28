@@ -19,3 +19,19 @@ async function isLoggedIn() {
         return response.exists;
     } catch (error) {}
 }
+
+function nextSlide() {
+    this.style.pointerEvents = 'none';
+    setTimeout(() => {
+        this.style.pointerEvents = 'all';
+    }, 1);
+    slideShow(1);
+}
+
+function previousSlide() {
+    this.style.pointerEvents = 'none';
+    setTimeout(() => {
+        this.style.pointerEvents = 'all';
+    }, 1);
+    slideShow(-1);
+}

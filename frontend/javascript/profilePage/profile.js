@@ -332,22 +332,6 @@ function slideShow(move) {
     }
 }
 
-function nextSlide() {
-    this.style.pointerEvents = 'none';
-    setTimeout(() => {
-        this.style.pointerEvents = 'all';
-    }, 1);
-    slideShow(1);
-}
-
-function previousSlide() {
-    this.style.pointerEvents = 'none';
-    setTimeout(() => {
-        this.style.pointerEvents = 'all';
-    }, 1);
-    slideShow(-1);
-}
-
 let usernameBefore;
 let profilePicBefore;
 let biographyBefore;

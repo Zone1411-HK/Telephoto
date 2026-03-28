@@ -122,6 +122,12 @@ FOR EACH ROW
 DELETE FROM interactions 
 WHERE interactions.post_id = OLD.post_id;
 
+CREATE TRIGGER delete_post_favorites
+BEFORE DELETE ON posts
+FOR EACH ROW
+DELETE FROM favorites 
+WHERE favorites.post_id = OLD.post_id;
+
 CREATE TRIGGER delete_post_comments
 BEFORE DELETE ON posts
 FOR EACH ROW

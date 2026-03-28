@@ -2,9 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     var item = document.getElementById('posts-container');
     item.addEventListener('wheel', function (e) {
         if (e.deltaY > 0) {
-            item.scrollLeft += 500;
+            item.scrollLeft += 750;
         } else {
-            item.scrollLeft -= 500;
+            item.scrollLeft -= 750;
         }
         //this.window.scrollTo(this.window.y)
     });

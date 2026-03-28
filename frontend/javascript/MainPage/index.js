@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     //testing();
     start();
-    document.getElementById('mapButton').addEventListener('click', () => {
-        window.location.href = '/map';
-    });
+
     /*     document.getElementById('home').addEventListener('click', () => {});
     document.getElementById('personal').addEventListener('click', () => {});
     document.getElementById('profile').addEventListener('click', () => {});

@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="node/leaflet/dist/leaflet.css" />
         <link rel="stylesheet" href="node/leaflet.markercluster/dist/MarkerCluster.Default.css" />
         <link rel="stylesheet" href="/css/anim.css" />
+        <link rel="stylesheet" href="/css/util.css" />
         <link rel="stylesheet" href="/css/MainPage/style.css" />
         <link rel="stylesheet" href="/css/MainPage/modal.css" />
         <link rel="stylesheet" href="/css/MainPage/chat.css" />
@@ -38,122 +39,86 @@
         />
     </head>
     <body>
-        <div id="root">
-            <!--? Ha dolgoztok rajta nyugodtan kivehetitek az invisible-t csak zavaró volt, hogy minden látszott-->
-            <!--
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown">
-                        <a
-                            class="nav-link dropdown-toggle"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                            id="lenyitoFul"
-                        >
-                            Népszerű
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item"
-                                    ><input type="button" id="today" value="Ma"
-                                /></a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item"
-                                    ><input type="button" id="week" value="A Héten"
-                                /></a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item"
-                                    ><input type="button" id="month" value="A Hónapban"
-                                /></a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link"><input type="button" id="top" value="Toplistás" /></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><input type="button" id="new" value="Újak" /></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><input type="button" id="near" value="Közeli" /></a>
-                    </li>
-                </ul>
-            </div>
-            -->
-
-            <div class="home" id="home">
-                <div class="chat-and-sort">
-                    <div id="titleWrapper">
-                        <h1 id="title">Telephoto</h1>
+        <div class="home" id="home">
+            <div class="chat-and-sort">
+                <div id="titleWrapper">
+                    <h1 id="title">Telephoto</h1>
+                </div>
+                <div id="rendezesContainer">
+                    <div class="sortRow">
+                        <h2 id="trendingTitle">Trending</h2>
                     </div>
-                    <div id="rendezesContainer">
-                        <div id="rendezesTrending">
-                            <h2 id="trendingTitle">Trending</h2>
-                            <div id="rendezesButtonWrapper">
-                                <input class="trendingButton" type="button" value="Ma" />
-                                <input class="trendingButton" type="button" value="A héten" />
-                                <input class="trendingButton" type="button" value="A hónapban" />
-                                <input class="trendingButton" type="button" value="Idén" />
-                                <input class="trendingButton" type="button" value="Bármikor" />
-                            </div>
-                        </div>
-                        <div id="rendezesEgyeb">
-                            <input class="egyebButton" type="button" value="📍Budapest" />
-                            <input class="egyebButton" type="button" value="#summervibes" />
-                            <input class="egyebButton" type="button" value="📍Krakkó" />
-                        </div>
+                    <div class="sortRow">
+                        <label for="today" class="trendingButton">
+                            <span>Ma</span>
+                            <input id="today" type="hidden" value="1" />
+                        </label>
+                        <label for="weekly" class="trendingButton">
+                            <span>A héten</span>
+                            <input id="weekly" type="hidden" value="7" />
+                        </label>
+                        <label for="monthly" class="trendingButton">
+                            <span>A hónapban</span>
+                            <input id="monthly" type="hidden" value="30" />
+                        </label>
                     </div>
-                    <div id="chatContainer">
-                        <div id="newChatDiv">
-                            <button id="newChat" type="button">
-                                <img src="/images/plus-circle(2).svg" alt="Új chat" />
-                            </button>
-                        </div>
-                        <div id="existingChats"></div>
+                    <div class="sortRow">
+                        <label for="annual" class="trendingButton">
+                            <span>Idén</span>
+                            <input id="annual" type="hidden" value="365" />
+                        </label>
+                        <label for="allTime" class="trendingButton">
+                            <span>Bármikor</span>
+                            <input id="allTime" type="hidden" value="36500" />
+                        </label>
                     </div>
-                    <div id="openedChatWrapper" class="invisible">
-                        <div id="openedChat"></div>
+                    <div class="sortRow">
+                        <input class="egyebButton" type="button" value="📍Budapest" />
+                    </div>
+                    <div class="sortRow">
+                        <input class="egyebButton" type="button" value="#summervibes" />
+                    </div>
+                    <div class="sortRow">
+                        <input class="egyebButton" type="button" value="📍Krakkó" />
                     </div>
                 </div>
-                <div class="posts-container" id="posts-container">
+                <div id="chatContainer">
+                    <div id="newChatDiv">
+                        <button id="newChat" type="button">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="#442222"
+                                stroke-width="1"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="feather feather-plus-circle"
+                            >
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="16"></line>
+                                <line x1="8" y1="12" x2="16" y2="12"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="existingChats"></div>
+                </div>
+                <div id="openedChatWrapper" class="invisible">
+                    <div id="openedChat"></div>
                 </div>
             </div>
-                    <nav class="navbar navbar-expand-lg" id="navbar">
-            <div class="container-fluid p-0" id="navBarColor">
-                <a class="navbar-brand m-0"
-                    ><input
-                        type="button"
-                        id="homepage"
-                        value="Főoldal"
-                        class="navBarButton rightNavBorder"
-                /></a>
-
-                <a class="navbar-brand m-0"
-                    ><input
-                        type="button"
-                        id="mapButton"
-                        value="Térkép"
-                        class="navBarButton rightNavBorder"
-                /></a>
-                <a class="navbar-brand m-0"
-                    ><input
-                        type="button"
-                        id="postButton"
-                        value="Posztolás"
-                        class="navBarButton rightNavBorder"
-                        data-bs-toggle="modal"
-                        data-bs-target="#uploadModal"
-                /></a>
-                <a class="navbar-brand m-0"
-                    ><input type="button" id="profile" value="Profil" class="navBarButton noBorder"
-                /></a>
-            </div>
+            <div class="posts-container" id="posts-container"></div>
+        </div>
+        <nav id="nav">
+            <a href="/" class="navButton">Főoldal</a>
+            <a href="/map" class="navButton">Térkép</a>
+            <a href="/profile" class="navButton" id="profilGomb">Profil</a>
+            <button id="profilGomb" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                Profil
+            </button>
         </nav>
-
         <div class="modal" id="uploadModal">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
@@ -215,7 +180,6 @@
                 </div>
             </div>
         </div>
-
 
         <div id="newChatModal">
             <div id="newChatContainer">

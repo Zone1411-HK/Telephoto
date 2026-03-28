@@ -1,6 +1,8 @@
+let type = 'top';
+let timeframe = 36500;
+
 document.addEventListener('DOMContentLoaded', () => {
-    //testFunction();
-    getTopPosts();
+    startUp();
 });
 
 async function testFunction() {
@@ -26,39 +28,75 @@ function base(data, i) {
     return object;
 }
 
+function addEventListenersToElements() {
+    const trendingButtons = document.querySelectorAll('.trendingButton');
+    for (const button of trendingButtons) {
+        button.addEventListener('click', trendingPosts);
+    }
+}
+
+async function trendingPosts() {
+    let posts = document.getElementById('posts-container');
+    posts.replaceChildren();
+    const { status, result } = await PostMethodFetch('/api/setOffset', {
+        type: 'reset',
+        offset: 0
+    });
+    timeframe = this.children[1].value;
+    await getTopPosts();
+}
+
+async function startUp() {
+    addEventListenersToElements();
+    const { status, result } = await PostMethodFetch('/api/setOffset', {
+        type: 'reset',
+        offset: 0
+    });
+    await getTopPosts();
+}
+
 const getTopPosts = async () => {
     try {
-        const response = await GetMethodFetch('/api/topPosts');
-        const data = response.results;
-        //console.log(response);
+        type = 'top';
+        const response = await GetMethodFetch('/api/topPosts/' + timeframe);
+        console.log(response);
 
-        for (let i = 0; i < data.length; i++) {
-            const test = base(data, i);
-            /*             console.log(test);
+        if (response.status != 'failed') {
+            const data = response.results;
+            console.log(data);
 
-            console.log('név' + test.username);
-            console.log('userpic' + test.userpic);
-            console.log('pic' + test.pic);
-            console.log('desc' + test.description);
-            console.log('tag' + test.tags);
-            console.log('loc' + test.location);
-            console.log('lat' + test.latitude);
-            console.log('lon' + test.longitude);
-            console.log('create' + test.creation_date);
-            console.log('postid' + test.post_id); */
-
-            hangPictures(test);
+            for (let i = 0; i < data.length; i++) {
+                await hangPictures(data[i]);
+            }
+            const { status, result } = await PostMethodFetch('/api/setOffset', {
+                type: 'top',
+                offset: 50
+            });
+            appendLoadMore();
         }
     } catch (error) {
         console.error('Hiba' + error);
     }
 };
 
-const hangPictures = async (test) => {
-    let posts = document.getElementById('posts-container');
-    let post = document.createElement('div');
-    post.classList.add('post');
+function appendLoadMore() {
+    const loadMore = document.createElement('div');
+    loadMore.classList.add('loadMorePost');
+    loadMore.innerHTML = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800px" height="800px" viewBox="0 0 50.00 50.00" enable-background="new 0 0 50 50" xml:space="preserve" fill="#000000" stroke="#000000" stroke-width="1.65"><g id="SVGRepo_bgCarrier" stroke-width="0"/><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/><g id="SVGRepo_iconCarrier"> <line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" x1="25" y1="10.5" x2="25" y2="39.5"/> <circle fill="none" stroke="#000000" cx="25" cy="25" r="23.667"/> <line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" x1="39.5" y1="25" x2="10.5" y2="25"/> </g></svg>`;
+    loadMore.addEventListener('click', loadMorePost);
+    document.getElementById('posts-container').appendChild(loadMore);
+}
 
+async function loadMorePost() {
+    if (type == 'top') {
+        getTopPosts(timeframe);
+    } else {
+        //! I dunno
+    }
+    this.remove();
+}
+
+function generateRope() {
     let ropediv = document.createElement('div');
     let rope = document.createElement('hr');
     let ropetexture = document.createElement('hr');
@@ -66,6 +104,13 @@ const hangPictures = async (test) => {
     rope.classList.add('rope');
     ropetexture.classList.add('ropeTexture');
 
+    ropediv.appendChild(rope);
+    ropediv.appendChild(ropetexture);
+
+    return ropediv;
+}
+
+function generateClip() {
     let clip = document.createElement('div');
     let imgclip = document.createElement('div');
     let imgcliptexture = document.createElement('div');
@@ -73,11 +118,140 @@ const hangPictures = async (test) => {
     imgclip.classList.add('imgClip');
     imgcliptexture.classList.add('imgClipTexture');
 
+    clip.appendChild(imgclip);
+    clip.appendChild(imgcliptexture);
+
+    return clip;
+}
+
+function slideshowController(move, slideshow) {
+    let slides = slideshow.children;
+    let j = 0;
+    while (j < slides.length && slides[j].classList.contains('hidden')) {
+        j++;
+    }
+
+    let currentSlide = slides[j];
+    currentSlide.classList.add('hidden');
+
+    if (currentSlide.dataset.type == 'video') {
+        currentSlide.pause();
+        currentSlide.currentTime = 0;
+    }
+
+    let finalIndex;
+
+    if (j >= slides.length - 1 && move == 1) {
+        finalIndex = 0;
+    } else {
+        if (j == 0 && move == -1) {
+            finalIndex = slides.length - 1;
+        } else {
+            finalIndex = j + move;
+        }
+    }
+    slides[finalIndex].classList.remove('hidden');
+
+    let postImages = slideshow.parentNode.parentNode;
+    if (slides[finalIndex].dataset.type == 'image') {
+        postImages.style.backgroundImage = `url(${slides[finalIndex].src})`;
+    } else {
+        postImages.style.backgroundImage = `url("/images/videoBackground.png")`;
+    }
+}
+
+function nextSlideItem() {
+    this.style.pointerEvents = 'none';
+    setTimeout(() => {
+        this.style.pointerEvents = 'all';
+    }, 1);
+    let slideshow = this.parentNode.children[1];
+    slideshowController(1, slideshow);
+}
+
+function previousSlideItem() {
+    this.style.pointerEvents = 'none';
+    setTimeout(() => {
+        this.style.pointerEvents = 'all';
+    }, 1);
+    let slideshow = this.parentNode.children[1];
+    slideshowController(-1, slideshow);
+}
+
+function generateSlideshow(links) {
+    if (links == undefined) return document.createElement('div');
+    let postImages = document.createElement('div');
+    postImages.classList.add('postImages');
+
+    let backdropWrapper = document.createElement('div');
+    backdropWrapper.classList.add('backdropWrapper');
+
+    let previous = document.createElement('div');
+    previous.classList.add('previous');
+    previous.innerText = '<';
+    previous.addEventListener('click', previousSlideItem);
+
+    let next = document.createElement('div');
+    next.classList.add('next');
+    next.innerText = '>';
+    next.addEventListener('click', nextSlideItem);
+
+    let slideshow = document.createElement('div');
+    slideshow.classList.add('slideshow');
+
+    for (let i = 0; i < links.length; i++) {
+        let content = links[i];
+        let format = content.split('.')[1];
+        let media;
+
+        if (format == 'mp4' || format == 'avi' || format == 'hevc') {
+            media = document.createElement('video');
+            media.muted = true;
+            media.loop = true;
+            media.controls = true;
+
+            let source = document.createElement('source');
+            source.src = '/uploads/' + content;
+            source.type = 'video/' + format;
+            media.appendChild(source);
+            media.dataset.type = 'video';
+            if (i == 0) postImages.style.backgroundImage = 'url("/images/videoBackground.png")';
+        } else {
+            media = document.createElement('img');
+            media.src = '/uploads/' + content;
+            media.alt = '/uploads/' + content;
+            media.dataset.type = 'image';
+
+            if (i == 0) postImages.style.backgroundImage = `url("/uploads/${content}")`;
+        }
+
+        media.classList.add('slideshowItem');
+
+        if (i != 0) media.classList.add('hidden');
+
+        slideshow.appendChild(media);
+    }
+
+    backdropWrapper.appendChild(previous);
+    backdropWrapper.appendChild(slideshow);
+    backdropWrapper.appendChild(next);
+
+    postImages.appendChild(backdropWrapper);
+
+    return postImages;
+}
+const hangPictures = async (test) => {
+    let asd = generateSlideshow(test.links);
+    let posts = document.getElementById('posts-container');
+    let post = document.createElement('div');
+    post.classList.add('post');
+
+    let ropediv = generateRope();
+    let clip = generateClip();
+    let slideshow = generateSlideshow(test.links);
+
     let postcontent = document.createElement('div');
-    let imgdiv = document.createElement('div');
-    let img = document.createElement('img');
     postcontent.classList.add('postContent');
-    imgdiv.classList.add('imgDiv');
 
     let p = document.createElement('p');
 
@@ -129,68 +303,14 @@ const hangPictures = async (test) => {
     favoriteButton.addEventListener('click', function () {
         favoritePost(this, test.post_id);
     });
-    let tableContainer = document.createElement('div');
-    let commentsTable = document.createElement('table');
-    let tBody = document.createElement('tbody');
-    tableContainer.classList.add('tableContainer');
-    commentsTable.classList.add('commentsTable');
-    tBody.classList.add('tBody');
 
-    let tRow = document.createElement('tr');
-    let commentingUserPic = document.createElement('td');
-    let commentingUserImg = document.createElement('img');
-    let commentingUser = document.createElement('span');
-    let comment = document.createElement('td');
-    tRow.classList.add('tRow');
-    commentingUserPic.classList.add('commentingUserPic');
-    commentingUserImg.classList.add('commentingUserImg');
-    commentingUser.classList.add('commentingUser');
-    comment.classList.add('comment');
-
-    p.innerHTML = test.description;
-    img.src = '/uploads/' + test.pic;
-
-    const response2 = await PostMethodFetch('/api/commentInfos', { post_id: test.post_id });
-    const data2 = response2.results;
-    let userName;
-    let userPic;
-    let text;
-    for (let i = 0; i < data2.length; i++) {
-        userName = data2[i].username;
-        userPic = data2[i].profile_picture_link;
-        text = data2[i].comment_content;
-        console.log('username: ' + userName);
-        console.log('userpic: ' + userPic);
-        console.log('text: ' + text);
-    }
-
-    commentingUserImg.src = '/uploads/' + userPic;
-    commentingUser.innerHTML = userName;
-    comment.innerHTML = text;
-
-    imgdiv.appendChild(img);
-    postcontent.appendChild(imgdiv);
+    postcontent.appendChild(slideshow);
     postcontent.appendChild(p);
 
     interactionRow.appendChild(likeButton);
     interactionRow.appendChild(favoriteButton);
     interactionRow.appendChild(dislikeButton);
     postcontent.appendChild(interactionRow);
-
-    commentingUserPic.appendChild(commentingUserImg);
-    commentingUserPic.appendChild(commentingUser);
-    tRow.appendChild(commentingUserPic);
-    tRow.appendChild(comment);
-    tBody.appendChild(tRow);
-    commentsTable.appendChild(tBody);
-    tableContainer.appendChild(commentsTable);
-    postcontent.appendChild(tableContainer);
-
-    clip.appendChild(imgclip);
-    clip.appendChild(imgcliptexture);
-
-    ropediv.appendChild(rope);
-    ropediv.appendChild(ropetexture);
 
     post.appendChild(ropediv);
     post.appendChild(clip);
