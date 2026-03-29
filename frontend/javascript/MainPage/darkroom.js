@@ -1,10 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-    var item = document.getElementById('posts-container');
+    let matchMedia = window.matchMedia('(width > 1000px)');
+
+    let item = document.getElementById('posts-container');
     item.addEventListener('wheel', function (e) {
-        if (e.deltaY > 0) {
-            item.scrollLeft += 500;
-        } else {
-            item.scrollLeft -= 500;
+        if (matchMedia.matches) {
+            if (e.deltaY > 0) {
+                item.scrollLeft += 750;
+            } else {
+                item.scrollLeft -= 750;
+            }
         }
         //this.window.scrollTo(this.window.y)
     });

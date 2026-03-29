@@ -51,6 +51,21 @@ async function isLoggedIn() {
     } catch (error) {}
 }
 
+function nextSlide() {
+    this.style.pointerEvents = 'none';
+    setTimeout(() => {
+        this.style.pointerEvents = 'all';
+    }, 1);
+    slideShow(1);
+}
+
+function previousSlide() {
+    this.style.pointerEvents = 'none';
+    setTimeout(() => {
+        this.style.pointerEvents = 'all';
+    }, 1);
+    slideShow(-1);
+}
 function closeModalByClickingOutside(e, modal, modalContent) {
     let clickedOutside = e.target == modal;
 

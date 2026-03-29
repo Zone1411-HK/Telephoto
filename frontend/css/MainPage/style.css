@@ -22,36 +22,22 @@ rgb(150, 100, 100)
     --PostModalBottomColor: rgb(30, 30, 30);
 }
 
-#navbar {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 5vh;
-    animation: fadeInUp 1s forwards;
-}
-
-.navLine {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-}
-
-.container-fluid {
-    height: 100%;
-    width: 100%;
-}
-
 body {
     height: 100vh;
-    width: 100vw;
+    width: 100%;
     font-family: 'Josefin Sans', sans-serif;
     /*font-optical-sizing: auto;*/
-    font-weight: 650;
-    font-style: normal;
-    font-size: larger;
+    font-size: 14px;
+    overflow: hidden;
+    background: #ffdd00;
+    background: radial-gradient(
+        circle,
+        /*rgba(255, 221, 0, 1) 5%,*/ rgba(200, 230, 255, 1) 5%,
+        rgba(170, 200, 225, 1) 50%,
+        rgba(140, 170, 195, 1) 100%
+    );
+
+    /*
     background: #333333;
     background: linear-gradient(
         315deg,
@@ -66,7 +52,7 @@ body {
         rgba(68, 0, 0, 1) 80%,
         rgba(51, 17, 17, 1) 90%,
         rgba(68, 0, 0, 1) 100%
-    );
+    );*/
     position: relative;
 }
 
@@ -74,50 +60,6 @@ form {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-}
-
-.roll {
-    overflow-y: scroll;
-    height: 95vh;
-    display: flex;
-    flex-direction: column;
-    row-gap: 10px;
-}
-
-.profileBase {
-    display: flex;
-    flex-direction: row;
-}
-
-.adatok {
-    display: flex;
-    flex-direction: column;
-}
-
-/*.lenyitoFul {
-    majd valami lesz itt
-}
-*/
-
-@keyframes invalidShake {
-    0% {
-        left: 0px;
-        right: 0px;
-    }
-    25% {
-        right: 0px;
-        left: 10px;
-    }
-
-    50% {
-        right: 10px;
-        left: -10px;
-    }
-    100% {
-        left: 0px;
-        right: 0px;
-        border: 2px solid var(--invalidRed);
-    }
 }
 
 @keyframes openChat {
@@ -162,28 +104,6 @@ form {
     }
 }
 
-.invalid {
-    border: 2px solid var(--invalidRed);
-}
-
-#map {
-    height: 50rem;
-}
-
-.postSpace {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 50vh;
-}
-
-.imageSpace {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
 .descriptionSpace {
     width: 100%;
     display: flex;
@@ -199,34 +119,6 @@ form {
     height: 25rem;
 }
 
-#navBarColor {
-    background-color: var(--NavBarColor);
-}
-
-.navBarButton {
-    background-color: var(--NavBarColor);
-    width: 20vw;
-    padding: 0px;
-    color: var(--PostModalBottomColor);
-    font-weight: 700;
-    font-size: 1.75rem;
-    text-align: center;
-}
-
-.rightNavBorder {
-    border: 0px;
-    border-bottom-right-radius: 0px;
-    border-top-right-radius: 0px;
-}
-
-.noBorder {
-    border: 0px;
-}
-
-#navbar {
-    background-color: var(--NavBarColor);
-}
-
 .slideShowController {
     user-select: none;
     text-decoration: none;
@@ -239,23 +131,23 @@ form {
 }
 
 #rendezesChatContainer {
-    background-color: aqua;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
 #rendezesContainer {
-    height: 33vh;
-    background-color: greenyellow;
+    height: 30%;
+    max-height: 30%;
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+    flex-direction: column;
+    overflow-y: auto;
+    gap: 10px;
+    transition: 0.25s;
 }
 
 #chatContainer {
-    background-color: var(--Hatter);
-    height: 57vh;
+    height: 55%;
     overflow-y: scroll;
     scrollbar-width: none;
     display: flex;
@@ -264,75 +156,50 @@ form {
     gap: 10px;
     padding-top: 5px;
     z-index: 1;
-}
-
-/*? Scrollbar formázás 
-/*! FIREFOXBAN NEM MŰKÖDIK
-#chatContainer::-webkit-scrollbar {
-    background-color: brown;
-    width: 100px;
-}
-#chatContainer::-webkit-scrollbar-thumb {
-    background-color: wheat;
-    border-radius: 20px;
-}*/
-
-#rendezesTrending {
-    width: 40%;
-    height: 100%;
-    background-color: var(--Hatter);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    padding-bottom: 10px;
-}
-
-#rendezesEgyeb {
-    width: 60%;
-    height: 100%;
-    background-color: var(--Hatter);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    gap: 10px;
+    transition: 0.25s;
 }
 
 #trendingTitle {
-    font-size: 2.5vh;
+    font-size: 1.5rem;
     margin-bottom: 0px;
+    text-align: center;
 }
 
 .trendingButton {
-    width: 80%;
-    height: 15%;
-    font-size: 2vh;
+    width: 31%;
+    font-weight: 350;
+    font-size: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 1px solid rgb(183, 197, 135);
     background-color: rgb(233, 247, 185);
+    transition: 0.2s;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.trendingButton,
+.egyebButton {
+    border-radius: 3px;
+}
+
+.trendingButton:hover,
+.egyebButton:hover {
+    background-color: rgb(213, 227, 165);
 }
 
 .egyebButton {
-    height: 25%;
-    width: 80%;
+    height: 80%;
+    width: 90%;
     background-color: rgb(233, 247, 185);
-    font-size: 2vh;
-}
-
-.brandBar {
-    height: 5vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--NavBarColor);
-    padding-top: 0.5vh;
-    animation: fadeInDown 1s forwards;
-}
-
-#brandText {
-    height: fit-content;
-    font-weight: 600;
-    font-size: 3.5vh;
-    margin: 0;
+    border: 1px solid rgb(183, 197, 135);
+    font-size: 1rem;
+    font-weight: 350;
+    transition: 0.2s;
 }
 
 .usernamePopup {
@@ -345,9 +212,6 @@ form {
     border: rgb(200, 200, 200) 2px solid;
 }
 
-.navbar-brand {
-    border-right: 1px solid black;
-}
 .interactionButton {
     display: flex;
     flex-direction: row;
@@ -391,27 +255,32 @@ form {
 .home {
     display: flex;
     flex-direction: row;
-    height: 90vh;
+    height: 95vh;
+    max-height: 95vh;
+    position: relative;
 }
 
 .chat-and-sort {
-    width: 20vw;
-    min-width: 20vw;
-    background-color: white;
+    width: 15vw;
+    min-width: 200px;
+    background-color: rgb(233, 247, 185);
     height: 100%;
     transform-origin: left;
     animation: fadeInRight 1s forwards;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transition: 0.25s;
 }
 
 .posts-container {
     display: flex;
     flex-direction: row;
     overflow-x: scroll;
-    width: 80vw;
+    width: 85vw;
     height: 100%;
     gap: 10vw;
-    padding-left: 12.5vw;
-    padding-right: 5vw;
+    padding-left: 15vw;
     scrollbar-width: none;
     scroll-behavior: smooth;
     margin-top: 1vh;
@@ -465,9 +334,9 @@ form {
     margin-top: 2vh;
     margin-bottom: 1vh;
     height: 5px;
-    width: 200%;
+    width: 225%;
     bottom: 100%;
-    z-index: 2000;
+    z-index: 10;
     animation: fadeInLeft 1.5s forwards;
 }
 
@@ -476,9 +345,10 @@ form {
     flex-direction: column;
     align-items: center;
     position: relative;
-    overflow: visible;
     height: 90%;
-    width: 33vw;
+    width: 40vw;
+    min-width: 600px;
+    max-width: 1000px;
     z-index: 10;
     flex-shrink: 0;
     margin-top: 35px;
@@ -491,7 +361,7 @@ form {
     background-color: white;
     padding: 25px;
     /*animation: fadeInUp 1s forwards;*/
-    box-shadow: 0px 0px 15px 15px #350000;
+    box-shadow: 0px 0px 10px 2px rgba(100, 100, 100, 0.75);
 }
 
 .imgDiv {
@@ -509,7 +379,7 @@ form {
 }
 
 #clipDiv {
-    z-index: 5500;
+    z-index: 1000;
 }
 
 .clip {
@@ -541,50 +411,57 @@ form {
     opacity: 70%;
 }
 
-.tableContainer {
-    overflow: auto;
-    height: 40%;
-}
-
-.commentsTable {
-}
-
-.tRow {
+#titleWrapper {
     display: flex;
     flex-direction: row;
-    align-content: center;
-    height: 70px;
+    justify-content: center;
+    align-items: center;
+    height: 10%;
+    transition: 0.25s;
 }
 
-.commentingUserPic {
-    display: flex;
-
-    align-content: center;
-    height: 70px;
+#title {
+    font-size: 2rem;
+    margin: 0;
+    width: 90%;
+    border-bottom: 1px solid rgb(183, 197, 135);
+    text-align: center;
+    color: #212e00;
 }
 
-.commentingUserImg {
+.sortRow {
     display: flex;
-    clip-path: circle();
-    height: 70px;
-    align-content: center;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    flex: 1 1 0;
+    padding-left: 1%;
+    padding-right: 1%;
 }
 
-.commentingUser {
-    display: flex;
-    visibility: hidden;
-
-    z-index: 1;
+.loadMorePost {
+    flex-shrink: 0;
+    margin-top: 35px;
+    height: 90%;
+    width: 15vw;
 }
 
-.commentingUserPic:hover .commentingUser {
-    visibility: visible;
-    display: flex;
+.loadMorePost svg {
+    height: 100%;
+    width: 50%;
+    aspect-ratio: 1/1;
+    object-fit: contain;
 }
 
-.comment {
-    display: flex;
-    align-content: center;
+#nav {
+    box-shadow: none;
+    animation: fadeInUp 1s forwards;
+}
+
+.slideshowItem {
+    display: block;
+    background-color: black;
 }
 
 .postContent p {

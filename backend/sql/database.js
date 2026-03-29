@@ -149,18 +149,77 @@ async function like(username, postId, likeValue, dislikeValue) {
 //like('test', 1, true, false);
 
 //post sorbarendezés lekérdezásek
-async function topPosts() {
+async function topPosts(timeFrame, offset) {
     try {
+        let result = [];
+
         const topPostsSql = `
-        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link, pictures.picture_link 
+        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link
         FROM posts 
         LEFT JOIN users ON users.user_id = posts.user_id 
         LEFT JOIN interactions ON interactions.post_id = posts.post_id 
-        LEFT JOIN pictures ON pictures.post_id = posts.post_id 
+        WHERE posts.creation_date > NOW() - INTERVAL ? DAY
         GROUP BY posts.post_id
-        ORDER BY COUNT(interactions.upvote) - COUNT(interactions.downvote)`;
-        const [rows] = await pool.execute(topPostsSql);
-        return rows;
+        ORDER BY COUNT(interactions.upvote) - COUNT(interactions.downvote) DESC
+        LIMIT 50 OFFSET ?;
+        `;
+        result = await pool.execute(topPostsSql, [timeFrame, offset]);
+        return await postPictures(result[0]);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+topPosts(0);
+
+async function postPictures(posts) {
+    try {
+        if (posts.length == 0) return null;
+        let result = posts;
+
+        //? Eltároljuk az összes id-t
+        let postIds = [];
+
+        //? Eltároljuk, hogy hány id lesz
+        let queryPlaceholder = '';
+
+        for (let i = 0; i < posts.length; i++) {
+            postIds.push(posts[i].post_id);
+
+            //? Ha az utolsó postnál tartunk nem rakunk vesszőt a ? után
+            if (i != posts.length - 1) {
+                queryPlaceholder += '?,';
+            } else {
+                queryPlaceholder += '?';
+            }
+        }
+
+        //? Az IN kb úgy működik mintha sok OR lenne tehát post_id = 1 OR post_id = 2 HELYETT post_id IN (1,2)
+        //! ITT NEM BAJ HOGY NEM PARAMÉTERES A "queryPlaceholder" MERT AZT MI CSINÁLJUK (asszem emiatt, or idunno)
+        const sql = `
+            SELECT post_id, picture_link
+            FROM pictures
+            WHERE post_id IN (${queryPlaceholder});
+            `;
+
+        const [rows] = await pool.execute(sql, postIds);
+
+        //? Eltároljuk a linkeket egy object-ben
+        let links = {};
+        for (const row of rows) {
+            //? ha az adott id-val még nincs semmi akkor lesz egy array, majd abba belepusholjuk az éppen soron lévő linket
+            if (links[row.post_id] == undefined) {
+                links[row.post_id] = [];
+            }
+            links[row.post_id].push(row.picture_link);
+        }
+
+        //? Hozzárendeljük a posztokhoz a linkeket
+        for (const post of result) {
+            post['links'] = links[post.post_id];
+        }
+
+        return result;
     } catch (error) {
         console.error(error);
     }

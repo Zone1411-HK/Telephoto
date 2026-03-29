@@ -122,6 +122,12 @@ FOR EACH ROW
 DELETE FROM interactions 
 WHERE interactions.post_id = OLD.post_id;
 
+CREATE TRIGGER delete_post_favorites
+BEFORE DELETE ON posts
+FOR EACH ROW
+DELETE FROM favorites 
+WHERE favorites.post_id = OLD.post_id;
+
 CREATE TRIGGER delete_post_comments
 BEFORE DELETE ON posts
 FOR EACH ROW
@@ -138,7 +144,7 @@ CREATE TRIGGER save_deleted_pictures
 BEFORE DELETE ON pictures
 FOR EACH ROW 
 INSERT INTO deleted_pictures(picture_id, post_id, picture_link, deleted_at)
-VALUES(OLD.picture_id, OLD.post_id, OLD.picture_link, NOW())
+VALUES(OLD.picture_id, OLD.post_id, OLD.picture_link, NOW());
 
 
 
