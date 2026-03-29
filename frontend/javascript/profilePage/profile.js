@@ -207,10 +207,12 @@ async function openPost() {
     let modal = document.getElementById('openedPostModal');
     let post = document.getElementById('openedPost');
 
-    modal.removeEventListener('click', closeModal);
-    modal.addEventListener('click', closeModal);
+    modal.removeEventListener('click', closeModalByClickingOutside);
+    modal.addEventListener('click', () => {
+        closeModalByClickingOutside(event, modal, post);
+    });
 
-    modal.style.display = 'flex';
+    modal.classList.remove('hidden');
     post.style.animation = 'fadeInUp 0.5s forwards';
 
     const { Status, Infos } = await GetMethodFetch('/api/postInfos/' + openedPostId);
@@ -271,20 +273,6 @@ function generatePostInfos(userInfos, postInfos) {
     document.getElementById('postDateSpan').innerText = postInfos.creation_date;
 }
 
-function closeModal(e) {
-    let modal = document.getElementById('openedPostModal');
-    let clickedOutside = e.target == modal;
-
-    if (clickedOutside) {
-        let post = document.getElementById('openedPost');
-        post.style.animation = 'fadeOutDown 0.5s forwards';
-
-        setTimeout(() => {
-            modal.style.display = 'none';
-        }, 500);
-    }
-}
-
 function closePost() {
     let modal = document.getElementById('openedPostModal');
 
@@ -292,7 +280,8 @@ function closePost() {
     post.style.animation = 'fadeOutDown 0.5s forwards';
 
     setTimeout(() => {
-        modal.style.display = 'none';
+        modal.classList.add('hidden');
+        post.style.animation = '';
     }, 500);
 }
 

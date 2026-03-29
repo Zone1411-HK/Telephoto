@@ -375,7 +375,7 @@ body {
 /*#region Modal */
 
 #openedPostModal {
-    display: none;
+    display: flex;
     position: fixed;
     background-color: rgba(0, 0, 0, 0.75);
     width: 100vw;
@@ -410,10 +410,35 @@ body {
     z-index: 102;
     left: 10px;
     top: 10px;
+}
+#postImages {
+    height: 50%;
+    width: 100%;
+    background-image: url('/uploads/1768924539207-olahbenjo.jpg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    user-select: none;
+    overflow: hidden;
+}
+
+#backdropWrapper {
+    display: flex;
+    flex-direction: row;
+    backdrop-filter: blur(20px);
+    width: 100%;
+    height: 100%;
+}
+
+#previous,
+#next {
+    height: 100%;
+    width: 15%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+
     filter: brightness(100%);
     transition: 0.2s;
 }
@@ -424,6 +449,32 @@ body {
 
 #closePost:hover {
     filter: brightness(50%);
+    font-size: 60px;
+    color: rgb(50, 50, 50);
+    -webkit-text-stroke: 1px white;
+    cursor: pointer;
+}
+#previous:hover,
+#next:hover {
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+#slideshow {
+    height: 100%;
+    width: 70%;
+    overflow: hidden;
+}
+
+.slideshowItem {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: none;
+    transition: 0.25s;
+}
+
+.activeSlideshowItem {
+    display: block;
 }
 
 #postInfos {
@@ -521,10 +572,6 @@ body {
 
 #deleteProfile:hover {
     background-color: rgb(206, 115, 115);
-}
-
-.hidden {
-    display: none !important;
 }
 
 .customModal {

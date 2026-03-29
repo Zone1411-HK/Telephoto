@@ -222,6 +222,11 @@ form {
     padding: 0;
     flex-basis: 0;
     flex-grow: 1;
+    padding: 2px 0 2px 0;
+}
+
+.interactionButton:hover {
+    background-color: gray;
 }
 
 .interactionButton svg {
@@ -319,7 +324,7 @@ form {
     border: none;
     opacity: 50%;
     z-index: 3;
-    width: 100%;
+    width: 100vw;
     margin: 0;
     bottom: 5px;
 }
@@ -457,4 +462,9 @@ form {
 .slideshowItem {
     display: block;
     background-color: black;
+}
+
+.postContent p {
+    height: 5%;
+    margin: 0;
 }

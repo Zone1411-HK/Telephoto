@@ -123,3 +123,246 @@
     margin-bottom: 0;
     height: 30px;
 }
+
+#commentModal {
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    padding-top: 10vh;
+    justify-content: center;
+    z-index: 1000;
+    position: absolute;
+    background-color: rgba(30, 30, 30, 0.9);
+    overflow: hidden;
+}
+
+#commentModalContentWrapper {
+    background-color: white;
+    box-shadow: 0 0 10px 2px rgba(75, 75, 75, 1);
+    width: 50vw;
+    height: 70vh;
+    animation: fadeInUp 0.5s forwards;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+#commentModalContent {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    height: 90%;
+    width: 100%;
+    gap: 15px;
+    overflow-y: auto;
+}
+
+#newCommentWrapper {
+    width: 100%;
+    height: 10%;
+    overflow: hidden;
+    padding: 5px 5px 5px 10px;
+}
+
+#boxShadowWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 0 3px rgba(75, 75, 75, 1);
+    border-radius: 5px;
+}
+
+#newCommentWrapper textarea {
+    width: 95%;
+    height: 100%;
+    font-size: 1.75vh;
+    resize: none;
+    overflow: auto;
+    border-radius: 0;
+    scrollbar-width: thin;
+    padding: 2px 2px 2px 4px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border: none;
+    outline: none;
+}
+
+#boxShadowWrapper:focus-within {
+    border: 1px solid gray;
+    padding: 0;
+}
+
+#commentSvgWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    width: 5%;
+    height: 100%;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+#commentSvgWrapper svg {
+    width: 100%;
+    height: 40%;
+    aspect-ratio: 1/1;
+    stroke: rgb(100, 100, 100);
+}
+#commentSvgWrapper:hover {
+    background-color: lightgray;
+}
+
+.encourageText {
+    height: 100%;
+    width: 100%;
+    font-size: 4.5vh;
+    font-weight: 400;
+    color: rgba(150, 150, 150, 1);
+    padding: 20% 2.5% 0 2.5%;
+    text-align: center;
+    margin: 0;
+    user-select: none;
+}
+
+.commentWrapper {
+    width: 100%;
+    height: 15%;
+    border-radius: 5px;
+    box-shadow: 0 0 3px rgba(50, 75, 50, 1);
+    gap: 25px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+
+.commentWrapper:hover {
+    background-color: rgba(225, 235, 225, 1);
+}
+
+.commentWrapper:hover .commentProfilePicture {
+    background-color: rgba(225, 235, 225, 1);
+}
+.commentWrapper:hover .commentContentWrapper {
+    scrollbar-color: gray rgb(225, 235, 225);
+}
+
+.profilePictureWrapper {
+    height: 100%;
+    aspect-ratio: 1/1;
+}
+
+.profilePictureBorder {
+    background-color: rgba(50, 75, 50, 1);
+    clip-path: circle();
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.commentProfilePicture {
+    width: 96%;
+    aspect-ratio: 1/1;
+    background-color: white;
+    object-fit: cover;
+    clip-path: circle();
+}
+.commentTextWrapper {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    width: 100%;
+}
+
+.commentContentWrapper {
+    height: 100%;
+    width: 65%;
+    word-break: break-all;
+}
+.commentContent {
+    margin: 0;
+    font-size: 2vh;
+    font-weight: 350;
+    height: 100%;
+    max-height: 50px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: gray white;
+}
+
+.commentUsernameWrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 20%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
+.commentUsername {
+    font-size: 3.5vh;
+    letter-spacing: 1px;
+    font-weight: 400;
+    margin: 0;
+}
+
+.commentDateWrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding-left: 2.5%;
+    width: 15%;
+}
+
+.commentDate {
+    text-align: center;
+    color: gray;
+    margin: 0;
+    height: fit-content;
+    font-size: clamp(1vh, 1.5vh, 2vh);
+    font-weight: 350;
+}
+
+@media (max-width: 1000px) {
+    .commentDateWrapper {
+        display: none;
+    }
+
+    #commentModalContentWrapper {
+        width: 70vw;
+    }
+
+    .commentWrapper {
+        gap: 5px;
+    }
+
+    .commentUsernameWrapper {
+        width: 25%;
+    }
+
+    .commentUsername {
+        font-size: 20px;
+    }
+
+    .commentContent {
+        font-size: 14px;
+    }
+
+    .commentContentWrapper {
+        width: 75%;
+    }
+}

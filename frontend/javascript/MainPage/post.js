@@ -3,14 +3,19 @@ let timeframe = 36500;
 
 document.addEventListener('DOMContentLoaded', () => {
     startUp();
+    //testFunction();
+
+    document.getElementById('closeComments').addEventListener('click', closeComments);
+    document.getElementById('commentSvgWrapper').addEventListener('click', sendComment);
 });
 
-async function testFunction() {
+async function testFunction(username) {
     const response = await PostMethodFetch('/api/saveUsername', {
-        username: 'testasd'
+        username: username
     });
 }
 
+/*
 function base(data, i) {
     let object = {
         username: data[i].username,
@@ -26,7 +31,7 @@ function base(data, i) {
     };
 
     return object;
-}
+}*/
 
 function addEventListenersToElements() {
     const trendingButtons = document.querySelectorAll('.trendingButton');
@@ -304,11 +309,105 @@ const hangPictures = async (test) => {
         favoritePost(this, test.post_id);
     });
 
+    let commentButton = document.createElement('button');
+    commentButton.type = 'button';
+    commentButton.classList.add('interactionButton');
+    commentButton.dataset.postId = test.post_id;
+    commentButton.innerHTML = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 20 19.999859"
+   fill="none"
+   stroke-width="2"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   class="feather feather-message-square"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <path
+     d="m 19,13 a 2,2 0 0 1 -2,2 H 5 L 1,19 V 3 A 2,2 0 0 1 3,1 h 14 a 2,2 0 0 1 2,2 z"
+     id="path1"
+     style="fill:none;fill-opacity:1;stroke:#212e00;stroke-opacity:1" />
+  <rect
+     style="fill:#212e00;fill-opacity:1;stroke:none;stroke-width:95.743;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+     id="rect1"
+     width="11"
+     height="1.9641944"
+     x="5.25"
+     y="3.5170503"
+     rx="0.91666669" />
+  <rect
+     style="fill:#212e00;fill-opacity:1;stroke:none;stroke-width:95.7424;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+     id="rect1-8"
+     width="11"
+     height="1.9641944"
+     x="5.25"
+     y="7.0170503"
+     rx="0.91666681" />
+  <rect
+     style="fill:#212e00;fill-opacity:1;stroke:none;stroke-width:95.7427;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+     id="rect1-5"
+     width="11"
+     height="1.9641944"
+     x="5.25"
+     y="10.51705"
+     rx="0.91666669" />
+</svg>
+
+`;
+    commentButton.addEventListener('click', function () {
+        showComments(this.dataset.postId);
+    });
+
+    /*
+    let tableContainer = document.createElement('div');
+    let commentsTable = document.createElement('table');
+    let tBody = document.createElement('tbody');
+    tableContainer.classList.add('tableContainer');
+    commentsTable.classList.add('commentsTable');
+    tBody.classList.add('tBody');
+
+    let tRow = document.createElement('tr');
+    let commentingUserPic = document.createElement('td');
+    let commentingUserImg = document.createElement('img');
+    let commentingUser = document.createElement('span');
+    let comment = document.createElement('td');
+    tRow.classList.add('tRow');
+    commentingUserPic.classList.add('commentingUserPic');
+    commentingUserImg.classList.add('commentingUserImg');
+    commentingUser.classList.add('commentingUser');
+    comment.classList.add('comment');
+
+    p.innerHTML = test.description;
+    img.src = '/uploads/' + test.pic;
+
+    const response2 = await PostMethodFetch('/api/commentInfos', { post_id: test.post_id });
+    const data2 = response2.results;
+    let userName;
+    let userPic;
+    let text;
+    for (let i = 0; i < data2.length; i++) {
+        userName = data2[i].username;
+        userPic = data2[i].profile_picture_link;
+        text = data2[i].comment_content;
+        console.log('username: ' + userName);
+        console.log('userpic: ' + userPic);
+        console.log('text: ' + text);
+    }
+
+    commentingUserImg.src = '/uploads/' + userPic;
+    commentingUser.innerHTML = userName;
+    comment.innerHTML = text;*/
+
     postcontent.appendChild(slideshow);
     postcontent.appendChild(p);
 
     interactionRow.appendChild(likeButton);
     interactionRow.appendChild(favoriteButton);
+    interactionRow.appendChild(commentButton);
     interactionRow.appendChild(dislikeButton);
     postcontent.appendChild(interactionRow);
 
@@ -394,4 +493,150 @@ async function favoritePost(div, postId) {
         favoriteValue: div.dataset.favorite == 'true' ? true : false
     });
     if (status != 'success') console.log('Valami hiba történt a poszt elmentése során!');
+}
+
+function closeCommentModal(e, modal, modalContent) {
+    let clickedOutside = e.target == modal;
+
+    if (clickedOutside) {
+        modalContent.style.animation = 'fadeOutDown 0.5s forwards';
+
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modalContent.style.animation = '';
+            document.getElementById('commentTextarea').value = '';
+        }, 500);
+    }
+}
+
+async function showComments(postId) {
+    let modal = document.getElementById('commentModal');
+    let modalContent = document.getElementById('commentModalContent');
+    modalContent.replaceChildren();
+
+    modal.dataset.postId = postId;
+    modal.classList.remove('hidden');
+    modal.removeEventListener('click', closeCommentModal);
+    modal.addEventListener('click', () => {
+        closeCommentModal(event, modal, document.getElementById('commentModalContentWrapper'));
+    });
+
+    const { status, results } = await GetMethodFetch('/api/commentInfos/' + postId);
+
+    if (status == 'Success') {
+        if (results.length == 0) {
+            const encourageText = document.createElement('p');
+            encourageText.innerText =
+                'Még senki sem kommentelt ehhez a poszthoz.\nLegyél te az első!';
+            encourageText.classList.add('encourageText');
+
+            modalContent.appendChild(encourageText);
+        } else {
+            for (const commentData of results) {
+                //console.log(commentData);
+                modalContent.appendChild(generateComment(commentData));
+            }
+        }
+    }
+}
+
+function generateCommentProfilePicture(src) {
+    let profilePictureWrapper = document.createElement('div');
+    profilePictureWrapper.classList.add('profilePictureWrapper');
+
+    let profilePictureBorder = document.createElement('div');
+    profilePictureBorder.classList.add('profilePictureBorder');
+
+    let profilePicture = document.createElement('img');
+
+    src != null
+        ? (profilePicture.src = '/profile_images/' + src)
+        : (profilePicture.src = 'profile_images/defaultProfile.svg');
+
+    profilePicture.classList.add('commentProfilePicture');
+    profilePicture.loading = 'lazy';
+    profilePicture.alt = 'Profil Kép';
+
+    profilePictureBorder.appendChild(profilePicture);
+    profilePictureWrapper.appendChild(profilePictureBorder);
+
+    return profilePictureWrapper;
+}
+
+function generateCommentContent(content) {
+    let contentWrapper = document.createElement('div');
+    contentWrapper.classList.add('commentContentWrapper');
+
+    let commentContent = document.createElement('p');
+    commentContent.innerText = content;
+    commentContent.classList.add('commentContent');
+
+    contentWrapper.appendChild(commentContent);
+    return contentWrapper;
+}
+
+function generateCommentUsername(username) {
+    let contentWrapper = document.createElement('div');
+    contentWrapper.classList.add('commentUsernameWrapper');
+
+    let commentUsername = document.createElement('p');
+    commentUsername.innerText = username + ':';
+    commentUsername.classList.add('commentUsername');
+
+    contentWrapper.appendChild(commentUsername);
+    return contentWrapper;
+}
+
+function generateCommentDate(date) {
+    let contentWrapper = document.createElement('div');
+    contentWrapper.classList.add('commentDateWrapper');
+
+    let commentDate = document.createElement('p');
+    let formattedDate = date_yyyy_MM_dd_hh_mm_ss(date);
+    commentDate.innerText = formattedDate.split(' ')[0] + '\n' + formattedDate.split(' ')[1];
+    commentDate.classList.add('commentDate');
+
+    contentWrapper.appendChild(commentDate);
+    return contentWrapper;
+}
+
+function generateComment(commentData) {
+    let commentWrapper = document.createElement('div');
+    commentWrapper.classList.add('commentWrapper');
+
+    let textWrapper = document.createElement('div');
+    textWrapper.classList.add('commentTextWrapper');
+
+    commentWrapper.appendChild(generateCommentProfilePicture(commentData.profile_picture_link));
+    textWrapper.appendChild(generateCommentUsername(commentData.username));
+    textWrapper.appendChild(generateCommentContent(commentData.comment_content));
+    textWrapper.appendChild(generateCommentDate(commentData.comment_date));
+
+    commentWrapper.appendChild(textWrapper);
+
+    return commentWrapper;
+}
+
+function closeComments() {
+    document.getElementById('commentModalContentWrapper').style.animation =
+        'fadeOutDown 0.5s forwards';
+    setTimeout(() => {
+        document.getElementById('commentModal').classList.add('hidden');
+        document.getElementById('commentModalContentWrapper').style.animation = '';
+        document.getElementById('commentTextarea').value = '';
+    }, 500);
+}
+
+async function sendComment() {
+    const modal = document.getElementById('commentModal');
+    const textarea = document.getElementById('commentTextarea');
+    const message = textarea.value;
+    if (message != '') {
+        await PostMethodFetch('/api/uploadComment', {
+            postId: modal.dataset.postId,
+            commentContent: message
+        });
+        showComments(modal.dataset.postId);
+        textarea.value = '';
+    }
 }
