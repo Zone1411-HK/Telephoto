@@ -24,11 +24,11 @@ rgb(150, 100, 100)
 
 body {
     height: 100vh;
-    width: 100vw;
+    width: 100%;
     font-family: 'Josefin Sans', sans-serif;
     /*font-optical-sizing: auto;*/
     font-size: 14px;
-
+    overflow: hidden;
     background: #ffdd00;
     background: radial-gradient(
         circle,
@@ -251,6 +251,7 @@ form {
     display: flex;
     flex-direction: row;
     height: 95vh;
+    max-height: 95vh;
     position: relative;
 }
 
@@ -274,7 +275,7 @@ form {
     width: 85vw;
     height: 100%;
     gap: 10vw;
-    padding-left: 12.5vw;
+    padding-left: 15vw;
     scrollbar-width: none;
     scroll-behavior: smooth;
     margin-top: 1vh;
@@ -450,6 +451,7 @@ form {
 
 #nav {
     box-shadow: none;
+    animation: fadeInUp 1s forwards;
 }
 
 .slideshowItem {
