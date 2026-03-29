@@ -191,7 +191,7 @@ async function profileInfos() {
 
         let profilePicture =
             results[0].profile_picture_link == null
-                ? '/profile_images/defaultPicture.svg'
+                ? 'defaultProfile.jpg'
                 : results[0].profile_picture_link;
         document.getElementById('profilePicture').src = '/profile_images/' + profilePicture;
         document.getElementById('profilePictureDiv').style.backgroundImage =
@@ -414,6 +414,7 @@ async function saveProfileChanges() {
 function cancelProfileChanges() {
     document.getElementById('profileModify').classList.remove('hidden');
     document.getElementById('saveProfileModification').classList.add('hidden');
+    document.getElementById('deleteProfile').classList.add('hidden');
     this.classList.add('hidden');
 
     document.getElementById('profilePictureUploadLabel').classList.add('hidden');

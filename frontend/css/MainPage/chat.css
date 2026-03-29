@@ -152,7 +152,7 @@
 }
 
 #openedChatWrapper {
-    height: 57%;
+    height: 57vh;
 }
 
 /* You won't believe what it does */
@@ -280,7 +280,7 @@
 }
 
 .messagesDiv {
-    height: 47%;
+    height: 47vh;
     width: 100%;
     display: flex;
     flex-direction: column;

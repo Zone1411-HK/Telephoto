@@ -41,6 +41,13 @@ function addEventListenersToElements() {
 }
 
 async function trendingPosts() {
+    const trendingButtons = document.querySelectorAll('.trendingButton');
+    for (const button of trendingButtons) {
+        button.classList.remove('activeSort');
+        button.removeEventListener('click', trendingPosts);
+    }
+    this.classList.add('activeSort');
+
     let posts = document.getElementById('posts-container');
     posts.replaceChildren();
     const { status, result } = await PostMethodFetch('/api/setOffset', {
@@ -48,16 +55,23 @@ async function trendingPosts() {
         offset: 0
     });
     timeframe = this.children[1].value;
-    await getTopPosts();
+    getTopPosts().then(() => {
+        const trendingButtons = document.querySelectorAll('.trendingButton');
+        for (const button of trendingButtons) {
+            button.addEventListener('click', trendingPosts);
+        }
+    });
 }
 
 async function startUp() {
-    addEventListenersToElements();
     const { status, result } = await PostMethodFetch('/api/setOffset', {
         type: 'reset',
         offset: 0
     });
     await getTopPosts();
+    addEventListenersToElements();
+    const trendingButtons = document.querySelectorAll('.trendingButton');
+    trendingButtons[trendingButtons.length - 1].classList.add('activeSort');
 }
 
 const getTopPosts = async () => {
@@ -77,18 +91,24 @@ const getTopPosts = async () => {
                 type: 'top',
                 offset: 50
             });
-            appendLoadMore();
+            appendLoadMore(data.length == 50);
+        } else {
+            appendLoadMore(false);
         }
     } catch (error) {
         console.error('Hiba' + error);
     }
 };
 
-function appendLoadMore() {
+function appendLoadMore(areThereMorePosts) {
     const loadMore = document.createElement('div');
     loadMore.classList.add('loadMorePost');
-    loadMore.innerHTML = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800px" height="800px" viewBox="0 0 50.00 50.00" enable-background="new 0 0 50 50" xml:space="preserve" fill="#000000" stroke="#000000" stroke-width="1.65"><g id="SVGRepo_bgCarrier" stroke-width="0"/><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/><g id="SVGRepo_iconCarrier"> <line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" x1="25" y1="10.5" x2="25" y2="39.5"/> <circle fill="none" stroke="#000000" cx="25" cy="25" r="23.667"/> <line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" x1="39.5" y1="25" x2="10.5" y2="25"/> </g></svg>`;
-    loadMore.addEventListener('click', loadMorePost);
+    if (areThereMorePosts) {
+        loadMore.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
+        loadMore.addEventListener('click', loadMorePost);
+    } else {
+        loadMore.innerText = 'Úgy néz ki a végére értél';
+    }
     document.getElementById('posts-container').appendChild(loadMore);
 }
 
@@ -245,29 +265,60 @@ function generateSlideshow(links) {
 
     return postImages;
 }
-const hangPictures = async (test) => {
-    let asd = generateSlideshow(test.links);
-    let posts = document.getElementById('posts-container');
-    let post = document.createElement('div');
-    post.classList.add('post');
 
-    let ropediv = generateRope();
-    let clip = generateClip();
-    let slideshow = generateSlideshow(test.links);
+function generateTimestamp(rawDate) {
+    const date = date_yyyy_MM_dd(rawDate);
+    let element = document.createElement('div');
+    element.classList.add('postTimestamp');
+    element.innerText = date;
+    return element;
+}
 
-    let postcontent = document.createElement('div');
-    postcontent.classList.add('postContent');
+function generateTags(tags) {
+    let wrapper = document.createElement('div');
+    wrapper.classList.add('postTagWrapper');
 
-    let p = document.createElement('p');
+    let tagArray = tags.split('#');
+    for (let i = 1; i < tagArray.length; i++) {
+        let tag = document.createElement('span');
+        tag.innerText = '#' + tagArray[i];
+        tag.classList.add('postTag');
+        wrapper.appendChild(tag);
+    }
 
-    let interactionsResult = await GetMethodFetch('/api/interactions/' + test.post_id);
+    return wrapper;
+}
+
+function generateDescription(description) {
+    let descriptionElement = document.createElement('div');
+    descriptionElement.classList.add('postDescription');
+    descriptionElement.innerText = description;
+
+    return descriptionElement;
+}
+
+async function generateInteractions(postId, upvote, downvote) {
+    let interactionsResult = await GetMethodFetch('/api/interactions/' + postId);
     let interactionRow = document.createElement('div');
-    interactionRow.classList.add('likeDiv');
+    interactionRow.classList.add('interactionRow');
+
+    let likeAmount = document.createElement('span');
+    likeAmount.classList.add('interactionText');
+    let upvoteText;
+    if (upvote >= 1000000) {
+        upvoteText = upvote / 1000000 + ' m';
+    } else if (upvote >= 1000) {
+        upvoteText = upvote / 1000 + ' k';
+    } else if (upvote == null) {
+        upvoteText = '0';
+    } else {
+        upvoteText = upvote;
+    }
+    likeAmount.innerText = upvote;
 
     let likeButton = document.createElement('button');
     likeButton.setAttribute('type', 'button');
-    likeButton.innerHTML =
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#314b49ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-up"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>';
+    likeButton.innerHTML = `<div><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#314b49ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-up"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></div><span class="interactionText">${upvoteText}</span>`;
     likeButton.classList.add('interactionButton');
     if (interactionsResult.results.upvote == 1) {
         likeButton.dataset.liked = 'true';
@@ -276,13 +327,24 @@ const hangPictures = async (test) => {
         likeButton.dataset.liked = 'false';
     }
     likeButton.addEventListener('click', function () {
-        like(this, test.post_id);
+        like(this, postId);
     });
 
     let dislikeButton = document.createElement('button');
     dislikeButton.setAttribute('type', 'button');
-    dislikeButton.innerHTML =
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#314b49ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-down"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path></svg>';
+
+    let downvoteText;
+    if (downvote >= 1000000) {
+        downvoteText = downvote / 1000000 + ' m';
+    } else if (downvote >= 1000) {
+        downvoteText = downvote / 1000 + ' k';
+    } else if (downvote == null) {
+        downvoteText = '0';
+    } else {
+        downvoteText = downvote;
+    }
+
+    dislikeButton.innerHTML = `<div><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#314b49ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-down"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path></svg></div><span class="interactionText">${downvoteText}</span>`;
     dislikeButton.classList.add('interactionButton');
     if (interactionsResult.results.downvote == 1) {
         dislikeButton.dataset.disliked = 'true';
@@ -291,10 +353,10 @@ const hangPictures = async (test) => {
         dislikeButton.dataset.disliked = 'false';
     }
     dislikeButton.addEventListener('click', function () {
-        dislike(this, test.post_id);
+        dislike(this, postId);
     });
 
-    let favoriteResult = await GetMethodFetch('/api/isFavorited/' + test.post_id);
+    let favoriteResult = await GetMethodFetch('/api/isFavorited/' + postId);
     let favoriteButton = document.createElement('button');
     favoriteButton.type = 'button';
     favoriteButton.classList.add('interactionButton');
@@ -306,13 +368,13 @@ const hangPictures = async (test) => {
         favoriteButton.dataset.favorite = 'false';
     }
     favoriteButton.addEventListener('click', function () {
-        favoritePost(this, test.post_id);
+        favoritePost(this, postId);
     });
 
     let commentButton = document.createElement('button');
     commentButton.type = 'button';
     commentButton.classList.add('interactionButton');
-    commentButton.dataset.postId = test.post_id;
+    commentButton.dataset.postId = postId;
     commentButton.innerHTML = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    viewBox="0 0 20 19.999859"
@@ -362,54 +424,40 @@ const hangPictures = async (test) => {
         showComments(this.dataset.postId);
     });
 
-    /*
-    let tableContainer = document.createElement('div');
-    let commentsTable = document.createElement('table');
-    let tBody = document.createElement('tbody');
-    tableContainer.classList.add('tableContainer');
-    commentsTable.classList.add('commentsTable');
-    tBody.classList.add('tBody');
-
-    let tRow = document.createElement('tr');
-    let commentingUserPic = document.createElement('td');
-    let commentingUserImg = document.createElement('img');
-    let commentingUser = document.createElement('span');
-    let comment = document.createElement('td');
-    tRow.classList.add('tRow');
-    commentingUserPic.classList.add('commentingUserPic');
-    commentingUserImg.classList.add('commentingUserImg');
-    commentingUser.classList.add('commentingUser');
-    comment.classList.add('comment');
-
-    p.innerHTML = test.description;
-    img.src = '/uploads/' + test.pic;
-
-    const response2 = await PostMethodFetch('/api/commentInfos', { post_id: test.post_id });
-    const data2 = response2.results;
-    let userName;
-    let userPic;
-    let text;
-    for (let i = 0; i < data2.length; i++) {
-        userName = data2[i].username;
-        userPic = data2[i].profile_picture_link;
-        text = data2[i].comment_content;
-        console.log('username: ' + userName);
-        console.log('userpic: ' + userPic);
-        console.log('text: ' + text);
-    }
-
-    commentingUserImg.src = '/uploads/' + userPic;
-    commentingUser.innerHTML = userName;
-    comment.innerHTML = text;*/
-
-    postcontent.appendChild(slideshow);
-    postcontent.appendChild(p);
-
     interactionRow.appendChild(likeButton);
     interactionRow.appendChild(favoriteButton);
     interactionRow.appendChild(commentButton);
     interactionRow.appendChild(dislikeButton);
+
+    return interactionRow;
+}
+
+const hangPictures = async (test) => {
+    let posts = document.getElementById('posts-container');
+    let post = document.createElement('div');
+    post.classList.add('post');
+
+    let ropediv = generateRope();
+    let clip = generateClip();
+    let slideshow = generateSlideshow(test.links);
+
+    let timestamp = generateTimestamp(test.creation_date);
+    slideshow.appendChild(timestamp);
+
+    let tags = generateTags(test.tags);
+
+    let description = generateDescription(test.description);
+
+    let interactionRow = await generateInteractions(test.post_id, test.upvote, test.downvote);
+
+    let postcontent = document.createElement('div');
+    postcontent.classList.add('postContent');
+
+    postcontent.appendChild(slideshow);
+
     postcontent.appendChild(interactionRow);
+    postcontent.appendChild(tags);
+    postcontent.appendChild(description);
 
     post.appendChild(ropediv);
     post.appendChild(clip);
@@ -444,8 +492,8 @@ async function like(div, postId) {
         div.dataset.liked = 'true';
         div.classList.add('activeLike');
     }
-    div.parentNode.children[2].dataset.disliked = 'false';
-    div.parentNode.children[2].classList.remove('activeLike');
+    div.parentNode.children[3].dataset.disliked = 'false';
+    div.parentNode.children[3].classList.remove('activeLike');
 
     const { status } = await PostMethodFetch('/api/uploadInteraction', {
         postId: postId,
@@ -592,7 +640,7 @@ function generateCommentDate(date) {
     contentWrapper.classList.add('commentDateWrapper');
 
     let commentDate = document.createElement('p');
-    let formattedDate = date_yyyy_MM_dd_hh_mm_ss(date);
+    let formattedDate = date_yyyy_MM_dd_hh_mm(date);
     commentDate.innerText = formattedDate.split(' ')[0] + '\n' + formattedDate.split(' ')[1];
     commentDate.classList.add('commentDate');
 

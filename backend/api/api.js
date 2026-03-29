@@ -369,9 +369,7 @@ router.get('/topPosts/:timeFrame', async (request, response) => {
     try {
         const timeFrame = request.params.timeFrame;
         const data = await database.topPosts(timeFrame, postTypeOffset.offset);
-        console.log(data);
 
-        console.log(postTypeOffset);
         if (data != null) {
             response.status(200).json({
                 status: 'Success',

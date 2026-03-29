@@ -1,3 +1,24 @@
+@font-face {
+    font-family: quartzDisplay;
+    src: url(../fonts/Technology.ttf);
+}
+@font-face {
+    font-family: quartzDisplay;
+    src: url(../fonts/Technology-Bold.ttf);
+    font-weight: bold;
+}
+@font-face {
+    font-family: quartzDisplay;
+    src: url(../fonts/Technology-Italic.ttf);
+    font-style: italic;
+}
+@font-face {
+    font-family: quartzDisplay;
+    src: url(../fonts/Technology-BoldItalic.ttf);
+    font-style: italic;
+    font-weight: bold;
+}
+
 #nav {
     position: sticky;
     display: flex;
@@ -43,6 +64,10 @@
     background-size: cover;
     user-select: none;
     overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .backdropWrapper {
@@ -57,7 +82,17 @@
 .next {
     height: 100%;
     width: 15%;
+    font-size: 60px;
+    color: rgb(50, 50, 50);
+    -webkit-text-stroke: 1px white;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.25s;
 }
+
 .closeButton {
     position: absolute;
     width: 40px;
@@ -65,18 +100,10 @@
     z-index: 102;
     left: 20px;
     top: 20px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    font-size: 60px;
-    color: rgb(50, 50, 50);
-    -webkit-text-stroke: 1px white;
-    cursor: pointer;
 }
 .previous:hover,
 .next:hover {
-    background-color: rgba(0, 0, 0, 0.75);
+    background-color: rgba(0, 0, 0, 0.65);
 }
 
 .slideshow {

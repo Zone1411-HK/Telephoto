@@ -13,7 +13,7 @@ function date_yyyy_MM_dd(originDate) {
     return `${year}-${month}-${day}`;
 }
 
-function date_yyyy_MM_dd_hh_mm_ss(originDate) {
+function date_yyyy_MM_dd_hh_mm(originDate) {
     const date = new Date(originDate);
     const year = date.getFullYear();
     let month = date.getMonth() + 1;
@@ -36,12 +36,7 @@ function date_yyyy_MM_dd_hh_mm_ss(originDate) {
         minute = '0' + minute.toString();
     }
 
-    let second = date.getSeconds(date);
-    if (second.length == 1) {
-        second = '0' + second.toString();
-    }
-
-    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+    return `${year}-${month}-${day} ${hour}:${minute}`;
 }
 
 async function isLoggedIn() {

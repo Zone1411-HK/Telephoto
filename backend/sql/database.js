@@ -154,13 +154,13 @@ async function topPosts(timeFrame, offset) {
         let result = [];
 
         const topPostsSql = `
-        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link
+        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link, SUM(interactions.upvote) as upvote, SUM(interactions.downvote) as downvote
         FROM posts 
         LEFT JOIN users ON users.user_id = posts.user_id 
         LEFT JOIN interactions ON interactions.post_id = posts.post_id 
         WHERE posts.creation_date > NOW() - INTERVAL ? DAY
         GROUP BY posts.post_id
-        ORDER BY COUNT(interactions.upvote) - COUNT(interactions.downvote) DESC
+        ORDER BY SUM(interactions.upvote) - SUM(interactions.downvote) DESC
         LIMIT 50 OFFSET ?;
         `;
         result = await pool.execute(topPostsSql, [timeFrame, offset]);

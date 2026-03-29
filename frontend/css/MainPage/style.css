@@ -29,15 +29,15 @@ body {
     /*font-optical-sizing: auto;*/
     font-size: 14px;
     overflow: hidden;
-    background: #ffdd00;
+    background: rgb(220, 210, 180);
+    /*
     background: radial-gradient(
         circle,
-        /*rgba(255, 221, 0, 1) 5%,*/ rgba(200, 230, 255, 1) 5%,
+        rgba(255, 221, 0, 1) 5%, rgba(200, 230, 255, 1) 5%,
         rgba(170, 200, 225, 1) 50%,
         rgba(140, 170, 195, 1) 100%
     );
 
-    /*
     background: #333333;
     background: linear-gradient(
         315deg,
@@ -171,8 +171,9 @@ form {
     font-size: 1rem;
     overflow: hidden;
     text-overflow: ellipsis;
-    border: 1px solid rgb(183, 197, 135);
+    border: 1px solid rgb(163, 177, 115);
     background-color: rgb(233, 247, 185);
+    color: #212e00;
     transition: 0.2s;
     height: 100%;
     display: flex;
@@ -180,6 +181,15 @@ form {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    user-select: none;
+    filter: brightness(100%);
+}
+
+.activeSort {
+    border: 1px solid rgb(0, 57, 61);
+    background-color: rgb(52, 129, 133);
+    color: rgb(233, 247, 185);
+    font-weight: 400;
 }
 
 .trendingButton,
@@ -189,7 +199,7 @@ form {
 
 .trendingButton:hover,
 .egyebButton:hover {
-    background-color: rgb(213, 227, 165);
+    filter: brightness(80%);
 }
 
 .egyebButton {
@@ -218,38 +228,65 @@ form {
     justify-content: center;
     align-items: center;
     background-color: inherit;
+    border-radius: inherit;
     border: none;
     padding: 0;
     flex-basis: 0;
     flex-grow: 1;
-    padding: 2px 0 2px 0;
+    transition: 0.25s;
+    gap: 6px;
+}
+
+.interactionButton div {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+}
+
+.interactionText {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    font-size: 1.25rem;
+    color: #212e00;
 }
 
 .interactionButton:hover {
-    background-color: gray;
+    background-color: #ccccbd;
 }
 
 .interactionButton svg {
-    height: 100%;
-    height: 100%;
+    height: 1.5rem;
+    max-height: 65%;
     fill: none;
-    stroke: #212e00;
+    stroke: rgb(109, 109, 94);
+    stroke-width: 1px;
 }
 
-.activeLike svg {
-    fill: #212e00;
-}
-
+.activeLike svg,
 .activeFavorite svg {
-    fill: goldenrod;
+    fill: rgb(255, 255, 214);
 }
 
-.likeDiv {
+.interactionRow {
     min-height: 20px;
+    width: 100%;
     height: 5%;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    border: 1px solid rgb(139, 139, 124);
+    border-top: none;
+    background-color: rgb(229, 229, 214);
+    border-radius: 3px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 .home {
@@ -358,10 +395,15 @@ form {
     height: 100%;
     width: 100%;
     z-index: 100;
-    background-color: white;
+    background-color: rgb(239, 239, 224);
+    background-image: url('https://www.transparenttextures.com/patterns/groovepaper.png');
     padding: 25px;
     /*animation: fadeInUp 1s forwards;*/
-    box-shadow: 0px 0px 10px 2px rgba(100, 100, 100, 0.75);
+    box-shadow: 0px 0px 30px 5px rgb(139, 139, 124, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 5px;
 }
 
 .imgDiv {
@@ -445,13 +487,29 @@ form {
     margin-top: 35px;
     height: 90%;
     width: 15vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: rgb(75, 75, 75);
+    text-align: center;
+}
+
+.loadMorePost svg:hover {
+    background-color: rgba(100, 100, 100, 0.5);
 }
 
 .loadMorePost svg {
-    height: 100%;
+    height: fit-content;
     width: 50%;
     aspect-ratio: 1/1;
     object-fit: contain;
+    stroke: #212e00;
+    clip-path: circle();
+    cursor: pointer;
+    transition: 0.25s;
+    padding: 10px;
 }
 
 #nav {
@@ -467,4 +525,73 @@ form {
 .postContent p {
     height: 5%;
     margin: 0;
+}
+
+.postTimestamp {
+    display: flex;
+    position: absolute;
+    top: 5px;
+    right: 17.5%;
+    justify-content: start;
+    align-items: center;
+    color: rgb(220, 210, 180);
+    font-size: 1.5rem;
+    transition: 0.25s;
+    font-family: quartzDisplay;
+}
+
+.postImages {
+    border: 1px solid rgb(139, 139, 124);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.postImages:hover .postTimestamp {
+    opacity: 0;
+}
+
+.postTagWrapper {
+    width: 100%;
+    height: 10%;
+    max-height: 10%;
+    color: rgb(75, 75, 75);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    scrollbar-width: thin;
+
+    gap: 0px 10px;
+    margin-top: 10px;
+}
+
+.postTag {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 5px 2px 5px;
+    height: 33%;
+    max-width: 50%;
+    text-overflow: ellipsis;
+    font-size: 0.8rem;
+    border: 1px solid rgb(139, 139, 124);
+    border-radius: 5px;
+    user-select: none;
+    transition: 0.25s;
+}
+
+.postTag:hover {
+    background-color: rgb(209, 209, 194);
+}
+
+.postDescription {
+    border: 1px solid rgb(175, 175, 175);
+    width: 90%;
+    height: 30%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 3px;
+    color: rgb(80, 75, 70);
 }
