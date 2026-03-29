@@ -22,6 +22,7 @@ async function getChats() {
         const existingChats = document.getElementById('existingChats');
         existingChats.replaceChildren();
         for (const chat of chatArray) {
+            console.log(chat);
             const chatDiv = document.createElement('div');
             chatDiv.classList.add('chat');
 

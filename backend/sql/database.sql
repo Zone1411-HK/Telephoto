@@ -178,6 +178,12 @@ FOR EACH ROW
 DELETE FROM messages 
 WHERE (SELECT member_id FROM chat_members WHERE user_id = OLD.user_id) = messages.member_id;
 
+CREATE TRIGGER delete_chatmember_messages
+BEFORE DELETE ON chat_members
+FOR EACH ROW
+DELETE FROM messages 
+WHERE OLD.member_id = messages.member_id;
+
 CREATE TRIGGER delete_user_member
 BEFORE DELETE ON users
 FOR EACH ROW
