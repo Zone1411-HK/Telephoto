@@ -63,6 +63,8 @@ async function getChats() {
             chatDiv.dataset.name = chat.name;
             chatDiv.addEventListener('click', openChat);
             existingChats.appendChild(chatDiv);
+
+            socket.emit('joinRoom', chat.id);
         }
     } else {
         console.error(chatArray);
@@ -308,14 +310,13 @@ async function sendMessage() {
     const newMessageInput = document.getElementById('newMessageInput');
     if (newMessageInput.value != '') {
         const newMessage = newMessageInput.value;
-        const chatId = await GetMethodFetch('/api/sendChatId');
-        const id = chatId.Result;
+        const chatId = document.getElementById('openedChat').dataset.chatId;
         let username = await GetMethodFetch('/api/sendUsername');
         username = username.Result;
-        socket.emit('chatId', id);
+        socket.emit('newMessage', chatId);
         const response = await PostMethodFetch('/api/sendMessage', {
             message: newMessage,
-            chatId: chatId.Result,
+            chatId: chatId,
             username: username
         });
 
@@ -506,6 +507,6 @@ async function filePost(url, data) {
     }
 }
 
-socket.on('newMessage', (msg) => {
+socket.on('newMessage', () => {
     refreshChat();
 });
