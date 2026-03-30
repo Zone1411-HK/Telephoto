@@ -278,12 +278,14 @@ function generateTags(tags) {
     let wrapper = document.createElement('div');
     wrapper.classList.add('postTagWrapper');
 
-    let tagArray = tags.split('#');
-    for (let i = 1; i < tagArray.length; i++) {
-        let tag = document.createElement('span');
-        tag.innerText = '#' + tagArray[i];
-        tag.classList.add('postTag');
-        wrapper.appendChild(tag);
+    if (tags) {
+        let tagArray = tags.split('#');
+        for (let i = 1; i < tagArray.length; i++) {
+            let tag = document.createElement('span');
+            tag.innerText = '#' + tagArray[i];
+            tag.classList.add('postTag');
+            wrapper.appendChild(tag);
+        }
     }
 
     return wrapper;
@@ -470,10 +472,16 @@ const hangPictures = async (test) => {
     };
 
     const callback = (entries) => {
+        let matchMedia = window.matchMedia('(width > 1000px)');
+
         entries.forEach((element) => {
             if (element.isIntersecting) {
                 let postContent = element.target.children[2];
-                postContent.style.animation = 'fadeInUp 0.5s forwards';
+                if (matchMedia.matches) {
+                    postContent.style.animation = 'fadeInUp 0.5s forwards';
+                } else {
+                    postContent.style.animation = 'fadeInLeft 0.5s forwards';
+                }
             }
         });
     };

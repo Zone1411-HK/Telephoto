@@ -161,11 +161,8 @@ async function generateChat(element) {
     const closeButton = document.createElement('button');
     closeButton.type = 'button';
     closeButton.addEventListener('click', closeChat);
+    closeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
 
-    const closeImg = document.createElement('img');
-    closeImg.src = '/images/x(2).svg';
-
-    closeButton.appendChild(closeImg);
     chatNameCloseDiv.appendChild(closeButton);
 
     nav.appendChild(chatNameDiv);
@@ -288,12 +285,7 @@ function generateMessageInput() {
     const send = document.createElement('button');
     send.type = 'button';
     send.addEventListener('click', sendMessage);
-
-    const svg = document.createElement('img');
-    svg.src = '/images/send(1).svg';
-    svg.classList.add('img-fluid');
-
-    send.appendChild(svg);
+    send.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>`;
 
     div.appendChild(textArea);
     div.appendChild(send);

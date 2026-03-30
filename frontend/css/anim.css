@@ -50,3 +50,12 @@
         transform: translateX(0%);
     }
 }
+
+@keyframes openChat {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
