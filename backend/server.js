@@ -55,9 +55,12 @@ io.on('connection', (socket) => {
         io.emit('responseActiveUsers', activeUsers);
     });
 
-    socket.on('chatId', (msg) => {
-        console.log(msg);
-        io.emit('newMessage', msg);
+    socket.on('newMessage', (chatId) => {
+        io.to('chat-' + chatId).emit('newMessage');
+    });
+
+    socket.on('joinRoom', (id) => {
+        socket.join('chat-' + id);
     });
 
     socket.on('disconnect', () => {
