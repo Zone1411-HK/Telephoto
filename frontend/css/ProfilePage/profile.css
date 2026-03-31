@@ -2,7 +2,9 @@ body {
     position: relative;
     width: 100vw;
     height: 100vh;
-    background-color: #98bc7f;
+    /* background-color: #98bc7f; */
+
+    background-color: var(--SecondaryDark);
     font-family: 'Josefin Sans', sans-serif;
 }
 
@@ -40,12 +42,13 @@ body {
     width: 100vw;
     height: 95vh;
     max-height: 95vh;
-    padding: 3.5vh 3.5vw 3.5vh 3.5vw;
+    padding: 6vh 5vw 3vh 5vw;
     position: relative;
     display: flex;
     flex-direction: row;
     gap: 3vw;
     overflow: hidden;
+    font-size: 16px;
 }
 
 /*!#region ProfileInfos */
@@ -53,7 +56,7 @@ body {
 /*? Magasság: 10% = 8.8vh, 50% = 44vh, 100% = 88vh */
 
 #profileInfos {
-    width: 35vw;
+    width: 33.5vw;
     height: 100%;
     background-color: #f0febe;
     display: flex;
@@ -227,7 +230,7 @@ body {
 /*!#region Posts */
 
 #postsWrapper {
-    width: 55vw;
+    width: 53.5vw;
     height: 100%;
     position: relative;
     display: flex;
@@ -700,6 +703,17 @@ body {
     background-color: rgb(246, 155, 155);
 }
 
+#logoutWrapper {
+    flex: 0.25 0.25 0;
+}
+#logoutWrapper svg {
+    max-width: 30px;
+    max-height: 30px;
+    height: 100%;
+    width: 100%;
+    aspect-ratio: 1/1;
+}
+
 @media (max-width: 768px) {
     #root {
         flex-direction: column;
@@ -724,6 +738,13 @@ body {
 
     #openedPost {
         margin-top: 15px;
+    }
+
+    #logoutWrapper {
+        flex: 0.5 0.5 0;
+    }
+    .navButton span {
+        display: none;
     }
 }
 

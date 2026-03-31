@@ -18,6 +18,7 @@
         <script src="/javascript/fetch.js"></script>
         <script src="node/socket.io/client-dist/socket.io.js"></script>
         <script src="node/leaflet/dist/leaflet.js"></script>
+        <script src="/javascript/util.js"></script>
         <script src="/javascript/AdminPage/admin.js"></script>
         <!--? FONTS-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,59 +32,47 @@
         <div id="root">
             <div id="sidebar" data-collapsed="false">
                 <button id="collapseSidebar">
-                    <img src="/images/arrow-left.svg" class="visible" />
-                    <img src="/images/arrow-right.svg" class="invisible" />
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#ffffff"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-menu"
+                    >
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
                 </button>
                 <div id="sidebarTitle">
                     <h2 id="adminUsername">Sigmin</h2>
                 </div>
                 <div id="navButtons">
-                    <a class="navButton" href="#profiles">
+                    <a class="altNavButton" href="#profiles">
                         <img src="/images/user.svg" class="navButtonSVG" alt="" /><span
                             >Profilok</span
                         >
                     </a>
-                    <a class="navButton" href="#posts">
+                    <a class="altNavButton" href="#posts">
                         <img src="/images/post.svg" class="navButtonSVG" alt="" /><span
                             >Posztok</span
                         >
                     </a>
-                    <a class="navButton" href="#comments">
+                    <a class="altNavButton" href="#comments">
                         <img src="/images/comment.svg" class="navButtonSVG" alt="" /><span
                             >Kommentek</span
                         >
                     </a>
-                    <a class="navButton" href="#profiles">
+                    <a class="altNavButton" href="#reports">
                         <img src="/images/flag.svg" class="navButtonSVG" alt="" /><span
                             >Jelentések</span
                         >
                     </a>
-                </div>
-                <div id="navSearches">
-                    <label for="profileSearchId" class="searchLabel">
-                        <input
-                            type="text"
-                            id="profileSearchId"
-                            class="searchId"
-                            placeholder="Profil ID"
-                            maxlength="12"
-                        />
-                        <button type="button" id="profileSearchButton">
-                            <img src="/images/search.svg" />
-                        </button>
-                    </label>
-                    <label for="postSearchId" class="searchLabel">
-                        <input
-                            type="text"
-                            class="searchId"
-                            id="postSearchId"
-                            placeholder="Poszt ID"
-                            maxlength="12"
-                        />
-                        <button type="button" id="postSearchButton">
-                            <img src="/images/search.svg" />
-                        </button>
-                    </label>
                 </div>
                 <div id="activeUsers">
                     <span id="userTrackerTitle">Aktív felhasználók</span>
@@ -103,6 +92,50 @@
                         <div class="userTrackerColumn"></div>
                     </div>
                     <div id="userTrackerTimes"></div>
+                </div>
+                <div id="nav">
+                    <span class="navTitle">Admin oldal elhagyása</span>
+                    <a href="/" class="navButton"
+                        ><svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-home"
+                        >
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <span>Főoldal</span>
+                    </a>
+                    <a href="/map" class="navButton"
+                        ><svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-map"
+                        >
+                            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                            <line x1="8" y1="2" x2="8" y2="18"></line>
+                            <line x1="16" y1="6" x2="16" y2="22"></line></svg
+                        ><span>Térkép</span></a
+                    >
+                    <a href="/profile" class="navButton" id="profilGomb"
+                        ><svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-user"
+                        >
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle></svg
+                        ><span>Profil</span></a
+                    >
                 </div>
             </div>
             <div id="adminContent">
@@ -435,6 +468,76 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. A iusto asperiores repe
                         </div>
                     </div>
                 </div>
+                <div class="adminPanel" id="reports">
+                    <div class="adminPanelHeader"><h3>Kommentek</h3></div>
+                    <div class="adminPanelContent">
+                        <div class="tableWrapper" id="reportsTableDiv">
+                            <table id="reportsTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Poszt ID</th>
+                                        <th>Felhasználó</th>
+                                        <th>Komment tartalma</th>
+                                        <th>Komment dátuma</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportsTbody"></tbody>
+                            </table>
+                        </div>
+                        <div id="openedComment">
+                            <div id="commentDiv">
+                                <div id="commentDataHeader">
+                                    <div id="commentUserPost">
+                                        <div id="commentUser">Felhasználó: Béla #1</div>
+                                        <div id="commentPost">Poszt: #1</div>
+                                    </div>
+                                    <div id="commentDateDiv">
+                                        Dátum:
+                                        <input
+                                            type="date"
+                                            id="commentDate"
+                                            disabled
+                                            class="commentModifyData"
+                                        />
+                                    </div>
+                                </div>
+                                <div id="commentDataBody">
+                                    <textarea
+                                        id="commentContent"
+                                        class="commentModifyData"
+                                        disabled
+                                        maxlength="500"
+                                    >
+Lorem ipsum dolor sit amet consectetur adipisicing elit. A iusto asperiores repellendus explicabo. Tempora delectus iste nisi veritatis provident saepe placeat esse! Nostrum sed similique illum magni. Neque, explicabo laboriosam?</textarea
+                                    >
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <div class="adminAction adminActionBan" id="commentActionBan">
+                                    <h3>törlés</h3>
+                                </div>
+                                <div class="adminAction adminActionModify" id="commentActionModify">
+                                    <h3>módosítás</h3>
+                                </div>
+                                <div
+                                    class="adminAction adminActionConfirmModify"
+                                    id="commentActionConfirmModify"
+                                >
+                                    <h3>megerősítés</h3>
+                                </div>
+                                <div class="adminAction adminActionClear" id="commentActionClear">
+                                    <h3
+                                        id="commentActionClearH3"
+                                        class="disabledButton adminActionClearH3"
+                                    >
+                                        tisztázás
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -448,7 +551,7 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. A iusto asperiores repe
             <a class="navButton" href="#comments">
                 <img src="/images/comment.svg" class="navButtonSVG" alt="kommentek" />
             </a>
-            <a class="navButton" href="#profiles">
+            <a class="navButton" href="#reports">
                 <img src="/images/flag.svg" class="navButtonSVG" alt="jelentések" />
             </a>
         </nav>
