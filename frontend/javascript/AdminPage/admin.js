@@ -2,6 +2,7 @@ let socket = io();
 let userTrackerArray = [];
 let userTrackerTimeArray = [];
 let map;
+let matchMedia = window.matchMedia('(width > 768px)');
 
 socket.emit('requestActiveUsers');
 setInterval(() => {
@@ -9,19 +10,73 @@ setInterval(() => {
 }, 1500);
 
 document.addEventListener('DOMContentLoaded', () => {
+    isAdmin();
     getProfiles();
     getPosts();
     getComments();
-    //responsiveUsername();
     adminAddEventListeners();
     loadAnimation();
 });
+window.addEventListener('resize', () => {
+    let sidebar = document.getElementById('sidebar');
+
+    if (!matchMedia.matches) {
+        sidebar.dataset.collapsed = 'false';
+        sidebar.classList.remove('collapsed');
+        for (let i = 1; i < sidebar.children.length; i++) {
+            sidebar.children[i].style.visibility = 'visible';
+        }
+    }
+});
+
+function collapseSidebar() {
+    let sidebar = document.getElementById('sidebar');
+    let adminContent = document.getElementById('adminContent');
+    let isCollapsed = sidebar.dataset.collapsed;
+
+    if (isCollapsed == 'true') {
+        sidebar.dataset.collapsed = 'false';
+        this.style.right = '-2.5vh';
+        sidebar.classList.remove('collapsed');
+        adminContent.style.width = '88vw';
+    } else {
+        sidebar.classList.add('collapsed');
+        adminContent.style.width = '98vw';
+        sidebar.dataset.collapsed = 'true';
+    }
+
+    toggleSidebarVisibility(sidebar);
+}
+
+function toggleSidebarVisibility(parent) {
+    let children = parent.children;
+    for (let i = 1; i < children.length; i++) {
+        console.log(children[i].style.visibility);
+        if (children[i].style.visibility == 'visible') {
+            children[i].style.visibility = 'hidden';
+        } else {
+            children[i].style.visibility = 'visible';
+        }
+    }
+}
 
 //! COMMENT
 //#region COMMENT
 
+async function isAdmin() {
+    let loggedIn = await isLoggedIn();
+    if (!loggedIn) {
+        window.location.href = '/';
+    } else {
+        const { Status } = await GetMethodFetch('/api/isAdmin');
+        if (Status != 'success') {
+            window.location.href = '/';
+        }
+    }
+}
+
 function adminAddEventListeners() {
-    const navButtons = document.getElementsByClassName('navButton');
+    const navButtons = document.getElementsByClassName('altNavButton');
     for (const navButton of navButtons) {
         navButton.addEventListener('click', navButtonClick);
     }
@@ -80,34 +135,34 @@ function loadAnimation() {
 async function getComments() {
     try {
         const response = await GetMethodFetch('/api/getCommentsAdmin');
-        const result = response.Result;
-        const tbody = document.getElementById('commentsTbody');
-        tbody.replaceChildren();
-        for (const obj of result) {
-            const tr = document.createElement('tr');
-            const values = Object.entries(obj);
-            for (let i = 0; i < values.length - 1; i++) {
-                const td = document.createElement('td');
+        if (response.Status == 'Success') {
+            const result = response.Result;
+            const tbody = document.getElementById('commentsTbody');
+            tbody.replaceChildren();
+            for (const obj of result) {
+                const tr = document.createElement('tr');
+                const values = Object.entries(obj);
+                for (let i = 0; i < values.length - 1; i++) {
+                    const td = document.createElement('td');
 
-                if (values[i][0] == 'commentContent') {
-                    const div = document.createElement('div');
-                    div.classList.add('commentContent');
-                    div.innerText = values[i][1];
-                    td.appendChild(div);
-                } else {
-                    td.innerText = values[i][1];
+                    if (values[i][0] == 'commentContent') {
+                        const div = document.createElement('div');
+                        div.classList.add('commentContent');
+                        div.innerText = values[i][1];
+                        td.appendChild(div);
+                    } else {
+                        td.innerText = values[i][1];
+                    }
+                    tr.appendChild(td);
                 }
-                tr.appendChild(td);
+                tr.addEventListener('click', openComment);
+                if (values[5][1] == true) {
+                    tr.classList.add('reported');
+                    tr.dataset.reported = true;
+                }
+                tr.dataset.commentId = values[0][1];
+                tbody.appendChild(tr);
             }
-            tr.addEventListener('click', openComment);
-            console.log(values[5]);
-            if (values[5][1] == true) {
-                tr.classList.add('reported');
-                tr.dataset.reported = true;
-            }
-            tr.dataset.commentId = values[0][1];
-            console.log(tr);
-            tbody.appendChild(tr);
         }
     } catch (error) {
         console.error('Galiba támadt');
@@ -231,34 +286,36 @@ async function deleteComment() {
 async function getProfiles() {
     try {
         const response = await GetMethodFetch('/api/getProfilesAdmin');
-        const result = response.Result;
-        const tbody = document.getElementById('profilesTbody');
-        tbody.replaceChildren();
-        for (const obj of result) {
-            const tr = document.createElement('tr');
-            const values = Object.entries(obj);
+        if (response.Status == 'Success') {
+            const result = response.Result;
+            const tbody = document.getElementById('profilesTbody');
+            tbody.replaceChildren();
+            for (const obj of result) {
+                const tr = document.createElement('tr');
+                const values = Object.entries(obj);
 
-            for (let i = 0; i < values.length - 2; i++) {
-                const td = document.createElement('td');
-                td.innerText = values[i][1];
-                if (values[i][0] == 'userId') {
-                    tr.dataset.userId = values[i][1];
+                for (let i = 0; i < values.length - 2; i++) {
+                    const td = document.createElement('td');
+                    td.innerText = values[i][1];
+                    if (values[i][0] == 'userId') {
+                        tr.dataset.userId = values[i][1];
+                    }
+
+                    tr.appendChild(td);
+                }
+                if (values[6][1]) {
+                    tr.classList.add('adminProfile');
+                    tr.dataset.admin = true;
                 }
 
-                tr.appendChild(td);
-            }
-            if (values[6][1]) {
-                tr.classList.add('adminProfile');
-                tr.dataset.admin = true;
-            }
+                if (values[7][1]) {
+                    tr.classList.add('reported');
+                    tr.dataset.reported = true;
+                }
 
-            if (values[7][1]) {
-                tr.classList.add('reported');
-                tr.dataset.reported = true;
+                tr.addEventListener('click', openProfile);
+                tbody.appendChild(tr);
             }
-
-            tr.addEventListener('click', openProfile);
-            tbody.appendChild(tr);
         }
     } catch (error) {
         console.error(error);
@@ -386,6 +443,8 @@ function closeProfile() {
     document.getElementById('openedProfile').removeAttribute('data-user-id');
     document.getElementById('profileBack').style.display = 'none';
     getProfiles();
+    getPosts();
+    getComments();
 }
 
 async function deleteProfile() {
@@ -408,29 +467,31 @@ async function clearProfile() {
 async function getPosts() {
     try {
         const response = await GetMethodFetch('/api/getPostsAdmin');
-        const result = response.Result;
-        const tbody = document.getElementById('postsTbody');
-        tbody.replaceChildren();
-        for (const obj of result) {
-            const tr = document.createElement('tr');
-            const values = Object.entries(obj);
+        if (response.Status == 'Success') {
+            const result = response.Result;
+            const tbody = document.getElementById('postsTbody');
+            tbody.replaceChildren();
+            for (const obj of result) {
+                const tr = document.createElement('tr');
+                const values = Object.entries(obj);
 
-            for (let i = 0; i < values.length - 1; i++) {
-                const td = document.createElement('td');
-                td.innerText = values[i][1];
-                if (values[i][0] == 'postId') {
-                    tr.dataset.postId = values[i][1];
+                for (let i = 0; i < values.length - 1; i++) {
+                    const td = document.createElement('td');
+                    td.innerText = values[i][1];
+                    if (values[i][0] == 'postId') {
+                        tr.dataset.postId = values[i][1];
+                    }
+
+                    tr.appendChild(td);
+                }
+                if (values[6][1] == true) {
+                    tr.classList.add('reported');
+                    tr.dataset.reported = true;
                 }
 
-                tr.appendChild(td);
+                tr.addEventListener('click', openPost);
+                tbody.appendChild(tr);
             }
-            if (values[6][1] == true) {
-                tr.classList.add('reported');
-                tr.dataset.reported = true;
-            }
-
-            tr.addEventListener('click', openPost);
-            tbody.appendChild(tr);
         }
     } catch (error) {
         console.error(error);
@@ -514,6 +575,7 @@ function closePost() {
         .classList.remove(...document.getElementById('postMap').classList);
     map.remove();
     getPosts();
+    getComments();
 }
 
 async function deletePost() {
@@ -736,41 +798,6 @@ function inputDate(originDate) {
     return `${year}-${month}-${day}`;
 }
 
-function collapseSidebar() {
-    let sidebar = document.getElementById('sidebar');
-    let adminContent = document.getElementById('adminContent');
-    let isCollapsed = sidebar.dataset.collapsed;
-
-    if (isCollapsed == 'true') {
-        sidebar.style.width = '10vw';
-        adminContent.style.width = '90vw';
-        sidebar.dataset.collapsed = 'false';
-        this.style.left = '9vw';
-    } else {
-        sidebar.style.width = '2vw';
-        adminContent.style.width = '98vw';
-        sidebar.dataset.collapsed = 'true';
-        this.style.left = '1vw';
-    }
-    for (const child of this.children) {
-        child.classList.toggle('visible');
-        child.classList.toggle('invisible');
-    }
-    toggleSidebarVisibility(sidebar);
-}
-
-function toggleSidebarVisibility(parent) {
-    let children = parent.children;
-    for (let i = 1; i < children.length; i++) {
-        console.log(children[i].style.visibility);
-        if (children[i].style.visibility == 'visible') {
-            children[i].style.visibility = 'hidden';
-        } else {
-            children[i].style.visibility = 'visible';
-        }
-    }
-}
-
 function responsiveUsername() {
     let username = document.getElementById('adminUsername');
     let length = username.innerText.length;
@@ -885,7 +912,8 @@ function sortArray(arr) {
 }
 
 function navButtonClick() {
-    const navButtons = document.getElementsByClassName('navButton');
+    const navButtons = document.getElementsByClassName('altNavButton');
+    console.log(navButtons);
     for (const navButton of navButtons) {
         console.log(navButton == this);
         if (navButton != this) {

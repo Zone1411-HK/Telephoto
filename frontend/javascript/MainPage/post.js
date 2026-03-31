@@ -493,15 +493,20 @@ const hangPictures = async (test) => {
 };
 
 async function like(div, postId) {
+    let dislikeDiv = div.parentNode.children[3];
     if (div.dataset.liked == 'true') {
         div.dataset.liked = 'false';
         div.classList.remove('activeLike');
+        div.children[1].innerText = parseInt(div.children[1].innerText) - 1;
     } else {
         div.dataset.liked = 'true';
         div.classList.add('activeLike');
+        div.children[1].innerText = parseInt(div.children[1].innerText) + 1;
+        if (div.parentNode.children[3].dataset.disliked == 'true')
+            dislikeDiv.children[1].innerText = parseInt(dislikeDiv.children[1].innerText) - 1;
     }
-    div.parentNode.children[3].dataset.disliked = 'false';
-    div.parentNode.children[3].classList.remove('activeLike');
+    dislikeDiv.dataset.disliked = 'false';
+    dislikeDiv.classList.remove('activeLike');
 
     const { status } = await PostMethodFetch('/api/uploadInteraction', {
         postId: postId,
@@ -515,16 +520,22 @@ async function like(div, postId) {
 }
 
 async function dislike(div, postId) {
+    let likeDiv = div.parentNode.children[0];
+
     console.log(div.dataset.disliked);
     if (div.dataset.disliked == 'true') {
         div.dataset.disliked = 'false';
         div.classList.remove('activeLike');
+        div.children[1].innerText = parseInt(div.children[1].innerText) - 1;
     } else {
         div.dataset.disliked = 'true';
         div.classList.add('activeLike');
+        div.children[1].innerText = parseInt(div.children[1].innerText) + 1;
+        if (likeDiv.dataset.liked == 'true')
+            likeDiv.children[1].innerText = parseInt(likeDiv.children[1].innerText) - 1;
     }
-    div.parentNode.children[0].dataset.liked = 'false';
-    div.parentNode.children[0].classList.remove('activeLike');
+    likeDiv.dataset.liked = 'false';
+    likeDiv.classList.remove('activeLike');
     const { status } = await PostMethodFetch('/api/uploadInteraction', {
         postId: postId,
         likeValue: false,

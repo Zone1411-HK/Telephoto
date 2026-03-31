@@ -25,6 +25,14 @@ function profileAddEventListeners() {
     document.getElementById('profileModify').addEventListener('click', modifyProfile);
     document.getElementById('deleteCancel').addEventListener('click', hideDeleteModal);
     document.getElementById('deleteConfirm').addEventListener('click', doDelete);
+    document.getElementById('logoutWrapper').addEventListener('click', logout);
+}
+
+async function logout() {
+    const { Status } = await PostMethodFetch('/api/logout');
+    if (Status == 'Success') {
+        window.location.href = '/login';
+    }
 }
 
 async function postsByUser() {
@@ -395,11 +403,14 @@ async function saveProfileChanges() {
     if (responsePic.Status == 'success') {
         pictureEl.classList.remove('hidden');
         pictureEl.src = '/profile_images/' + responsePic.Link;
+        document.getElementById('profilePictureDiv').style.backgroundImage =
+            `url("/profile_images/${responsePic.Link}")`;
     }
 
     document.getElementById('profileModify').classList.remove('hidden');
     document.getElementById('cancelProfileModification').classList.add('hidden');
     document.getElementById('profilePictureUploadLabel').classList.add('hidden');
+    document.getElementById('deleteProfile').classList.add('hidden');
     this.classList.add('hidden');
 
     pictureEl.classList.remove('hidden');

@@ -137,6 +137,32 @@ router.post('/login', async (request, response) => {
 });
 //#endregion
 
+router.get('/isAdmin', async (request, response) => {
+    try {
+        const username = request.session.username;
+        if (username != undefined) {
+            const isAdmin = await database.isAdmin(username);
+            if (isAdmin) {
+                response.status(200).json({
+                    Status: 'success'
+                });
+            } else {
+                response.status(200).json({
+                    Status: 'Failed',
+                    Message: 'Önnek nincs meg a megfelelő jogosultsága!'
+                });
+            }
+        } else {
+            response.status(200).json({
+                Status: 'Failed',
+                Message: 'Nincsen elmentett felhasználónév!'
+            });
+        }
+    } catch (error) {
+        throw new Error(`Hiba az "isAdmin" middleware-ben: ${error}`);
+    }
+});
+
 //! POSZT FELTÖLTÉS
 //#region Posting
 router.post('/createPost', async (request, response) => {
@@ -835,7 +861,7 @@ router.post('/removeUserId', async (request, response) => {
 
 //! ADMIN
 //#region Admin
-router.post('/deletePost', async (request, response) => {
+router.post('/deletePost', isAdmin, async (request, response) => {
     try {
         const { postId } = request.body;
         console.log(postId);
@@ -855,7 +881,7 @@ router.post('/deletePost', async (request, response) => {
     }
 });
 
-router.get('/getProfilesAdmin', async (request, response) => {
+router.get('/getProfilesAdmin', isAdmin, async (request, response) => {
     try {
         let resultArr = [];
         const sqlResult = await database.adminProfiles();
@@ -880,7 +906,7 @@ router.get('/getProfilesAdmin', async (request, response) => {
     }
 });
 
-router.get('/getProfileData/:userId', async (request, response) => {
+router.get('/getProfileData/:userId', isAdmin, async (request, response) => {
     try {
         const userId = request.params.userId;
         const profileData = await database.adminProfileData(userId);
@@ -894,7 +920,7 @@ router.get('/getProfileData/:userId', async (request, response) => {
     }
 });
 
-router.post('/updateProfileData', async (request, response) => {
+router.post('/updateProfileData', isAdmin, async (request, response) => {
     try {
         const { userId, profileUsername, profileRegDate, profileEmail, profileBiography } =
             request.body;
@@ -913,7 +939,7 @@ router.post('/updateProfileData', async (request, response) => {
     }
 });
 
-router.post('/deleteProfile', async (request, response) => {
+router.post('/deleteProfile', isAdmin, async (request, response) => {
     try {
         const { userId } = request.body;
         const deleteProfile = await database.deleteProfile(userId);
@@ -925,7 +951,7 @@ router.post('/deleteProfile', async (request, response) => {
     }
 });
 
-router.post('/clearProfile', async (request, response) => {
+router.post('/clearProfile', isAdmin, async (request, response) => {
     try {
         const { userId } = request.body;
         const clearProfile = await database.clearProfile(userId);
@@ -937,7 +963,7 @@ router.post('/clearProfile', async (request, response) => {
     }
 });
 
-router.post('/clearPost', async (request, response) => {
+router.post('/clearPost', isAdmin, async (request, response) => {
     try {
         const { postId } = request.body;
         const clearPost = await database.clearPost(postId);
@@ -949,7 +975,7 @@ router.post('/clearPost', async (request, response) => {
     }
 });
 
-router.get('/getPostsAdmin', async (request, response) => {
+router.get('/getPostsAdmin', isAdmin, async (request, response) => {
     try {
         let resultArr = [];
         const sqlResult = await database.adminPosts();
@@ -973,7 +999,7 @@ router.get('/getPostsAdmin', async (request, response) => {
     }
 });
 
-router.get('/getPostData/:postId', async (request, response) => {
+router.get('/getPostData/:postId', isAdmin, async (request, response) => {
     try {
         const postId = request.params.postId;
         const postData = await database.adminPostData(postId);
@@ -1007,7 +1033,7 @@ router.get('/getPostData/:postId', async (request, response) => {
     }
 });
 
-router.post('/updatePostData', async (request, response) => {
+router.post('/updatePostData', isAdmin, async (request, response) => {
     try {
         const {
             postId,
@@ -1036,7 +1062,7 @@ router.post('/updatePostData', async (request, response) => {
     }
 });
 
-router.get('/getCommentsAdmin', async (request, response) => {
+router.get('/getCommentsAdmin', isAdmin, async (request, response) => {
     try {
         let resultArr = [];
         const sqlResult = await database.adminComments();
@@ -1059,7 +1085,7 @@ router.get('/getCommentsAdmin', async (request, response) => {
     }
 });
 
-router.get('/getCommentData/:commentId', async (request, response) => {
+router.get('/getCommentData/:commentId', isAdmin, async (request, response) => {
     try {
         const commentId = request.params.commentId;
         const commentData = await database.adminCommentData(commentId);
@@ -1072,7 +1098,7 @@ router.get('/getCommentData/:commentId', async (request, response) => {
     }
 });
 
-router.post('/updateCommentData', async (request, response) => {
+router.post('/updateCommentData', isAdmin, async (request, response) => {
     try {
         const { commentId, commentDate, commentContent } = request.body;
         console.log(request.body);
@@ -1085,7 +1111,7 @@ router.post('/updateCommentData', async (request, response) => {
     }
 });
 
-router.post('/deleteComment', async (request, response) => {
+router.post('/deleteComment', isAdmin, async (request, response) => {
     try {
         const { commentId } = request.body;
         const deleteComment = await database.deleteComment(commentId);
@@ -1097,7 +1123,7 @@ router.post('/deleteComment', async (request, response) => {
     }
 });
 
-router.post('/clearComment', async (request, response) => {
+router.post('/clearComment', isAdmin, async (request, response) => {
     try {
         const { commentId } = request.body;
         console.log(commentId);
@@ -1174,6 +1200,21 @@ router.post('/modifyProfileBiography', async (request, response) => {
     });
 });
 
+router.post('/logout', async (request, response) => {
+    try {
+        request.session.destroy();
+        response.status(200).json({
+            Status: 'Success'
+        });
+    } catch (error) {
+        console.log(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: error
+        });
+    }
+});
+
 //! FÜGGVÉNYEK
 //? Hash-eljük a megadott stringet, és visszaadunk egy salt, és egy hash változót.
 function HashString(string) {
@@ -1236,13 +1277,13 @@ async function isAdmin(request, response, next) {
             if (isAdmin) {
                 next();
             } else {
-                response.status(200).send({
+                response.status(200).json({
                     Status: 'Failed',
                     Message: 'Önnek nincs meg a megfelelő jogosultsága!'
                 });
             }
         } else {
-            response.status(200).send({
+            response.status(200).json({
                 Status: 'Failed',
                 Message: 'Nincsen elmentett felhasználónév!'
             });

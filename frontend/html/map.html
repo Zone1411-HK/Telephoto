@@ -10,6 +10,8 @@
         <script src="../bootstrap/js/popper.min.js"></script>
         <script src="../bootstrap/js/bootstrap.min.js"></script>
         <!--!CSS-->
+        <link rel="stylesheet" href="/css/util.css" />
+        <link rel="stylesheet" href="/css/color.css" />
         <link rel="stylesheet" href="/css/MapPage/map.css" />
         <link rel="stylesheet" href="node/leaflet/dist/leaflet.css" />
         <link rel="stylesheet" href="node/leaflet.markercluster/dist/MarkerCluster.Default.css" />
@@ -68,11 +70,61 @@
                 </div>
             </div>
             <div id="map" tabindex="-1"></div>
-            <div id="nav">
-                <a href="/" class="navButton">Főoldal</a>
-                <a href="/map" class="navButton">Térkép</a>
-                <a href="/profile" class="navButton">Profil</a>
-            </div>
+            <nav id="nav">
+                <a href="/" class="navButton"
+                    ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-home"
+                    >
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span>Főoldal</span>
+                </a>
+                <a href="/map" class="navButton"
+                    ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#ffffff"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-map"
+                    >
+                        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                        <line x1="8" y1="2" x2="8" y2="18"></line>
+                        <line x1="16" y1="6" x2="16" y2="22"></line></svg
+                    ><span>Térkép</span></a
+                >
+                <a href="/profile" class="navButton" id="profilGomb"
+                    ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#ffffff"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-user"
+                    >
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle></svg
+                    ><span>Profil</span></a
+                >
+            </nav>
         </div>
         <div id="postModal" class="postModal">
             <div id="modalClose">
