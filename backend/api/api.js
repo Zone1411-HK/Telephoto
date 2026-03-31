@@ -383,6 +383,7 @@ router.post('/setOffset', async (request, response) => {
     const { type, offset } = request.body;
     if (type == 'reset') {
         postTypeOffset.offset = 0;
+        postTypeOffset.type = 'reset';
     } else {
         postTypeOffset.type = type;
         postTypeOffset.offset += offset;
@@ -394,7 +395,30 @@ router.post('/setOffset', async (request, response) => {
 router.get('/topPosts/:timeFrame', async (request, response) => {
     try {
         const timeFrame = request.params.timeFrame;
-        const data = await database.topPosts(timeFrame, postTypeOffset.offset);
+        const userId = request.session.userId;
+        const data = await database.topPosts(userId, timeFrame, postTypeOffset.offset);
+
+        if (data != null) {
+            response.status(200).json({
+                status: 'Success',
+                results: data
+            });
+        } else {
+            response.status(200).json({
+                status: 'failed'
+            });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+router.get('/searchPosts/:search', async (request, response) => {
+    try {
+        console.log(postTypeOffset);
+        const search = request.params.search;
+        const userId = request.session.userId;
+        const data = await database.searchPosts(userId, search, postTypeOffset.offset);
 
         if (data != null) {
             response.status(200).json({

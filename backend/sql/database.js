@@ -149,9 +149,9 @@ async function like(username, postId, likeValue, dislikeValue) {
 //like('test', 1, true, false);
 
 //post sorbarendezés lekérdezásek
-async function topPosts(timeFrame, offset) {
+async function topPosts(userId, timeFrame, offset) {
     try {
-        let result = [];
+        let result;
 
         const topPostsSql = `
         SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link, SUM(interactions.upvote) as upvote, SUM(interactions.downvote) as downvote
@@ -163,14 +163,34 @@ async function topPosts(timeFrame, offset) {
         ORDER BY SUM(interactions.upvote) - SUM(interactions.downvote) DESC
         LIMIT 50 OFFSET ?;
         `;
-        result = await pool.execute(topPostsSql, [timeFrame, offset]);
-        return await postPictures(result[0]);
+        const [rows] = await pool.execute(topPostsSql, [timeFrame, offset]);
+        result = await getAllInteractions(userId, rows);
+        return await postPictures(result);
     } catch (error) {
         console.error(error);
     }
 }
 
-topPosts(0);
+async function searchPosts(userId, searchString, offset) {
+    try {
+        let result;
+        let string = '%' + searchString + '%';
+        const sql = ` SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link, SUM(interactions.upvote) as upvote, SUM(interactions.downvote) as downvote
+        FROM posts 
+        LEFT JOIN users ON users.user_id = posts.user_id 
+        LEFT JOIN interactions ON interactions.post_id = posts.post_id 
+        WHERE posts.tags LIKE ? OR users.username LIKE ? OR posts.creation_date LIKE ? OR posts.location LIKE ?
+        GROUP BY posts.post_id
+        ORDER BY SUM(interactions.upvote) - SUM(interactions.downvote) DESC
+        LIMIT 50 OFFSET ?;`;
+
+        let [rows] = await pool.execute(sql, [string, string, string, string, offset]);
+        result = await getAllInteractions(userId, rows);
+        return await postPictures(result);
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 async function postPictures(posts) {
     try {
@@ -222,6 +242,51 @@ async function postPictures(posts) {
         return result;
     } catch (error) {
         console.error(error);
+    }
+}
+
+async function getAllInteractions(userId, posts) {
+    try {
+        if (posts.length == 0) return null;
+        let result = posts;
+        let queryPlaceholder = '';
+        let postIds = [];
+        for (let i = 0; i < posts.length; i++) {
+            postIds.push(posts[i].post_id);
+            if (i == posts.length - 1) {
+                queryPlaceholder += `?`;
+            } else {
+                queryPlaceholder += `?,`;
+            }
+        }
+        const sql = `
+        SELECT interactions.post_id, interactions.upvote, interactions.downvote, favorites.is_favorited 
+        FROM interactions
+        LEFT JOIN favorites ON interactions.post_id = favorites.post_id 
+        WHERE interactions.user_id = ? AND interactions.post_id IN (${queryPlaceholder});`;
+        const [rows] = await pool.execute(sql, [userId, ...postIds]);
+
+        let interactions = {};
+        for (const row of rows) {
+            if (interactions[row.post_id] == undefined) interactions[row.post_id] = [];
+            interactions[row.post_id].push({
+                like: row.upvote,
+                dislike: row.downvote,
+                favorite: row.is_favorited
+            });
+        }
+
+        for (const post of result) {
+            if (interactions[post.post_id] == undefined) {
+                post['interactions'] = post[post.post_id] = [{ like: 0, dislike: 0, favorite: 0 }];
+            } else {
+                post['interactions'] = interactions[post.post_id];
+            }
+        }
+
+        return result;
+    } catch (error) {
+        console.log(error);
     }
 }
 
@@ -962,5 +1027,6 @@ module.exports = {
     isLiked,
     like,
     favoritePost,
-    isFavorited
+    isFavorited,
+    searchPosts
 };

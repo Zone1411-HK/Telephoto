@@ -102,6 +102,8 @@ form {
     overflow-y: auto;
     gap: 10px;
     transition: 0.25s;
+    scrollbar-color: var(--PrimaryAccent) var(--Primary);
+    scrollbar-width: thin;
 }
 
 #chatContainer {
@@ -143,15 +145,9 @@ form {
     filter: brightness(100%);
 }
 
-.activeSort {
-    border: 1px solid var(--AccentDark);
-    background-color: var(--Accent);
-    color: var(--Primary);
-    font-weight: 400;
-}
-
 .trendingButton,
-.egyebButton {
+.egyebButton,
+.postSearchWrapper {
     border-radius: 3px;
 }
 
@@ -168,6 +164,55 @@ form {
     font-size: 1rem;
     font-weight: 350;
     transition: 0.2s;
+}
+
+.postSearchWrapper {
+    height: 90%;
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--PrimaryAccent);
+    background-color: var(--Primary);
+}
+
+.postSearchWrapper input {
+    height: 100%;
+    width: 80%;
+    border: none;
+    outline: none;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding-left: 3%;
+    font-size: 1rem;
+    border-right: 1px solid var(--PrimaryAccent);
+    background-color: var(--PostLight);
+}
+
+#postSearchSVGWrapper {
+    width: 20%;
+
+    height: 100%;
+
+    filter: brightness(100%);
+    background-color: inherit;
+    transition: 0.25s;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+#postSearchSVGWrapper svg {
+    height: 100%;
+    stroke-width: 1.5px;
+    stroke: var(--PrimaryAccent);
+}
+
+#postSearchSVGWrapper:hover {
+    filter: brightness(85%);
 }
 
 .usernamePopup {
@@ -264,8 +309,9 @@ form {
     animation: fadeInRight 1s forwards;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
     transition: 0.25s;
+    box-shadow: 3px 0px 3px -3px var(--PostAccent);
 }
 
 .posts-container {
@@ -332,7 +378,7 @@ form {
     width: 225%;
     bottom: 100%;
     z-index: 10;
-    animation: fadeInLeft 1.5s forwards;
+    animation: fadeInLeft 1s forwards;
 }
 
 .post {
@@ -474,6 +520,7 @@ form {
     box-shadow: none;
     animation: fadeInUp 1s forwards;
     z-index: 100;
+    box-shadow: 0px -5px 5px -3px var(--PrimaryAccent);
 }
 
 .slideshowItem {
@@ -601,6 +648,22 @@ form {
     width: 100%;
     aspect-ratio: 1/1;
     stroke: var(--AccentDark);
+}
+
+.activeSort {
+    border-color: var(--AccentDark) !important;
+    background-color: var(--Accent);
+    color: var(--Primary);
+    font-weight: 400 !important;
+}
+
+.activeSort svg {
+    stroke: var(--AccentDark) !important;
+}
+
+.activeSort input {
+    border-right: 1px solid var(--AccentDark);
+    color: var(--AccentDark);
 }
 
 @media (max-width: 1000px) {
