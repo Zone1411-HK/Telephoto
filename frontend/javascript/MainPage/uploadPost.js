@@ -21,7 +21,10 @@ async function preLoadFiles() {
         for (let file of files) {
             let renamedFile = new File(
                 [file],
-                file.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
+                file.name
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/\.(?=.*\.)/g, '-'),
                 {
                     type: file.type
                 }
@@ -191,7 +194,12 @@ async function uploadPost() {
         for (let file of files) {
             let renamedFile = new File(
                 [file],
-                file.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
+                file.name
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+
+                    //? keres egy pontot (\.) ha utána van még pont (?=.*\.) (asszem)
+                    .replace(/\.(?=.*\.)/g, '-'),
                 {
                     type: file.type
                 }

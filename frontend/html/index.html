@@ -54,37 +54,59 @@
                         <h2 id="trendingTitle">Népszerű</h2>
                     </div>
                     <div class="sortRow">
-                        <label for="today" class="trendingButton">
+                        <label for="today" class="trendingButton postLoad">
                             <span>Ma</span>
                             <input id="today" type="hidden" value="1" />
                         </label>
-                        <label for="weekly" class="trendingButton">
+                        <label for="weekly" class="trendingButton postLoad">
                             <span>A héten</span>
                             <input id="weekly" type="hidden" value="7" />
                         </label>
-                        <label for="monthly" class="trendingButton">
+                        <label for="monthly" class="trendingButton postLoad">
                             <span>Havi</span>
                             <input id="monthly" type="hidden" value="30" />
                         </label>
                     </div>
                     <div class="sortRow">
-                        <label for="annual" class="trendingButton">
+                        <label for="annual" class="trendingButton postLoad">
                             <span>Idén</span>
                             <input id="annual" type="hidden" value="365" />
                         </label>
-                        <label for="allTime" class="trendingButton activeSort">
+                        <label for="allTime" class="trendingButton activeSort postLoad">
                             <span>Bármikor</span>
                             <input id="allTime" type="hidden" value="36500" />
                         </label>
                     </div>
                     <div class="sortRow">
-                        <input class="egyebButton" type="button" value="📍Budapest" />
+                        <input class="egyebButton postLoad" type="button" value="📍Budapest" />
                     </div>
                     <div class="sortRow">
-                        <input class="egyebButton" type="button" value="#summervibes" />
+                        <input class="egyebButton postLoad" type="button" value="#summervibes" />
                     </div>
                     <div class="sortRow">
-                        <input class="egyebButton" type="button" value="📍Krakkó" />
+                        <input class="egyebButton postLoad" type="button" value="📍Krakkó" />
+                    </div>
+                    <div class="sortRow">
+                        <div class="postSearchWrapper postLoad">
+                            <input id="postSearch" type="text" />
+                            <div id="postSearchSVGWrapper">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="#ffffff"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="feather feather-search"
+                                >
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div id="chatContainer">

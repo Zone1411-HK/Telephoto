@@ -13,6 +13,15 @@ function chatAddEventListeners() {
     document.getElementById('newChatCancel').addEventListener('click', closeNewChatWindow);
     document.getElementById('newChatCreate').addEventListener('click', createNewChat);
     document.getElementById('newChatUserInput').addEventListener('input', searchUser);
+    document.getElementById('newChatImgInput').addEventListener('change', loadNewChatImg);
+}
+
+function loadNewChatImg() {
+    let temp = new FileReader();
+    temp.onload = function (e) {
+        document.getElementById('newChatImg').src = e.target.result;
+    };
+    temp.readAsDataURL(this.files[0]);
 }
 
 async function getChats() {
@@ -453,17 +462,32 @@ async function createNewChat() {
         formData.append('userIds', userIds);
 
         let img = document.getElementById('newChatImgInput').files[0];
-        let newImg = new File([img], img.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ''), {
-            type: img.type
-        });
+        let newImg = new File(
+            [img],
+            img.name
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/\.(?=.*\.)/g, '-'),
+            {
+                type: img.type
+            }
+        );
 
         formData.append('img', newImg);
 
+        let errorMessage;
         let isValid = true;
         for (const value of formData.values()) {
             if (value == '') {
                 isValid = false;
+                errorMessage = 'Nem töltötte ki az összes mezőt!';
             }
+            try {
+                if (value.type.split('/')[0] != 'image') {
+                    isValid = false;
+                    errorMessage = 'Nem megfelelő formátumú fájl feltöltve!';
+                }
+            } catch (error) {}
         }
 
         if (isValid) {
@@ -477,7 +501,7 @@ async function createNewChat() {
                 alert('Valami hiba történt');
             }
         } else {
-            alert('Nem töltötte ki az adatokat');
+            alert(errorMessage);
         }
     } else {
         alert('Nincs hozzáadott felhasználó!');

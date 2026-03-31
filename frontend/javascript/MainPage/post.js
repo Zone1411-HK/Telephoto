@@ -38,12 +38,70 @@ function addEventListenersToElements() {
     for (const button of trendingButtons) {
         button.addEventListener('click', trendingPosts);
     }
+
+    document.getElementById('postSearchSVGWrapper').addEventListener('click', searchPost);
+}
+
+function removeActiveLoad() {
+    const postLoads = document.querySelectorAll('.activeSort');
+    for (const button of postLoads) {
+        console.log(button);
+        button.classList.remove('activeSort');
+    }
+}
+
+let searchValue;
+
+async function getSearchedPosts(searchValue) {
+    type = 'search';
+    const response = await GetMethodFetch('/api/searchPosts/' + searchValue);
+    console.log(response);
+
+    if (response.status != 'failed') {
+        const data = response.results;
+        console.log(data);
+
+        for (let i = 0; i < data.length; i++) {
+            await hangPictures(data[i]);
+        }
+        const { status, result } = await PostMethodFetch('/api/setOffset', {
+            type: type,
+            offset: 50
+        });
+        appendLoadMore(data.length == 50);
+    } else {
+        appendLoadMore(false);
+    }
+}
+
+async function searchPost() {
+    try {
+        searchValue = document.getElementById('postSearch').value;
+        if (searchValue.length >= 2) {
+            const setOffsetResponse = await PostMethodFetch('/api/setOffset', {
+                type: 'reset',
+                offset: 0
+            });
+            console.log(setOffsetResponse);
+
+            let posts = document.getElementById('posts-container');
+            posts.replaceChildren();
+            removeActiveLoad();
+            this.parentNode.classList.add('activeSort');
+            this.classList.add('activeSort');
+            this.parentNode.children[0].classList.add('activeSort');
+
+            await getSearchedPosts(searchValue);
+        }
+    } catch (error) {
+        console.error('Hiba' + error);
+    }
 }
 
 async function trendingPosts() {
+    removeActiveLoad();
     const trendingButtons = document.querySelectorAll('.trendingButton');
     for (const button of trendingButtons) {
-        button.classList.remove('activeSort');
         button.removeEventListener('click', trendingPosts);
     }
     this.classList.add('activeSort');
@@ -56,7 +114,6 @@ async function trendingPosts() {
     });
     timeframe = this.children[1].value;
     getTopPosts().then(() => {
-        const trendingButtons = document.querySelectorAll('.trendingButton');
         for (const button of trendingButtons) {
             button.addEventListener('click', trendingPosts);
         }
@@ -82,13 +139,12 @@ const getTopPosts = async () => {
 
         if (response.status != 'failed') {
             const data = response.results;
-            console.log(data);
 
             for (let i = 0; i < data.length; i++) {
                 await hangPictures(data[i]);
             }
             const { status, result } = await PostMethodFetch('/api/setOffset', {
-                type: 'top',
+                type: type,
                 offset: 50
             });
             appendLoadMore(data.length == 50);
@@ -115,8 +171,9 @@ function appendLoadMore(areThereMorePosts) {
 async function loadMorePost() {
     if (type == 'top') {
         getTopPosts(timeframe);
-    } else {
-        //! I dunno
+    }
+    if (type == 'search') {
+        getSearchedPosts(searchValue);
     }
     this.remove();
 }
@@ -228,7 +285,7 @@ function generateSlideshow(links) {
         let content = links[i];
         let format = content.split('.')[1];
         let media;
-
+        console.log(format);
         if (format == 'mp4' || format == 'avi' || format == 'hevc') {
             media = document.createElement('video');
             media.muted = true;
@@ -299,30 +356,35 @@ function generateDescription(description) {
     return descriptionElement;
 }
 
-async function generateInteractions(postId, upvote, downvote) {
-    let interactionsResult = await GetMethodFetch('/api/interactions/' + postId);
+async function generateInteractions(
+    userUpvote,
+    userDownvote,
+    userFavorite,
+    postId,
+    totalUpvote,
+    totalDownvote
+) {
     let interactionRow = document.createElement('div');
     interactionRow.classList.add('interactionRow');
 
     let likeAmount = document.createElement('span');
     likeAmount.classList.add('interactionText');
     let upvoteText;
-    if (upvote >= 1000000) {
-        upvoteText = upvote / 1000000 + ' m';
-    } else if (upvote >= 1000) {
-        upvoteText = upvote / 1000 + ' k';
-    } else if (upvote == null) {
+    if (totalUpvote >= 1000000) {
+        upvoteText = totalUpvote / 1000000 + ' m';
+    } else if (totalUpvote >= 1000) {
+        upvoteText = totalUpvote / 1000 + ' k';
+    } else if (totalUpvote == null) {
         upvoteText = '0';
     } else {
-        upvoteText = upvote;
+        upvoteText = totalUpvote;
     }
-    likeAmount.innerText = upvote;
 
     let likeButton = document.createElement('button');
     likeButton.setAttribute('type', 'button');
     likeButton.innerHTML = `<div><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#314b49ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-up"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></div><span class="interactionText">${upvoteText}</span>`;
     likeButton.classList.add('interactionButton');
-    if (interactionsResult.results.upvote == 1) {
+    if (userUpvote == 1) {
         likeButton.dataset.liked = 'true';
         likeButton.classList.add('activeLike');
     } else {
@@ -336,19 +398,19 @@ async function generateInteractions(postId, upvote, downvote) {
     dislikeButton.setAttribute('type', 'button');
 
     let downvoteText;
-    if (downvote >= 1000000) {
-        downvoteText = downvote / 1000000 + ' m';
-    } else if (downvote >= 1000) {
-        downvoteText = downvote / 1000 + ' k';
-    } else if (downvote == null) {
+    if (totalDownvote >= 1000000) {
+        downvoteText = totalDownvote / 1000000 + ' m';
+    } else if (totalDownvote >= 1000) {
+        downvoteText = totalDownvote / 1000 + ' k';
+    } else if (totalDownvote == null) {
         downvoteText = '0';
     } else {
-        downvoteText = downvote;
+        downvoteText = totalDownvote;
     }
 
     dislikeButton.innerHTML = `<div><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#314b49ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-down"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path></svg></div><span class="interactionText">${downvoteText}</span>`;
     dislikeButton.classList.add('interactionButton');
-    if (interactionsResult.results.downvote == 1) {
+    if (userDownvote == 1) {
         dislikeButton.dataset.disliked = 'true';
         dislikeButton.classList.add('activeLike');
     } else {
@@ -358,12 +420,11 @@ async function generateInteractions(postId, upvote, downvote) {
         dislike(this, postId);
     });
 
-    let favoriteResult = await GetMethodFetch('/api/isFavorited/' + postId);
     let favoriteButton = document.createElement('button');
     favoriteButton.type = 'button';
     favoriteButton.classList.add('interactionButton');
     favoriteButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"viewBox="0 0 24 24" fill="none" stroke="#314b49ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
-    if (favoriteResult.results.is_favorited == 1) {
+    if (userFavorite == 1) {
         favoriteButton.dataset.favorite = 'true';
         favoriteButton.classList.add('activeFavorite');
     } else {
@@ -450,7 +511,14 @@ const hangPictures = async (test) => {
 
     let description = generateDescription(test.description);
 
-    let interactionRow = await generateInteractions(test.post_id, test.upvote, test.downvote);
+    let interactionRow = await generateInteractions(
+        test.interactions[0].like,
+        test.interactions[0].dislike,
+        test.interactions[0].favorite,
+        test.post_id,
+        test.upvote,
+        test.downvote
+    );
 
     let postcontent = document.createElement('div');
     postcontent.classList.add('postContent');
