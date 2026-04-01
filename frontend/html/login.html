@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="hu">
     <head>
         <meta charset="UTF-8" />
@@ -11,6 +11,8 @@
         <script src="../bootstrap/js/bootstrap.min.js"></script>
         <!--!CSS-->
         <link rel="stylesheet" href="/css/color.css" />
+        <link rel="stylesheet" href="/css/anim.css" />
+        <link rel="stylesheet" href="/css/util.css" />
         <link rel="stylesheet" href="/css/LoginPage/login.css" />
 
         <!--!JavaScript-->
@@ -29,22 +31,203 @@
     </head>
     <body>
         <div id="root">
-            <div class="backgroundImage backgroundImage1"></div>
+            <div id="registrationFeedback">
+                <h2 id="registrationStatus">Sikeres</h2>
+                <span id="registrationMessage">A regisztráció sikeres!</span>
+            </div>
+            <div class="backgroundImageDiv backgroundImageLeft">
+                <img class="backgroundImage" src="../images/backgroundImage1.png" />
+            </div>
 
-            <div class="backgroundImage backgroundImage2"></div>
+            <div class="backgroundImageDiv backgroundImageRight">
+                <img class="backgroundImage" src="../images/backgroundImage2.jpg" />
+            </div>
 
-            <div id="loginDiv" class="containerDiv">
+            <div id="loginDiv" class="containerDiv animFadeInUp">
                 <h2 class="title">Telephoto</h2>
-                <h3 class="action">Bejelentkezés</h3>
+                <hr class="divider full" />
+                <h3 class="actionTitle">Bejelentkezés</h3>
+                <hr class="divider fourFifth" />
+                <div class="loginInputWrapper">
+                    <label for="loginUsername" class="loginInputDiv">
+                        <span>Felhasználónév:</span>
+                        <input
+                            id="loginUsername"
+                            class="loginInput"
+                            type="text"
+                            placeholder="Írja be a felhasználónevét"
+                        />
+                    </label>
+                    <label for="loginPassword" class="loginInputDiv">
+                        <span>Jelszó:</span>
+                        <div class="passwordWrapper">
+                            <input
+                                id="loginPassword"
+                                class="loginInput"
+                                type="password"
+                                placeholder="Írja be a jelszavát"
+                            />
+                            <button type="button" class="showPasswordButton" data-visible="false">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="feather feather-eye"
+                                >
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </label>
+                    <button type="button" id="loginButton">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-log-in"
+                        >
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                            <polyline points="10 17 15 12 10 7"></polyline>
+                            <line x1="15" y1="12" x2="3" y2="12"></line>
+                        </svg>
+                        <span>Bejelentkezés</span>
+                    </button>
+                    <hr class="divider fourFifth" />
+                    <button type="button" id="switchToRegistration" class="toggleRegistrationLogin">
+                        Regisztráció
+                    </button>
+                </div>
+            </div>
 
-                <label for="loginUsername" class="loginInput">
-                    <span>Felhasználónév:</span>
-                    <input type="text" placeholder="Írja be a felhasználónevét" />
-                </label>
-                <label for="loginPassword" class="loginInput">
-                    <span>Jelszó:</span>
-                    <input type="password" placeholder="Írja be a jelszavát" />
-                </label>
+            <div id="registrationDiv" class="containerDiv hidden">
+                <h2 class="title">Telephoto</h2>
+                <hr class="divider full" />
+                <h3 class="actionTitle">Regisztráció</h3>
+                <hr class="divider fourFifth" />
+                <div class="registrationInputWrapper">
+                    <label for="registrationUsername" class="registrationInputDiv">
+                        <span>Felhasználónév:</span>
+                        <input
+                            id="registrationUsername"
+                            class="registrationInput"
+                            type="text"
+                            placeholder="Írja be a felhasználónevét"
+                        />
+                    </label>
+                    <label for="registrationEmail" class="registrationInputDiv">
+                        <span>E-mail:</span>
+                        <input
+                            id="registrationEmail"
+                            class="registrationInput"
+                            type="text"
+                            placeholder="Írja be az e-mailjét"
+                        />
+                    </label>
+                    <label for="registrationPassword" class="registrationInputDiv">
+                        <span>Jelszó:</span>
+                        <div class="passwordWrapper">
+                            <input
+                                id="registrationPassword"
+                                class="registrationInput"
+                                type="password"
+                                placeholder="Írja be a jelszavát"
+                            />
+                            <button type="button" class="showPasswordButton" data-visible="false">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="feather feather-eye"
+                                >
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </label>
+                    <span class="passwordDisclaimer"
+                        >Tartalmazia kell: <br />
+                        egy számot (0-9) <br />
+                        egy speciális karaktert</span
+                    >
+
+                    <label for="registrationPasswordConfirm" class="registrationInputDiv">
+                        <span>Jelszó megerősítés:</span>
+                        <div class="passwordWrapper">
+                            <input
+                                id="registrationPasswordConfirm"
+                                class="registrationInput"
+                                type="password"
+                                placeholder="Írja be a jelszavát újra"
+                            />
+                            <button type="button" class="showPasswordButton" data-visible="false">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="feather feather-eye"
+                                >
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </label>
+                    <button type="button" id="registrationButton">
+                        <svg
+                            xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                            xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                            xmlns="http://www.w3.org/2000/svg"
+                            xmlns:svg="http://www.w3.org/2000/svg"
+                            xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                            xmlns:cc="http://creativecommons.org/ns#"
+                            xmlns:dc="http://purl.org/dc/elements/1.1/"
+                            viewBox="-0.8466666500000001 -1.6933334 18.6266663 22.8600009"
+                            version="1.1"
+                            x="0px"
+                            y="0px"
+                        >
+                            <g>
+                                <path
+                                    d="m 2.0361057,1.4293952 c -0.683992,0 -1.24234197,0.559741 -1.24234197,1.243893 V 14.259529 c 0,0.684154 0.55834997,1.244409 1.24234197,1.244409 h 9.4198933 c 0.683994,0 1.244409,-0.560256 1.24441,-1.244409 v -0.933308 a 0.26459228,0.26459228 0 0 0 -0.265625,-0.263559 0.26459228,0.26459228 0 0 0 -0.263559,0.263559 v 0.933308 c 0,0.400314 -0.315423,0.715225 -0.715226,0.715225 H 2.0361057 c -0.399802,0 -0.713158,-0.314911 -0.713158,-0.715225 V 2.6732882 c 0,-0.400312 0.313356,-0.714709 0.713158,-0.714709 h 9.4198933 c 0.399803,0 0.715226,0.314397 0.715226,0.714709 v 4.312542 a 0.26459228,0.26459228 0 0 0 0.263559,0.264074 0.26459228,0.26459228 0 0 0 0.265625,-0.264074 v -4.312542 c 0,-0.684152 -0.560416,-1.243893 -1.24441,-1.243893 z m 1.099195,2.89656 a 0.26459228,0.26459228 0 0 0 -0.265626,0.265626 0.26459228,0.26459228 0 0 0 0.265626,0.263558 h 7.2230553 a 0.26459228,0.26459228 0 0 0 0.263557,-0.263558 0.26459228,0.26459228 0 0 0 -0.263557,-0.265626 z m 11.8286113,2.122939 c -0.301979,0 -0.604976,0.114407 -0.834085,0.343659 l -1.486264,1.486264 a 0.26459228,0.26459228 0 0 0 -0.0021,0.0026 L 9.7883137,11.136634 a 0.26461875,0.26461875 0 0 0 -0.07028,0.132813 l -0.353995,1.644398 a 0.26461875,0.26461875 0 0 0 0.31472,0.314721 l 1.6443993,-0.353479 a 0.26461875,0.26461875 0 0 0 0.130745,-0.07028 l 3.494476,-3.4965428 a 0.26461875,0.26461875 0 0 0 0.01499,-0.01602 l 0.832534,-0.833568 c 0.458222,-0.458507 0.458223,-1.207601 0,-1.666104 -0.22911,-0.229253 -0.530038,-0.343659 -0.832018,-0.343659 z M 3.1353007,6.6933312 a 0.26459228,0.26459228 0 0 0 -0.265626,0.263559 0.26459228,0.26459228 0 0 0 0.265626,0.265626 h 7.2230553 a 0.26459228,0.26459228 0 0 0 0.263557,-0.265626 0.26459228,0.26459228 0 0 0 -0.263557,-0.263559 z m 11.8275783,0.281129 c 0.164647,0 0.329657,0.06447 0.458385,0.193277 0.257454,0.257611 0.257455,0.660189 0,0.917803 L 14.7603,8.7470212 13.843012,7.8297342 14.50501,7.1677372 c 0.128727,-0.128808 0.293221,-0.193277 0.457869,-0.193277 z m -1.495049,1.230457 0.917803,0.917287 -0.449083,0.450117 a 0.26459228,0.26459228 0 0 0 -0.001,0.001 L 11.135628,12.374793 9.9677027,12.624915 10.217825,11.456989 13.01878,8.6539662 Z M 3.1353007,9.0586392 a 0.26459228,0.26459228 0 0 0 -0.265626,0.265626 0.26459228,0.26459228 0 0 0 0.265626,0.263559 h 7.2230553 a 0.26459228,0.26459228 0 0 0 0.263557,-0.263559 0.26459228,0.26459228 0 0 0 -0.263557,-0.265626 z m 0,2.3668598 a 0.26459228,0.26459228 0 0 0 -0.265626,0.264076 0.26459228,0.26459228 0 0 0 0.265626,0.265625 h 5.291326 a 0.26459228,0.26459228 0 0 0 0.265624,-0.265625 0.26459228,0.26459228 0 0 0 -0.265624,-0.264076 z"
+                                    fill="#000000"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </g>
+                        </svg>
+                        <span>Regisztráció</span>
+                    </button>
+                    <hr class="divider fourFifth" />
+                    <button type="button" id="switchToLogin" class="toggleRegistrationLogin">
+                        Bejelentkezés
+                    </button>
+                </div>
             </div>
         </div>
 

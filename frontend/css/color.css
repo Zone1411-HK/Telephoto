@@ -13,7 +13,12 @@
     --PostAccent: rgb(139, 139, 124);
     --PostDark: rgb(69, 69, 54);
     --PostDarker: rgb(39, 39, 24);
+    --interactiveBlue: rgb(75, 100, 200);
+    --interactiveBlueDark: rgb(25, 50, 150);
 
     --Accent: rgb(82, 159, 163);
     --AccentDark: rgb(0, 37, 41);
+
+    --invalidRed: rgb(191, 26, 26);
+    --successGreen: rgb(50, 150, 30);
 }

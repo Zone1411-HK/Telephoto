@@ -1,8 +1,5 @@
 :root {
     --Hatter: rgb(245, 240, 245);
-    --invalidRed: rgb(191, 26, 26);
-    --successGreen: rgb(50, 150, 30);
-    --interactiveBlue: rgb(6, 7, 113);
     --LoginGomb: rgb(207, 173, 193);
     --LoginGombBorder: rgb(187, 153, 173);
     --LoginGombBoxShadow: rgb(217, 213, 233);
@@ -12,6 +9,7 @@
 }
 
 #root {
+    overflow: hidden;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -22,27 +20,36 @@
     background-color: var(--SecondaryDark);
 }
 
-.backgroundImage {
-    height: 50vh;
-    width: 40vw;
+.backgroundImageDiv {
+    max-height: 50vh;
+    max-width: 40vw;
+    /*
     background-size: contain;
     background-repeat: no-repeat;
-    box-shadow: inset -5px -5px 10px 5px var(--SecondaryDark);
+    box-shadow: inset -5px -5px 10px 5px var(--SecondaryDark);*/
     position: absolute;
     filter: blur(3px);
 }
 
-.backgroundImage1 {
-    background-image: url('/images/backgroundImage1.png');
-    left: 2vw;
-    top: 10vh;
-    transform: rotateZ(-15deg);
+.backgroundImage {
+    max-height: 50vh;
+    max-width: 40vw;
+
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
 }
 
-.backgroundImage2 {
-    background-image: url('/images/backgroundImage2.png');
-    transform: rotateZ(10deg);
-    right: 2vw;
+.backgroundImageLeft {
+    left: 2vw;
+    top: 10vh;
+    animation: fadeInRightLogin 1s forwards;
+}
+
+.backgroundImageRight {
+    right: 3vw;
+    bottom: 15vh;
+    animation: fadeInLeftLogin 1s forwards;
 }
 
 .containerDiv {
@@ -52,63 +59,365 @@
     max-height: 95vh;
     max-width: 95vw;
     z-index: 100;
-    box-shadow: 0 0 15px 1px rgba(99, 99, 84, 0.75);
+    box-shadow: 0 0 20px 1px rgba(79, 79, 64, 0.75);
+    scrollbar-color: var(--PostAccent) var(--Secondary);
     border-radius: 50px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 25px;
-    padding: 20px 30px 50px 30px;
+    padding: 2vh 2vw 5vh 2vw;
     font-family: 'Josefin Sans', sans-serif;
 }
 
+#registrationDiv {
+    height: 900px;
+}
+
+.passwordDisclaimer {
+    width: 72%;
+    color: var(--PostAccent);
+    font-size: 16px !important;
+    font-weight: 350;
+    line-height: normal;
+    margin-bottom: 5px;
+}
+
+.animFadeInUp {
+    animation: fadeInUp 1s forwards;
+}
+.animFadeInDown {
+    animation: fadeInDown 1s forwards;
+}
+.animFadeOutUp {
+    animation: fadeOutUp 1s forwards;
+}
+.animFadeOutDown {
+    animation: fadeOutDown 1s forwards;
+}
+
 .title {
-    width: 90%;
+    width: 100%;
     height: fit-content;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--PostAccent);
     color: var(--PostDark);
     text-align: center;
     font-size: 40px;
-    margin: 0;
+    font-weight: 600;
+    margin-bottom: 10px;
 }
 
-.action {
-    width: 50%;
+.actionTitle {
+    width: 100%;
     height: fit-content;
-    border-bottom: 1px solid var(--PostAccent);
     color: var(--PostDark);
     text-align: center;
     font-size: 32px;
-    padding-bottom: 10px;
+    font-weight: 400;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.divider {
+    color: var(--PostAccent);
+    opacity: 1;
+    margin: 0;
+}
+
+.full {
+    width: 100%;
+}
+
+.fourFifth {
+    width: 80%;
+}
+
+.half {
+    width: 50%;
+}
+
+.oneQuarter {
+    width: 25%;
+}
+
+.loginInputWrapper {
+    gap: 25px;
+}
+
+.registrationInputWrapper {
+    gap: 15px;
+}
+
+.loginInputWrapper,
+.registrationInputWrapper {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.loginInputDiv,
+.registrationInputDiv {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    width: 75%;
+    flex: 1 1 0;
+    max-height: 17.5%;
+    min-height: 54px;
+}
+
+.loginInputDiv span,
+.registrationInputDiv span {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex: 1 1 0;
+    min-height: 24px;
+    font-size: 24px;
+    color: var(--PostDark);
+    font-weight: 350;
 }
 
 .loginInput {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    width: 75%;
-    font-size: 24px;
-    flex: 1 1 0;
-    max-height: 12%;
-    min-height: 30px;
-}
-
-.loginInput input {
     background-color: var(--Secondary);
     border: 1px solid var(--PostAccent);
-    border-radius: 3px;
-    height: 66%;
-    padding-left: 10px;
+    border-radius: 5px;
+    min-height: 30px;
+    padding: 2px 3px 2px 12px;
+    flex: 2 2 0;
     font-size: 20px;
     outline: none;
     color: var(--PostDark);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 350;
 }
 
-.loginInput input:focus {
-    border-color: var(--Secondary);
-    box-shadow: 0 0 2px 1px var(--PostAccent);
+.registrationInput {
+    background-color: var(--Secondary);
+    border: 1px solid var(--PostAccent);
+    border-radius: 5px;
+    min-height: 30px;
+    padding: 2px 3px 2px 12px;
+    flex: 2 2 0;
+    font-size: 20px;
+    outline: none;
+    color: var(--PostDark);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 350;
 }
+
+.loginInput:focus {
+    padding: 1px 2px 1px 11px;
+
+    border: 2px solid var(--PostAccent);
+}
+
+.registrationInput:focus {
+    padding: 1px 2px 1px 11px;
+
+    border: 2px solid var(--PostAccent);
+}
+
+.passwordWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: var(--Secondary);
+    border: 1px solid var(--PostAccent);
+    min-height: 32px;
+    font-size: 20px;
+    flex: 2 2 0;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.passwordWrapper .loginInput {
+    height: 100%;
+    max-width: 90%;
+    flex: 9 9 0;
+    border: none;
+    border-right: 1px solid var(--PostAccent);
+    border-radius: inherit;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.passwordWrapper .registrationInput {
+    height: 100%;
+    max-width: 90%;
+    flex: 9 9 0;
+    border: none;
+    border-right: 1px solid var(--PostAccent);
+    border-radius: inherit;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.showPasswordButton {
+    flex: 1 1 0;
+    max-width: 10%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1px;
+    background-color: inherit;
+    border: none;
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+    filter: brightness(100%);
+    transition: 0.25s;
+}
+
+.showPasswordButton svg {
+    stroke-width: 1.5px;
+    stroke: var(--PostAccent);
+}
+
+.passwordWrapper:focus-within {
+    border-width: 2px;
+}
+.passwordWrapper:focus-within .showPasswordButton svg {
+    stroke-width: 2px;
+}
+
+.passwordWrapper:focus-within .registrationInput {
+    padding: 1px 2px 1px 11px;
+    border-right: 2px solid var(--PostAccent);
+}
+
+.showPasswordButton:hover {
+    filter: brightness(90%);
+}
+
+#loginButton,
+#registrationButton {
+    flex: 1 1 0;
+    max-height: 12%;
+    min-height: 30px;
+    width: 66%;
+    background-color: var(--PostAccent);
+    border: none;
+    border-radius: 10px;
+    color: var(--Secondary);
+    margin-top: 3vh;
+    filter: brightness(100%);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: 0.25s;
+}
+
+#loginButton span,
+#registrationButton span {
+    font-size: 24px;
+    font-weight: 400;
+}
+
+#loginButton svg,
+#registrationButton svg {
+    stroke: var(--Secondary);
+    stroke-width: 2px;
+    height: 100%;
+    max-height: 36px;
+}
+
+#registrationButton svg {
+    stroke-width: 1px;
+}
+
+#loginButton:hover,
+#registrationButton:hover {
+    filter: brightness(85%);
+}
+
+.toggleRegistrationLogin {
+    color: var(--interactiveBlue);
+    background-color: var(--Secondary);
+    border: none;
+    width: 30%;
+    height: 6%;
+    min-height: 20px;
+    text-align: center;
+    font-size: 18px;
+    transition: 0.25s;
+    border-radius: 10px;
+    filter: brightness(100%);
+    margin-top: 20px;
+}
+
+#switchToLogin {
+    margin-top: 20px;
+}
+
+.toggleRegistrationLogin:hover {
+    filter: brightness(90%);
+}
+
+#registrationFeedback {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;
+    box-shadow: 0 0 10px 1px rgba(79, 79, 64, 0.75);
+    bottom: 5vh;
+    right: 3vh;
+    z-index: 1000;
+    width: 350px;
+    height: 200px;
+    background-color: var(--Secondary);
+    opacity: 0;
+}
+
+#registrationStatus {
+    flex: 1 1 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    font-size: 36px;
+    color: var(--Secondary);
+}
+
+.successfulRegistration {
+    background-color: var(--successGreen);
+}
+
+.failedRegistration {
+    background-color: var(--invalidRed);
+}
+
+#registrationMessage {
+    flex: 2 2 0;
+    background-color: inherit;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 5%;
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+    font-size: 22px;
+    color: var(--PostDark);
+}
+
+.invalid {
+    border-color: var(--invalidRed) !important;
+    border-width: 2px !important;
+}
+
+/*
 
 .loginMain {
     display: flex;
@@ -183,7 +492,7 @@
     flex: 3 3 0;
 }
 
-#loginButton {
+#loginButton, #registrationButton {
     position: relative;
     width: 50%;
     height: 100%;
@@ -256,27 +565,4 @@ form {
     gap: 10%;
 }
 
-@keyframes invalidShake {
-    0% {
-        left: 0px;
-        right: 0px;
-    }
-    25% {
-        right: 0px;
-        left: 10px;
-    }
-
-    50% {
-        right: 10px;
-        left: -10px;
-    }
-    100% {
-        left: 0px;
-        right: 0px;
-        border: 2px solid var(--invalidRed);
-    }
-}
-
-.invalid {
-    border: 2px solid var(--invalidRed);
-}
+*/

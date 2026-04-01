@@ -766,7 +766,7 @@ async function sendComment() {
     const modal = document.getElementById('commentModal');
     const textarea = document.getElementById('commentTextarea');
     const message = textarea.value;
-    if (message != '') {
+    if (message != '' && message.replace(/\s/g, '').length != 0) {
         await PostMethodFetch('/api/uploadComment', {
             postId: modal.dataset.postId,
             commentContent: message

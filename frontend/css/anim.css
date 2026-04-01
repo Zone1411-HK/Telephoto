@@ -25,7 +25,17 @@
     }
     to {
         opacity: 0;
-        transform: translateY(25%);
+        transform: translateY(100%);
+    }
+}
+@keyframes fadeOutUp {
+    from {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-100%);
     }
 }
 
@@ -57,5 +67,48 @@
     }
     to {
         transform: scale(1);
+    }
+}
+
+@keyframes fadeInLeftLogin {
+    from {
+        opacity: 0;
+        transform: translateX(100%) rotateZ(0deg);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0%) rotateZ(10deg);
+    }
+}
+
+@keyframes fadeInRightLogin {
+    from {
+        opacity: 0;
+        left: 0;
+        transform: translateX(-50%) rotateZ(0deg);
+    }
+    to {
+        transform: translateX(0%) rotateZ(-15deg);
+    }
+}
+
+@keyframes invalidShake {
+    0% {
+        left: 0px;
+        right: 0px;
+    }
+    25% {
+        right: 0px;
+        left: 10px;
+    }
+
+    50% {
+        right: 10px;
+        left: -10px;
+    }
+    100% {
+        left: 0px;
+        right: 0px;
+        border: 2px solid var(--invalidRed);
     }
 }
