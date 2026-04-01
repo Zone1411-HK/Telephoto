@@ -11,6 +11,109 @@
     --PostModalBottomColor: rgb(30, 30, 30);
 }
 
+#root {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--SecondaryDark);
+}
+
+.backgroundImage {
+    height: 50vh;
+    width: 40vw;
+    background-size: contain;
+    background-repeat: no-repeat;
+    box-shadow: inset -5px -5px 10px 5px var(--SecondaryDark);
+    position: absolute;
+    filter: blur(3px);
+
+}
+
+.backgroundImage1 {
+    background-image: url('/images/backgroundImage1.png');
+    left: 2vw;
+    transform: rotateZ(-15deg);
+
+}
+
+.backgroundImage2 {
+    background-image: url('/images/backgroundImage2.png');
+    transform: rotateZ(10deg);
+    right: 2vw;
+
+
+}
+
+.containerDiv {
+    background-color: var(--Secondary);
+    height: 800px;
+    width: 650px;
+    max-height: 95vh;
+    max-width: 95vw;
+    z-index: 100;
+    box-shadow: 0 0 15px 1px rgba(99, 99, 84, 0.75);
+    border-radius: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    padding: 20px 30px 50px 30px;
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+ .title {
+    width: 90%;
+    height: fit-content;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--PostAccent);
+    color: var(--PostDark);
+    text-align: center;
+    font-size: 40px;
+    margin: 0;
+ }
+
+ .action {
+    width: 50%;
+    height: fit-content;
+    border-bottom: 1px solid var(--PostAccent);
+    color: var(--PostDark);
+    text-align: center;
+    font-size: 32px;
+    padding-bottom: 10px;
+
+ }
+
+.loginInput {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 75%;
+    font-size: 24px;
+    flex: 1 1 0;
+    max-height: 12%;
+    min-height: 30px;
+}
+
+.loginInput input {
+    background-color: var(--Secondary);
+    border: 1px solid var(--PostAccent);
+    border-radius: 3px;
+    height: 66%;
+    padding-left: 10px;
+    font-size: 20px;
+    outline: none;
+    color: var(--PostDark);
+}
+
+.loginInput input:focus {
+    border-color: var(--Secondary);
+    box-shadow: 0 0 2px 1px var(--PostAccent);
+}
+
 .loginMain {
     display: flex;
     flex-direction: column;
