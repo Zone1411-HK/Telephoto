@@ -309,7 +309,7 @@ function expandUpwards() {
 
 async function sendMessage() {
     const newMessageInput = document.getElementById('newMessageInput');
-    if (newMessageInput.value != '') {
+    if (newMessageInput.value != '' && newMessageInput.value.replace(/\s/g, '').length != 0) {
         const newMessage = newMessageInput.value;
         const chatId = document.getElementById('openedChat').dataset.chatId;
         let username = await GetMethodFetch('/api/sendUsername');
