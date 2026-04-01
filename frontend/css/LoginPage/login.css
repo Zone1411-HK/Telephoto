@@ -30,22 +30,19 @@
     box-shadow: inset -5px -5px 10px 5px var(--SecondaryDark);
     position: absolute;
     filter: blur(3px);
-
 }
 
 .backgroundImage1 {
     background-image: url('/images/backgroundImage1.png');
     left: 2vw;
+    top: 10vh;
     transform: rotateZ(-15deg);
-
 }
 
 .backgroundImage2 {
     background-image: url('/images/backgroundImage2.png');
     transform: rotateZ(10deg);
     right: 2vw;
-
-
 }
 
 .containerDiv {
@@ -65,7 +62,7 @@
     font-family: 'Josefin Sans', sans-serif;
 }
 
- .title {
+.title {
     width: 90%;
     height: fit-content;
     padding-bottom: 10px;
@@ -74,9 +71,9 @@
     text-align: center;
     font-size: 40px;
     margin: 0;
- }
+}
 
- .action {
+.action {
     width: 50%;
     height: fit-content;
     border-bottom: 1px solid var(--PostAccent);
@@ -84,8 +81,7 @@
     text-align: center;
     font-size: 32px;
     padding-bottom: 10px;
-
- }
+}
 
 .loginInput {
     display: flex;
