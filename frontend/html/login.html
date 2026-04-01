@@ -1,5 +1,5 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="hu">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,7 +10,9 @@
         <script src="../bootstrap/js/popper.min.js"></script>
         <script src="../bootstrap/js/bootstrap.min.js"></script>
         <!--!CSS-->
+        <link rel="stylesheet" href="/css/color.css" />
         <link rel="stylesheet" href="/css/LoginPage/login.css" />
+
         <!--!JavaScript-->
         <script src="../javascript/fetch.js"></script>
         <script src="../javascript/LoginPage/registration.js"></script>
@@ -26,7 +28,27 @@
         />
     </head>
     <body>
-        <div class="loginMain" id="login">
+        <div id="root">
+            <div class="backgroundImage backgroundImage1"></div>
+
+            <div class="backgroundImage backgroundImage2"></div>
+
+            <div id="loginDiv" class="containerDiv">
+                <h2 class="title">Telephoto</h2>
+                <h3 class="action">Bejelentkezés</h3>
+
+                <label for="loginUsername" class="loginInput">
+                    <span>Felhasználónév:</span>
+                    <input type="text" placeholder="Írja be a felhasználónevét" />
+                </label>
+                <label for="loginPassword" class="loginInput">
+                    <span>Jelszó:</span>
+                    <input type="password" placeholder="Írja be a jelszavát" />
+                </label>
+            </div>
+        </div>
+
+        <!--div class="loginMain" id="login">
             <div class="login">
                 <div class="loginDoboz">
                     <img src="/images/placeholder1.jpg" alt="PLACEHOLDER" class="img-fluid w-100" />
@@ -90,6 +112,6 @@
                     <img src="/images/placeholder2.gif" alt="PLACEHOLDER" class="img-fluid w-100" />
                 </div>
             </div>
-        </div>
+        </div-->
     </body>
 </html>
