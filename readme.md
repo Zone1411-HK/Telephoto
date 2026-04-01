@@ -1,15 +1,8 @@
 <h1 align="center">TEENDŐK</h1>
 <ul>
-   <li>Profil felület dizájn</li>
    <li>Térkép felületen egyedi pin-ek a posztokhoz</li>
    <li>Térkép felület csiszolása</li>
-   <li>Bejelentkezési felület csiszolása</li>
-   <li>Regisztráció visszajelzés</li>
-   <li>MOBIL NÉZET !!!!!!!!!!!!!!!</li>
-   <li>Admin sql triggerek</li>
    <li>Főoldalon posztok rendezése</li>
-   <li>Posztokra való keresés/szűrés</li>
-   <li>Főoldalon lévő rendezési szekció átdolgozása</li>
 </ul>
 
 <h1 align="center">NodeJS - Template project</h1>
