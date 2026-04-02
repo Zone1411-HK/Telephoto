@@ -1,3 +1,5 @@
+let matchMedia = window.matchMedia('(width > 768px)');
+
 document.addEventListener('DOMContentLoaded', () => {
     loginAddEventListeners();
 });
@@ -15,16 +17,16 @@ function loginAddEventListeners() {
 }
 
 async function submitRegistration() {
-    let successful = await registration();
-    console.log(successful);
-    document.getElementById('registrationFeedback').classList.remove('animFadeOutDown');
-    document.getElementById('registrationFeedback').classList.add('animFadeInUp');
+    let response = await registration();
+    console.log(response.success);
+    document.getElementById('registrationFeedback').classList.remove('animFadeOutUp');
+    document.getElementById('registrationFeedback').classList.add('animFadeInDown');
     setTimeout(() => {
-        document.getElementById('registrationFeedback').classList.remove('animFadeInUp');
-        document.getElementById('registrationFeedback').classList.add('animFadeOutDown');
-    }, 2500);
+        document.getElementById('registrationFeedback').classList.remove('animFadeInDown');
+        document.getElementById('registrationFeedback').classList.add('animFadeOutUp');
+    }, 5000);
 
-    if (successful) {
+    if (response.success) {
         document.getElementById('registrationStatus').innerText = 'Sikeres';
         document.getElementById('registrationMessage').innerText = 'Sikeres regisztráció';
         document.getElementById('registrationStatus').classList.remove('failedRegistration');
@@ -32,7 +34,7 @@ async function submitRegistration() {
         switchToLogin();
     } else {
         document.getElementById('registrationStatus').innerText = 'Sikertelen';
-        document.getElementById('registrationMessage').innerText = 'Sikertelen regisztráció';
+        document.getElementById('registrationMessage').innerText = response.errorMessage;
         document.getElementById('registrationStatus').classList.remove('successfulRegistration');
         document.getElementById('registrationStatus').classList.add('failedRegistration');
     }

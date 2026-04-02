@@ -705,6 +705,7 @@ body {
 
 #logoutWrapper {
     flex: 0.25 0.25 0;
+    order: 1;
 }
 #logoutWrapper svg {
     max-width: 30px;
@@ -750,10 +751,6 @@ body {
 
 .modifyData {
     border: 2px solid #404e0e !important;
-}
-#profilGomb {
-    background-color: #f0febe;
-    filter: brightness(90%);
 }
 
 .navbar {

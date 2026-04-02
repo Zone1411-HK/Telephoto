@@ -19,49 +19,74 @@ const boundLines = {
     minLonLine: null,
     maxLonLine: null
 };
+let isClosed = true;
 
 document.addEventListener('DOMContentLoaded', () => {
-    generateMap();
-
-    let isClosed = true;
-    document.getElementById('filterSVGWrapper').addEventListener('click', function () {
-        if (isClosed) {
-            this.parentNode.style.width = '125px';
-            this.parentNode.style.borderRadius = '15px';
-            this.parentNode.style.height = '200px';
-
-            setTimeout(() => {
-                this.style.height = '15%';
-                this.style.borderBottomLeftRadius = '0';
-                this.style.borderBottomRightRadius = '0';
-                document.getElementById('filterOptions').style.display = 'flex';
-            }, 250);
-            isClosed = false;
-        } else {
-            this.parentNode.style.width = '40px';
-            this.parentNode.style.height = '40px';
-            this.style.borderRadius = 'inherit';
-            this.style.height = '100%';
-            document.getElementById('filterOptions').style.display = 'none';
-
-            setTimeout(() => {
-                this.parentNode.style.borderRadius = '50%';
-            }, 250);
-
-            isClosed = true;
-        }
-    });
-
-    let filterInputs = document.querySelectorAll('.filterOptionInputs input');
-    for (const input of filterInputs) {
-        input.value = '';
-        input.addEventListener('input', filterPins);
-    }
-
-    document.getElementById('modalClose').addEventListener('click', exitPost);
-    document.getElementById('resetFilter').addEventListener('click', resetFilter);
-    //#region Legacy Kód
+    startUp();
 });
+
+async function startUp() {
+    if (await isLoggedIn()) {
+        if (await isAdmin()) {
+            let adminNav = document.createElement('a');
+            adminNav.href = '/admin';
+            adminNav.classList.add('navButton');
+            adminNav.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><span>Admin</span>`;
+
+            document.getElementById('nav').appendChild(adminNav);
+
+            let adminNavMobile = document.createElement('a');
+            adminNavMobile.href = '/admin';
+            adminNavMobile.classList.add('mobileIcon');
+            adminNavMobile.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
+
+            document.getElementById('navMobile').appendChild(adminNavMobile);
+        }
+
+        generateMap();
+
+        document.getElementById('filterSVGWrapper').addEventListener('click', toggleFilter);
+
+        let filterInputs = document.querySelectorAll('.filterOptionInputs input');
+        for (const input of filterInputs) {
+            input.value = '';
+            input.addEventListener('input', filterPins);
+        }
+
+        document.getElementById('modalClose').addEventListener('click', exitPost);
+        document.getElementById('resetFilter').addEventListener('click', resetFilter);
+    } else {
+        window.location.href = '/login';
+    }
+}
+
+function toggleFilter() {
+    if (isClosed) {
+        this.parentNode.style.width = '125px';
+        this.parentNode.style.borderRadius = '15px';
+        this.parentNode.style.height = '200px';
+
+        setTimeout(() => {
+            this.style.height = '15%';
+            this.style.borderBottomLeftRadius = '0';
+            this.style.borderBottomRightRadius = '0';
+            document.getElementById('filterOptions').style.display = 'flex';
+        }, 250);
+        isClosed = false;
+    } else {
+        this.parentNode.style.width = '40px';
+        this.parentNode.style.height = '40px';
+        this.style.borderRadius = 'inherit';
+        this.style.height = '100%';
+        document.getElementById('filterOptions').style.display = 'none';
+
+        setTimeout(() => {
+            this.parentNode.style.borderRadius = '50%';
+        }, 250);
+
+        isClosed = true;
+    }
+}
 
 function filterPins() {
     let val = '';
@@ -150,7 +175,13 @@ function generateFilterLines(filterInput, max) {
 }
 
 function exitPost() {
-    document.getElementById('postModal').style.display = 'none';
+    let modal = document.getElementById('postModal');
+    modal.removeEventListener('click', closeModalByClickingOutside);
+    modal.children[1].style.animation = 'fadeOutDown 0.5s forwards';
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.children[1].style.animation = '';
+    }, 500);
 }
 
 async function generateMap() {
@@ -322,5 +353,12 @@ function generateFilteredMarkers() {
 }
 
 function openPost() {
-    document.getElementById('postModal').style.display = 'flex';
+    let modal = document.getElementById('postModal');
+    let content = document.getElementById('modalContent');
+    content.style.animation = 'fadeInUp 0.5s forwards';
+    modal.removeEventListener('click', closeModalByClickingOutside);
+    modal.classList.remove('hidden');
+    modal.addEventListener('click', function () {
+        closeModalByClickingOutside(event, modal, content);
+    });
 }

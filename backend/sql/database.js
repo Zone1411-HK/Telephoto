@@ -798,17 +798,6 @@ async function favoritePost(username, postId, favoriteValue) {
         throw new Error(error);
     }
 }
-async function appendPictures(posts) {
-    for (const post of posts) {
-        const picSql = `
-            SELECT pictures.picture_link
-            FROM pictures
-            WHERE pictures.post_id = ?;`;
-        const [rows] = await pool.execute(picSql, [post.post_id]);
-        post['pictures'] = rows;
-    }
-    return posts;
-}
 
 async function userPosted(username) {
     try {
@@ -819,7 +808,7 @@ async function userPosted(username) {
         WHERE user_id = ?;`;
 
         let posts = await pool.execute(sql, [userId]);
-        posts = await appendPictures(posts[0]);
+        posts = await postPictures(posts[0]);
 
         return posts;
     } catch (error) {
@@ -831,25 +820,14 @@ async function userLiked(username) {
     try {
         const userId = await getUserByUsername(username);
         const interactionSql = `
-    SELECT post_id
-    FROM interactions
-    WHERE user_id = ? AND upvote = 1;`;
+            SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.creation_date
+            FROM posts
+            INNER JOIN interactions ON posts.post_id = interactions.post_id
+            WHERE interactions.user_id = ? AND interactions.upvote = 1;`;
 
-        let posts = [];
+        const [rows] = await pool.execute(interactionSql, [userId]);
 
-        const postIds = await pool.execute(interactionSql, [userId]);
-        for (const id of postIds[0]) {
-            let postSql = `
-        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.creation_date
-        FROM posts
-        WHERE post_id = ?;`;
-
-            let post = await pool.execute(postSql, [id.post_id]);
-            posts.push(post[0][0]);
-        }
-
-        posts = await appendPictures(posts);
-        return posts;
+        return await postPictures(rows);
     } catch (error) {
         console.log(error);
     }
@@ -859,25 +837,14 @@ async function userDisliked(username) {
     try {
         const userId = await getUserByUsername(username);
         const interactionSql = `
-    SELECT post_id
-    FROM interactions
-    WHERE user_id = ? AND downvote = 1;`;
+            SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.creation_date
+            FROM posts
+            INNER JOIN interactions ON posts.post_id = interactions.post_id
+            WHERE interactions.user_id = ? AND interactions.downvote = 1;`;
 
-        let posts = [];
+        const [rows] = await pool.execute(interactionSql, [userId]);
 
-        const postIds = await pool.execute(interactionSql, [userId]);
-        for (const id of postIds[0]) {
-            let postSql = `
-        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.creation_date
-        FROM posts
-        WHERE post_id = ?;`;
-
-            let post = await pool.execute(postSql, [id.post_id]);
-            posts.push(post[0][0]);
-        }
-
-        posts = await appendPictures(posts);
-        return posts;
+        return await postPictures(rows);
     } catch (error) {
         console.log(error);
     }
@@ -887,26 +854,14 @@ async function userSaved(username) {
     try {
         const userId = await getUserByUsername(username);
         const interactionSql = `
-        SELECT post_id
-        FROM favorites
-        WHERE user_id = ? AND is_favorited = 1;`;
-
-        let posts = [];
-
-        const postIds = await pool.execute(interactionSql, [userId]);
-        for (const id of postIds[0]) {
-            let postSql = `
             SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.creation_date
             FROM posts
-            WHERE post_id = ?;`;
+            INNER JOIN favorites ON posts.post_id = favorites.post_id
+            WHERE favorites.user_id = ?;`;
 
-            let post = await pool.execute(postSql, [id.post_id]);
-            posts.push(post[0][0]);
-        }
+        const [rows] = await pool.execute(interactionSql, [userId]);
 
-        posts = await appendPictures(posts);
-        console.log(posts);
-        return posts;
+        return await postPictures(rows);
     } catch (error) {
         console.log(error);
     }
@@ -974,6 +929,37 @@ async function isFavorited(postId, username) {
     }
 }
 
+async function reportUser(username) {
+    try {
+        const userId = await getUserByUsername(username);
+        const sql = `
+        UPDATE users
+        SET is_reported = 1
+        WHERE user_id = ?;
+        `;
+        const response = await pool.execute(sql, [userId]);
+        return response[0].affectedRows == 1;
+    } catch (error) {
+        console.error(error);
+        return 'failed';
+    }
+}
+
+async function reportPost(postId) {
+    try {
+        const sql = `
+        UPDATE posts
+        SET is_reported = 1
+        WHERE post_id = ?;
+        `;
+        const response = await pool.execute(sql, [postId]);
+        return response[0].affectedRows == 1;
+    } catch (error) {
+        console.error(error);
+        return 'failed';
+    }
+}
+
 //!Export
 module.exports = {
     selectall,
@@ -1028,5 +1014,7 @@ module.exports = {
     like,
     favoritePost,
     isFavorited,
-    searchPosts
+    searchPosts,
+    reportUser,
+    reportPost
 };

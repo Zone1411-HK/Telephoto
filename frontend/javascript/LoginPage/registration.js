@@ -3,7 +3,7 @@
 async function registration() {
     try {
         let validInputs = 0;
-
+        let errorMessage = '';
         let usernameInput = document.getElementById('registrationUsername');
         let username = usernameInput.value;
         if (username != '' && username.replace(/\s/g, '').length != 0) {
@@ -15,9 +15,11 @@ async function registration() {
                 validInputs++;
             } else {
                 usernameInput.classList.add('invalid');
+                errorMessage += 'Ez a felhasználónév már foglalt!\n';
                 validInputs--;
             }
         } else {
+            errorMessage += 'Nem adott meg felhasználónevet!\n';
             usernameInput.classList.add('invalid');
             validInputs--;
         }
@@ -32,6 +34,8 @@ async function registration() {
             emailInput.classList.remove('invalid');
             validInputs++;
         } else {
+            errorMessage += 'Nem megfelelő e-mail formátum!\n';
+
             emailInput.classList.add('invalid');
             validInputs--;
         }
@@ -40,25 +44,28 @@ async function registration() {
         let password = passwordInput.value;
         let notSpecialCharacters = /[^a-zA-Z0-9áéíóúőűÁÉÍÓÚŐŰ]/;
         let numbers = /[0-9]/;
-        if (!!password && notSpecialCharacters.test(password) && numbers.test(password)) {
+        if (
+            password &&
+            notSpecialCharacters.test(password) &&
+            numbers.test(password) &&
+            password.length >= 8
+        ) {
             passwordInput.parentNode.classList.remove('invalid');
             validInputs++;
         } else {
+            errorMessage += 'A jelszó nem elég erős!\n';
             passwordInput.parentNode.classList.add('invalid');
             validInputs--;
         }
 
         let passwordConfirmInput = document.getElementById('registrationPasswordConfirm');
         let passwordConfirm = passwordConfirmInput.value;
-        if (
-            !!passwordConfirm &&
-            passwordConfirm === password &&
-            notSpecialCharacters.test(passwordConfirm) &&
-            numbers.test(passwordConfirm)
-        ) {
+        if (passwordConfirm && passwordConfirm === password) {
             passwordConfirmInput.parentNode.classList.remove('invalid');
             validInputs++;
         } else {
+            errorMessage += 'A két jelszó nem egyezik meg!\n';
+
             passwordConfirmInput.parentNode.classList.add('invalid');
             validInputs--;
         }
@@ -69,21 +76,21 @@ async function registration() {
                 email: email,
                 password: password
             });
-            console.log(response);
-            usernameInput.value = '';
+            //console.log(response);
+            //usernameInput.value = '';
             emailInput.value = '';
+            usernameInput.value = '';
             passwordConfirmInput.value = '';
             passwordInput.value = '';
             if (response.status == 'Successful registration') {
-                return true;
+                return { success: true };
             } else {
-                return false;
+                return { success: false, errorMessage: errorMessage };
             }
         } else {
-            return false;
+            return { success: false, errorMessage: errorMessage };
         }
     } catch (error) {
         console.error(`REGISZTRÁCIÓS hiba: ${error.message}`);
-        return false;
     }
 }

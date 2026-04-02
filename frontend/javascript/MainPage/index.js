@@ -1,37 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
-    //testing();
-    start();
-
-    /*     document.getElementById('home').addEventListener('click', () => {});
-    document.getElementById('personal').addEventListener('click', () => {});
-    document.getElementById('profile').addEventListener('click', () => {});
-    document.getElementById('postButton').addEventListener('click', () => {});
-
- */
-    /* document.getElementById('loginButton').addEventListener('click', login);
-    document.getElementById('loginText').addEventListener('click', toggleLoginRegistration);
-    document.getElementById('regButton').addEventListener('click', registration);
-    document.getElementById('regText').addEventListener('click', toggleLoginRegistration); */
-    /*     document.getElementById('create').addEventListener('click', () => {});
-    document.getElementById('settings').addEventListener('click', () => {});
-
-    document.getElementById('today').addEventListener('click', () => {});
-    document.getElementById('week').addEventListener('click', () => {});
-    document.getElementById('month').addEventListener('click', () => {});
-    document.getElementById('top').addEventListener('click', () => {});
-    document.getElementById('new').addEventListener('click', () => {});
-    document.getElementById('near').addEventListener('click', () => {});
- */
-    //socket.emit('test');
-    //isLoggedIn();
+    startUp();
 });
 
-async function start() {
-    if (await isLoggedIn()) {
-        getChats();
-        chatAddEventListeners();
-    } else {
-        window.location.href = '/login';
+async function startUp() {
+    try {
+        if (await isLoggedIn()) {
+            getChats();
+            chatAddEventListeners();
+            if (await isAdmin()) {
+                let adminNav = document.createElement('a');
+                adminNav.href = '/admin';
+                adminNav.classList.add('navButton');
+                adminNav.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><span>Admin</span>`;
+
+                document.getElementById('nav').appendChild(adminNav);
+
+                let adminNavMobile = document.createElement('a');
+                adminNavMobile.href = '/admin';
+                adminNavMobile.classList.add('mobileIcon');
+                adminNavMobile.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
+
+                document.getElementById('navMobile').appendChild(adminNavMobile);
+            }
+        } else {
+            window.location.href = '/login';
+        }
+    } catch (error) {
+        console.log(error);
     }
 }
 
