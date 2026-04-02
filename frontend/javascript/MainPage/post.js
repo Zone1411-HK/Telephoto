@@ -2,7 +2,7 @@ let type = 'top';
 let timeframe = 36500;
 
 document.addEventListener('DOMContentLoaded', () => {
-    startUp();
+    startUpPosts();
     //testFunction();
 
     document.getElementById('closeComments').addEventListener('click', closeComments);
@@ -120,7 +120,7 @@ async function trendingPosts() {
     });
 }
 
-async function startUp() {
+async function startUpPosts() {
     const { status, result } = await PostMethodFetch('/api/setOffset', {
         type: 'reset',
         offset: 0
@@ -495,7 +495,60 @@ async function generateInteractions(
     return interactionRow;
 }
 
+function generateUserRow(name, profilePicture) {
+    let wrapper = document.createElement('div');
+    wrapper.classList.add('postUserRow');
+
+    let imgWrapper = document.createElement('div');
+    imgWrapper.classList.add('postUserImgWrapper');
+
+    let imgBorder = document.createElement('div');
+    imgBorder.classList.add('postUserImgBorder');
+
+    let img = document.createElement('img');
+    img.src = profilePicture
+        ? '/profile_images/' + profilePicture
+        : '/profile_images/defaultProfile.jpg';
+    img.alt = 'Profil Kép';
+    img.classList.add('postUserImg');
+    img.loading = 'lazy';
+
+    imgBorder.appendChild(img);
+    imgWrapper.appendChild(imgBorder);
+
+    let username = document.createElement('span');
+    username.classList.add('postUsername');
+    username.innerText = name;
+
+    let report = document.createElement('div');
+    report.classList.add('postUserReport');
+    report.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"  stroke-linecap="round" stroke-linejoin="round" class="feather feather-flag"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>`;
+    report.addEventListener('click', reportUser);
+
+    wrapper.appendChild(imgWrapper);
+    wrapper.appendChild(username);
+    wrapper.appendChild(report);
+
+    return wrapper;
+}
+
+async function reportUser() {
+    const responseUser = await PostMethodFetch('/api/reportUser', {
+        username: this.previousSibling.innerText
+    });
+
+    const responsePost = await PostMethodFetch('/api/reportPost', {
+        postId: this.parentNode.parentNode.parentNode.dataset.postId
+    });
+
+    if (responsePost.Status == 'success' && responseUser.Status == 'success') {
+        this.classList.add('reported');
+        this.removeEventListener('click', reportUser);
+    }
+}
+
 const hangPictures = async (test) => {
+    console.log(test);
     let posts = document.getElementById('posts-container');
     let post = document.createElement('div');
     post.classList.add('post');
@@ -520,12 +573,15 @@ const hangPictures = async (test) => {
         test.downvote
     );
 
+    let userRow = await generateUserRow(test.username, test.profile_picture_link);
+
     let postcontent = document.createElement('div');
     postcontent.classList.add('postContent');
 
     postcontent.appendChild(slideshow);
 
     postcontent.appendChild(interactionRow);
+    postcontent.appendChild(userRow);
     postcontent.appendChild(tags);
     postcontent.appendChild(description);
 

@@ -1,16 +1,34 @@
 const socket = io();
 document.addEventListener('DOMContentLoaded', () => {
-    start();
+    startUp();
 });
 
-async function start() {
-    //testing();
-    if (await isLoggedIn()) {
-        postsByUser(document.getElementById('postsByUser'));
-        profileInfos();
-        profileAddEventListeners();
-    } else {
-        window.location.href = '/login';
+async function startUp() {
+    try {
+        if (await isLoggedIn()) {
+            postsByUser(document.getElementById('postsByUser'));
+            profileInfos();
+            profileAddEventListeners();
+            if (await isAdmin()) {
+                let adminNav = document.createElement('a');
+                adminNav.href = '/admin';
+                adminNav.classList.add('navButton');
+                adminNav.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><span>Admin</span>`;
+
+                document.getElementById('nav').appendChild(adminNav);
+                /*
+            let adminNavMobile = document.createElement('a');
+            adminNavMobile.href = '/admin';
+            adminNavMobile.classList.add('mobileIcon');
+            adminNavMobile.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
+
+            document.getElementById('navMobile').appendChild(adminNavMobile);*/
+            }
+        } else {
+            window.location.href = '/login';
+        }
+    } catch (error) {
+        console.log(error);
     }
 }
 
@@ -126,10 +144,11 @@ function generatePosts(posts, canDeletePost) {
         row.classList.add('postRow');
 
         for (let arrayValue of arrayRow) {
+            console.log(arrayValue);
             let post = document.createElement('div');
             let url = '../images/placeholder1.jpg';
-            if (arrayValue.pictures.length != 0) {
-                url = '/uploads/' + arrayValue.pictures[0].picture_link;
+            if (arrayValue.links.length != 0) {
+                url = '/uploads/' + arrayValue.links[0];
             }
 
             let format = url.split('.')[1];
@@ -201,9 +220,10 @@ async function profileInfos() {
             results[0].profile_picture_link == null
                 ? 'defaultProfile.jpg'
                 : results[0].profile_picture_link;
+
         document.getElementById('profilePicture').src = '/profile_images/' + profilePicture;
         document.getElementById('profilePictureDiv').style.backgroundImage =
-            `url(/profile_images/${profilePicture})`;
+            `url("/profile_images/${profilePicture}")`;
         console.log('Profil adatok sikeresen betöltve');
     }
 }

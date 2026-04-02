@@ -46,6 +46,12 @@ async function isLoggedIn() {
     } catch (error) {}
 }
 
+async function isAdmin() {
+    const { Status } = await GetMethodFetch('/api/isAdmin');
+    console.log(Status == 'success');
+    return Status == 'success';
+}
+
 function nextSlide() {
     this.style.pointerEvents = 'none';
     setTimeout(() => {

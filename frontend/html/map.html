@@ -11,6 +11,7 @@
         <script src="../bootstrap/js/bootstrap.min.js"></script>
         <!--!CSS-->
         <link rel="stylesheet" href="/css/util.css" />
+        <link rel="stylesheet" href="/css/anim.css" />
         <link rel="stylesheet" href="/css/color.css" />
         <link rel="stylesheet" href="/css/MapPage/map.css" />
         <link rel="stylesheet" href="node/leaflet/dist/leaflet.css" />
@@ -21,6 +22,7 @@
         <script src="node/leaflet/dist/leaflet.js"></script>
         <script src="node/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
         <script src="node/exifreader/dist/exif-reader.js"></script>
+        <script src="/javascript/util.js"></script>
         <script src="/javascript/MapPage/map.js"></script>
 
         <!--Font Style-->
@@ -89,7 +91,7 @@
                     </svg>
                     <span>Főoldal</span>
                 </a>
-                <a href="/map" class="navButton"
+                <a href="/map" class="navButton activeNav"
                     ><svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -125,8 +127,51 @@
                     ><span>Profil</span></a
                 >
             </nav>
+            <nav id="navMobile">
+                <a href="/" class="mobileIcon">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-home"
+                    >
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </a>
+                <a href="/map" class="mobileIcon activeNav">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-map"
+                    >
+                        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                        <line x1="8" y1="2" x2="8" y2="18"></line>
+                        <line x1="16" y1="6" x2="16" y2="22"></line>
+                    </svg>
+                </a>
+                <a href="/profile" class="mobileIcon">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-user"
+                    >
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </a>
+            </nav>
         </div>
-        <div id="postModal" class="postModal">
+
+        <div id="postModal" class="postModal hidden">
             <div id="modalClose">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -144,7 +189,7 @@
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
             </div>
-            <div class="modalContent">
+            <div class="modalContent" id="modalContent">
                 <div class="post">
                     <div id="mediaWrapper">
                         <div class="slideshowControllerWrapper">

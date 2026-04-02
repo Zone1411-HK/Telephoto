@@ -342,6 +342,26 @@ router.get('/isFavorited/:postId', async (request, response) => {
     }
 });
 
+router.post('/reportUser', async (request, response) => {
+    try {
+        const { username } = request.body;
+        const status = await database.reportUser(username);
+        response.status(200).json({ Status: status ? 'success' : 'failed' });
+    } catch (error) {
+        response.status(500).json({ error: error });
+    }
+});
+
+router.post('/reportPost', async (request, response) => {
+    try {
+        const { postId } = request.body;
+        const status = await database.reportPost(postId);
+        response.status(200).json({ Status: status ? 'success' : 'failed' });
+    } catch (error) {
+        response.status(500).json({ error: error });
+    }
+});
+
 //! ADATOK
 //#region Data
 

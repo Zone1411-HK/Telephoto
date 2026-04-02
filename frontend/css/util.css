@@ -60,7 +60,7 @@
 }
 
 .navButton:hover {
-    background-color: #a8ec9f;
+    filter: brightness(85%);
 }
 
 .hidden {
@@ -146,4 +146,50 @@
 
 .closeButton:hover {
     filter: brightness(50%);
+}
+
+#navMobile {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+    animation: fadeInUp 1s forwards;
+    height: 6vh;
+    background-color: var(--Primary);
+    transition: 0.5s;
+    opacity: 1;
+    position: absolute;
+    width: 100%;
+    z-index: 100;
+    gap: 5px;
+    padding: 5px;
+}
+
+.mobileIcon {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: inherit;
+    filter: brightness(100%);
+    flex: 1 1 0;
+    border-radius: 4px;
+    transition: 0.25s;
+    border: none;
+}
+
+.mobileIcon:hover {
+    filter: brightness(80%);
+}
+
+.mobileIcon svg {
+    height: 70%;
+    stroke-width: 1.5px;
+    width: 100%;
+    aspect-ratio: 1/1;
+    stroke: var(--AccentDark);
+}
+
+.activeNav {
+    filter: brightness(90%);
 }

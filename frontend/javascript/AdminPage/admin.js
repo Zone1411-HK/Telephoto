@@ -10,12 +10,7 @@ setInterval(() => {
 }, 1500);
 
 document.addEventListener('DOMContentLoaded', () => {
-    isAdmin();
-    getProfiles();
-    getPosts();
-    getComments();
-    adminAddEventListeners();
-    loadAnimation();
+    startUp();
 });
 window.addEventListener('resize', () => {
     let sidebar = document.getElementById('sidebar');
@@ -28,6 +23,23 @@ window.addEventListener('resize', () => {
         }
     }
 });
+
+async function startUp() {
+    let loggedIn = await isLoggedIn();
+    if (!loggedIn) {
+        window.location.href = '/login';
+    } else {
+        if (await isAdmin()) {
+            getProfiles();
+            getPosts();
+            getComments();
+            adminAddEventListeners();
+            loadAnimation();
+        } else {
+            window.location.href = '/';
+        }
+    }
+}
 
 function collapseSidebar() {
     let sidebar = document.getElementById('sidebar');
@@ -62,18 +74,6 @@ function toggleSidebarVisibility(parent) {
 
 //! COMMENT
 //#region COMMENT
-
-async function isAdmin() {
-    let loggedIn = await isLoggedIn();
-    if (!loggedIn) {
-        window.location.href = '/';
-    } else {
-        const { Status } = await GetMethodFetch('/api/isAdmin');
-        if (Status != 'success') {
-            window.location.href = '/';
-        }
-    }
-}
 
 function adminAddEventListeners() {
     const navButtons = document.getElementsByClassName('altNavButton');

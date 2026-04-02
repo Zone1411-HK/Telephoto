@@ -580,6 +580,7 @@ form {
     padding: 2px 5px 2px 5px;
     height: 33%;
     max-width: 50%;
+    overflow: hidden;
     text-overflow: ellipsis;
     font-size: 0.8rem;
     border: 1px solid var(--PostAccent);
@@ -592,6 +593,100 @@ form {
     background-color: var(--PostSecondary);
 }
 
+.postUserRow {
+    height: 10%;
+    width: 90%;
+    display: flex;
+    flex-direction: row-reverse;
+    max-height: 10%;
+    margin-top: 10px;
+    border: 1px solid var(--PostAccent);
+    gap: 20px;
+    border-radius: 5px;
+}
+
+.postUserImgWrapper {
+    height: 100%;
+    width: 20%;
+    min-width: 24px;
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: start;
+    padding: 5px;
+    order: 2;
+}
+
+.postUsername {
+    max-width: 72.5%;
+    width: 72.5%;
+    height: 100%;
+    font-size: 26px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--PostDark);
+    order: 1;
+}
+
+.postUserReport {
+    max-width: 7.5%;
+    width: 7.5%;
+    height: 100%;
+    justify-self: end;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    order: 0;
+    transition: 0.25s;
+    filter: brightness(100%);
+    background-color: var(--Post);
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+}
+
+.postUserReport svg {
+    height: 40%;
+    aspect-ratio: 1/1;
+    stroke: var(--PostAccent);
+    stroke-width: 1.5px;
+    transition: 0.25s;
+}
+
+.postUserReport:hover {
+    filter: brightness(85%);
+}
+
+.postUserReport:hover svg {
+    stroke: var(--invalidRed);
+}
+
+.reported svg {
+    stroke: var(--invalidRed);
+}
+
+.postUserImgBorder {
+    background-color: var(--PostDark);
+    height: 100%;
+    width: 100%;
+    aspect-ratio: 1/1;
+    clip-path: circle();
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.postUserImg {
+    height: 95%;
+    clip-path: circle();
+    object-fit: cover;
+}
+
 .postDescription {
     border: 1px solid rgb(175, 175, 175);
     width: 90%;
@@ -600,10 +695,6 @@ form {
     margin-top: 5px;
     border-radius: 3px;
     color: rgb(80, 75, 70);
-}
-
-#navMobile {
-    display: none;
 }
 
 #mobileTitle {
@@ -625,31 +716,6 @@ form {
     transition: 0.5s;
 }
 
-.mobileIcon {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    background-color: inherit;
-    filter: brightness(100%);
-    flex: 1 1 0;
-    border-radius: 4px;
-    transition: 0.25s;
-    border: none;
-}
-
-.mobileIcon:hover {
-    filter: brightness(80%);
-}
-
-.mobileIcon svg {
-    height: 70%;
-    stroke-width: 1.5px;
-    width: 100%;
-    aspect-ratio: 1/1;
-    stroke: var(--AccentDark);
-}
-
 .activeSort {
     border-color: var(--AccentDark) !important;
     background-color: var(--Accent);
@@ -666,7 +732,15 @@ form {
     color: var(--AccentDark);
 }
 
+#navMobile {
+    display: none;
+}
+
 @media (max-width: 1000px) {
+    #navMobile {
+        display: flex;
+    }
+
     #home {
         flex-direction: column !important;
         height: 100vh;
@@ -713,23 +787,6 @@ form {
         height: 90%;
         min-width: 0;
         flex-direction: column-reverse;
-    }
-
-    #navMobile {
-        position: sticky;
-        bottom: 0;
-        display: flex;
-        flex-direction: row;
-        animation: fadeInUp 1s forwards;
-        height: 6vh;
-        background-color: var(--Primary);
-        transition: 0.5s;
-        opacity: 1;
-        position: absolute;
-        width: 100%;
-        z-index: 100;
-        gap: 5px;
-        padding: 5px;
     }
 
     #mobileTitleWrapper {

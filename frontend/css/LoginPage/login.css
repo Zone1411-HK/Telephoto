@@ -78,7 +78,7 @@
     color: var(--PostAccent);
     font-size: 16px !important;
     font-weight: 350;
-    line-height: normal;
+    line-height: 17px;
     margin-bottom: 5px;
 }
 
@@ -228,7 +228,7 @@
     align-items: center;
     background-color: var(--Secondary);
     border: 1px solid var(--PostAccent);
-    min-height: 32px;
+    min-height: 34px;
     font-size: 20px;
     flex: 2 2 0;
     border-radius: 5px;
@@ -367,9 +367,8 @@
     flex-direction: column;
     align-items: center;
     border-radius: 15px;
-    box-shadow: 0 0 10px 1px rgba(79, 79, 64, 0.75);
-    bottom: 5vh;
-    right: 3vh;
+    box-shadow: 0 0 10px 2px rgba(79, 79, 64, 0.75);
+    top: 5vh;
     z-index: 1000;
     width: 350px;
     height: 200px;
@@ -405,16 +404,33 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    padding-top: 5%;
+    align-items: center;
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit;
-    font-size: 22px;
+    font-size: 18px;
+    font-weight: 350;
     color: var(--PostDark);
 }
 
 .invalid {
     border-color: var(--invalidRed) !important;
     border-width: 2px !important;
+    color: var(--invalidRed) !important;
+}
+
+.invalid .registrationInput,
+.invalid .loginInput {
+    color: var(--invalidRed) !important;
+}
+
+.invalid .registrationInput,
+.invalid .loginInput {
+    color: var(--invalidRed) !important;
+    border-right: 2px solid var(--invalidRed) !important;
+}
+
+.invalid .showPasswordButton svg {
+    stroke: var(--invalidRed) !important;
 }
 
 /*
