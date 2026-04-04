@@ -31,7 +31,6 @@ async function getChats() {
         const existingChats = document.getElementById('existingChats');
         existingChats.replaceChildren();
         for (const chat of chatArray) {
-            console.log(chat);
             const chatDiv = document.createElement('div');
             chatDiv.classList.add('chat');
 
@@ -329,11 +328,12 @@ async function sendMessage() {
 }
 
 function openNewChatWindow() {
-    document.getElementById('newChatModal').style.display = 'flex';
+    document.getElementById('newChatModal').classList.remove('hidden');
+    document.getElementById('newChatContainer').style.animation = 'fadeInUp 1s forwards';
 }
 
 function closeNewChatWindow() {
-    document.getElementById('newChatModal').style.display = 'none';
+    document.getElementById('newChatModal').classList.add('hidden');
     document.getElementById('newChatUserSuggestionList').replaceChildren();
     document.getElementById('newChatAddedUsers').replaceChildren();
 }

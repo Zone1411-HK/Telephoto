@@ -95,8 +95,8 @@ form {
 }
 
 #rendezesContainer {
-    height: 30%;
-    max-height: 30%;
+    height: 40%;
+    max-height: 40%;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -107,7 +107,7 @@ form {
 }
 
 #chatContainer {
-    height: 55%;
+    height: 45%;
     overflow-y: scroll;
     scrollbar-width: none;
     display: flex;
@@ -125,10 +125,15 @@ form {
     text-align: center;
 }
 
+.postSortTitle {
+    font-size: 1.5rem;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
 .trendingButton {
     width: 31%;
-    font-weight: 350;
-    font-size: 1rem;
+    font-size: 0.9rem;
     overflow: hidden;
     text-overflow: ellipsis;
     border: 1px solid var(--PrimaryAccent);
@@ -161,9 +166,15 @@ form {
     width: 90%;
     background-color: var(--Primary);
     border: 1px solid var(--PrimaryAccent);
+    color: var(--AccentDark);
     font-size: 1rem;
     font-weight: 350;
     transition: 0.2s;
+}
+
+.disabledButton {
+    filter: brightness(85%) !important;
+    cursor: not-allowed;
 }
 
 .postSearchWrapper {

@@ -114,11 +114,10 @@ function slideshowController(move, slideshow) {
     }
     slides[finalIndex].classList.remove('hidden');
 
-    let postImages = slideshow.parentNode.parentNode;
     if (slides[finalIndex].dataset.type == 'image') {
-        postImages.style.backgroundImage = `url(${slides[finalIndex].src})`;
+        slideshow.style.backgroundImage = `url(${slides[finalIndex].src})`;
     } else {
-        postImages.style.backgroundImage = `url("/images/videoBackground.png")`;
+        slideshow.style.backgroundImage = `url("/images/videoBackground.png")`;
     }
 }
 
@@ -161,8 +160,10 @@ function generateSlideshow(links) {
     let slideshow = document.createElement('div');
     slideshow.classList.add('slideshow');
 
+    console.log(links);
     for (let i = 0; i < links.length; i++) {
         let content = links[i];
+
         let format = content.split('.')[1];
         let media;
         console.log(format);
@@ -177,14 +178,14 @@ function generateSlideshow(links) {
             source.type = 'video/' + format;
             media.appendChild(source);
             media.dataset.type = 'video';
-            if (i == 0) postImages.style.backgroundImage = 'url("/images/videoBackground.png")';
+            if (i == 0) slideshow.style.backgroundImage = 'url("/images/videoBackground.png")';
         } else {
             media = document.createElement('img');
             media.src = '/uploads/' + content;
             media.alt = '/uploads/' + content;
             media.dataset.type = 'image';
 
-            if (i == 0) postImages.style.backgroundImage = `url("/uploads/${content}")`;
+            if (i == 0) slideshow.style.backgroundImage = `url("/uploads/${content}")`;
         }
 
         media.classList.add('slideshowItem');
