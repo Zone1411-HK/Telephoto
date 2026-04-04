@@ -10,9 +10,9 @@
         <script src="../bootstrap/js/popper.min.js"></script>
         <script src="../bootstrap/js/bootstrap.min.js"></script>
         <!--!CSS-->
-        <link rel="stylesheet" href="../css/util.css" />
-        <link rel="stylesheet" href="../css/anim.css" />
         <link rel="stylesheet" href="../css/color.css" />
+        <link rel="stylesheet" href="../css/anim.css" />
+        <link rel="stylesheet" href="../css/util.css" />
         <link rel="stylesheet" href="../css/ProfilePage/profile.css" />
         <!--!JavaScript-->
         <script src="/javascript/fetch.js"></script>
@@ -248,7 +248,7 @@
                     <line x1="16" y1="6" x2="16" y2="22"></line></svg
                 ><span>Térkép</span></a
             >
-            <a href="/profile" class="navButton activeNav"
+            <a href="/profile" id="profilGomb" class="navButton activeNav"
                 ><svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -303,44 +303,48 @@
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
             </div>
-            <div id="openedPost">
-                <div id="postImages" class="postImages">
-                    <div id="backdropWrapper" class="backdropWrapper">
-                        <div id="previous" class="previous">&lt;</div>
-                        <div id="slideshow" class="slideshow"></div>
-                        <div id="next" class="next">&gt;</div>
-                    </div>
-                </div>
-                <div id="postInfos">
-                    <div id="postUser">
-                        <div id="postPictureWrapper">
-                            <div id="postPictureBorder">
-                                <img
-                                    id="postUserPicture"
-                                    src="/profile_images/defaultProfile.svg"
-                                    alt="Profil Kép"
-                                />
-                            </div>
-                        </div>
-                        <span id="postUsername">Default</span>
-                    </div>
-                    <div id="postTags">
-                        <span id="postTagsSpan">#Default #Placeholder</span>
-                    </div>
-                    <div id="postDescription">
-                        <span id="postDescriptionSpan"
-                            >Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio dolorum
-                            nostrum, rerum, saepe aspernatur accusantium natus delectus ducimus
-                            blanditiis labore sapiente enim exercitationem recusandae deserunt,
-                            reiciendis ab voluptatibus distinctio commodi.</span
-                        >
-                    </div>
-                    <div id="locationDateWrapper">
-                        <div id="postLocation">
-                            <span id="postLocationSpan">Budapest</span>
-                        </div>
-                        <div id="postDate">
-                            <span id="postDateSpan">2026.03.17</span>
+            <div id="openedPost"></div>
+        </div>
+
+        <div id="commentModal" class="hidden" tabindex="-1">
+            <div id="closeComments" class="closeButton">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="feather feather-x"
+                >
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
+            <div id="commentModalContentWrapper">
+                <div id="commentModalContent"></div>
+                <div id="newCommentWrapper">
+                    <div id="boxShadowWrapper">
+                        <textarea maxlength="150" id="commentTextarea"></textarea>
+                        <div id="commentSvgWrapper">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="feather feather-send"
+                            >
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
                         </div>
                     </div>
                 </div>

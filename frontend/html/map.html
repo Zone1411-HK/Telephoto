@@ -10,9 +10,9 @@
         <script src="../bootstrap/js/popper.min.js"></script>
         <script src="../bootstrap/js/bootstrap.min.js"></script>
         <!--!CSS-->
-        <link rel="stylesheet" href="/css/util.css" />
-        <link rel="stylesheet" href="/css/anim.css" />
         <link rel="stylesheet" href="/css/color.css" />
+        <link rel="stylesheet" href="/css/anim.css" />
+        <link rel="stylesheet" href="/css/util.css" />
         <link rel="stylesheet" href="/css/MapPage/map.css" />
         <link rel="stylesheet" href="node/leaflet/dist/leaflet.css" />
         <link rel="stylesheet" href="node/leaflet.markercluster/dist/MarkerCluster.Default.css" />
@@ -237,6 +237,51 @@
                         </div>
                     </div>
                     <p>asd</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="commentModal" class="hidden" tabindex="-1">
+            <div id="closeComments" class="closeButton">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="feather feather-x"
+                >
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
+            <div id="commentModalContentWrapper">
+                <div id="commentModalContent"></div>
+                <div id="newCommentWrapper">
+                    <div id="boxShadowWrapper">
+                        <textarea maxlength="150" id="commentTextarea"></textarea>
+                        <div id="commentSvgWrapper">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="feather feather-send"
+                            >
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

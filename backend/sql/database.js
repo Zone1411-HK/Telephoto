@@ -88,14 +88,37 @@ async function findUserOfPost(postId) {
 
 async function getPostDataByPostId(postId) {
     try {
+        let result;
+
+        const topPostsSql = `
+        SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link, SUM(interactions.upvote) as upvote, SUM(interactions.downvote) as downvote
+        FROM posts 
+        LEFT JOIN users ON users.user_id = posts.user_id 
+        LEFT JOIN interactions ON interactions.post_id = posts.post_id 
+        WHERE posts.post_id = ?;
+        `;
+
+        const [rows] = await pool.execute(topPostsSql, [postId]);
+        console.log(rows);
+
+        let userId = await getUserByUsername(rows[0].username);
+
+        result = await getAllInteractions(userId, rows);
+        return await postPictures(result);
+
+        let Infos = {};
         let user = await findUserOfPost(postId);
         const userSql = `SELECT users.username, users.profile_picture_link FROM users WHERE users.user_id = ?`;
         let userInfos = await pool.execute(userSql, [user]);
         userInfos = userInfos[0][0];
 
+        Infos.userInfos = userInfos;
+
         const postSql = `SELECT description, tags, upvote, downvote, location, latitude, longitude, unix_timestamp(creation_date) as unix_date FROM posts LEFT JOIN interactions ON posts.post_id = interactions.post_id WHERE posts.post_id = ?`;
         let postInfos = await pool.execute(postSql, [postId]);
         postInfos = postInfos[0][0];
+
+        Infos.postInfos = postInfos;
 
         const pictureSql = `SELECT picture_link FROM pictures WHERE post_id = ?`;
         let pictureInfos = await pool.execute(pictureSql, [postId]);
@@ -302,7 +325,8 @@ async function loadProfile(username) {
         const [rows] = await pool.execute(profileSql, [userId]);
         return rows;
     } catch (error) {
-        console.error(error);
+        //console.error(error);
+        return [];
     }
 }
 
@@ -561,7 +585,7 @@ async function adminProfileData(userId) {
     }
 }
 
-async function updateProfile(userId, username, regDate, email, bio) {
+async function updateProfileAdmin(userId, username, regDate, email, bio) {
     try {
         const sql = `
         UPDATE users
@@ -738,7 +762,8 @@ async function markers() {
         SELECT posts.post_id, latitude, longitude, picture_link
         FROM posts
         LEFT JOIN pictures ON posts.post_id = pictures.post_id
-        WHERE latitude IS NOT NULL AND longitude IS NOT NULL;`;
+        WHERE latitude IS NOT NULL AND longitude IS NOT NULL
+        GROUP BY posts.post_id;`;
         const [rows] = await pool.execute(sql);
         return rows;
     } catch (error) {
@@ -867,6 +892,22 @@ async function userSaved(username) {
     }
 }
 
+async function updateProfileUser(userId, username, biography, profileLink) {
+    try {
+        const sql = `
+        UPDATE users
+        SET username = ?, biography = ?, profile_picture_link = ?
+        WHERE user_id = ?;`;
+
+        let response = await pool.execute(sql, [username, biography, profileLink, userId]);
+
+        return response[0].affectedRows > 0 ? 'success' : 'failed';
+    } catch (error) {
+        console.error(error);
+        return 'failed';
+    }
+}
+
 async function updateProfileName(username, newUsername) {
     try {
         const userId = await getUserByUsername(username);
@@ -989,7 +1030,7 @@ module.exports = {
     userComments,
     userPosts,
     adminProfileData,
-    updateProfile,
+    updateProfileAdmin,
     deleteProfile,
     clearProfile,
     adminPostData,
@@ -1006,9 +1047,7 @@ module.exports = {
     userLiked,
     userDisliked,
     userSaved,
-    updateProfilePicture,
-    updateProfileName,
-    updateProfileBiography,
+    updateProfileUser,
     createComment,
     isLiked,
     like,

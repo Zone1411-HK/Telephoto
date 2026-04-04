@@ -35,6 +35,13 @@ async function startUp() {
             getComments();
             adminAddEventListeners();
             loadAnimation();
+            let { Status, exists, Result } = await GetMethodFetch('/api/sendUsername');
+            if (Status == 'Success' && exists) {
+                let profileURL = new URL('/profile', 'http://127.0.0.1:3000/');
+                profileURL.searchParams.set('username', Result);
+                document.getElementById('profilGomb').href = profileURL;
+                document.getElementById('adminUsername').innerText = Result;
+            }
         } else {
             window.location.href = '/';
         }
@@ -650,7 +657,6 @@ function placeMarker() {
     let lat = latEl.value == '' || latEl.value == '-' ? null : parseFloat(latEl.value);
     let lon = lonEl.value == '' || lonEl.value == '-' ? null : parseFloat(lonEl.value);
     if (lat != null && lon != null) {
-        console.log('asd');
         if (tempMarker != null) {
             map.removeLayer(tempMarker);
         }
@@ -780,6 +786,12 @@ function generateMap(lat, lon) {
         zoom: zoom,
         center: center
     });
+
+    if (lat != undefined && lon != undefined) {
+        tempMarker = L.marker([lat, lon]);
+        map.addLayer(tempMarker);
+    }
+
     map.invalidateSize();
 }
 

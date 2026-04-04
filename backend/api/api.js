@@ -369,26 +369,15 @@ router.post('/reportPost', async (request, response) => {
 router.get('/postInfos/:postId', async (request, response) => {
     try {
         const postId = request.params.postId;
-        const { userInfos, postInfos, pictureInfos } = await database.getPostDataByPostId(postId);
-        const returnInfos = {
-            userInfos: userInfos,
-            postInfos: {
-                description: postInfos.description,
-                tags: postInfos.tags,
-                score: postInfos.upvote - postInfos.downvote,
-                location: postInfos.location,
-                latitude: postInfos.latitude,
-                longitude: postInfos.longitude,
-                creation_date: convertUnixToReadableDate(postInfos.unix_date * 1000)
-            },
-            pictureInfos: pictureInfos
-        };
+        const Infos = await database.getPostDataByPostId(postId);
         response.status(200).json({
             Status: 'Success',
-            Infos: returnInfos
+            Infos: Infos[0]
         });
     } catch (error) {
         response.status(500).json({
+            Status: 'Failed',
+            Infos: '',
             error: `Endpoint ERROR: postInfos: ${error}`
         });
     }
@@ -456,13 +445,18 @@ router.get('/searchPosts/:search', async (request, response) => {
 });
 
 //! PROFIL ADATOK (nincs kész)
-router.get('/profileInfos', async (request, response) => {
+router.get('/profileInfos/:username', async (request, response) => {
     try {
-        const username = request.session.username;
+        let username = request.params.username;
+        if (!username) {
+            username = request.session.username;
+        }
         const data = await database.loadProfile(username);
 
+        console.log(data);
+
         response.status(200).json({
-            status: 'Success',
+            status: data.length > 0 ? 'Success' : 'Failed',
             results: data
         });
         //console.log(data);
@@ -471,14 +465,17 @@ router.get('/profileInfos', async (request, response) => {
     }
 });
 
-router.get('/postsByUser', async (request, response) => {
+router.get('/postsByUser/:username', async (request, response) => {
     try {
-        const username = request.session.username;
+        let username = request.params.username;
+        if (!username) {
+            username = request.session.username;
+        }
         const userPosts = await database.userPosted(username);
         console.log(userPosts);
         response.status(200).json({
             Status: 'Success',
-            posts: userPosts
+            posts: userPosts == null ? [] : userPosts
         });
     } catch (error) {
         console.log(error);
@@ -488,14 +485,17 @@ router.get('/postsByUser', async (request, response) => {
         });
     }
 });
-router.get('/likedPosts', async (request, response) => {
+router.get('/likedPosts/:username', async (request, response) => {
     try {
-        const username = request.session.username;
+        let username = request.params.username;
+        if (!username) {
+            username = request.session.username;
+        }
         const likedPosts = await database.userLiked(username);
 
         response.status(200).json({
             Status: 'Success',
-            posts: likedPosts
+            posts: likedPosts == null ? [] : likedPosts
         });
     } catch (error) {
         console.log(error);
@@ -505,14 +505,17 @@ router.get('/likedPosts', async (request, response) => {
         });
     }
 });
-router.get('/dislikedPosts', async (request, response) => {
+router.get('/dislikedPosts/:username', async (request, response) => {
     try {
-        const username = request.session.username;
+        let username = request.params.username;
+        if (!username) {
+            username = request.session.username;
+        }
         const dislikedPosts = await database.userDisliked(username);
 
         response.status(200).json({
             Status: 'Success',
-            posts: dislikedPosts
+            posts: dislikedPosts == null ? [] : dislikedPosts
         });
     } catch (error) {
         console.log(error);
@@ -522,14 +525,17 @@ router.get('/dislikedPosts', async (request, response) => {
         });
     }
 });
-router.get('/savedPosts', async (request, response) => {
+router.get('/savedPosts/:username', async (request, response) => {
     try {
-        const username = request.session.username;
+        let username = request.params.username;
+        if (!username) {
+            username = request.session.username;
+        }
         const savedPosts = await database.userSaved(username);
 
         response.status(200).json({
             Status: 'Success',
-            posts: savedPosts
+            posts: savedPosts == null ? [] : savedPosts
         });
     } catch (error) {
         console.log(error);
@@ -968,7 +974,7 @@ router.post('/updateProfileData', isAdmin, async (request, response) => {
     try {
         const { userId, profileUsername, profileRegDate, profileEmail, profileBiography } =
             request.body;
-        const updateProfile = await database.updateProfile(
+        const updateProfile = await database.updateProfileAdmin(
             userId,
             profileUsername,
             profileRegDate,
@@ -1198,6 +1204,7 @@ router.get('/markers', async (request, response) => {
         });
     }
 });
+
 const profileStorage = multer.diskStorage({
     destination: (request, file, callback) => {
         callback(null, path.join(__dirname, '../profile_images'));
@@ -1209,39 +1216,36 @@ const profileStorage = multer.diskStorage({
 
 const profileUpload = multer({ storage: profileStorage });
 
-router.post(
-    '/modifyProfilePicture',
-    profileUpload.single('profilePic'),
-    async (request, response) => {
-        const filename = request.file.filename;
-        const status = await database.updateProfilePicture(request.session.username, filename);
+router.post('/modifyProfile', profileUpload.single('profilePic'), async (request, response) => {
+    try {
+        let { targetUser, username, biography, currentProfilePicture } = request.body;
+        let initiatingUser = request.session.username;
+        let filename = request.file ? request.file.filename : currentProfilePicture;
 
-        response.status(200).json({
-            Status: status,
-            Link: filename
+        if (initiatingUser == targetUser) {
+            let status = await database.updateProfileUser(
+                request.session.userId,
+                username,
+                biography,
+                filename
+            );
+            response.status(200).json({
+                Status: status,
+                profilePicture: filename
+            });
+        } else {
+            response.status(200).json({
+                Status: 'failed',
+                Message: 'Nincsen a felhasználónak jogosultsága!'
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        response.status(500).json({
+            Status: 'failed',
+            Message: error
         });
     }
-);
-
-router.post('/modifyProfileName', async (request, response) => {
-    const { username } = request.body;
-    const status = await database.updateProfileName(request.session.username, username);
-
-    response.status(200).json({
-        Status: status,
-        Name: username
-    });
-});
-
-router.post('/modifyProfileBiography', async (request, response) => {
-    const { biography } = request.body;
-    const username = request.session.username;
-    const status = await database.updateProfileBiography(username, biography);
-
-    response.status(200).json({
-        Status: status,
-        Biography: biography
-    });
 });
 
 router.post('/logout', async (request, response) => {
