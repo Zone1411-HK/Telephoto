@@ -70,10 +70,7 @@
 .postImages {
     height: 50%;
     width: 100%;
-    background-image: url('/uploads/1768924539207-olahbenjo.jpg');
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-color: var(--PostSecondary);
     user-select: none;
     overflow: hidden;
     position: relative;
@@ -94,7 +91,7 @@
 .previous,
 .next {
     height: 100%;
-    width: 15%;
+    width: 10%;
     font-size: 60px;
     color: var(--PostDark);
     -webkit-text-stroke: 1px var(--Post);
@@ -122,8 +119,12 @@
 
 .slideshow {
     height: 100%;
-    width: 70%;
+    width: 80%;
     overflow: hidden;
+    background-image: url('../images/test.png');
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .slideshowItem {
@@ -132,7 +133,7 @@
     object-fit: contain;
     display: block;
     transition: 0.25s;
-    background-color: var(--PostDarkest);
+    backdrop-filter: blur(10px);
 }
 
 .activeSlideshowItem {
@@ -228,6 +229,8 @@
     font-size: 1.5rem;
     transition: 0.25s;
     font-family: quartzDisplay;
+    paint-order: stroke fill;
+    -webkit-text-stroke: var(--PostDark) 0.1rem;
 }
 
 .postImages {
@@ -251,8 +254,7 @@
     flex-wrap: wrap;
     overflow-y: auto;
     scrollbar-width: thin;
-
-    gap: 0px 10px;
+    gap: 5px 10px;
     margin-top: 10px;
 }
 

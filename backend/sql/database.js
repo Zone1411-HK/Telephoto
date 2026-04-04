@@ -215,6 +215,28 @@ async function searchPosts(userId, searchString, offset) {
     }
 }
 
+async function randomPlacesPosts(userId, place, offset) {
+    try {
+        let result;
+        const sql = ` SELECT posts.post_id, posts.description, posts.tags, posts.location, posts.latitude, posts.longitude, posts.creation_date, users.username, users.profile_picture_link, SUM(interactions.upvote) as upvote, SUM(interactions.downvote) as downvote
+        FROM posts 
+        LEFT JOIN users ON users.user_id = posts.user_id 
+        LEFT JOIN interactions ON interactions.post_id = posts.post_id 
+        WHERE posts.location = ?
+        GROUP BY posts.post_id
+        ORDER BY SUM(interactions.upvote) - SUM(interactions.downvote) DESC
+        LIMIT 50 OFFSET ?;`;
+
+        console.log(place + ' ' + offset);
+        let [rows] = await pool.execute(sql, [place, offset]);
+        console.log(rows);
+        result = await getAllInteractions(userId, rows);
+        return await postPictures(result);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 async function postPictures(posts) {
     try {
         if (posts.length == 0) return null;
@@ -1001,6 +1023,24 @@ async function reportPost(postId) {
     }
 }
 
+async function randomPlaces() {
+    try {
+        const sql = `
+        SELECT posts.location
+        FROM posts
+        WHERE posts.location != ""
+        GROUP BY posts.location
+        ORDER BY rand()
+        LIMIT 3;`;
+
+        const [rows] = await pool.execute(sql);
+        return rows;
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}
+
 //!Export
 module.exports = {
     selectall,
@@ -1055,5 +1095,7 @@ module.exports = {
     isFavorited,
     searchPosts,
     reportUser,
-    reportPost
+    reportPost,
+    randomPlaces,
+    randomPlacesPosts
 };

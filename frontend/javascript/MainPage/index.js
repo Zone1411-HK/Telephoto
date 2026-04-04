@@ -28,11 +28,59 @@ async function startUp() {
                 profileURL.searchParams.set('username', Result);
                 document.getElementById('profilGomb').href = profileURL;
             }
+
+            let randomPlacesResponse = await GetMethodFetch('/api/randomPlaces');
+            if (randomPlacesResponse.Status == 'success') {
+                let placeButtons = document.querySelectorAll('.egyebButton');
+
+                for (let i = 0; i < randomPlacesResponse.places.length; i++) {
+                    placeButtons[i].value = randomPlacesResponse.places[i].location;
+                    placeButtons[i].dataset.filled = 'true';
+                    placeButtons[i].disabled = false;
+                    placeButtons[i].classList.remove('disabledButton');
+                    placeButtons[i].addEventListener('click', randomPlaceSort);
+                }
+
+                for (const button of placeButtons) {
+                    if (button.dataset.filled != 'true') {
+                        button.disabled = true;
+                        button.classList.add('disabledButton');
+                    }
+                }
+            }
         } else {
             window.location.href = '/login';
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
+    }
+}
+
+async function randomPlaceSort() {
+    const { status, result } = await PostMethodFetch('/api/setOffset', {
+        type: 'reset',
+        offset: 0
+    });
+
+    console.log(result);
+
+    const response = await GetMethodFetch('/api/randomPlacesPosts/' + this.value);
+    console.log(response);
+
+    if (response.status != 'failed') {
+        document.getElementById('posts-container').replaceChildren();
+        document.querySelector('.activeSort').classList.remove('activeSort');
+        this.classList.add('activeSort');
+        const data = response.places;
+        console.log(data);
+
+        for (let i = 0; i < data.length; i++) {
+            await hangPictures(data[i]);
+        }
+
+        appendLoadMore(data.length == 50);
+    } else {
+        appendLoadMore(false);
     }
 }
 

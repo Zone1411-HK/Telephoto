@@ -44,7 +44,6 @@ function addEventListenersToElements() {
 function removeActiveLoad() {
     const postLoads = document.querySelectorAll('.activeSort');
     for (const button of postLoads) {
-        console.log(button);
         button.classList.remove('activeSort');
     }
 }
@@ -52,13 +51,11 @@ function removeActiveLoad() {
 let searchValue;
 
 async function getSearchedPosts(searchValue) {
-    type = 'search';
+    type = 'reset';
     const response = await GetMethodFetch('/api/searchPosts/' + searchValue);
-    console.log(response);
 
     if (response.status != 'failed') {
         const data = response.results;
-        console.log(data);
 
         for (let i = 0; i < data.length; i++) {
             await hangPictures(data[i]);
@@ -81,7 +78,6 @@ async function searchPost() {
                 type: 'reset',
                 offset: 0
             });
-            console.log(setOffsetResponse);
 
             let posts = document.getElementById('posts-container');
             posts.replaceChildren();
@@ -134,7 +130,6 @@ const getTopPosts = async () => {
     try {
         type = 'top';
         const response = await GetMethodFetch('/api/topPosts/' + timeframe);
-        console.log(response);
 
         if (response.status != 'failed') {
             const data = response.results;
@@ -206,7 +201,6 @@ function generateClip() {
 }
 
 const hangPictures = async (test) => {
-    console.log(test);
     let posts = document.getElementById('posts-container');
     let post = document.createElement('div');
     post.classList.add('post');
@@ -231,7 +225,7 @@ const hangPictures = async (test) => {
         test.downvote
     );
 
-    let userRow = await generateUserRow(test.username, test.profile_picture_link);
+    let userRow = generateUserRow(test.username, test.profile_picture_link);
 
     let postcontent = document.createElement('div');
     postcontent.classList.add('postContent');

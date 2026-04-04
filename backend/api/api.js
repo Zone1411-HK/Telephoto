@@ -1263,6 +1263,45 @@ router.post('/logout', async (request, response) => {
     }
 });
 
+router.get('/randomPlaces', async (request, response) => {
+    try {
+        const places = await database.randomPlaces();
+        response.status(200).json({
+            Status: 'success',
+            places: places
+        });
+    } catch (error) {
+        console.log(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: error
+        });
+    }
+});
+
+router.get('/randomPlacesPosts/:place', async (request, response) => {
+    try {
+        postTypeOffset.type = request.params.place;
+        const userId = request.session.userId;
+        const places = await database.randomPlacesPosts(
+            userId,
+            postTypeOffset.type,
+            postTypeOffset.offset
+        );
+        console.log(places);
+        response.status(200).json({
+            Status: 'success',
+            places: places
+        });
+    } catch (error) {
+        console.log(error);
+        response.status(500).json({
+            Status: 'Failed',
+            Message: error
+        });
+    }
+});
+
 //! FÜGGVÉNYEK
 //? Hash-eljük a megadott stringet, és visszaadunk egy salt, és egy hash változót.
 function HashString(string) {
