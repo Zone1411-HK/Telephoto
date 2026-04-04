@@ -119,7 +119,7 @@ body {
     clip-path: circle();
     height: 100%;
     width: 100%;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 #profilePictureUploadLabel {
@@ -319,7 +319,7 @@ body {
     justify-content: center;
     max-width: 100%;
 }
-.post {
+.postPreview {
     position: relative;
     flex-basis: 0;
     flex-grow: 1;
@@ -341,7 +341,7 @@ body {
     animation: loadContent 0.5s forwards;
 }
 
-.post:hover {
+.postPreview:hover {
     margin: -5px;
     border: 2px solid #f0febe;
     z-index: 10;
@@ -397,8 +397,6 @@ body {
     aspect-ratio: 35/40;
     max-width: 96vw;
     max-height: 90vh;
-    background-color: white;
-    box-shadow: 0 0 8px 4px rgba(100, 100, 100, 0.5);
     padding: 10px;
     z-index: 101;
     display: flex;
@@ -406,14 +404,12 @@ body {
     transition: 0.2s;
 }
 
-#closePost {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    z-index: 102;
-    left: 10px;
-    top: 10px;
+.post {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
 }
+
 #postImages {
     height: 50%;
     width: 100%;
@@ -446,17 +442,6 @@ body {
     transition: 0.2s;
 }
 
-#closePost svg {
-    stroke: white;
-}
-
-#closePost:hover {
-    filter: brightness(50%);
-    font-size: 60px;
-    color: rgb(50, 50, 50);
-    -webkit-text-stroke: 1px white;
-    cursor: pointer;
-}
 #previous:hover,
 #next:hover {
     background-color: rgba(0, 0, 0, 0.75);
@@ -472,7 +457,6 @@ body {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    display: none;
     transition: 0.25s;
 }
 
@@ -683,8 +667,8 @@ body {
     height: 40px;
     position: absolute;
     padding: 5px;
-    right: 20px;
-    bottom: 5%;
+    right: 1%;
+    bottom: 1%;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -715,6 +699,19 @@ body {
     aspect-ratio: 1/1;
 }
 
+.disclaimer {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    margin: 0;
+    padding-bottom: 10%;
+    color: var(--PostDark);
+}
+
 @media (max-width: 768px) {
     #root {
         flex-direction: column;
@@ -735,10 +732,6 @@ body {
     }
     #profileModifyDiv {
         flex: 2 2 0;
-    }
-
-    #openedPost {
-        margin-top: 15px;
     }
 
     #logoutWrapper {

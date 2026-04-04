@@ -55,6 +55,15 @@ async function startUp() {
 
         document.getElementById('modalClose').addEventListener('click', exitPost);
         document.getElementById('resetFilter').addEventListener('click', resetFilter);
+        document.getElementById('closeComments').addEventListener('click', closeComments);
+        document.getElementById('commentSvgWrapper').addEventListener('click', sendComment);
+
+        let { Status, exists, Result } = await GetMethodFetch('/api/sendUsername');
+        if (Status == 'Success' && exists) {
+            let profileURL = new URL('/profile', 'http://127.0.0.1:3000/');
+            profileURL.searchParams.set('username', Result);
+            document.getElementById('profilGomb').href = profileURL;
+        }
     } else {
         window.location.href = '/login';
     }
@@ -95,7 +104,7 @@ function filterPins() {
         if (i == 0 && this.value[i] == '-') {
             val += this.value[i];
         }
-        if (/[0-9]/.test(this.value[i])) {
+        if (/[0-9]/.Infos(this.value[i])) {
             val += this.value[i];
         }
         if (!dot && this.value[i] == '.') {
@@ -352,13 +361,59 @@ function generateFilteredMarkers() {
     map.addLayer(markerCluster);
 }
 
-function openPost() {
-    let modal = document.getElementById('postModal');
-    let content = document.getElementById('modalContent');
-    content.style.animation = 'fadeInUp 0.5s forwards';
-    modal.removeEventListener('click', closeModalByClickingOutside);
-    modal.classList.remove('hidden');
-    modal.addEventListener('click', function () {
-        closeModalByClickingOutside(event, modal, content);
-    });
+async function openPost() {
+    let postId = this.dataset.postId;
+    let { Status, Infos } = await GetMethodFetch('/api/postInfos/' + postId);
+
+    if (Status == 'Success') {
+        console.log(Infos);
+        let modal = document.getElementById('postModal');
+        let content = document.getElementById('modalContent');
+        content.style.animation = 'fadeInUp 0.5s forwards';
+        modal.removeEventListener('click', closeModalByClickingOutside);
+        modal.classList.remove('hidden');
+        modal.addEventListener('click', function () {
+            closeModalByClickingOutside(event, modal, content);
+        });
+
+        content.replaceChildren();
+
+        let post = document.createElement('div');
+        post.classList.add('post');
+
+        let slideshow = generateSlideshow(Infos.links);
+
+        let timestamp = generateTimestamp(Infos.creation_date);
+        slideshow.appendChild(timestamp);
+
+        let tags = generateTags(Infos.tags, Infos.location);
+
+        let description = generateDescription(Infos.description);
+
+        let interactionRow = await generateInteractions(
+            Infos.interactions[0].like,
+            Infos.interactions[0].dislike,
+            Infos.interactions[0].favorite,
+            Infos.post_id,
+            Infos.upvote,
+            Infos.downvote
+        );
+
+        let userRow = generateUserRow(Infos.username, Infos.profile_picture_link);
+
+        let postcontent = document.createElement('div');
+        postcontent.classList.add('postContent');
+
+        postcontent.appendChild(slideshow);
+
+        postcontent.appendChild(interactionRow);
+        postcontent.appendChild(userRow);
+        postcontent.appendChild(tags);
+        postcontent.appendChild(description);
+
+        post.appendChild(postcontent);
+        post.dataset.postId = Infos.post_id;
+
+        content.appendChild(post);
+    }
 }

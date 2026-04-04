@@ -1,4 +1,6 @@
 const socket = io();
+let currentURL = new URL(window.location.href);
+let currentUser;
 document.addEventListener('DOMContentLoaded', () => {
     startUp();
 });
@@ -16,13 +18,16 @@ async function startUp() {
                 adminNav.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><span>Admin</span>`;
 
                 document.getElementById('nav').appendChild(adminNav);
-                /*
-            let adminNavMobile = document.createElement('a');
-            adminNavMobile.href = '/admin';
-            adminNavMobile.classList.add('mobileIcon');
-            adminNavMobile.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
+            }
 
-            document.getElementById('navMobile').appendChild(adminNavMobile);*/
+            let { Status, exists, Result } = await GetMethodFetch('/api/sendUsername');
+            if (Status == 'Success' && exists) {
+                currentUser = Result;
+                let profileURL = new URL('/profile', 'http://127.0.0.1:3000/');
+                profileURL.searchParams.set('username', currentUser);
+                document.getElementById('profilGomb').href = profileURL;
+                if (currentUser != currentURL.searchParams.get('username'))
+                    document.getElementById('profileModifyDiv').classList.add('hidden');
             }
         } else {
             window.location.href = '/login';
@@ -37,8 +42,6 @@ function profileAddEventListeners() {
     document.getElementById('likedPosts').addEventListener('click', likedPosts);
     document.getElementById('dislikedPosts').addEventListener('click', dislikedPosts);
     document.getElementById('savedPosts').addEventListener('click', savedPosts);
-    document.getElementById('previous').addEventListener('click', previousSlide);
-    document.getElementById('next').addEventListener('click', nextSlide);
     document.getElementById('closePost').addEventListener('click', closePost);
     document.getElementById('profileModify').addEventListener('click', modifyProfile);
     document.getElementById('deleteCancel').addEventListener('click', hideDeleteModal);
@@ -54,9 +57,13 @@ async function logout() {
 }
 
 async function postsByUser() {
-    const { Status, posts } = await GetMethodFetch('/api/postsByUser');
+    let isTheUserSameAsProfile = currentUser == currentURL.searchParams.get('username');
+
+    const { Status, posts } = await GetMethodFetch(
+        '/api/postsByUser/' + currentURL.searchParams.get('username')
+    );
     if (Status == 'Success') {
-        generatePosts(posts, true);
+        generatePosts(posts, isTheUserSameAsProfile);
         try {
             makeTypeActive(this);
         } catch (error) {
@@ -67,7 +74,9 @@ async function postsByUser() {
 }
 
 async function likedPosts() {
-    const { Status, posts } = await GetMethodFetch('/api/likedPosts');
+    const { Status, posts } = await GetMethodFetch(
+        '/api/likedPosts/' + +currentURL.searchParams.get('username')
+    );
     if (Status == 'Success') {
         generatePosts(posts, false);
         makeTypeActive(this);
@@ -76,7 +85,9 @@ async function likedPosts() {
 }
 
 async function dislikedPosts() {
-    const { Status, posts } = await GetMethodFetch('/api/dislikedPosts');
+    const { Status, posts } = await GetMethodFetch(
+        '/api/dislikedPosts/' + currentURL.searchParams.get('username')
+    );
     if (Status == 'Success') {
         generatePosts(posts, false);
         makeTypeActive(this);
@@ -85,7 +96,9 @@ async function dislikedPosts() {
 }
 
 async function savedPosts() {
-    const { Status, posts } = await GetMethodFetch('/api/savedPosts');
+    const { Status, posts } = await GetMethodFetch(
+        '/api/savedPosts/' + currentURL.searchParams.get('username')
+    );
     if (Status == 'Success') {
         generatePosts(posts, false);
         makeTypeActive(this);
@@ -93,11 +106,10 @@ async function savedPosts() {
     }
 }
 
-function generatePosts(posts, canDeletePost) {
-    if (canDeletePost) {
-        let postDeletionDiv = document.createElement('div');
-        postDeletionDiv.classList.add('postDeletionDiv');
-        postDeletionDiv.innerHTML = `
+function generatePostDelete() {
+    let postDeletionDiv = document.createElement('div');
+    postDeletionDiv.classList.add('postDeletionDiv');
+    postDeletionDiv.innerHTML = `
         <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -114,8 +126,14 @@ function generatePosts(posts, canDeletePost) {
             <line x1="10" y1="11" x2="10" y2="17"></line>
             <line x1="14" y1="11" x2="14" y2="17"></line>
         </svg>`;
-        postDeletionDiv.addEventListener('click', showDeleteModalPost);
-        document.getElementById('postInfos').appendChild(postDeletionDiv);
+    postDeletionDiv.addEventListener('click', showDeleteModalPost);
+
+    return postDeletionDiv;
+}
+
+function generatePosts(posts, canDeletePost) {
+    if (canDeletePost) {
+        //document.getElementById('postInfos').appendChild(generatePostDelete());
     } else {
         const divs = document.querySelectorAll('.postDeletionDiv');
         if (divs.length != 0) {
@@ -125,67 +143,69 @@ function generatePosts(posts, canDeletePost) {
         }
     }
 
-    let postArr = [];
-    for (let i = 0; i < posts.length; i += 3) {
-        let tempArr = [];
-        let j = 0;
-        while (j < 3 && j + i != posts.length) {
-            tempArr.push(posts[i + j]);
-            j++;
-        }
-        postArr.push(tempArr);
-    }
-
-    const postsDiv = document.getElementById('posts');
-    postsDiv.replaceChildren();
-
-    for (let arrayRow of postArr) {
-        let row = document.createElement('div');
-        row.classList.add('postRow');
-
-        for (let arrayValue of arrayRow) {
-            console.log(arrayValue);
-            let post = document.createElement('div');
-            let url = '../images/placeholder1.jpg';
-            if (arrayValue.links.length != 0) {
-                url = '/uploads/' + arrayValue.links[0];
+    if (posts.length > 0) {
+        let postArr = [];
+        for (let i = 0; i < posts.length; i += 3) {
+            let tempArr = [];
+            let j = 0;
+            while (j < 3 && j + i != posts.length) {
+                tempArr.push(posts[i + j]);
+                j++;
             }
-
-            let format = url.split('.')[1];
-            let content;
-
-            if (format == 'mp4' || format == 'avi' || format == 'hevc') {
-                content = document.createElement('video');
-                const source = document.createElement('source');
-                source.src = url;
-                source.type = `video/${format}`;
-                content.appendChild(source);
-                content.classList.add('postImg');
-                content.controls = false;
-            } else {
-                content = document.createElement('img');
-                content.src = url;
-                content.alt = url;
-                content.loading = 'lazy';
-                content.classList.add('postImg');
-                post.style.backgroundImage = "url(\'" + url + "\')";
-            }
-
-            post.classList.add('post');
-
-            let postImgWrapper = document.createElement('div');
-            postImgWrapper.classList.add('postImgWrapper');
-
-            postImgWrapper.appendChild(content);
-            post.appendChild(postImgWrapper);
-
-            post.dataset.postId = arrayValue.post_id;
-            post.addEventListener('click', openPost);
-
-            row.appendChild(post);
+            postArr.push(tempArr);
         }
 
-        postsDiv.appendChild(row);
+        const postsDiv = document.getElementById('posts');
+        postsDiv.replaceChildren();
+
+        for (let arrayRow of postArr) {
+            let row = document.createElement('div');
+            row.classList.add('postRow');
+
+            for (let arrayValue of arrayRow) {
+                console.log(arrayValue);
+                let post = document.createElement('div');
+                let url = '../images/placeholder1.jpg';
+                if (arrayValue.links.length != 0) {
+                    url = '/uploads/' + arrayValue.links[0];
+                }
+
+                let format = url.split('.')[1];
+                let content;
+
+                if (format == 'mp4' || format == 'avi' || format == 'hevc') {
+                    content = document.createElement('video');
+                    const source = document.createElement('source');
+                    source.src = url;
+                    source.type = `video/${format}`;
+                    content.appendChild(source);
+                    content.classList.add('postImg');
+                    content.controls = false;
+                } else {
+                    content = document.createElement('img');
+                    content.src = url;
+                    content.alt = url;
+                    content.loading = 'lazy';
+                    content.classList.add('postImg');
+                    post.style.backgroundImage = "url(\'" + url + "\')";
+                }
+
+                post.classList.add('postPreview');
+
+                let postImgWrapper = document.createElement('div');
+                postImgWrapper.classList.add('postImgWrapper');
+
+                postImgWrapper.appendChild(content);
+                post.appendChild(postImgWrapper);
+
+                post.dataset.postId = arrayValue.post_id;
+                post.addEventListener('click', openPost);
+
+                row.appendChild(post);
+            }
+
+            postsDiv.appendChild(row);
+        }
     }
 }
 
@@ -208,97 +228,106 @@ async function testing() {
 }
 
 async function profileInfos() {
-    const { status, results } = await GetMethodFetch('/api/profileInfos');
-    if (status == 'Success') {
-        document.getElementById('profileName').innerText = results[0].username;
-        document.getElementById('profileEmail').innerText = results[0].email;
+    const response = await GetMethodFetch(
+        '/api/profileInfos/' + currentURL.searchParams.get('username')
+    );
+    if (response.status == 'Success') {
+        document.getElementById('profileName').innerText = response.results[0].username;
+        document.getElementById('profileEmail').innerText = response.results[0].email;
         document.getElementById('profileRegistration').innerText =
-            date_yyyy_MM_dd(results[0].registration_date) + ' óta';
-        document.getElementById('profileBiography').innerText = results[0].biography;
+            date_yyyy_MM_dd(response.results[0].registration_date) + ' óta';
+        document.getElementById('profileBiography').innerText = response.results[0].biography;
 
         let profilePicture =
-            results[0].profile_picture_link == null
+            response.results[0].profile_picture_link == null
                 ? 'defaultProfile.jpg'
-                : results[0].profile_picture_link;
+                : response.results[0].profile_picture_link;
 
         document.getElementById('profilePicture').src = '/profile_images/' + profilePicture;
         document.getElementById('profilePictureDiv').style.backgroundImage =
             `url("/profile_images/${profilePicture}")`;
         console.log('Profil adatok sikeresen betöltve');
+    } else {
+        const disclaimer = document.createElement('p');
+        disclaimer.innerText = 'Nincsen ilyen profil!';
+        disclaimer.classList.add('disclaimer');
+        document.getElementById('root').replaceChildren();
+        document.getElementById('root').appendChild(disclaimer);
     }
 }
 
 let openedPostId;
 
 async function openPost() {
-    openedPostId = this.dataset.postId;
-    let modal = document.getElementById('openedPostModal');
-    let post = document.getElementById('openedPost');
+    let postId = this.dataset.postId;
+    let { Status, Infos } = await GetMethodFetch('/api/postInfos/' + postId);
 
-    modal.removeEventListener('click', closeModalByClickingOutside);
-    modal.addEventListener('click', () => {
-        closeModalByClickingOutside(event, modal, post);
-    });
-
-    modal.classList.remove('hidden');
-    post.style.animation = 'fadeInUp 0.5s forwards';
-
-    const { Status, Infos } = await GetMethodFetch('/api/postInfos/' + openedPostId);
     if (Status == 'Success') {
         console.log(Infos);
-        generateSlideshow(Infos.pictureInfos);
-        generatePostInfos(Infos.userInfos, Infos.postInfos);
-        console.log('Kiválasztott poszt sikeresen betöltve');
-    }
-}
+        let modal = document.getElementById('openedPostModal');
+        let content = document.getElementById('openedPost');
+        content.replaceChildren();
+        content.style.animation = 'fadeInUp 0.5s forwards';
+        modal.removeEventListener('click', closeModalByClickingOutside);
+        modal.classList.remove('hidden');
+        modal.addEventListener('click', function () {
+            closeModalByClickingOutside(event, modal, post);
+        });
 
-function generateSlideshow(contentArray) {
-    let slideshowElement = document.getElementById('slideshow');
-    let background = document.getElementById('postImages');
-    slideshowElement.replaceChildren();
+        let post = document.createElement('div');
+        post.classList.add('post');
 
-    for (let i = 0; i < contentArray.length; i++) {
-        let content = contentArray[i];
-        let format = content.split('.')[1];
-        let media;
+        let slideshow = generateSlideshow(Infos.links);
 
-        if (format == 'mp4' || format == 'avi' || format == 'hevc') {
-            media = document.createElement('video');
-            media.muted = true;
-            media.loop = true;
-            media.controls = true;
+        let timestamp = generateTimestamp(Infos.creation_date);
+        slideshow.appendChild(timestamp);
 
-            let source = document.createElement('source');
-            source.src = '/uploads/' + content;
-            source.type = 'video/' + format;
-            media.appendChild(source);
-            media.dataset.type = 'video';
-            background.style.backgroundImage = 'url("/images/videoBackground.png")';
-        } else {
-            media = document.createElement('img');
-            media.src = '/uploads/' + content;
-            media.alt = '/uploads/' + content;
-            media.dataset.type = 'image';
-            console.log(content);
-            background.style.backgroundImage = `url("/uploads/${content}")`;
+        let tags = generateTags(Infos.tags, Infos.location);
+
+        let description = generateDescription(Infos.description);
+
+        let interactionRow = await generateInteractions(
+            Infos.interactions[0].like,
+            Infos.interactions[0].dislike,
+            Infos.interactions[0].favorite,
+            Infos.post_id,
+            Infos.upvote,
+            Infos.downvote
+        );
+
+        let userRow = generateUserRow(Infos.username, Infos.profile_picture_link);
+
+        let postcontent = document.createElement('div');
+        postcontent.classList.add('postContent');
+
+        postcontent.appendChild(slideshow);
+
+        postcontent.appendChild(interactionRow);
+        postcontent.appendChild(userRow);
+        postcontent.appendChild(tags);
+        postcontent.appendChild(description);
+
+        let selectionType = document.querySelector('.activeType');
+        if (
+            currentURL.searchParams.get('username') == currentUser &&
+            selectionType.id == 'postsByUser'
+        ) {
+            let deleteButton = generatePostDelete();
+            postcontent.appendChild(deleteButton);
         }
 
-        media.classList.add('slideshowItem');
+        post.appendChild(postcontent);
+        post.dataset.postId = Infos.post_id;
 
-        if (i == 0) media.classList.add('activeSlideshowItem');
+        content.appendChild(post);
+        modal.removeEventListener('click', closeModalByClickingOutside);
+        modal.addEventListener('click', () => {
+            closeModalByClickingOutside(event, modal, post);
+        });
 
-        slideshowElement.appendChild(media);
+        modal.classList.remove('hidden');
+        post.style.animation = 'fadeInUp 0.5s forwards';
     }
-}
-
-function generatePostInfos(userInfos, postInfos) {
-    document.getElementById('postUserPicture').src =
-        'profile_images/' + userInfos.profile_picture_link;
-    document.getElementById('postUsername').innerText = userInfos.username;
-    document.getElementById('postTagsSpan').innerText = postInfos.tags;
-    document.getElementById('postDescriptionSpan').innerText = postInfos.description;
-    document.getElementById('postLocationSpan').innerText = postInfos.location;
-    document.getElementById('postDateSpan').innerText = postInfos.creation_date;
 }
 
 function closePost() {
@@ -311,42 +340,6 @@ function closePost() {
         modal.classList.add('hidden');
         post.style.animation = '';
     }, 500);
-}
-
-function slideShow(move) {
-    let slides = document.getElementsByClassName('slideshowItem');
-    let j = 0;
-    while (j < slides.length && slides[j].style.display == 'none') {
-        j++;
-    }
-
-    let currentSlide = slides[j];
-    currentSlide.style.display = 'none';
-
-    if (currentSlide.dataset.type == 'video') {
-        currentSlide.pause();
-        currentSlide.currentTime = 0;
-    }
-
-    let finalIndex;
-
-    if (j >= slides.length - 1 && move == 1) {
-        finalIndex = 0;
-    } else {
-        if (j == 0 && move == -1) {
-            finalIndex = slides.length - 1;
-        } else {
-            finalIndex = j + move;
-        }
-    }
-    slides[finalIndex].style.display = 'block';
-    if (slides[finalIndex].dataset.type == 'image') {
-        document.getElementById('postImages').style.backgroundImage =
-            `url(${slides[finalIndex].src})`;
-    } else {
-        document.getElementById('postImages').style.backgroundImage =
-            `url("/images/videoBackground.png")`;
-    }
 }
 
 let usernameBefore;
@@ -386,45 +379,65 @@ function modifyProfile() {
     console.log(usernameBefore + ' ' + profilePicBefore + ' ' + biographyBefore);
 }
 
+function isImageFormat(file) {
+    if (!file) return false;
+    let format = file.name.split('.')[1];
+    if (
+        format == 'jpg' ||
+        format == 'jpeg' ||
+        format == 'png' ||
+        format == 'jfif' ||
+        format == 'png' ||
+        format == 'gif' ||
+        format == 'webp'
+    ) {
+        return true;
+    }
+    return false;
+}
 async function saveProfileChanges() {
-    let isValid = true;
+    let formdata = new FormData();
 
     let bio = document.getElementById('profileBiography');
-    let responseBio =
-        bio.value != biographyBefore
-            ? await PostMethodFetch('/api/modifyProfileBiography', { biography: bio.value })
-            : {
-                  Status: 'failed'
-              };
-
     let name = document.getElementById('profileName');
-    let available = await GetMethodFetch('/api/isUsernameAvailable/' + name.innerText);
-    if (available.available) {
-        let responseName =
-            name.innerText != usernameBefore
-                ? await PostMethodFetch('/api/modifyProfileName', { username: name.innerText })
-                : {
-                      Status: 'failed'
-                  };
-    } else {
-        name.innerText = usernameBefore;
-    }
-
-    let picture = document.getElementById('profilePictureUpload');
-    let formdata = new FormData();
-    formdata.append('profilePic', picture.files[0]);
-
-    let responsePic =
-        picture.files.length != 0
-            ? await UploadPostMethod('/api/modifyProfilePicture', formdata)
-            : { Status: 'failed' };
-
     let pictureEl = document.getElementById('profilePicture');
-    if (responsePic.Status == 'success') {
-        pictureEl.classList.remove('hidden');
-        pictureEl.src = '/profile_images/' + responsePic.Link;
-        document.getElementById('profilePictureDiv').style.backgroundImage =
-            `url("/profile_images/${responsePic.Link}")`;
+    let picture = document.getElementById('profilePictureUpload');
+
+    let available = await GetMethodFetch('/api/isUsernameAvailable/' + name.innerText);
+
+    formdata.append('targetUser', currentURL.searchParams.get('username'));
+    formdata.append('username', name.innerText);
+    formdata.append('biography', bio.value);
+
+    let file = picture.files[0];
+    let uploadFile = file
+        ? new File(
+              [file],
+              file.name
+                  .normalize('NFD')
+                  .replace(/[\u0300-\u036f]/g, '')
+
+                  //? keres egy pontot (\.) ha utána van még pont (?=.*\.) (asszem)
+                  .replace(/\.(?=.*\.)/g, '-'),
+              {
+                  type: file.type
+              }
+          )
+        : undefined;
+    formdata.append('profilePic', isImageFormat(uploadFile) ? uploadFile : undefined);
+    console.log();
+    formdata.append('currentProfilePicture', pictureEl.src.split('/profile_images/')[1]);
+    if (available.available || name.innerText == usernameBefore) {
+        console.log('asd');
+        let { Status, profilePicture } = await UploadPostMethod('/api/modifyProfile', formdata);
+        if (Status == 'success') {
+            pictureEl.classList.remove('hidden');
+            pictureEl.src = '/profile_images/' + profilePicture;
+            document.getElementById('profilePictureDiv').style.backgroundImage =
+                `url("/profile_images/${profilePicture}")`;
+        } else {
+            console.log(Status);
+        }
     }
 
     document.getElementById('profileModify').classList.remove('hidden');
@@ -508,34 +521,41 @@ function hideDeleteModal() {
 
 async function doDelete() {
     console.log(deletionType);
-    if (deletionType == 'Post') {
-        try {
-            const { Status } = await PostMethodFetch('/api/deletePost', { postId: openedPostId });
-            if (Status == 'Success') {
-                hideDeleteModal();
-                closePost();
-                postsByUser();
-            } else {
-                alert('Valami hiba történt!');
+    if (currentUser == currentURL.searchParams.get('username')) {
+        if (deletionType == 'Post') {
+            try {
+                const { Status } = await PostMethodFetch('/api/deletePost', {
+                    postId: openedPostId
+                });
+                if (Status == 'Success') {
+                    hideDeleteModal();
+                    closePost();
+                    postsByUser();
+                } else {
+                    alert('Valami hiba történt!');
+                }
+            } catch (error) {
+                console.error(error);
             }
-        } catch (error) {
-            console.error(error);
-        }
-    } else if (deletionType == 'Profile') {
-        try {
-            const { userId } = await GetMethodFetch('/api/sendUserId');
-            const { Status } = await PostMethodFetch('/api/deleteProfile', { userId: userId });
-            if (Status == 'Success') {
-                await PostMethodFetch('/api/removeUserId');
-                await PostMethodFetch('/api/removeUsername');
-                window.location.href = '/login';
-            } else {
-                alert('Valami hiba történt!');
+        } else if (deletionType == 'Profile') {
+            try {
+                const { userId } = await GetMethodFetch('/api/sendUserId');
+                const { Status } = await PostMethodFetch('/api/deleteProfile', { userId: userId });
+                if (Status == 'Success') {
+                    await PostMethodFetch('/api/removeUserId');
+                    await PostMethodFetch('/api/removeUsername');
+                    window.location.href = '/login';
+                } else {
+                    alert('Valami hiba történt!');
+                }
+            } catch (error) {
+                console.error(error);
             }
-        } catch (error) {
-            console.error(error);
+        } else {
+            alert('Valami hiba történt!');
         }
     } else {
-        alert('Valami hiba történt!');
+        alert('Önnek nincsen ehhez jogusultsága!');
+        hideDeleteModal();
     }
 }

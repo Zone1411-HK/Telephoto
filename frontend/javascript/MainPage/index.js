@@ -22,6 +22,12 @@ async function startUp() {
 
                 document.getElementById('navMobile').appendChild(adminNavMobile);
             }
+            let { Status, exists, Result } = await GetMethodFetch('/api/sendUsername');
+            if (Status == 'Success' && exists) {
+                let profileURL = new URL('/profile', 'http://127.0.0.1:3000/');
+                profileURL.searchParams.set('username', Result);
+                document.getElementById('profilGomb').href = profileURL;
+            }
         } else {
             window.location.href = '/login';
         }
