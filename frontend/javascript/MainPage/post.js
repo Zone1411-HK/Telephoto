@@ -51,7 +51,6 @@ function removeActiveLoad() {
 let searchValue;
 
 async function getSearchedPosts(searchValue) {
-    type = 'reset';
     const response = await GetMethodFetch('/api/searchPosts/' + searchValue);
 
     if (response.status != 'failed') {
@@ -60,6 +59,7 @@ async function getSearchedPosts(searchValue) {
         for (let i = 0; i < data.length; i++) {
             await hangPictures(data[i]);
         }
+        type = 'searched';
         const { status, result } = await PostMethodFetch('/api/setOffset', {
             type: type,
             offset: 50
@@ -78,6 +78,8 @@ async function searchPost() {
                 type: 'reset',
                 offset: 0
             });
+
+            console.log(setOffsetResponse);
 
             let posts = document.getElementById('posts-container');
             posts.replaceChildren();
@@ -150,6 +152,30 @@ const getTopPosts = async () => {
     }
 };
 
+async function randomPlaceSort(searchValue) {
+    type = searchValue;
+
+    const response = await GetMethodFetch('/api/randomPlacesPosts/' + searchValue);
+
+    if (response.status != 'failed') {
+        const data = response.places;
+        console.log(data);
+
+        for (let i = 0; i < data.length; i++) {
+            await hangPictures(data[i]);
+        }
+
+        const { status, result } = await PostMethodFetch('/api/setOffset', {
+            type: type,
+            offset: 50
+        });
+
+        appendLoadMore(data.length == 50);
+    } else {
+        appendLoadMore(false);
+    }
+}
+
 function appendLoadMore(areThereMorePosts) {
     const loadMore = document.createElement('div');
     loadMore.classList.add('loadMorePost');
@@ -165,9 +191,10 @@ function appendLoadMore(areThereMorePosts) {
 async function loadMorePost() {
     if (type == 'top') {
         getTopPosts(timeframe);
-    }
-    if (type == 'search') {
+    } else if (type == 'searched') {
         getSearchedPosts(searchValue);
+    } else {
+        randomPlaceSort(type);
     }
     this.remove();
 }

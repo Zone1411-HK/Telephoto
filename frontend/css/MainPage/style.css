@@ -199,6 +199,7 @@ form {
     font-size: 1rem;
     border-right: 1px solid var(--PrimaryAccent);
     background-color: var(--PostLight);
+    color: var(--PostDark);
 }
 
 #postSearchSVGWrapper {

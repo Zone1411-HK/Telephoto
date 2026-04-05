@@ -38,7 +38,7 @@ async function startUp() {
                     placeButtons[i].dataset.filled = 'true';
                     placeButtons[i].disabled = false;
                     placeButtons[i].classList.remove('disabledButton');
-                    placeButtons[i].addEventListener('click', randomPlaceSort);
+                    placeButtons[i].addEventListener('click', dunno);
                 }
 
                 for (const button of placeButtons) {
@@ -56,32 +56,15 @@ async function startUp() {
     }
 }
 
-async function randomPlaceSort() {
+async function dunno() {
     const { status, result } = await PostMethodFetch('/api/setOffset', {
         type: 'reset',
-        offset: 0
+        offset: 50
     });
-
-    console.log(result);
-
-    const response = await GetMethodFetch('/api/randomPlacesPosts/' + this.value);
-    console.log(response);
-
-    if (response.status != 'failed') {
-        document.getElementById('posts-container').replaceChildren();
-        document.querySelector('.activeSort').classList.remove('activeSort');
-        this.classList.add('activeSort');
-        const data = response.places;
-        console.log(data);
-
-        for (let i = 0; i < data.length; i++) {
-            await hangPictures(data[i]);
-        }
-
-        appendLoadMore(data.length == 50);
-    } else {
-        appendLoadMore(false);
-    }
+    document.querySelector('.activeSort').classList.remove('activeSort');
+    this.classList.add('activeSort');
+    document.getElementById('posts-container').replaceChildren();
+    randomPlaceSort(this.value);
 }
 
 async function testing() {
