@@ -37,9 +37,9 @@ function scrollHorizontal(e) {
 
     if (matchMedia.matches && j == stopScrollClasses.length) {
         if (e.deltaY > 0) {
-            this.scrollLeft += 750;
+            this.scrollLeft += 10500;
         } else {
-            this.scrollLeft -= 750;
+            this.scrollLeft -= 10500;
         }
     }
     //this.window.scrollTo(this.window.y)
