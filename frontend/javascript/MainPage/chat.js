@@ -18,9 +18,9 @@ function chatAddEventListeners() {
 
 function loadNewChatImg() {
     let temp = new FileReader();
-    temp.onload = function (e) {
+    temp.addEventListener('load', function (e) {
         document.getElementById('newChatImg').src = e.target.result;
-    };
+    });
     temp.readAsDataURL(this.files[0]);
 }
 

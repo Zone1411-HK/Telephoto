@@ -37,6 +37,18 @@ async function startUp() {
     }
 }
 
+function loadNewUserImg() {
+    let fr = new FileReader();
+    fr.addEventListener('load', function (e) {
+        document.getElementById('tempImg').src = e.target.result;
+        document.getElementById('profilePictureDiv').style.backgroundImage =
+            `url('${e.target.result}')`;
+        document.getElementById('tempImg').classList.remove('hidden');
+        document.getElementById('uploadSVG').classList.add('hidden');
+    });
+    fr.readAsDataURL(this.files[0]);
+}
+
 function profileAddEventListeners() {
     document.getElementById('postsByUser').addEventListener('click', postsByUser);
     document.getElementById('likedPosts').addEventListener('click', likedPosts);
@@ -47,6 +59,9 @@ function profileAddEventListeners() {
     document.getElementById('deleteCancel').addEventListener('click', hideDeleteModal);
     document.getElementById('deleteConfirm').addEventListener('click', doDelete);
     document.getElementById('logoutWrapper').addEventListener('click', logout);
+    document.getElementById('closeComments').addEventListener('click', closeComments);
+    document.getElementById('commentSvgWrapper').addEventListener('click', sendComment);
+    document.getElementById('profilePictureUpload').addEventListener('change', loadNewUserImg);
 }
 
 async function logout() {
@@ -75,7 +90,7 @@ async function postsByUser() {
 
 async function likedPosts() {
     const { Status, posts } = await GetMethodFetch(
-        '/api/likedPosts/' + +currentURL.searchParams.get('username')
+        '/api/likedPosts/' + currentURL.searchParams.get('username')
     );
     if (Status == 'Success') {
         generatePosts(posts, false);
@@ -89,6 +104,7 @@ async function dislikedPosts() {
         '/api/dislikedPosts/' + currentURL.searchParams.get('username')
     );
     if (Status == 'Success') {
+        console.log(posts);
         generatePosts(posts, false);
         makeTypeActive(this);
         console.log('Posztok sikeresen betöltve');
@@ -143,6 +159,9 @@ function generatePosts(posts, canDeletePost) {
         }
     }
 
+    const postsDiv = document.getElementById('posts');
+    postsDiv.replaceChildren();
+
     if (posts.length > 0) {
         let postArr = [];
         for (let i = 0; i < posts.length; i += 3) {
@@ -155,9 +174,6 @@ function generatePosts(posts, canDeletePost) {
             postArr.push(tempArr);
         }
 
-        const postsDiv = document.getElementById('posts');
-        postsDiv.replaceChildren();
-
         for (let arrayRow of postArr) {
             let row = document.createElement('div');
             row.classList.add('postRow');
@@ -166,7 +182,8 @@ function generatePosts(posts, canDeletePost) {
                 console.log(arrayValue);
                 let post = document.createElement('div');
                 let url = '../images/placeholder1.jpg';
-                if (arrayValue.links.length != 0) {
+
+                if (arrayValue.links && arrayValue.links.length != 0) {
                     url = '/uploads/' + arrayValue.links[0];
                 }
 
@@ -259,8 +276,10 @@ async function profileInfos() {
 let openedPostId;
 
 async function openPost() {
-    let postId = this.dataset.postId;
-    let { Status, Infos } = await GetMethodFetch('/api/postInfos/' + postId);
+    openedPostId = this.dataset.postId;
+    console.log(openedPostId);
+
+    let { Status, Infos } = await GetMethodFetch('/api/postInfos/' + openedPostId);
 
     if (Status == 'Success') {
         console.log(Infos);
@@ -372,6 +391,8 @@ function modifyProfile() {
     usernameBefore = name.innerText;
 
     document.getElementById('profilePicture').classList.add('hidden');
+    document.getElementById('uploadSVG').classList.remove('hidden');
+
     profilePicBefore = document.getElementById('profilePicture').src;
 
     let picture = document.getElementById('profilePictureUploadLabel');
@@ -403,10 +424,10 @@ async function saveProfileChanges() {
     let pictureEl = document.getElementById('profilePicture');
     let picture = document.getElementById('profilePictureUpload');
 
-    let available = await GetMethodFetch('/api/isUsernameAvailable/' + name.innerText);
+    let available = await GetMethodFetch('/api/isUsernameAvailable/' + name.textContent);
 
     formdata.append('targetUser', currentURL.searchParams.get('username'));
-    formdata.append('username', name.innerText);
+    formdata.append('username', name.textContent);
     formdata.append('biography', bio.value);
 
     let file = picture.files[0];
@@ -428,13 +449,10 @@ async function saveProfileChanges() {
     console.log();
     formdata.append('currentProfilePicture', pictureEl.src.split('/profile_images/')[1]);
     if (available.available || name.innerText == usernameBefore) {
-        console.log('asd');
-        let { Status, profilePicture } = await UploadPostMethod('/api/modifyProfile', formdata);
+        let { Status } = await UploadPostMethod('/api/modifyProfile', formdata);
         if (Status == 'success') {
-            pictureEl.classList.remove('hidden');
-            pictureEl.src = '/profile_images/' + profilePicture;
-            document.getElementById('profilePictureDiv').style.backgroundImage =
-                `url("/profile_images/${profilePicture}")`;
+            currentURL.searchParams.set('username', name.textContent);
+            window.location.href = currentURL;
         } else {
             console.log(Status);
         }
@@ -444,6 +462,8 @@ async function saveProfileChanges() {
     document.getElementById('cancelProfileModification').classList.add('hidden');
     document.getElementById('profilePictureUploadLabel').classList.add('hidden');
     document.getElementById('deleteProfile').classList.add('hidden');
+    document.getElementById('tempImg').src = '';
+    document.getElementById('tempImg').classList.add('hidden');
     this.classList.add('hidden');
 
     pictureEl.classList.remove('hidden');
@@ -462,6 +482,11 @@ function cancelProfileChanges() {
     this.classList.add('hidden');
 
     document.getElementById('profilePictureUploadLabel').classList.add('hidden');
+    document.getElementById('tempImg').src = '';
+    document.getElementById('tempImg').classList.add('hidden');
+    document.getElementById('profilePictureDiv').style.backgroundImage =
+        `url('${profilePicBefore}')`;
+
     let picture = document.getElementById('profilePicture');
     picture.classList.remove('hidden');
     picture.src = profilePicBefore;
@@ -524,7 +549,8 @@ async function doDelete() {
     if (currentUser == currentURL.searchParams.get('username')) {
         if (deletionType == 'Post') {
             try {
-                const { Status } = await PostMethodFetch('/api/deletePost', {
+                console.log(openedPostId);
+                const { Status } = await PostMethodFetch('/api/deletePostOwn', {
                     postId: openedPostId
                 });
                 if (Status == 'Success') {
@@ -540,7 +566,9 @@ async function doDelete() {
         } else if (deletionType == 'Profile') {
             try {
                 const { userId } = await GetMethodFetch('/api/sendUserId');
-                const { Status } = await PostMethodFetch('/api/deleteProfile', { userId: userId });
+                const { Status } = await PostMethodFetch('/api/deleteProfileOwn', {
+                    userId: userId
+                });
                 if (Status == 'Success') {
                     await PostMethodFetch('/api/removeUserId');
                     await PostMethodFetch('/api/removeUsername');

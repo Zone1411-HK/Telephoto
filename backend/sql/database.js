@@ -35,9 +35,11 @@ async function loginSelect() {
 
 async function getUserByUsername(username) {
     try {
+        console.log(username);
         const sql = `SELECT user_id FROM users WHERE username = ?`;
         const values = [username];
         const [rows] = await pool.execute(sql, [username]);
+        console.log(rows[0].user_id);
         return rows[0].user_id;
     } catch (error) {
         console.error(error);
@@ -86,7 +88,7 @@ async function findUserOfPost(postId) {
     }
 }
 
-async function getPostDataByPostId(postId) {
+async function getPostDataByPostId(postId, userId) {
     try {
         let result;
 
@@ -100,8 +102,6 @@ async function getPostDataByPostId(postId) {
 
         const [rows] = await pool.execute(topPostsSql, [postId]);
         console.log(rows);
-
-        let userId = await getUserByUsername(rows[0].username);
 
         result = await getAllInteractions(userId, rows);
         return await postPictures(result);
@@ -229,7 +229,6 @@ async function randomPlacesPosts(userId, place, offset) {
 
         console.log(place + ' ' + offset);
         let [rows] = await pool.execute(sql, [place, offset]);
-        console.log(rows);
         result = await getAllInteractions(userId, rows);
         return await postPictures(result);
     } catch (error) {
@@ -239,7 +238,7 @@ async function randomPlacesPosts(userId, place, offset) {
 
 async function postPictures(posts) {
     try {
-        if (posts.length == 0) return null;
+        if (!posts || posts.length == 0) return [];
         let result = posts;
 
         //? Eltároljuk az összes id-t
@@ -627,7 +626,8 @@ async function deleteProfile(userId) {
         DELETE FROM users
         WHERE users.user_id = ?;
         `;
-        await pool.execute(sql, [userId]);
+        let [fields] = await pool.execute(sql, [userId]);
+        console.log(fields);
         return 'Success';
     } catch (error) {
         throw new Error(error);
@@ -795,17 +795,12 @@ async function markers() {
 
 async function createChat(userIds, imageName, chatName) {
     try {
-        console.log(userIds);
-        console.log(imageName);
-        console.log(chatName);
         const sql1 = `
         INSERT INTO chats(chat_name, chat_picture_link)
         VALUES(?,?)
         `;
         const [fields] = await pool.execute(sql1, [chatName, imageName]);
         let chatId = fields.insertId;
-        //console.log(chatId);
-        //console.log(userIds);
 
         try {
             for (let i = 0; i < userIds.length; i++) {
@@ -816,12 +811,9 @@ async function createChat(userIds, imageName, chatName) {
                 let asd = await pool.execute(sql2, [chatId, userIds[i]]);
             }
             return 'Success';
-        } catch (error) {
-            console.log('HIBA ITT 2.');
-            //console.log(error);
-        }
+        } catch (error) {}
     } catch (error) {
-        //throw new Error(error);
+        throw new Error(error);
     }
 }
 async function favoritePost(username, postId, favoriteValue) {
