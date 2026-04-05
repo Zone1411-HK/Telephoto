@@ -67,10 +67,12 @@ router.get('/isUsernameAvailable/:name', async (request, response) => {
 
         let isAvailable = j == usernames.length ? true : false;
         response.status(200).json({
+            status: isAvailable ? 'success' : 'failed',
             available: isAvailable
         });
     } catch (error) {
         response.status(500).json({
+            status: 'failed',
             error: `Endpoint ERROR: isUsernameAvailable: ${error}`
         });
     }
@@ -200,16 +202,20 @@ router.post('/createPost', async (request, response) => {
 });
 
 const tempStorage = multer.diskStorage({
-    destination: (request, file, callback) => {
-        callback(null, path.join(__dirname, '../../frontend/temp_images'));
+    destination: async (request, file, callback) => {
+        const fullpath = path.join(__dirname, '../../frontend/temp_images');
+        await fs.mkdir(fullpath, { recursive: true });
+        callback(null, fullpath);
     },
     filename: (request, file, callback) => {
         callback(null, 'temp-' + file.originalname); //?egyedi név: temp - file eredeti neve
     }
 });
 const postStorage = multer.diskStorage({
-    destination: (request, file, callback) => {
-        callback(null, path.join(__dirname, '../uploads'));
+    destination: async (request, file, callback) => {
+        const fullpath = path.join(__dirname, '../../frontend/temp_images');
+        await fs.mkdir(fullpath, { recursive: true });
+        callback(null, fullpath);
     },
     filename: (request, file, callback) => {
         callback(null, Date.now() + '-' + file.originalname); //?egyedi név: dátum - file eredeti neve

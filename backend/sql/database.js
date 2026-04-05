@@ -382,7 +382,7 @@ async function allUsername() {
         const [rows] = await pool.execute(sql);
         return rows;
     } catch (error) {
-        console.error('SQL ERROR: allUsername: ' + error);
+        throw new Error(error);
     }
 }
 
