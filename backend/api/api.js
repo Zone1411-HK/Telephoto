@@ -177,7 +177,6 @@ router.post('/createPost', async (request, response) => {
             latitude,
             longitude
         );
-        //console.log(fileNames);
         for (const file of fileNames) {
             await database.createPicture(createPost[0].insertId, file);
         }
@@ -369,7 +368,8 @@ router.post('/reportPost', async (request, response) => {
 router.get('/postInfos/:postId', async (request, response) => {
     try {
         const postId = request.params.postId;
-        const Infos = await database.getPostDataByPostId(postId);
+        const userId = request.session.userId;
+        const Infos = await database.getPostDataByPostId(postId, userId);
         response.status(200).json({
             Status: 'Success',
             Infos: Infos[0]
@@ -390,7 +390,6 @@ const postTypeOffset = {
 
 router.post('/setOffset', async (request, response) => {
     const { type, offset } = request.body;
-    console.log(postTypeOffset.type + ' ' + postTypeOffset.offset);
     if (type == 'reset') {
         postTypeOffset.offset = 0;
         postTypeOffset.type = 'reset';
@@ -398,7 +397,6 @@ router.post('/setOffset', async (request, response) => {
         postTypeOffset.type = type;
         postTypeOffset.offset += offset;
     }
-    console.log(postTypeOffset.type + ' ' + postTypeOffset.offset);
 
     response.status(200).json({ status: 'success', result: postTypeOffset });
 });
@@ -454,13 +452,10 @@ router.get('/profileInfos/:username', async (request, response) => {
         }
         const data = await database.loadProfile(username);
 
-        console.log(data);
-
         response.status(200).json({
             status: data.length > 0 ? 'Success' : 'Failed',
             results: data
         });
-        //console.log(data);
     } catch (error) {
         console.log(error);
     }
@@ -473,7 +468,6 @@ router.get('/postsByUser/:username', async (request, response) => {
             username = request.session.username;
         }
         const userPosts = await database.userPosted(username);
-        console.log(userPosts);
         response.status(200).json({
             Status: 'Success',
             posts: userPosts == null ? [] : userPosts
@@ -489,9 +483,13 @@ router.get('/postsByUser/:username', async (request, response) => {
 router.get('/likedPosts/:username', async (request, response) => {
     try {
         let username = request.params.username;
+        console.log(username);
+
         if (!username) {
             username = request.session.username;
         }
+        console.log(username);
+
         const likedPosts = await database.userLiked(username);
 
         response.status(200).json({
@@ -556,7 +554,6 @@ router.get('/commentInfos/:postId', async (request, response) => {
         status: 'Success',
         results: data
     });
-    //console.log(data);
 });
 //#endregion
 
@@ -627,12 +624,10 @@ router.get('/lastMessageOfChat/:chatId', async (request, response) => {
 router.post('/sendMessage', async (request, response) => {
     try {
         const { message, chatId, username } = request.body;
-        //console.log(message, chatId);
         const sqlData = await database.sendMessage(message, chatId, username);
         response.status(200).json({
             Status: 'Success'
         });
-        //console.log(sqlData);
     } catch (error) {
         console.error(error);
         response.status(500).json({
@@ -644,7 +639,6 @@ router.post('/sendMessage', async (request, response) => {
 router.post('/saveChatId', async (request, response) => {
     try {
         const { chatId } = request.body;
-        //console.log(chatId);
         request.session.chatId = chatId;
         response.status(200).json({
             Status: 'Success'
@@ -743,7 +737,6 @@ const chatUpload = multer({ storage: chatStorage });
 router.post('/createChat', chatUpload.single('img'), async (request, response) => {
     try {
         let userIds = request.body.userIds.split(',');
-        console.log(request.body.userIds);
         let imageName = request.file.filename;
         let { chatName } = request.body;
 
@@ -910,12 +903,40 @@ router.post('/removeUserId', async (request, response) => {
     }
 });
 
+router.post('/deletePostOwn', async (request, response) => {
+    try {
+        const { postId } = request.body;
+        const affectedRows = await database.deletePost(postId);
+        if (affectedRows != 0) {
+            response.status(200).json({
+                Status: 'Success'
+            });
+        } else {
+            response.status(200).json({
+                Status: 'Failed',
+                Message: 'Nincs ilyen id-val poszt!'
+            });
+        }
+    } catch (error) {
+        throw new Error(`Hiba a "deletePostOwn" végpontban: ${error}`);
+    }
+});
+router.post('/deleteProfileOwn', async (request, response) => {
+    try {
+        const { userId } = request.body;
+        const deleteProfile = await database.deleteProfile(userId);
+        response.status(200).json({
+            Status: deleteProfile
+        });
+    } catch (error) {
+        throw new Error(`Hiba a "deleteProfileOwn" végpontban: ${error}`);
+    }
+});
 //! ADMIN
 //#region Admin
 router.post('/deletePost', isAdmin, async (request, response) => {
     try {
         const { postId } = request.body;
-        console.log(postId);
         const affectedRows = await database.deletePost(postId);
         if (affectedRows != 0) {
             response.status(200).json({
@@ -1095,7 +1116,6 @@ router.post('/updatePostData', isAdmin, async (request, response) => {
             postLongitude,
             postTags
         } = request.body;
-        console.log(request.body);
         const updatePost = await database.updatePost(
             postId,
             postDescription,
@@ -1152,7 +1172,6 @@ router.get('/getCommentData/:commentId', isAdmin, async (request, response) => {
 router.post('/updateCommentData', isAdmin, async (request, response) => {
     try {
         const { commentId, commentDate, commentContent } = request.body;
-        console.log(request.body);
         const updateComment = await database.updateComment(commentId, commentDate, commentContent);
         response.status(200).json({
             Status: updateComment
@@ -1177,7 +1196,6 @@ router.post('/deleteComment', isAdmin, async (request, response) => {
 router.post('/clearComment', isAdmin, async (request, response) => {
     try {
         const { commentId } = request.body;
-        console.log(commentId);
         const clearComment = await database.clearComment(commentId);
         response.status(200).json({
             Status: clearComment
@@ -1230,6 +1248,7 @@ router.post('/modifyProfile', profileUpload.single('profilePic'), async (request
                 biography,
                 filename
             );
+            request.session.username = username;
             response.status(200).json({
                 Status: status,
                 profilePicture: filename
@@ -1324,29 +1343,35 @@ function VerifyHashedString(string, salt, hash) {
 
 function convertUnixToReadableDate(unix) {
     let date = new Date(unix);
-    let year = date.getUTCFullYear(date);
+    let year = date.getFullYear(date);
     //! VALAMIÉRT EZ A CSODA 0-TÓL KEZDI A HÓNAPOKAT
-    let month = date.getUTCMonth(date) + 1;
+    let month = date.getMonth(date) + 1;
     month = month.toString();
     if (month.length == 1) {
         month = '0' + month.toString();
     }
-    let day = date.getUTCDate(date);
-    let hour = date.getUTCHours(date);
-    let minute = date.getUTCMinutes(date);
-    let second = date.getUTCSeconds(date);
-    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-}
 
-function formatDate(date) {
-    const year = date.getUTCFullYear();
-    const month = date.getUTCSeconds;
+    let day = date.getDate(date).toString();
+    if (day.length == 1) {
+        day = '0' + day;
+    }
+
+    let hour = date.getHours(date).toString();
+    if (hour.length == 1) {
+        hour = '0' + hour;
+    }
+
+    let minute = date.getMinutes(date).toString();
+    if (minute.length == 1) {
+        minute = '0' + minute;
+    }
+
+    return `${year}-${month}-${day} ${hour}:${minute}`;
 }
 
 function clearFolder(path) {
     fs.readdir(path).then((files) => {
         files.forEach((file) => {
-            //console.log(file);
             fs.unlink(path + '/' + file);
         });
     });
