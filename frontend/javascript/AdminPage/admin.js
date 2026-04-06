@@ -40,6 +40,7 @@ async function startUp() {
                 let profileURL = new URL('/profile', 'http://127.0.0.1:3000/');
                 profileURL.searchParams.set('username', Result);
                 document.getElementById('profilGomb').href = profileURL;
+                document.getElementById('mobileProfilGomb').href = profileURL;
                 document.getElementById('adminUsername').innerText = Result;
             }
         } else {
@@ -100,6 +101,7 @@ function adminAddEventListeners() {
     collapseSidebarBtn.addEventListener('click', collapseSidebar);
 
     document.getElementById('profileBack').addEventListener('click', closeProfile);
+    document.getElementById('commentBack').addEventListener('click', closeComment);
 
     document.getElementById('postBack').addEventListener('click', closePost);
 
@@ -184,6 +186,7 @@ async function openComment() {
             document.getElementById('openedComment').style.display = 'flex';
             document.getElementById('openedComment').dataset.commentId = commentId;
             document.getElementById('commentsTableDiv').style.display = 'none';
+            document.getElementById('commentBack').classList.remove('hidden');
             document.getElementById('commentUser').innerText =
                 `Felhasználó: ${commentData.username} #${commentData.user_id}`;
             document.getElementById('commentPost').innerText = `Poszt: #${commentData.post_id}`;
@@ -247,6 +250,7 @@ async function confirmCommentModification() {
         });
         if (modifyResponse.Status == 'Success') {
             closeComment();
+            document.getElementById('commentBack').classList.add('hidden');
         }
     }
 }
@@ -273,8 +277,9 @@ function closeComment() {
         document.getElementById('commentsTableDiv').style.display = 'block';
         document.getElementById('openedComment').style.display = 'none';
         document.getElementById('openedComment').classList.remove('reported');
+        document.getElementById('commentBack').classList.add('hidden');
         document.getElementById('openedComment').removeAttribute('data-comment-id');
-        //document.getElementById('commentBack').style.display = 'none';
+        //document.getElementById('commentBack').classList.add('hidden');
         getComments();
     } catch (error) {
         console.error(error);
@@ -336,7 +341,7 @@ async function openProfile() {
         document.getElementById('openedProfile').style.display = 'flex';
         document.getElementById('openedProfile').dataset.userId = userId;
         document.getElementById('profilesTableDiv').style.display = 'none';
-        document.getElementById('profileBack').style.display = 'flex';
+        document.getElementById('profileBack').classList.remove('hidden');
 
         if (this.dataset.admin == 'true') {
             document.getElementById('openedProfile').classList.add('adminProfile');
@@ -448,7 +453,7 @@ function closeProfile() {
     document.getElementById('openedProfile').classList.remove('adminProfile');
     document.getElementById('openedProfile').classList.remove('reported');
     document.getElementById('openedProfile').removeAttribute('data-user-id');
-    document.getElementById('profileBack').style.display = 'none';
+    document.getElementById('profileBack').classList.add('hidden');
     getProfiles();
     getPosts();
     getComments();
@@ -512,7 +517,7 @@ async function openPost() {
         document.getElementById('openedPost').style.display = 'flex';
         document.getElementById('openedPost').dataset.postId = postId;
         document.getElementById('postsTableDiv').style.display = 'none';
-        document.getElementById('postBack').style.display = 'flex';
+        document.getElementById('postBack').classList.remove('hidden');
 
         if (this.dataset.reported == 'true') {
             document.getElementById('openedPost').classList.add('reported');
@@ -576,7 +581,7 @@ function closePost() {
     document.getElementById('openedPost').style.display = 'none';
     document.getElementById('openedPost').classList.remove('reported');
     document.getElementById('openedPost').removeAttribute('data-post-id');
-    document.getElementById('postBack').style.display = 'none';
+    document.getElementById('postBack').classList.add('hidden');
     document
         .getElementById('postMap')
         .classList.remove(...document.getElementById('postMap').classList);
@@ -608,6 +613,7 @@ function modifyPost() {
     console.log(originalPost);
     document.getElementById('postActionConfirmModify').style.display = 'flex';
     this.style.display = 'none';
+    document.getElementById('postMap').style.filter = 'none';
     document.getElementById('postLongitude').addEventListener('input', placeMarker);
     document.getElementById('postLatitude').addEventListener('input', placeMarker);
 }
@@ -768,7 +774,7 @@ function generateMap(lat, lon) {
     let zoom = 0;
     let center = [0, 0];
     if (lat != undefined && lon != undefined) {
-        zoom = 9;
+        zoom = 3;
         center[0] = lat;
         center[1] = lon;
         document.getElementById('postMap').style.filter = 'none';
@@ -840,20 +846,10 @@ function generateBarChart(arr) {
     yAxis.appendChild(nullPoint);
 
     let maxValue = Math.max(...arr);
-    /*
-    let sortedArr = arr.slice();
-    sortedArr = sortArray(sortedArr);
-    let usedNums = [];
-    for (let i = 0; i < sortedArr.length; i++) {
-        if (!usedNums.includes(sortedArr[i])) {
-            const span = document.createElement('span');
-            span.innerText = sortedArr[i];
-            usedNums.push(sortedArr[i]);
-            yAxis.appendChild(span);
-        }
-    }
-    */
+
     for (let i = 1; i < 5; i++) {
+        if ((maxValue * (i / 4)) % 1 == 0) {
+        }
         const span = document.createElement('span');
         span.innerText = maxValue * (i / 4);
         yAxis.appendChild(span);

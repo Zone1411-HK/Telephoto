@@ -155,7 +155,7 @@
     overflow: hidden;
 }
 
-.navButton {
+.navButtonAdmin {
     flex: 1 1 0;
     transition: 0.25s;
     width: 100%;
@@ -176,7 +176,7 @@
     text-decoration: none;
 }
 
-.navButton svg {
+.navButtonAdmin svg {
     max-height: 30px;
     stroke-width: 1.5px;
     stroke: white;
@@ -184,7 +184,7 @@
     aspect-ratio: 1/1;
 }
 
-.navButton span {
+.navButtonAdmin span {
     border: none;
 }
 
@@ -193,7 +193,7 @@
     text-overflow: ellipsis;
 }
 
-#nav {
+#navAdmin {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -204,7 +204,7 @@
 }
 
 .altNavButton:hover,
-.navButton:hover {
+.navButtonAdmin:hover {
     background-color: rgb(59, 75, 83);
     border: 1px solid aqua;
     color: aqua;
@@ -452,7 +452,7 @@
 }
 
 .back {
-    display: none;
+    display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
@@ -939,33 +939,13 @@ tr:hover td {
     width: 47.5%;
     justify-content: center;
     position: relative;
-    padding-left: 1.5vw;
-}
-
-#slideshowLeft,
-#slideshowRight {
-    background-color: gray;
-    position: absolute;
-    width: 7.5%;
-    height: 100%;
-    /*? átmeneti megoldás. kellenek sötét nyilak*/
-    filter: invert(180);
-}
-#slideshowLeft:hover,
-#slideshowRight:hover {
-    background-color: rgb(200, 205, 215);
-}
-
-#slideshowLeft {
-    left: 1.5vw;
-}
-
-#slideshowRight {
-    right: 0;
+    margin-left: 1.5vw;
+    border: 1px solid var(--PrimaryDark);
+    border-radius: 5px;
 }
 
 #slideshowContent {
-    width: 85%;
+    width: 80%;
     height: 100%;
 }
 
@@ -1205,7 +1185,34 @@ tr:hover td {
     stroke: var(--PrimaryLight);
 }
 
-@media (max-width: 768px) {
+.svgTitle {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: inherit;
+    filter: brightness(100%);
+    flex: 0.5 0.5 0;
+    border-radius: 4px;
+    transition: 0.25s;
+    border: none;
+}
+
+.svgTitle svg {
+    height: 85%;
+    stroke-width: 1.5px;
+    width: 100%;
+    aspect-ratio: 1/1;
+    stroke: var(--PrimaryLight);
+}
+
+#navMobileDivider {
+    height: 100%;
+    width: 1px;
+    background-color: white;
+}
+
+@media (max-width: 1000px) {
     #root {
         flex-direction: column;
     }
@@ -1250,7 +1257,86 @@ tr:hover td {
         width: 100%;
     }
 
+    #postDatas {
+        gap: 0.5%;
+    }
+
+    #postId {
+        flex: 1 1 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        font-size: 1rem;
+    }
+
+    #postUserCreationDate {
+        flex: 2 2 0;
+        flex-direction: column;
+    }
+
+    #postDescriptionTags {
+        flex: 4 4 0;
+        flex-direction: column;
+    }
+
+    #postUserNameId,
+    #postCreationDate {
+        width: 100%;
+        font-size: 0.75rem;
+    }
+
+    #postDescriptionTags textarea {
+        width: 100%;
+        font-size: 0.85rem;
+    }
+
+    #postLocation {
+        flex: 3 3 0;
+    }
+
+    #postLocationData {
+        width: 100%;
+        gap: 1%;
+    }
+
+    #postLocationNameWrapper,
+    #postLatitudeWrapper,
+    #postLongitudeWrapper {
+        flex-direction: column;
+        align-items: start;
+        height: 100%;
+        font-size: 0.8rem;
+    }
+
+    #mapWrapper {
+        display: none;
+    }
+
     .profileData {
         width: 100% !important;
+    }
+
+    #slideshowContent {
+        width: 100%;
+    }
+
+    .next,
+    .previous {
+        position: absolute;
+        background-color: transparent;
+        height: 40px;
+        -webkit-text-stroke: 1px var(--PrimaryLight);
+        top: calc(50% - 20px);
+    }
+
+    .next:hover,
+    .previous:hover {
+        background-color: transparent;
+    }
+    .next {
+        right: 5px;
+    }
+    .previous {
+        left: 5px;
     }
 }

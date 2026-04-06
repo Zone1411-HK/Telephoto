@@ -108,8 +108,9 @@ form {
 
 #chatContainer {
     height: 45%;
-    overflow-y: scroll;
-    scrollbar-width: none;
+    overflow-y: auto;
+    scrollbar-color: var(--PrimaryAccent) var(--Primary);
+    scrollbar-width: thin;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -138,7 +139,7 @@ form {
     text-overflow: ellipsis;
     border: 1px solid var(--PrimaryAccent);
     background-color: var(--Primary);
-    color: var(--AccentDark);
+    color: var(--PostDark);
     transition: 0.2s;
     height: 100%;
     display: flex;
@@ -166,7 +167,7 @@ form {
     width: 90%;
     background-color: var(--Primary);
     border: 1px solid var(--PrimaryAccent);
-    color: var(--AccentDark);
+    color: var(--PostDark);
     font-size: 1rem;
     font-weight: 350;
     transition: 0.2s;
@@ -202,9 +203,9 @@ form {
     color: var(--PostDark);
 }
 
-#postSearchSVGWrapper {
+#postSearchSVGWrapper,
+#postSearchSVGWrapperMobile {
     width: 20%;
-
     height: 100%;
 
     filter: brightness(100%);
@@ -217,13 +218,15 @@ form {
     border-bottom-right-radius: 3px;
 }
 
-#postSearchSVGWrapper svg {
+#postSearchSVGWrapper svg,
+#postSearchSVGWrapperMobile svg {
     height: 100%;
     stroke-width: 1.5px;
     stroke: var(--PrimaryAccent);
 }
 
-#postSearchSVGWrapper:hover {
+#postSearchSVGWrapper:hover,
+#postSearchSVGWrapperMobile:hover {
     filter: brightness(85%);
 }
 
@@ -263,29 +266,14 @@ form {
     display: flex;
     flex-direction: row;
     overflow-x: scroll;
+    overflow-y: hidden;
     width: 85vw;
-    height: 100%;
+    height: calc(100% - 1vh);
     gap: 10vw;
     padding-left: 15vw;
-    scrollbar-width: none;
+    scrollbar-color: var(--PostAccent) var(--SecondaryDark);
     scroll-behavior: smooth;
     margin-top: 1vh;
-}
-
-#posts {
-    display: flex;
-    flex-direction: row;
-    padding-left: 13vw;
-    padding-right: 10vw;
-    gap: 250px;
-    width: 100%;
-    height: 95%;
-    scrollbar-width: none;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
-    scroll-behavior: smooth;
-    overflow-x: scroll;
-    margin-top: 15px;
 }
 
 .rope {
@@ -458,7 +446,7 @@ form {
     height: fit-content;
     width: fit-content;
     margin: 0;
-    color: var(--AccentDark);
+    color: var(--PostDark);
 }
 
 #mobileTitleWrapper {
@@ -473,23 +461,53 @@ form {
 }
 
 .activeSort {
-    border-color: var(--AccentDark) !important;
-    background-color: var(--Accent);
-    color: var(--Primary);
+    border-color: var(--PrimaryAccent) !important;
+    background-color: var(--PostLight);
+    color: var(--PostDark);
     font-weight: 400 !important;
 }
 
 .activeSort svg {
-    stroke: var(--AccentDark) !important;
+    stroke: var(--PostDark) !important;
 }
 
 .activeSort input {
-    border-right: 1px solid var(--AccentDark);
-    color: var(--AccentDark);
+    border-right: 1px solid var(--PostDark);
+    color: var(--PostDark);
 }
 
 #navMobile {
     display: none;
+}
+
+#mobileSort {
+    width: 85vw;
+    height: 50vh;
+    background-color: var(--Primary);
+    border-radius: 5px;
+    position: absolute;
+    bottom: 10vh;
+    left: 7.5vw;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 5%;
+    padding-top: 5%;
+    gap: 5%;
+    border: 1px solid var(--PrimaryAccent);
+    box-shadow: 0 0 10px 1px var(--PrimaryDark2);
+}
+
+#mobileSort .trendingButton {
+    width: 90%;
+    flex: 1 1 0;
+}
+
+#mobileSort .postSearchWrapper {
+    width: 90%;
+    height: auto;
+    flex: 1 1 0;
 }
 
 @media (max-width: 1000px) {
@@ -536,6 +554,8 @@ form {
         padding-left: 0;
         margin: 0;
         gap: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
     .post {
         margin-top: 50px;

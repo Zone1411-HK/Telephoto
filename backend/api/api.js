@@ -589,9 +589,9 @@ router.get('/messagesOfChat', async (request, response) => {
         const sqlData = await database.messagesOfChat(chatId);
         let formattedDataArr = [];
         for (const data of sqlData) {
-            const formattedDate = convertUnixToReadableDate(
-                Math.floor(data.message_date.getTime())
-            );
+            const formattedDate = data.message_date
+                ? convertUnixToReadableDate(Math.floor(data.message_date.getTime()))
+                : null;
             formattedDataArr.push({
                 username: data.username,
                 message: data.message,

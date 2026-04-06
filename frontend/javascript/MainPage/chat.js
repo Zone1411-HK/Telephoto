@@ -329,13 +329,21 @@ async function sendMessage() {
 
 function openNewChatWindow() {
     document.getElementById('newChatModal').classList.remove('hidden');
-    document.getElementById('newChatContainer').style.animation = 'fadeInUp 1s forwards';
+    document.getElementById('newChatContainer').style.animation = 'fadeInUp 0.5s forwards';
+    document.getElementById('newChatModal').addEventListener('click', function () {
+        closeModalByClickingOutside(event, this, this.children[0]);
+    });
 }
 
 function closeNewChatWindow() {
-    document.getElementById('newChatModal').classList.add('hidden');
-    document.getElementById('newChatUserSuggestionList').replaceChildren();
-    document.getElementById('newChatAddedUsers').replaceChildren();
+    document.getElementById('newChatContainer').style.animation = 'fadeOutDown 0.5s forwards';
+    setTimeout(() => {
+        document.getElementById('newChatModal').classList.add('hidden');
+        document.getElementById('newChatUserSuggestionList').replaceChildren();
+        document.getElementById('newChatAddedUsers').replaceChildren();
+        document.getElementById('newChatForm').reset();
+        document.getElementById('newChatImg').src = '../images/circlePlus.png';
+    }, 500);
 }
 
 async function searchUser() {

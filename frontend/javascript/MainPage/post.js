@@ -36,9 +36,43 @@ function addEventListenersToElements() {
         button.addEventListener('click', trendingPosts);
     }
 
-    document.getElementById('postSearchSVGWrapper').addEventListener('click', searchPost);
+    document.getElementById('postSearchSVGWrapper').addEventListener('click', function () {
+        searchPost('postSearch', this);
+    });
+    document.getElementById('postSearchSVGWrapperMobile').addEventListener('click', function () {
+        searchPost('postSearchMobile', this);
+    });
     document.getElementById('closeComments').addEventListener('click', closeComments);
     document.getElementById('commentSvgWrapper').addEventListener('click', sendComment);
+    document.getElementById('openSort').addEventListener('click', toggleSort);
+}
+
+function toggleSort() {
+    if (this.dataset.opened == 'false') {
+        openSort();
+        this.dataset.opened = 'true';
+    } else {
+        closeSort();
+        this.dataset.opened = 'false';
+    }
+}
+
+function openSort() {
+    let sortDiv = document.getElementById('mobileSort');
+    sortDiv.classList.remove('hidden');
+    sortDiv.style.animation = 'fadeInUp 0.5s forwards';
+    setTimeout(() => {
+        sortDiv.style.animation = '';
+    }, 500);
+}
+
+function closeSort() {
+    let sortDiv = document.getElementById('mobileSort');
+    sortDiv.style.animation = 'fadeOutDown 0.5s forwards';
+    setTimeout(() => {
+        sortDiv.style.animation = '';
+        sortDiv.classList.add('hidden');
+    }, 500);
 }
 
 function removeActiveLoad() {
@@ -70,9 +104,10 @@ async function getSearchedPosts(searchValue) {
     }
 }
 
-async function searchPost() {
+async function searchPost(searchDiv, searchButton) {
     try {
-        searchValue = document.getElementById('postSearch').value;
+        console.log(searchButton);
+        searchValue = document.getElementById(searchDiv).value;
         if (searchValue.length >= 2) {
             const setOffsetResponse = await PostMethodFetch('/api/setOffset', {
                 type: 'reset',
@@ -84,9 +119,9 @@ async function searchPost() {
             let posts = document.getElementById('posts-container');
             posts.replaceChildren();
             removeActiveLoad();
-            this.parentNode.classList.add('activeSort');
-            this.classList.add('activeSort');
-            this.parentNode.children[0].classList.add('activeSort');
+            searchButton.parentNode.classList.add('activeSort');
+            searchButton.classList.add('activeSort');
+            searchButton.parentNode.children[0].classList.add('activeSort');
 
             await getSearchedPosts(searchValue);
         }
