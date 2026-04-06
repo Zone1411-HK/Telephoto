@@ -204,7 +204,7 @@ router.post('/createPost', async (request, response) => {
 const tempStorage = multer.diskStorage({
     destination: async (request, file, callback) => {
         const fullpath = path.join(__dirname, '../../frontend/temp_images');
-        await fs.mkdir(fullpath, { recursive: true });
+        fs.mkdir(fullpath, { recursive: true });
         callback(null, fullpath);
     },
     filename: (request, file, callback) => {
@@ -213,8 +213,8 @@ const tempStorage = multer.diskStorage({
 });
 const postStorage = multer.diskStorage({
     destination: async (request, file, callback) => {
-        const fullpath = path.join(__dirname, '../../frontend/temp_images');
-        await fs.mkdir(fullpath, { recursive: true });
+        const fullpath = path.join(__dirname, '../uploads');
+        fs.mkdir(fullpath, { recursive: true });
         callback(null, fullpath);
     },
     filename: (request, file, callback) => {
@@ -240,8 +240,7 @@ router.post('/tempUpload', tempUpload.array('uploadFile'), async (request, respo
 
 router.post('/uploadPost', postUpload.array('uploadFile'), async (request, response) => {
     try {
-        //uploadFiles(postUpload, 'uploadFile');
-        response.status(201).json({
+        response.status(200).json({
             Status: 'Success',
             filenames: request.files
         });

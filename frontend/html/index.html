@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="/css/util.css" />
         <link rel="stylesheet" href="/css/anim.css" />
         <link rel="stylesheet" href="/css/MainPage/style.css" />
-        <link rel="stylesheet" href="/css/MainPage/modal.css" />
+        <!--link rel="stylesheet" href="/css/MainPage/modal.css" /-->
         <link rel="stylesheet" href="/css/MainPage/chat.css" />
 
         <!--!JavaScript-->
@@ -135,7 +135,78 @@
                 </div>
             </div>
             <div class="posts-container" id="posts-container"></div>
+            <button id="openPostUpload">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="feather feather-upload"
+                >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+            </button>
         </div>
+
+        <nav id="nav">
+            <a href="/" class="navButton activeNav"
+                ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="feather feather-home"
+                >
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span>Főoldal</span>
+            </a>
+            <a href="/map" class="navButton"
+                ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#ffffff"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="feather feather-map"
+                >
+                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                    <line x1="8" y1="2" x2="8" y2="18"></line>
+                    <line x1="16" y1="6" x2="16" y2="22"></line></svg
+                ><span>Térkép</span></a
+            >
+            <a href="/profile" class="navButton" id="profilGomb"
+                ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#ffffff"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="feather feather-user"
+                >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle></svg
+                ><span>Profil</span></a
+            >
+        </nav>
 
         <nav id="navMobile">
             <button type="button" class="mobileIcon" data-opened="false" id="openSort">
@@ -251,124 +322,68 @@
             </label>
         </div>
 
-        <nav id="nav">
-            <a href="/" class="navButton activeNav"
-                ><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="feather feather-home"
-                >
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                </svg>
-                <span>Főoldal</span>
-            </a>
-            <a href="/map" class="navButton"
-                ><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#ffffff"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="feather feather-map"
-                >
-                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
-                    <line x1="8" y1="2" x2="8" y2="18"></line>
-                    <line x1="16" y1="6" x2="16" y2="22"></line></svg
-                ><span>Térkép</span></a
-            >
-            <a href="/profile" class="navButton" id="profilGomb"
-                ><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#ffffff"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="feather feather-user"
-                >
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle></svg
-                ><span>Profil</span></a
-            >
-            <button id="profilGomb" data-bs-toggle="modal" data-bs-target="#uploadModal">
-                Profil
-            </button>
-        </nav>
-
-        <div class="modal" id="uploadModal">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <p class="display-6 postTextDesign">Poszt előnézete</p>
-                    </div>
-                    <div class="modal-body">
-                        <form enctype="multipart/form-data" id="uploadForm">
-                            <!--! Valamiért a bootstrapes carousel bénán nézett ki-->
-                            <div id="carouselContainer">
-                                <div id="carouselContent"></div>
-                                <div id="carouselControl"></div>
-                            </div>
+        <div id="uploadModal" class="hidden">
+            <div id="uploadModalContent">
+                <h2 id="postUploadTitle">Poszt feltöltés</h2>
+                <form enctype="multipart/form-data" id="uploadForm">
+                    <div id="fileUpload">
+                        <label for="uploadFile" class="uploadFileLabel">
+                            <div id="uploadFileLabelText">Fájl feltöltése</div>
+                            <div id="uploadFeedback"></div>
                             <input
                                 type="file"
                                 id="uploadFile"
                                 accept=".mp4, .avi, .jpg, .jpeg, .jfif, .png, .gif, .webp, .hevc"
                                 name="uploadFile"
                                 multiple
+                                hidden
                             />
-                            <div id="uploadFeedbackDiv">
-                                <p id="uploadFeedback" class="uploadFeedback"></p>
-                            </div>
-                            <button
-                                type="button"
-                                id="loadFiles"
-                                class="postButtonDesign postButtonTextDesign"
-                            >
-                                Feltölt
-                            </button>
-                            <input
-                                type="text"
-                                id="uploadDescription"
-                                placeholder="Ide írhatod a leírást"
-                                class="postButtonDesign postButtonTextDesign"
-                            />
-                            <!--TODO Ide a tagaknak az inputja-->
-                            <input
-                                type="text"
-                                id="uploadLocation"
-                                placeholder="Ide írhatod a helyet"
-                                class="postButtonDesign postButtonTextDesign"
-                            />
-                            <input
-                                type="button"
-                                data-bs-dismiss="modal"
-                                value="Mégse"
-                                id="cancelPost"
-                                class="postButtonDesign postButtonTextDesign"
-                            />
-                            <input
-                                type="button"
-                                value="Poszt"
-                                id="uploadPost"
-                                class="postButtonDesign postButtonTextDesign"
-                            />
-                        </form>
+                        </label>
+                        <div id="tempSlideshowWrapper">
+                            <div class="uploadInfo">Itt láthatja a feltöltött képeket</div>
+                        </div>
                     </div>
-                </div>
+                    <div id="location">
+                        <label for="uploadLocation" class="uploadLocation">
+                            <span>Helyszín:</span>
+                            <input
+                                type="text"
+                                name="uploadLocation"
+                                id="uploadLocation"
+                                placeholder="Ide írhatja a helyszínt"
+                            />
+                        </label>
+                    </div>
+                    <div id="descriptionTags">
+                        <label for="uploadDescription" class="uploadDescription"
+                            ><span>Leírás:</span>
+                            <textarea
+                                id="uploadDescription"
+                                name="uploadDescription"
+                                placeholder="Ide írhatja a leírást"
+                                maxlength="500"
+                            ></textarea>
+                            <div id="descriptionLength">0/500</div>
+                        </label>
+                        <label for="uploadTags" class="uploadTags"
+                            ><span>Tagek:</span>
+                            <div id="tagWrapper">
+                                <input
+                                    id="uploadTags"
+                                    name="uploadTags"
+                                    placeholder="Nyomjon enter-t a tag hozzáadásához"
+                                    maxlength="50"
+                                />
+                                <div id="forTags"></div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div id="cancelUpload">
+                        <button type="button" id="cancelPost">Elvetés</button>
+                        <button type="button" id="uploadPost">Feltöltés</button>
+                    </div>
+                </form>
             </div>
         </div>
 
