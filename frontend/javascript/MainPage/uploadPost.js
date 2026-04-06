@@ -6,10 +6,45 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(Latitude + ' ' + Longitude);
     });
     */
-    document.getElementById('loadFiles').addEventListener('click', preLoadFiles);
     document.getElementById('uploadPost').addEventListener('click', uploadPost);
-    document.getElementById('cancelPost').addEventListener('click', cancelPost);
+    document.getElementById('cancelPost').addEventListener('click', closePost);
+    document.getElementById('uploadFile').addEventListener('change', preLoadFiles);
+    document
+        .getElementById('uploadDescription')
+        .addEventListener('keyup', currentDescriptionLength);
+    document.getElementById('uploadTags').addEventListener('keydown', function (e) {
+        if (e.key == 'Enter') {
+            e.preventDefault();
+            generateTag(this);
+        }
+    });
 });
+
+function currentDescriptionLength() {
+    document.getElementById('descriptionLength').innerText = this.value.length + '/500';
+}
+
+function generateTag(input) {
+    let existingTags = document.querySelectorAll('.addedTag');
+    let alreadyAdded = false;
+    for (const tag of existingTags) {
+        if (tag.innerText == '#' + input.value) {
+            alreadyAdded = true;
+        }
+    }
+    if (input.value.replace(/\s/g, '').length != 0 && !alreadyAdded) {
+        let newTag = document.createElement('div');
+        newTag.innerText = '#' + input.value;
+        newTag.classList.add('addedTag');
+        newTag.addEventListener('click', removeTag);
+        document.getElementById('forTags').appendChild(newTag);
+        input.value = '';
+    }
+}
+
+function removeTag() {
+    this.remove();
+}
 
 async function preLoadFiles() {
     let files = document.getElementById('uploadFile').files;
@@ -18,6 +53,7 @@ async function preLoadFiles() {
     uploadFeedback.innerText = '';
     if (rightFileFormats(files) && files.length > 0) {
         let renamedFiles = [];
+        let links = [];
         for (let file of files) {
             let renamedFile = new File(
                 [file],
@@ -30,13 +66,15 @@ async function preLoadFiles() {
                 }
             );
             renamedFiles.push(renamedFile);
+            links.push('../temp_images/temp-' + renamedFile.name);
         }
-        console.log(renamedFiles);
+        console.log(links);
         let response = await uploadFiles('/api/tempUpload', renamedFiles);
         document.getElementById('uploadFeedback').innerText = response.Message;
         uploadFeedback.style.color = 'var(--successGreen)';
 
-        generateCarousel(renamedFiles);
+        document.getElementById('tempSlideshowWrapper').replaceChildren();
+        document.getElementById('tempSlideshowWrapper').appendChild(generateSlideshow(links));
     } else {
         uploadFeedback.innerText = 'Nem megfelelő egy vagy több fájl formátuma!';
         uploadFeedback.style.color = 'var(--invalidRed)';
@@ -84,158 +122,66 @@ function fileFormats(format) {
     );
 }
 
-function generateSlideForFile(file) {
-    let fileType = file.type.split('/')[1];
-    if (fileType == 'mp4' || fileType == 'avi' || fileType == 'hevc') {
-        const video = document.createElement('video');
-        const source = document.createElement('source');
-        source.src = `temp_images/temp-${file.name}`;
-        source.type = `video/${fileType}`;
-        video.appendChild(source);
-        video.classList.add('tempVideo', 'img-fluid');
-        video.controls = true;
-        return video;
-    } else {
-        const image = document.createElement('img');
-        image.src = `/temp_images/temp-${file.name}`;
-        image.classList.add('tempImage', 'img-fluid', 'circle');
-        return image;
-    }
-}
-
-function slideShow(move) {
-    let slides = document.getElementsByClassName('tempSlide');
-    let j = 0;
-    while (j < slides.length && slides[j].style.display == 'none') {
-        j++;
-    }
-    slides[j].style.display = 'none';
-    console.log();
-    if (slides[j].children[1].classList.contains('tempVideo')) {
-        slides[j].children[1].pause();
-        slides[j].children[1].currentTime = 0;
-    }
-    console.log(j + ' ' + slides.length);
-    if (j >= slides.length - 1 && move == 1) {
-        slides[0].style.display = 'flex';
-    } else {
-        if (j == 0 && move == -1) {
-            slides[slides.length - 1].style.display = 'flex';
-        } else {
-            slides[j + move].style.display = 'flex';
-        }
-    }
-}
-
-function nextSlide() {
-    this.style.pointerEvents = 'none';
-    setTimeout(() => {
-        this.style.pointerEvents = 'all';
-    }, 1);
-    slideShow(1);
-}
-
-function previousSlide() {
-    this.style.pointerEvents = 'none';
-    setTimeout(() => {
-        this.style.pointerEvents = 'all';
-    }, 1);
-    slideShow(-1);
-}
-
-function generateCarousel(files) {
-    const carouselContent = document.getElementById('carouselContent');
-    carouselContent.replaceChildren();
-
-    for (let i = 0; i < files.length; i++) {
-        const slideDiv = document.createElement('div');
-        slideDiv.classList.add('tempSlide');
-        if (i != 0) {
-            slideDiv.style.display = 'none';
-        }
-
-        const serialNumber = document.createElement('div');
-        serialNumber.classList.add('tempSerialNumber');
-        serialNumber.innerText = `${i + 1} / ${files.length}`;
-
-        const file = generateSlideForFile(files[i]);
-
-        slideDiv.appendChild(serialNumber);
-        slideDiv.appendChild(file);
-        carouselContent.appendChild(slideDiv);
-    }
-    if (files.length > 1) {
-        const previous = document.createElement('a');
-        previous.classList.add('slideShowController', 'slideShowControllerLeft');
-
-        previous.innerText = '🠈';
-        previous.addEventListener('click', previousSlide);
-
-        const next = document.createElement('a');
-        next.classList.add('slideShowController', 'slideShowControllerRight');
-        next.innerText = '🠊';
-        next.addEventListener('click', nextSlide);
-
-        carouselContent.appendChild(previous);
-        carouselContent.appendChild(next);
-    }
-}
-
 async function uploadPost() {
-    let files = document.getElementById('uploadFile').files;
-    let gps;
-    (await getGPS(files[0])) == null
-        ? (gps = { Latitude: null, Longitude: null })
-        : (gps = await getGPS(files[0]));
+    try {
+        let files = document.getElementById('uploadFile').files;
 
-    console.log(gps);
-    if (files.length > 0 && rightFileFormats(files)) {
-        let renamedFiles = [];
-        for (let file of files) {
-            let renamedFile = new File(
-                [file],
-                file.name
-                    .normalize('NFD')
-                    .replace(/[\u0300-\u036f]/g, '')
+        if (files.length > 0 && rightFileFormats(files)) {
+            let gps;
+            (await getGPS(files[0])) == null
+                ? (gps = { Latitude: null, Longitude: null })
+                : (gps = await getGPS(files[0]));
 
-                    //? keres egy pontot (\.) ha utána van még pont (?=.*\.) (asszem)
-                    .replace(/\.(?=.*\.)/g, '-'),
-                {
-                    type: file.type
-                }
-            );
-            renamedFiles.push(renamedFile);
+            let renamedFiles = [];
+            for (let file of files) {
+                let renamedFile = new File(
+                    [file],
+                    file.name
+                        .normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '')
+
+                        //? keres egy pontot (\.) ha utána van még pont (?=.*\.) (asszem)
+                        .replace(/\.(?=.*\.)/g, '-'),
+                    {
+                        type: file.type
+                    }
+                );
+                renamedFiles.push(renamedFile);
+            }
+
+            let description = document.getElementById('uploadDescription').value;
+            let location = document.getElementById('uploadLocation').value;
+            let tags = document.querySelectorAll('.addedTag');
+            let uploadTags = '';
+            for (let tag of tags) {
+                uploadTags += tag.innerText + ' ';
+            }
+            const usernameResponse = await GetMethodFetch('/api/sendUsername');
+            const uploadResponse = await uploadFiles('/api/uploadPost', renamedFiles);
+            let uploadedFiles = [];
+            for (const object of uploadResponse.filenames) {
+                uploadedFiles.push(object.filename);
+            }
+
+            const createPostResponse = await PostMethodFetch('/api/createPost', {
+                username: usernameResponse.Result,
+                fileNames: uploadedFiles,
+                description: description,
+                tags: uploadTags,
+                location: location,
+                latitude: gps.Latitude,
+                longitude: gps.Longitude
+            });
+
+            if (createPostResponse.Success) {
+                closePost();
+            }
+        } else {
+            document.getElementById('uploadFileLabelText').classList.add('invalid');
+            document.getElementById('tempSlideshowWrapper').classList.add('invalid');
         }
-
-        console.log(renamedFiles);
-
-        let description = document.getElementById('uploadDescription').value;
-        let location = document.getElementById('uploadLocation').value;
-        const usernameResponse = await GetMethodFetch('/api/sendUsername');
-        console.log(usernameResponse);
-        const uploadResponse = await uploadFiles('/api/uploadPost', renamedFiles);
-        console.log(uploadResponse);
-        let uploadedFiles = [];
-        for (const object of uploadResponse.filenames) {
-            uploadedFiles.push(object.filename);
-        }
-
-        const createPostResponse = await PostMethodFetch('/api/createPost', {
-            username: usernameResponse.Result,
-            fileNames: uploadedFiles,
-            description: description,
-            tags: '',
-            location: location,
-            latitude: gps.Latitude,
-            longitude: gps.Longitude
-        });
-
-        if (createPostResponse.Success) {
-            window.location.reload();
-        }
-        const carouselContent = document.getElementById('carouselContent');
-        carouselContent.replaceChildren();
-        document.getElementById('uploadFile').value = null;
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -256,8 +202,36 @@ async function uploadFiles(apiUrl, files) {
     }
 }
 
-function cancelPost() {
-    document.getElementById('uploadFile').value = null;
-    document.getElementById('carouselContent').replaceChildren();
-    document.getElementById('uploadFeedback').innerText = '';
+function closePost() {
+    let modal = document.getElementById('uploadModal');
+    let modalContent = document.getElementById('uploadModalContent');
+    let form = document.getElementById('uploadForm');
+    modalContent.style.animation = 'fadeOutDown 0.5s forwards';
+    setTimeout(() => {
+        for (let element of document.querySelectorAll('.invalid')) {
+            element.classList.remove('invalid');
+        }
+
+        modal.classList.add('hidden');
+        modal.removeEventListener('click', closeModalByClickingOutside);
+
+        modalContent.style.animation = '';
+
+        const carouselContent = document.getElementById('tempSlideshowWrapper');
+        carouselContent.replaceChildren();
+
+        let uploadInfo = document.createElement('div');
+        uploadInfo.classList.add('uploadInfo');
+        uploadInfo.innerText = 'Itt láthatja a feltöltött képeket';
+
+        carouselContent.appendChild(uploadInfo);
+
+        document.getElementById('uploadFeedback').innerText = '';
+
+        document.getElementById('forTags').replaceChildren();
+
+        document.getElementById('descriptionLength').innerText = '0/500';
+
+        form.reset();
+    }, 500);
 }

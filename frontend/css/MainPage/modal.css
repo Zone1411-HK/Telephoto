@@ -24,18 +24,12 @@
 }
 
 .postTextDesign {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: fit-content;
+    height: fit-content;
     font-size: 2.5rem;
-    font-weight: 750;
     color: var(--PostModalBottomColor);
     font-family: 'Josefin Sans', sans-serif;
-}
-
-.modal-body {
-    background-color: var(--PostModalBottomColor);
-    color: whitesmoke;
+    margin: 0;
 }
 
 .modal-dialog {
@@ -95,21 +89,10 @@
     aspect-ratio: 1/1;
 }
 
-.modal-body {
-    background-image: url('/images/leather.png');
-    background-color: black;
-    background-position: center center;
-    background-size: 300px 300px;
-}
-
 .postButtonTextDesign {
     font-size: 1.3rem;
     font-weight: 750;
     color: var(--PostModalBottomColor);
-}
-
-#uploadModal {
-    box-shadow: 0 0 500px 500px rgba(255, 255, 255, 0.7);
 }
 
 .tempSerialNumber {

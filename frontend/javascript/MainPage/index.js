@@ -7,6 +7,8 @@ async function startUp() {
         if (await isLoggedIn()) {
             getChats();
             chatAddEventListeners();
+            addEventListeners();
+
             if (await isAdmin()) {
                 let adminNav = document.createElement('a');
                 adminNav.href = '/admin';
@@ -29,32 +31,49 @@ async function startUp() {
                 document.getElementById('profilGomb').href = profileURL;
                 document.getElementById('mobileProfilGomb').href = profileURL;
             }
-
-            let randomPlacesResponse = await GetMethodFetch('/api/randomPlaces');
-            if (randomPlacesResponse.Status == 'success') {
-                let placeButtons = document.querySelectorAll('.egyebButton');
-
-                for (let i = 0; i < randomPlacesResponse.places.length; i++) {
-                    placeButtons[i].value = randomPlacesResponse.places[i].location;
-                    placeButtons[i].dataset.filled = 'true';
-                    placeButtons[i].disabled = false;
-                    placeButtons[i].classList.remove('disabledButton');
-                    placeButtons[i].addEventListener('click', dunno);
-                }
-
-                for (const button of placeButtons) {
-                    if (button.dataset.filled != 'true') {
-                        button.disabled = true;
-                        button.classList.add('disabledButton');
-                    }
-                }
-            }
         } else {
             window.location.href = '/login';
         }
     } catch (error) {
         console.error(error);
     }
+}
+
+async function addEventListeners() {
+    let randomPlacesResponse = await GetMethodFetch('/api/randomPlaces');
+    if (randomPlacesResponse.Status == 'success') {
+        let placeButtons = document.querySelectorAll('.egyebButton');
+
+        for (let i = 0; i < randomPlacesResponse.places.length; i++) {
+            placeButtons[i].value = randomPlacesResponse.places[i].location;
+            placeButtons[i].dataset.filled = 'true';
+            placeButtons[i].disabled = false;
+            placeButtons[i].classList.remove('disabledButton');
+            placeButtons[i].addEventListener('click', dunno);
+        }
+
+        for (const button of placeButtons) {
+            if (button.dataset.filled != 'true') {
+                button.disabled = true;
+                button.classList.add('disabledButton');
+            }
+        }
+    }
+
+    document.getElementById('openPostUpload').addEventListener('click', openUploadModal);
+}
+
+function openUploadModal() {
+    let modal = document.getElementById('uploadModal');
+    let modalContent = document.getElementById('uploadModalContent');
+    modal.classList.remove('hidden');
+    modalContent.style.animation = 'fadeInUp 0.5s forwards';
+    setTimeout(() => {
+        modalContent.style.animation = '';
+        modal.addEventListener('click', function (event) {
+            closeModalByClickingOutside(event, modal, modalContent);
+        });
+    }, 500);
 }
 
 async function dunno() {
