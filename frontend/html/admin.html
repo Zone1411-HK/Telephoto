@@ -11,6 +11,7 @@
 
         <!--? CSS -->
         <link href="/css/anim.css" rel="stylesheet" />
+        <link href="/css/util.css" rel="stylesheet" />
         <link href="/css/AdminPage/adminColors.css" rel="stylesheet" />
         <link href="/css/AdminPage/admin.css" rel="stylesheet" />
         <link rel="stylesheet" href="node/leaflet/dist/leaflet.css" />
@@ -191,9 +192,9 @@
                     </div>
                     <div id="userTrackerTimes"></div>
                 </div>
-                <div id="nav">
+                <div id="navAdmin">
                     <span class="navTitle">Admin oldal elhagyása</span>
-                    <a href="/" class="navButton"
+                    <a href="/" class="navButtonAdmin"
                         ><svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
@@ -207,7 +208,7 @@
                         </svg>
                         <span>Főoldal</span>
                     </a>
-                    <a href="/map" class="navButton"
+                    <a href="/map" class="navButtonAdmin"
                         ><svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
@@ -221,7 +222,7 @@
                             <line x1="16" y1="6" x2="16" y2="22"></line></svg
                         ><span>Térkép</span></a
                     >
-                    <a href="/profile" class="navButton" id="profilGomb"
+                    <a href="/profile" class="navButtonAdmin" id="profilGomb"
                         ><svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
@@ -237,11 +238,25 @@
                 </div>
             </div>
             <div id="adminContent">
-                <div id="adminTitleMobile"><h2>Magyar Péter</h2></div>
+                <div id="adminTitleMobile"><h2></h2></div>
                 <div class="adminPanel" id="profiles">
                     <div class="adminPanelHeader">
-                        <button type="button" class="back" id="profileBack">
-                            <img src="/images/backDark.svg" />
+                        <button type="button" class="back hidden" id="profileBack">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="#314b49ff"
+                                stroke-width="3"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="feather feather-corner-down-left"
+                            >
+                                <polyline points="9 10 4 15 9 20"></polyline>
+                                <path d="M20 4v7a4 4 0 0 1-4 4H4"></path>
+                            </svg>
                         </button>
                         <h3>Profilok</h3>
                     </div>
@@ -349,8 +364,22 @@
 
                 <div class="adminPanel" id="posts">
                     <div class="adminPanelHeader">
-                        <button type="button" class="back" id="postBack">
-                            <img src="/images/backDark.svg" />
+                        <button type="button" class="back hidden" id="postBack">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="#314b49ff"
+                                stroke-width="3"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="feather feather-corner-down-left"
+                            >
+                                <polyline points="9 10 4 15 9 20"></polyline>
+                                <path d="M20 4v7a4 4 0 0 1-4 4H4"></path>
+                            </svg>
                         </button>
                         <h3>Posztok</h3>
                     </div>
@@ -379,9 +408,7 @@
                         <div id="openedPost">
                             <div id="postContent">
                                 <div id="postPictureSlideshow">
-                                    <div id="slideshowLeft">
-                                        <img src="/images/arrow-left.svg" />
-                                    </div>
+                                    <div id="slideshowLeft" class="previous"><</div>
                                     <div id="slideshowContent">
                                         <img
                                             src="/images/placeholder1.jpg"
@@ -390,9 +417,7 @@
                                         <img src="/images/placeholder2.gif" class="pictures" />
                                         <img src="/images/test.png" class="pictures" />
                                     </div>
-                                    <div id="slideshowRight">
-                                        <img src="/images/arrow-right.svg" />
-                                    </div>
+                                    <div id="slideshowRight" class="next">></div>
                                 </div>
                                 <div id="postDatas">
                                     <div id="postId">Azonosító: #1</div>
@@ -497,7 +522,26 @@
                 </div>
 
                 <div class="adminPanel" id="comments">
-                    <div class="adminPanelHeader"><h3>Kommentek</h3></div>
+                    <div class="adminPanelHeader">
+                        <button type="button" class="back hidden" id="commentBack">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="#314b49ff"
+                                stroke-width="3"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="feather feather-corner-down-left"
+                            >
+                                <polyline points="9 10 4 15 9 20"></polyline>
+                                <path d="M20 4v7a4 4 0 0 1-4 4H4"></path>
+                            </svg>
+                        </button>
+                        <h3>Kommentek</h3>
+                    </div>
                     <div class="adminPanelContent">
                         <div class="tableWrapper" id="commentsTableDiv">
                             <table id="commentsTable">
@@ -568,6 +612,161 @@
                 </div>
             </div>
             <nav id="navMobile">
+                <div class="svgTitle">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-shield"
+                    >
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                </div>
+                <a href="#profiles" class="mobileIcon">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-user"
+                    >
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle></svg
+                ></a>
+                <a href="#posts" class="mobileIcon">
+                    <svg
+                        width="16"
+                        height="15.999999"
+                        viewBox="0 0 4.2333332 4.233333"
+                        version="1.1"
+                        id="svg1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:svg="http://www.w3.org/2000/svg"
+                    >
+                        <defs id="defs1" />
+                        <g id="layer1">
+                            <path
+                                id="rect1"
+                                style="
+                                    fill: #ffffff;
+                                    fill-opacity: 1;
+                                    stroke: none;
+                                    stroke-width: 0.466676;
+                                    stroke-linecap: butt;
+                                    stroke-linejoin: round;
+                                    stroke-miterlimit: 0;
+                                    stroke-dasharray: none;
+                                    stroke-opacity: 1;
+                                    paint-order: stroke fill markers;
+                                "
+                                d="M 0.33331299,0 C 0.14879159,0 0,0.14879159 0,0.33331299 V 3.9000203 c 0,0.1845214 0.14879159,0.333313 0.33331299,0.333313 H 3.9000203 c 0.1845214,0 0.333313,-0.1487916 0.333313,-0.333313 V 0.33331299 C 4.2333333,0.14879159 4.0845417,0 3.9000203,0 Z M 1.1937256,0.52916667 h 1.8458821 c 0.221586,0 0.3999756,0.17838958 0.3999756,0.39997558 V 1.7166911 c 0,0.221586 -0.1783896,0.3999756 -0.3999756,0.3999756 H 1.1937256 C 0.97213958,2.1166667 0.79375,1.9382771 0.79375,1.7166911 V 0.92914225 c 0,-0.221586 0.17838958,-0.39997558 0.3999756,-0.39997558 z M 0.94361165,2.6458333 H 3.2897217 c 0.0831,0 0.1498616,0.059002 0.1498616,0.1322917 0,0.07329 -0.066762,0.1322917 -0.1498616,0.1322917 H 0.94361165 c -0.0831,0 -0.14986165,-0.059002 -0.14986165,-0.1322917 0,-0.07329 0.0667617,-0.1322917 0.14986165,-0.1322917 z m -0.037207,0.396875 H 2.6654704 c 0.062325,0 0.1126546,0.05033 0.1126546,0.1126547 v 0.039274 c 0,0.062325 -0.05033,0.1126547 -0.1126546,0.1126547 H 0.90640462 C 0.84407962,3.3072917 0.79375,3.2569621 0.79375,3.194637 V 3.155363 c 0,-0.062325 0.0503296,-0.1126547 0.11265465,-0.1126547 z m 0.0222209,0.396875 H 3.0401245 c 0.07479,0 0.1348755,0.059002 0.1348755,0.1322917 0,0.07329 -0.060086,0.1322917 -0.1348755,0.1322917 H 0.92862549 c -0.07479,0 -0.13487549,-0.059002 -0.13487549,-0.1322917 0,-0.07329 0.0600855,-0.1322917 0.13487555,-0.1322917 z"
+                            />
+                        </g>
+                    </svg>
+                </a>
+                <a href="#comments" class="mobileIcon">
+                    <svg
+                        width="20"
+                        height="19.999859"
+                        viewBox="0 0 20 19.999859"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-message-square"
+                        version="1.1"
+                        id="svg1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:svg="http://www.w3.org/2000/svg"
+                    >
+                        <defs id="defs1" />
+                        <path
+                            d="m 19,13 a 2,2 0 0 1 -2,2 H 5 L 1,19 V 3 A 2,2 0 0 1 3,1 h 14 a 2,2 0 0 1 2,2 z"
+                            id="path1"
+                            style="fill: none; fill-opacity: 1; stroke: #ffffff; stroke-opacity: 1"
+                        />
+                        <rect
+                            style="
+                                fill: #ffffff;
+                                fill-opacity: 1;
+                                stroke: none;
+                                stroke-width: 95.7427;
+                                stroke-miterlimit: 10;
+                                stroke-dasharray: none;
+                                stroke-opacity: 1;
+                                paint-order: stroke fill markers;
+                            "
+                            id="rect1"
+                            width="11"
+                            height="1.9641944"
+                            x="5.25"
+                            y="3.5"
+                            rx="0.91666669"
+                        />
+                        <rect
+                            style="
+                                fill: #ffffff;
+                                fill-opacity: 1;
+                                stroke: none;
+                                stroke-width: 95.7424;
+                                stroke-miterlimit: 10;
+                                stroke-dasharray: none;
+                                stroke-opacity: 1;
+                                paint-order: stroke fill markers;
+                            "
+                            id="rect1-8"
+                            width="11"
+                            height="1.9641944"
+                            x="5.25"
+                            y="7"
+                            rx="0.91666681"
+                        />
+                        <rect
+                            style="
+                                fill: #ffffff;
+                                fill-opacity: 1;
+                                stroke: none;
+                                stroke-width: 95.7427;
+                                stroke-miterlimit: 10;
+                                stroke-dasharray: none;
+                                stroke-opacity: 1;
+                                paint-order: stroke fill markers;
+                            "
+                            id="rect1-5"
+                            width="11"
+                            height="1.9641944"
+                            x="5.25"
+                            y="10.5"
+                            rx="0.91666669"
+                        />
+                    </svg>
+                </a>
+                <div id="navMobileDivider"></div>
+                <div class="svgTitle">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-external-link"
+                    >
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                </div>
                 <a href="/" class="mobileIcon">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -595,7 +794,7 @@
                         <line x1="16" y1="6" x2="16" y2="22"></line>
                     </svg>
                 </a>
-                <a href="/profile" class="mobileIcon">
+                <a id="mobileProfilGomb" href="/profile" class="mobileIcon">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -610,21 +809,6 @@
                 </a>
             </nav>
         </div>
-
-        <nav id="navbar">
-            <a class="navButton" href="#profiles">
-                <img src="/images/user.svg" class="navButtonSVG" alt="profilok" />
-            </a>
-            <a class="navButton" href="#posts">
-                <img src="/images/post.svg" class="navButtonSVG" alt="posztok" />
-            </a>
-            <a class="navButton" href="#comments">
-                <img src="/images/comment.svg" class="navButtonSVG" alt="kommentek" />
-            </a>
-            <a class="navButton" href="#reports">
-                <img src="/images/flag.svg" class="navButtonSVG" alt="jelentések" />
-            </a>
-        </nav>
 
         <div id="deleteConfirmModal" class="customModal">
             <div class="customModalContent">

@@ -37,9 +37,9 @@ function scrollHorizontal(e) {
 
     if (matchMedia.matches && j == stopScrollClasses.length) {
         if (e.deltaY > 0) {
-            this.scrollLeft += 10500;
+            this.scrollLeft += 700;
         } else {
-            this.scrollLeft -= 10500;
+            this.scrollLeft -= 700;
         }
     }
     //this.window.scrollTo(this.window.y)
@@ -49,6 +49,8 @@ window.addEventListener('resize', () => {
     let item = document.getElementById('posts-container');
     if (matchMedia.matches) {
         item.addEventListener('wheel', scrollHorizontal);
+        document.getElementById('mobileSort').classList.add('hidden');
+        document.getElementById('openSort').dataset.opened = 'false';
     } else {
         item.removeEventListener('wheel', scrollHorizontal);
     }

@@ -27,6 +27,7 @@ async function startUp() {
                 let profileURL = new URL('/profile', 'http://127.0.0.1:3000/');
                 profileURL.searchParams.set('username', Result);
                 document.getElementById('profilGomb').href = profileURL;
+                document.getElementById('mobileProfilGomb').href = profileURL;
             }
 
             let randomPlacesResponse = await GetMethodFetch('/api/randomPlaces');
