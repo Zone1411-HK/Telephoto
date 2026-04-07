@@ -175,7 +175,7 @@ form {
 
 .disabledButton {
     filter: brightness(85%) !important;
-    cursor: not-allowed;
+    cursor: not-allowed !important;
 }
 
 .postSearchWrapper {
@@ -550,16 +550,17 @@ form {
 }
 
 #uploadModalContent {
-    width: 60vw;
-    height: 85vh;
+    width: 40vw;
+    height: 90vh;
     border-radius: 20px;
-    background-color: var(--Primary);
+    background-color: var(--Post);
     display: flex;
     flex-direction: column;
     align-items: center;
     color: var(--PostDark);
     padding: 2vh 2vw 2vh 2vw;
     font-weight: 350;
+    box-shadow: 0 0 15px 5px var(--PostDark);
 }
 
 #postUploadTitle {
@@ -567,7 +568,7 @@ form {
     font-weight: 400;
     height: 10%;
     width: 100%;
-    border-bottom: 1px solid var(--PrimaryAccent);
+    border-bottom: 1px solid var(--PostAccent);
     margin: 0;
     display: flex;
     flex-direction: row;
@@ -577,12 +578,12 @@ form {
 
 #uploadForm {
     height: 90%;
-    gap: 3%;
+    gap: 1%;
     width: 100%;
     padding-top: 1%;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: var(--PrimaryAccent) var(--Primary);
+    scrollbar-color: var(--PostAccent) var(--Post);
 }
 
 #fileUpload {
@@ -617,17 +618,16 @@ form {
 
 .uploadFileLabel {
     width: 30%;
-    height: 7rem;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
 }
 
 #uploadFileLabelText {
-    height: 3rem;
-    border: 1px solid var(--PrimaryAccent);
+    height: 100%;
+    border: 1px solid var(--PostAccent);
     width: 100%;
     border-radius: 8px;
     transition: 0.25s;
@@ -648,11 +648,19 @@ form {
 #tempSlideshowWrapper {
     display: flex;
     flex-direction: row;
-    width: 70%;
-    height: 100%;
-    min-height: 100%;
-    border: 1px solid var(--PrimaryAccent);
+    width: 100%;
+    height: 40%;
+    min-height: 40%;
+    max-height: 40%;
+    border: 1px solid var(--PostAccent);
     border-radius: 3px;
+}
+
+#uploadLocationWrapper {
+    display: flex;
+    flex-direction: row;
+    height: 10%;
+    gap: 20px;
 }
 
 #tempSlideshowWrapper .postImages {
@@ -685,27 +693,28 @@ form {
 }
 
 .uploadDescription span {
-    flex: 1 1 0;
+    height: 2rem;
     font-size: 1.25rem;
     font-weight: 500;
     width: fit-content;
 }
 
 .uploadTags span {
-    height: 25%;
+    height: 2rem;
     font-size: 1.25rem;
     font-weight: 500;
     width: fit-content;
 }
 
 .uploadDescription textarea {
-    flex: 3 3 0;
+    height: auto;
+    flex: 1 1 0;
     font-size: 1rem;
     resize: none;
     outline: none;
     padding: 10px 50px 10px 10px;
     border-radius: 8px;
-    border: 1px solid var(--PrimaryAccent);
+    border: 1px solid var(--PostAccent);
     background-color: var(--PostLight);
     transition: 0.25s;
     color: var(--PostDark);
@@ -723,10 +732,11 @@ form {
 }
 
 #tagWrapper {
-    height: 75%;
-    max-height: 75%;
+    flex: 1 1 0;
+    height: auto;
+    max-height: calc(100% - 2rem);
     padding: 8px;
-    border: 1px solid var(--PrimaryAccent);
+    border: 1px solid var(--PostAccent);
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -739,7 +749,7 @@ form {
     height: 30%;
     min-height: 1.5rem;
     font-size: 1rem;
-    border: 1px solid var(--PrimaryAccent);
+    border: 1px solid var(--PostAccent);
     background-color: var(--PostLight);
     padding-left: 5px;
     border-radius: 5px;
@@ -755,7 +765,7 @@ form {
     flex-wrap: wrap;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: var(--PrimaryAccent) var(--Primary);
+    scrollbar-color: var(--PostAccent) var(--Post);
     justify-content: center;
     row-gap: 2px;
     column-gap: 5px;
@@ -765,7 +775,7 @@ form {
     height: 1.75rem;
     font-size: 1rem;
     width: fit-content;
-    border: 1px solid var(--PrimaryAccent);
+    border: 1px solid var(--PostAccent);
     background-color: var(--PostLight);
     color: var(--PostDark);
     display: flex;
@@ -785,30 +795,34 @@ form {
 
 .uploadDescription textarea:focus,
 #uploadTags:focus {
-    box-shadow: 0 0 2px 1px var(--PrimaryAccent);
+    box-shadow: 0 0 2px 1px var(--PostAccent);
 }
 
 .uploadLocation {
     display: flex;
-    flex-direction: column;
-    width: 50%;
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+    gap: 10px;
+    flex: 1 1 0;
 }
 
 .uploadLocation span {
     font-size: 1.25rem;
     font-weight: 500;
-    flex: 1 1 0;
+    width: fit-content;
 }
 
 .uploadLocation input {
     flex: 1 1 0;
+    width: 100%;
     outline: none;
     background-color: var(--PostLight);
-    border: 1px solid var(--PrimaryAccent);
+    border: 1px solid var(--PostAccent);
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 1.25rem;
     padding: 5px 5px 5px 10px;
-
+    height: 100%;
     color: var(--PostDark);
 }
 
@@ -816,7 +830,7 @@ form {
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-around;
     gap: 3%;
 }
 
@@ -826,7 +840,7 @@ form {
     height: 75%;
     border-radius: 8px;
     background-color: var(--PostLight);
-    border: 1px solid var(--PrimaryAccent);
+    border: 1px solid var(--PostAccent);
     color: var(--PostDark);
     filter: brightness(100%);
     transition: 0.25s;
@@ -912,5 +926,9 @@ form {
 
     #uploadFileLabelText {
         font-size: 1rem;
+    }
+
+    .uploadLocation span {
+        font-size: 0.9rem;
     }
 }

@@ -59,7 +59,7 @@ async function addEventListeners() {
             }
         }
     }
-
+    document.getElementById('mobileUpload').addEventListener('click', openUploadModal);
     document.getElementById('openPostUpload').addEventListener('click', openUploadModal);
 }
 

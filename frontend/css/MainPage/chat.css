@@ -380,13 +380,13 @@
 #newChatContainer {
     width: 35vw;
     height: 80vh;
-    background-color: var(--Primary);
+    background-color: var(--Post);
     display: flex;
     flex-direction: column;
     border-radius: 15px;
     gap: 15px;
     align-items: center;
-    box-shadow: 0 0 10px 2px var(--PrimaryDark3);
+    box-shadow: 0 0 10px 2px var(--PostDark);
 }
 
 #newChatForm {
@@ -397,21 +397,21 @@
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    gap: 2%;
+    gap: 1%;
 }
 
 #newChatImgWrapper {
-    height: 66%;
+    height: 50%;
     aspect-ratio: 1/1;
     filter: brightness(100%);
-    background-color: var(--Primary);
+    background-color: var(--Post);
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     transition: 0.25s;
-    border: 3px var(--PrimaryAccent) solid;
+    border: 2px var(--PostAccent) solid;
 }
 
 #newChatImgWrapper:hover {
@@ -419,18 +419,18 @@
 }
 
 #newChatImgLabel span {
-    height: 33%;
+    height: 50%;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 66%;
+    width: 75%;
     font-size: 1.5rem;
     transition: 0.25s;
-    border-radius: 8px;
+    border-radius: 5px;
     background-color: var(--PostLight);
-    border: 1px solid var(--PrimaryAccent);
-
+    border: 1px solid var(--PostAccent);
+    max-height: 4rem;
     filter: brightness(100%);
     padding-left: 10px;
     padding-right: 10px;
@@ -460,26 +460,28 @@
     flex-direction: column;
     align-items: center;
     gap: 10%;
-    color: var(--PrimaryDark3);
+    color: var(--PostDark);
 }
 
 #newChatName {
-    width: 66%;
-    border: 1px solid var(--PrimaryAccent);
+    width: 75%;
+    border: 1px solid var(--PostAccent);
     background-color: var(--PostLight);
-    border-radius: 8px;
+    border-radius: 5px;
     flex: 1 1 0;
+    max-height: 4rem;
     outline: none;
     padding-left: 10px;
     font-size: 1.5rem;
-    color: var(--PrimaryDark3);
+    color: var(--PostDark);
 }
 
 #newChatUsers {
     flex: 6 6 0;
-    width: 90%;
+    width: 75%;
     display: flex;
     flex-direction: column;
+    padding-top: 3%;
 }
 
 #newChatUserWrapper {
@@ -494,12 +496,12 @@
 #newChatUserInput {
     flex: 1 1 0;
     outline: none;
-    border: 1px solid var(--PrimaryAccent);
+    border: 1px solid var(--PostAccent);
     background-color: var(--PostLight);
-    color: var(--PrimaryDark3);
+    color: var(--PostDark);
     padding-left: 10px;
     font-size: 1.5rem;
-    border-radius: 8px;
+    border-radius: 5px;
 }
 
 #newChatUserSuggestionList,
@@ -508,12 +510,12 @@
     scrollbar-color: var(--PostAccent) var(--Post);
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--PrimaryAccent);
+    border: 1px solid var(--PostAccent);
     background-color: var(--PostLight);
     flex: 1 1 0;
     max-height: 48.5%;
     width: calc(100% - 20px);
-    border-radius: 1px;
+    border-radius: 3px;
 }
 
 #newChatAddedUsers {
@@ -530,10 +532,10 @@
     flex-direction: row;
     gap: 10px;
     font-size: 1rem;
-    color: var(--PrimaryDark3);
+    color: var(--PostDark);
     background-color: var(--PostLight);
     align-items: center;
-    border-bottom: 1px solid var(--PrimaryAccent);
+    border-bottom: 1px solid var(--PostAccent);
     transition: 0.25s;
     filter: brightness(100%);
 }
@@ -581,7 +583,7 @@
     background-color: var(--PostLight);
     border: 1px solid var(--PostAccent);
     transition: 0.25s;
-    color: var(--PrimaryDark3);
+    color: var(--PostDark);
 }
 
 #newChatCreate:hover,

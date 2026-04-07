@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(Latitude + ' ' + Longitude);
     });
     */
-    document.getElementById('uploadPost').addEventListener('click', uploadPost);
     document.getElementById('cancelPost').addEventListener('click', closePost);
     document.getElementById('uploadFile').addEventListener('change', preLoadFiles);
     document
@@ -52,6 +51,8 @@ async function preLoadFiles() {
 
     uploadFeedback.innerText = '';
     if (rightFileFormats(files) && files.length > 0) {
+        document.getElementById('uploadPost').addEventListener('click', uploadPost);
+        document.getElementById('uploadPost').classList.remove('disabledButton');
         let renamedFiles = [];
         let links = [];
         for (let file of files) {
@@ -231,6 +232,9 @@ function closePost() {
         document.getElementById('forTags').replaceChildren();
 
         document.getElementById('descriptionLength').innerText = '0/500';
+
+        document.getElementById('uploadPost').removeEventListener('click', uploadPost);
+        document.getElementById('uploadPost').classList.add('disabledButton');
 
         form.reset();
     }, 500);

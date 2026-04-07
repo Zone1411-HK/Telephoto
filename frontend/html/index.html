@@ -326,7 +326,10 @@
             <div id="uploadModalContent">
                 <h2 id="postUploadTitle">Poszt feltöltés</h2>
                 <form enctype="multipart/form-data" id="uploadForm">
-                    <div id="fileUpload">
+                    <div id="tempSlideshowWrapper">
+                        <div class="uploadInfo">Itt láthatja a feltöltött képeket</div>
+                    </div>
+                    <div id="uploadLocationWrapper">
                         <label for="uploadFile" class="uploadFileLabel">
                             <div id="uploadFileLabelText">Fájl feltöltése</div>
                             <div id="uploadFeedback"></div>
@@ -339,11 +342,6 @@
                                 hidden
                             />
                         </label>
-                        <div id="tempSlideshowWrapper">
-                            <div class="uploadInfo">Itt láthatja a feltöltött képeket</div>
-                        </div>
-                    </div>
-                    <div id="location">
                         <label for="uploadLocation" class="uploadLocation">
                             <span>Helyszín:</span>
                             <input
@@ -354,6 +352,7 @@
                             />
                         </label>
                     </div>
+
                     <div id="descriptionTags">
                         <label for="uploadDescription" class="uploadDescription"
                             ><span>Leírás:</span>
@@ -378,10 +377,11 @@
                             </div>
                         </label>
                     </div>
-
                     <div id="cancelUpload">
                         <button type="button" id="cancelPost">Elvetés</button>
-                        <button type="button" id="uploadPost">Feltöltés</button>
+                        <button type="button" id="uploadPost" class="disabledButton">
+                            Feltöltés
+                        </button>
                     </div>
                 </form>
             </div>

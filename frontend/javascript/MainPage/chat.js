@@ -289,6 +289,12 @@ function generateMessageInput() {
     textArea.rows = 1;
     textArea.maxLength = 200;
     textArea.addEventListener('input', expandUpwards);
+    textArea.addEventListener('keydown', function (e) {
+        if (e.key == 'Enter') {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
 
     const send = document.createElement('button');
     send.type = 'button';
@@ -319,11 +325,6 @@ async function sendMessage() {
             chatId: chatId,
             username: username
         });
-
-        if ((response.Status = 'Failed')) {
-            //TODO Hiba kezelés
-        } else {
-        }
     }
 }
 
