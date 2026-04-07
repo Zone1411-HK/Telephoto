@@ -322,9 +322,73 @@
             </label>
         </div>
 
-        <div id="uploadModal" class="hidden">
+        <!--div id="uploadModal" class="hidden">
             <div id="uploadModalContent">
                 <h2 id="postUploadTitle">Poszt feltöltés</h2>
+                <form enctype="multipart/form-data" id="uploadForm">
+                    <div id="tempSlideshowWrapper">
+                        <div class="uploadInfo">Itt láthatja a feltöltött képeket</div>
+                    </div>
+                    <div id="uploadLocationWrapper">
+                        <label for="uploadFile" class="uploadFileLabel">
+                            <div id="uploadFileLabelText">Fájl feltöltése</div>
+                            <div id="uploadFeedback"></div>
+                            <input
+                                type="file"
+                                id="uploadFile"
+                                accept=".mp4, .avi, .jpg, .jpeg, .jfif, .png, .gif, .webp, .hevc"
+                                name="uploadFile"
+                                multiple
+                                hidden
+                            />
+                        </label>
+                        <label for="uploadLocation" class="uploadLocation">
+                            <span>Helyszín:</span>
+                            <input
+                                type="text"
+                                name="uploadLocation"
+                                id="uploadLocation"
+                                placeholder="Ide írhatja a helyszínt"
+                            />
+                        </label>
+                    </div>
+
+                    <div id="descriptionTags">
+                        <label for="uploadDescription" class="uploadDescription"
+                            ><span>Leírás:</span>
+                            <textarea
+                                id="uploadDescription"
+                                name="uploadDescription"
+                                placeholder="Ide írhatja a leírást"
+                                maxlength="500"
+                            ></textarea>
+                            <div id="descriptionLength">0/500</div>
+                        </label>
+                        <label for="uploadTags" class="uploadTags"
+                            ><span>Tagek:</span>
+                            <div id="tagWrapper">
+                                <input
+                                    id="uploadTags"
+                                    name="uploadTags"
+                                    placeholder="Nyomjon enter-t a tag hozzáadásához"
+                                    maxlength="50"
+                                />
+                                <div id="forTags"></div>
+                            </div>
+                        </label>
+                    </div>
+                    <div id="cancelUpload">
+                        <button type="button" id="cancelPost">Elvetés</button>
+                        <button type="button" id="uploadPost" class="disabledButton">
+                            Feltöltés
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div-->
+        <div id="uploadModal" class="">
+            <div id="uploadModalContent">
+                <div id="cameraDecoration">Telephoto</div>
                 <form enctype="multipart/form-data" id="uploadForm">
                     <div id="tempSlideshowWrapper">
                         <div class="uploadInfo">Itt láthatja a feltöltött képeket</div>
