@@ -44,6 +44,12 @@ function addEventListenersToElements() {
     });
     document.getElementById('closeComments').addEventListener('click', closeComments);
     document.getElementById('commentSvgWrapper').addEventListener('click', sendComment);
+    document.getElementById('commentTextarea').addEventListener('keypress', function (e) {
+        if (e.key == 'Enter') {
+            e.preventDefault();
+            sendComment();
+        }
+    });
     document.getElementById('openSort').addEventListener('click', toggleSort);
 }
 
@@ -218,7 +224,7 @@ function appendLoadMore(areThereMorePosts) {
         loadMore.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
         loadMore.addEventListener('click', loadMorePost);
     } else {
-        loadMore.innerText = 'Úgy néz ki a végére értél';
+        loadMore.innerText = 'Úgy néz ki, a végére értél';
     }
     document.getElementById('posts-container').appendChild(loadMore);
 }

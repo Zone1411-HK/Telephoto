@@ -116,7 +116,7 @@
     flex-direction: column;
     align-items: center;
     flex: 1 1 0;
-    max-height: 15vh;
+    max-height: 33vh;
     border-bottom: 1px solid white;
     gap: 5px;
 }
@@ -157,6 +157,7 @@
 
 .navButtonAdmin {
     flex: 1 1 0;
+    max-height: 25%;
     transition: 0.25s;
     width: 100%;
     text-align: start;
@@ -198,7 +199,8 @@
     flex-direction: column;
     gap: 5px;
     width: 90%;
-    height: 30vh;
+    flex: 1 1 0;
+    max-height: 30vh;
     margin-top: 25px;
     overflow-y: auto;
 }
@@ -1210,6 +1212,12 @@ tr:hover td {
     height: 100%;
     width: 1px;
     background-color: white;
+}
+
+.next,
+.previous {
+    background-color: var(--PrimaryLight);
+    border-radius: inherit;
 }
 
 @media (max-width: 1000px) {

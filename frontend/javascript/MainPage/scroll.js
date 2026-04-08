@@ -49,9 +49,12 @@ window.addEventListener('resize', () => {
     let item = document.getElementById('posts-container');
     if (matchMedia.matches) {
         item.addEventListener('wheel', scrollHorizontal);
+        item.removeEventListener('wheel', hideTitleMobile);
+
         document.getElementById('mobileSort').classList.add('hidden');
         document.getElementById('openSort').dataset.opened = 'false';
     } else {
         item.removeEventListener('wheel', scrollHorizontal);
+        item.addEventListener('wheel', hideTitleMobile);
     }
 });

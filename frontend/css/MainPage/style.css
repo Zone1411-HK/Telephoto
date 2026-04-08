@@ -1000,4 +1000,13 @@ form {
     .uploadLocation span {
         font-size: 0.9rem;
     }
+
+    .loadMorePost {
+        height: 40%;
+    }
+
+    .loadMorePost svg {
+        transform: rotateZ(90deg);
+        width: 80vw;
+    }
 }

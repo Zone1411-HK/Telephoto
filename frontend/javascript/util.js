@@ -412,7 +412,7 @@ function generateUserRow(name, profilePicture) {
     username.classList.add('postUsername');
     username.innerText = name;
     username.dataset.username = name;
-    username.addEventListener('click', openProfile);
+    imgWrapper.appendChild(username);
 
     let report = document.createElement('div');
     report.classList.add('postUserReport');
@@ -420,7 +420,6 @@ function generateUserRow(name, profilePicture) {
     report.addEventListener('click', reportUser);
 
     wrapper.appendChild(imgWrapper);
-    wrapper.appendChild(username);
     wrapper.appendChild(report);
 
     return wrapper;

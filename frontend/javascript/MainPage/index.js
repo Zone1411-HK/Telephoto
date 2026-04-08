@@ -82,7 +82,9 @@ async function dunno() {
         type: 'reset',
         offset: 50
     });
-    document.querySelector('.activeSort').classList.remove('activeSort');
+    for (const element of document.querySelectorAll('.activeSort')) {
+        element.classList.remove('activeSort');
+    }
     this.classList.add('activeSort');
     document.getElementById('posts-container').replaceChildren();
     randomPlaceSort(this.value);

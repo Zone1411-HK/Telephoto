@@ -7,7 +7,7 @@ let matchMedia = window.matchMedia('(width > 768px)');
 socket.emit('requestActiveUsers');
 setInterval(() => {
     socket.emit('requestActiveUsers');
-}, 1500);
+}, 30000);
 
 document.addEventListener('DOMContentLoaded', () => {
     startUp();
@@ -39,7 +39,6 @@ async function startUp() {
             if (Status == 'Success' && exists) {
                 let profileURL = new URL('/profile', 'http://127.0.0.1:3000/');
                 profileURL.searchParams.set('username', Result);
-                document.getElementById('profilGomb').href = profileURL;
                 document.getElementById('mobileProfilGomb').href = profileURL;
                 document.getElementById('adminUsername').innerText = Result;
             }
@@ -368,7 +367,7 @@ async function openProfile() {
         document.getElementById('profileBiography').value = ProfileData[0].biography;
         if (ProfileData[0].profile_picture_link != null) {
             document.getElementById('profilePic').src =
-                '/uploads/' + ProfileData[0].profile_picture_link;
+                '/profile_images/' + ProfileData[0].profile_picture_link;
         } else {
             document.getElementById('profilePic').src = '/images/defaultProfile.svg';
         }
@@ -897,9 +896,9 @@ socket.on('responseActiveUsers', (activeUsers) => {
 
 function convertToTime(unix) {
     let date = new Date(unix);
-    let hour = date.getUTCHours(date);
-    hour++;
-    let minute = date.getUTCMinutes(date).toString();
+    let hour = date.getHours(date);
+
+    let minute = date.getMinutes(date).toString();
     if (minute.length == 1) {
         minute = '0' + minute;
     }
