@@ -66,6 +66,7 @@ async function addEventListeners() {
 function openUploadModal() {
     let modal = document.getElementById('uploadModal');
     let modalContent = document.getElementById('uploadModalContent');
+    let flash = document.getElementById('flash');
     modal.classList.remove('hidden');
     modalContent.style.animation = 'fadeInUp 0.5s forwards';
     setTimeout(() => {

@@ -534,7 +534,7 @@ form {
 #openPostUpload:hover {
     filter: brightness(85%);
 }
-/*
+
 #uploadModal {
     width: 100vw;
     height: 100vh;
@@ -546,454 +546,84 @@ form {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    padding-top: 5vh;
 }
 
 #uploadModalContent {
-    width: 40vw;
-    height: 90vh;
-    border-radius: 20px;
-    background-color: var(--Post);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: var(--PostDark);
-    padding: 2vh 2vw 2vh 2vw;
-    font-weight: 350;
-    box-shadow: 0 0 15px 5px var(--PostDark);
-}
-
-#postUploadTitle {
-    font-size: 2rem;
-    font-weight: 400;
-    height: 10%;
-    width: 100%;
-    border-bottom: 1px solid var(--PostAccent);
-    margin: 0;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-}
-
-#uploadForm {
-    height: 90%;
-    gap: 1%;
-    width: 100%;
-    padding-top: 1%;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--PostAccent) var(--Post);
-}
-
-#fileUpload {
-    height: 45%;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 5%;
-}
-
-#descriptionTags {
-    height: 30%;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    gap: 2.5%;
-}
-
-#location {
-    height: 15%;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
-#cancelUpload {
-    height: 10%;
-    width: 100%;
-}
-
-.uploadFileLabel {
-    width: 30%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-#uploadFileLabelText {
-    height: 100%;
-    border: 1px solid var(--PostAccent);
-    width: 100%;
-    border-radius: 8px;
-    transition: 0.25s;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--PostLight);
-    font-size: 1.25rem;
-    text-align: center;
-    filter: brightness(100%);
-}
-
-#uploadFileLabelText:hover {
-    filter: brightness(85%);
-}
-
-#tempSlideshowWrapper {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 40%;
-    min-height: 40%;
-    max-height: 40%;
-    border: 1px solid var(--PostAccent);
-    border-radius: 3px;
-}
-
-#uploadLocationWrapper {
-    display: flex;
-    flex-direction: row;
-    height: 10%;
-    gap: 20px;
-}
-
-#tempSlideshowWrapper .postImages {
-    height: 100%;
-}
-
-#tempSlideshowWrapper .slideshowItem {
-    object-fit: contain;
-    max-height: 100%;
-}
-
-.uploadInfo {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-}
-
-.uploadDescription,
-.uploadTags {
-    height: 100%;
-    flex: 1 1 0;
-    display: flex;
-    flex-direction: column;
-    max-width: 48.5%;
+    margin-top: 10vh;
     position: relative;
-}
-
-.uploadDescription span {
-    height: 2rem;
-    font-size: 1.25rem;
-    font-weight: 500;
-    width: fit-content;
-}
-
-.uploadTags span {
-    height: 2rem;
-    font-size: 1.25rem;
-    font-weight: 500;
-    width: fit-content;
-}
-
-.uploadDescription textarea {
-    height: auto;
-    flex: 1 1 0;
-    font-size: 1rem;
-    resize: none;
-    outline: none;
-    padding: 10px 50px 10px 10px;
-    border-radius: 8px;
-    border: 1px solid var(--PostAccent);
-    background-color: var(--PostLight);
-    transition: 0.25s;
-    color: var(--PostDark);
-    scrollbar-width: thin;
-}
-
-#descriptionLength {
-    position: absolute;
-    bottom: 0;
-    right: 15px;
-    font-size: 0.9rem;
-    font-weight: 350;
-    user-select: none;
-    color: var(--PostDark);
-}
-
-#tagWrapper {
-    flex: 1 1 0;
-    height: auto;
-    max-height: calc(100% - 2rem);
-    padding: 8px;
-    border: 1px solid var(--PostAccent);
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-}
-
-#uploadTags {
-    width: 100%;
-    height: 30%;
-    min-height: 1.5rem;
-    font-size: 1rem;
-    border: 1px solid var(--PostAccent);
-    background-color: var(--PostLight);
-    padding-left: 5px;
-    border-radius: 5px;
-    outline: none;
-    color: var(--PostDark);
-}
-
-#forTags {
-    width: 95%;
-    height: 70%;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--PostAccent) var(--Post);
-    justify-content: center;
-    row-gap: 2px;
-    column-gap: 5px;
-}
-
-.addedTag {
-    height: 1.75rem;
-    font-size: 1rem;
-    width: fit-content;
-    border: 1px solid var(--PostAccent);
-    background-color: var(--PostLight);
-    color: var(--PostDark);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-    filter: brightness(100%);
-    transition: 0.25s;
-}
-
-.addedTag:hover {
-    filter: brightness(85%);
-}
-
-.uploadDescription textarea:focus,
-#uploadTags:focus {
-    box-shadow: 0 0 2px 1px var(--PostAccent);
-}
-
-.uploadLocation {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: auto;
-    gap: 10px;
-    flex: 1 1 0;
-}
-
-.uploadLocation span {
-    font-size: 1.25rem;
-    font-weight: 500;
-    width: fit-content;
-}
-
-.uploadLocation input {
-    flex: 1 1 0;
-    width: 100%;
-    outline: none;
-    background-color: var(--PostLight);
-    border: 1px solid var(--PostAccent);
-    border-radius: 8px;
-    font-size: 1.25rem;
-    padding: 5px 5px 5px 10px;
-    height: 100%;
-    color: var(--PostDark);
-}
-
-#cancelUpload {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    gap: 3%;
-}
-
-#cancelUpload button {
-    flex: 1 1 0;
-    max-width: 40%;
-    height: 75%;
-    border-radius: 8px;
-    background-color: var(--PostLight);
-    border: 1px solid var(--PostAccent);
-    color: var(--PostDark);
-    filter: brightness(100%);
-    transition: 0.25s;
-    font-size: 1.25rem;
-}
-
-#cancelUpload button:hover {
-    filter: brightness(85%);
-}
-
-*/
-
-/*?  ---------------------------------------- W I P --------------------------------------------- */
-
-#uploadModal {
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.8);
-    position: absolute;
-    z-index: 100;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    padding-top: 5vh;
-}
-
-#uploadModalContent {
-    width: 40vw;
-    height: 90vh;
+    width: 60vw;
+    height: 70vh;
     border-radius: 15px;
-    background-image:
-        -webkit-repeating-linear-gradient(
-            left,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0) 6%,
-            rgba(255, 255, 255, 0.1) 7.5%
-        ),
-        -webkit-repeating-linear-gradient(
-                left,
-                rgba(0, 0, 0, 0) 0%,
-                rgba(0, 0, 0, 0) 5%,
-                rgba(0, 0, 0, 0.03) 6.5%
-            ),
-        -webkit-repeating-linear-gradient(
-                left,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0) 3.2%,
-                rgba(255, 255, 255, 0.15) 5.2%
-            ),
-        linear-gradient(
-            180deg,
-            rgb(210, 210, 210) 0%,
-            rgb(230, 230, 230) 47%,
-            rgb(210, 210, 210) 53%,
-            rgb(199, 199, 199) 100%
-        );
+    background-color: rgb(208, 208, 218);
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: var(--PostDark);
-    font-weight: 350;
-    box-shadow: 0 0 15px 5px var(--PostDark);
-}
-
-#postUploadTitle {
-    font-size: 2rem;
-    font-weight: 400;
-    height: 10%;
-    width: 100%;
-    border-bottom: 1px solid var(--PostAccent);
-    margin: 0;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
     justify-content: center;
+    font-weight: 350;
+    box-shadow: 0 0 20px 5px rgb(58, 58, 58);
 }
 
 #cameraDecoration {
-    height: 35vh;
-    width: 5vw;
-    background-image:
-        -webkit-repeating-linear-gradient(
-            left,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0) 6%,
-            rgba(255, 255, 255, 0.1) 7.5%
-        ),
-        -webkit-repeating-linear-gradient(
-                left,
-                rgba(0, 0, 0, 0) 0%,
-                rgba(0, 0, 0, 0) 5%,
-                rgba(0, 0, 0, 0.03) 6.5%
-            ),
-        -webkit-repeating-linear-gradient(
-                left,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0) 3.2%,
-                rgba(255, 255, 255, 0.15) 5.2%
-            ),
-        linear-gradient(
-            180deg,
-            rgb(210, 210, 210) 0%,
-            rgb(230, 230, 230) 47%,
-            rgb(210, 210, 210) 53%,
-            rgb(199, 199, 199) 100%
-        );
+    height: 6vh;
+    width: 18vw;
+    background-color: rgb(208, 208, 218);
     position: absolute;
-    left: 25vw;
-    top: 27.5vh;
-    border-top-left-radius: 15px;
-    border-bottom-left-radius: 15px;
-    writing-mode: sideways-lr;
-    text-orientation: sideways-right;
+    top: -6vh;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    font-size: 2rem;
-    font-weight: 500;
+    font-size: clamp(1vw, 1.75rem, 2vw);
+    font-weight: 600;
     user-select: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    color: rgb(20, 10, 7);
+    -webkit-text-stroke: rgb(228, 228, 238) 3px;
+    paint-order: stroke fill;
 }
 #uploadForm {
-    height: 100%;
-    gap: 1%;
-    width: 85%;
+    margin-top: 5vh;
+    height: 90%;
+    gap: 2.5%;
+    width: 100%;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: var(--PostAccent) var(--Post);
-    padding-left: 3%;
-    padding-right: 3%;
+    scrollbar-color: rgb(208, 208, 218) black;
     background-image: url('/images/leather.png');
     background-color: black;
     background-position: center center;
     background-size: 300px 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: rgb(50, 50, 50);
+    paint-order: stroke fill;
+    font-size: 1.3rem;
+    font-weight: 400;
+    padding-top: 1.5%;
+    padding-bottom: 1.5%;
 }
 
 #fileUpload {
-    height: 45%;
+    flex: 5 5 0;
     width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 5%;
+    padding-left: 3%;
+    padding-right: 3%;
 }
 
 #descriptionTags {
-    height: 30%;
+    flex: 4 4 0;
     width: 100%;
     display: flex;
     flex-direction: row;
     gap: 2.5%;
+    padding-left: 3%;
+    padding-right: 3%;
 }
 
 #location {
@@ -1004,13 +634,9 @@ form {
     justify-content: center;
 }
 
-#cancelUpload {
-    height: 10%;
-    width: 100%;
-}
-
 .uploadFileLabel {
-    width: 30%;
+    flex: 1 1 0;
+    max-width: 40%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -1020,7 +646,8 @@ form {
 
 #uploadFileLabelText {
     height: 100%;
-    border: 1px solid var(--PostAccent);
+    border: 1px solid rgb(208, 208, 218);
+    box-shadow: 0 0 1px 2px rgb(108, 108, 118);
     width: 100%;
     border-radius: 8px;
     transition: 0.25s;
@@ -1028,8 +655,7 @@ form {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    background-color: var(--PostLight);
-    font-size: 1.25rem;
+    background-color: rgb(208, 208, 218);
     text-align: center;
     filter: brightness(100%);
 }
@@ -1041,19 +667,24 @@ form {
 #tempSlideshowWrapper {
     display: flex;
     flex-direction: row;
-    width: 100%;
-    height: 40%;
-    min-height: 40%;
-    max-height: 40%;
-    border: 1px solid var(--PostAccent);
+    width: 50%;
+    flex: 6 6 0;
+    min-height: 54.545%;
+    max-height: 54.545%;
+    border: 1px solid rgb(208, 208, 218);
+    box-shadow: 0 0 1px 2px rgb(108, 108, 118);
     border-radius: 3px;
 }
 
 #uploadLocationWrapper {
     display: flex;
     flex-direction: row;
-    height: 10%;
+    justify-content: center;
+    flex: 1 1 0;
+    width: 100%;
     gap: 20px;
+    padding-left: 3%;
+    padding-right: 3%;
 }
 
 #tempSlideshowWrapper .postImages {
@@ -1065,11 +696,10 @@ form {
     max-height: 100%;
 }
 
-#tempSlideshowWrapper .slideshow {
-    height: 100%;
-    aspect-ratio: 1/1;
-    clip-path: circle();
-    background-color: #212e00;
+#tempSlideshowWrapper .next,
+#tempSlideshowWrapper .previous {
+    background-color: rgb(208, 208, 218);
+    color: rgb(50, 50, 50);
 }
 
 .uploadInfo {
@@ -1079,7 +709,6 @@ form {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
 }
 
 .uploadDescription,
@@ -1094,31 +723,34 @@ form {
 
 .uploadDescription span {
     height: 2rem;
-    font-size: 1.25rem;
     font-weight: 500;
     width: fit-content;
+    color: rgb(208, 208, 218);
 }
 
 .uploadTags span {
     height: 2rem;
-    font-size: 1.25rem;
     font-weight: 500;
     width: fit-content;
+    color: rgb(208, 208, 218);
 }
 
 .uploadDescription textarea {
     height: auto;
     flex: 1 1 0;
-    font-size: 1rem;
+    font-size: 1.1rem;
     resize: none;
     outline: none;
     padding: 10px 50px 10px 10px;
     border-radius: 8px;
-    border: 1px solid var(--PostAccent);
-    background-color: var(--PostLight);
+    background-color: rgb(208, 208, 218);
+    border: 1px solid rgb(208, 208, 218);
+    box-shadow: 0 0 1px 2px rgb(108, 108, 118);
+    color: rgb(50, 50, 50);
+
     transition: 0.25s;
-    color: var(--PostDark);
     scrollbar-width: thin;
+    border: none;
 }
 
 #descriptionLength {
@@ -1128,7 +760,6 @@ form {
     font-size: 0.9rem;
     font-weight: 350;
     user-select: none;
-    color: var(--PostDark);
 }
 
 #tagWrapper {
@@ -1136,7 +767,9 @@ form {
     height: auto;
     max-height: calc(100% - 2rem);
     padding: 8px;
-    border: 1px solid var(--PostAccent);
+    border: 1px solid rgb(208, 208, 218);
+    box-shadow: 0 0 1px 2px rgb(108, 108, 118);
+
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -1149,12 +782,13 @@ form {
     height: 30%;
     min-height: 1.5rem;
     font-size: 1rem;
-    border: 1px solid var(--PostAccent);
-    background-color: var(--PostLight);
+    background-color: rgb(208, 208, 218);
     padding-left: 5px;
     border-radius: 5px;
     outline: none;
-    color: var(--PostDark);
+    border: 1px solid rgb(208, 208, 218);
+    box-shadow: 0 0 1px 2px rgb(108, 108, 118);
+    color: rgb(50, 50, 50);
 }
 
 #forTags {
@@ -1165,19 +799,18 @@ form {
     flex-wrap: wrap;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: var(--PostAccent) var(--Post);
+    scrollbar-color: rgb(108, 108, 118) rgb(208, 208, 218);
     justify-content: center;
     row-gap: 2px;
     column-gap: 5px;
+    padding-right: 5px;
 }
 
 .addedTag {
     height: 1.75rem;
     font-size: 1rem;
     width: fit-content;
-    border: 1px solid var(--PostAccent);
-    background-color: var(--PostLight);
-    color: var(--PostDark);
+    background-color: rgb(208, 208, 218);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -1195,7 +828,7 @@ form {
 
 .uploadDescription textarea:focus,
 #uploadTags:focus {
-    box-shadow: 0 0 2px 1px var(--PostAccent);
+    box-shadow: 0 0 2px 3px rgb(108, 108, 118);
 }
 
 .uploadLocation {
@@ -1205,55 +838,85 @@ form {
     width: auto;
     gap: 10px;
     flex: 1 1 0;
+    max-width: 60%;
+    background-color: rgb(208, 208, 218);
+    border: 1px solid rgb(208, 208, 218);
+    box-shadow: 0 0 1px 2px rgb(108, 108, 118);
+
+    border-radius: 5px;
+}
+
+.uploadLocation:focus-within {
+    box-shadow: 0 0 2px 3px rgb(108, 108, 118);
 }
 
 .uploadLocation span {
     font-size: 1.25rem;
     font-weight: 500;
-    width: fit-content;
+    flex: 1 1 0;
+    min-width: fit-content;
+    border-right: 1px solid rgb(108, 108, 118);
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 .uploadLocation input {
-    flex: 1 1 0;
-    width: 100%;
+    flex: 4 4 0;
     outline: none;
-    background-color: var(--PostLight);
-    border: 1px solid var(--PostAccent);
-    border-radius: 8px;
+    background-color: rgb(208, 208, 218);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
     font-size: 1.25rem;
     padding: 5px 5px 5px 10px;
     height: 100%;
-    color: var(--PostDark);
+    border: none;
+    color: rgb(50, 50, 50);
 }
 
 #cancelUpload {
+    background-color: rgb(208, 208, 218);
+    height: 7.5%;
     width: 100%;
     display: flex;
     flex-direction: row;
+    align-items: center;
     justify-content: space-around;
-    gap: 3%;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
 }
 
 #cancelUpload button {
     flex: 1 1 0;
-    max-width: 40%;
+    max-width: 33%;
     height: 75%;
-    border-radius: 8px;
-    background-color: var(--PostLight);
-    border: 1px solid var(--PostAccent);
-    color: var(--PostDark);
+    border-radius: 5px;
+    background-color: rgb(208, 208, 218);
+    border: none;
+    box-shadow: 0 0 2px 1px rgb(108, 108, 118);
+    color: rgb(50, 50, 50);
     filter: brightness(100%);
     transition: 0.25s;
     font-size: 1.25rem;
 }
 
 #cancelUpload button:hover {
-    filter: brightness(85%);
-} /*?  ---------------------------------------- W I P --------------------------------------------- */
+    filter: brightness(75%);
+}
 
 .invalid {
     border-color: var(--invalidRed) !important;
     color: var(--invalidRed) !important;
+}
+
+#flash {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 50;
+    background-color: white;
 }
 
 @media (max-width: 1000px) {

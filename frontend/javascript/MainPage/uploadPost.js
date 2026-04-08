@@ -175,7 +175,7 @@ async function uploadPost() {
             });
 
             if (createPostResponse.Success) {
-                closePost();
+                uploadClose();
             }
         } else {
             document.getElementById('uploadFileLabelText').classList.add('invalid');
@@ -203,9 +203,56 @@ async function uploadFiles(apiUrl, files) {
     }
 }
 
+function uploadClose() {
+    let modal = document.getElementById('uploadModal');
+    let modalContent = document.getElementById('uploadModalContent');
+    let flash = document.getElementById('flash');
+    let form = document.getElementById('uploadForm');
+    let carouselContent = document.getElementById('tempSlideshowWrapper');
+    let uploadInfo = document.createElement('div');
+
+    modalContent.style.animation = '';
+    modalContent.classList.add('hidden');
+
+    flash.classList.remove('hidden');
+
+    setTimeout(() => {
+        flash.style.animation = 'flashout 0.5s forwards';
+    }, 250);
+
+    for (let element of document.querySelectorAll('.invalid')) {
+        element.classList.remove('invalid');
+    }
+
+    carouselContent.replaceChildren();
+
+    uploadInfo.classList.add('uploadInfo');
+    uploadInfo.innerText = 'Itt láthatja a feltöltött képeket';
+    carouselContent.appendChild(uploadInfo);
+
+    document.getElementById('uploadFeedback').innerText = '';
+    document.getElementById('forTags').replaceChildren();
+    document.getElementById('descriptionLength').innerText = '0/500';
+    document.getElementById('uploadPost').removeEventListener('click', uploadPost);
+    document.getElementById('uploadPost').classList.add('disabledButton');
+
+    form.reset();
+    modal.removeEventListener('click', closeModalByClickingOutside);
+
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        modalContent.classList.remove('hidden');
+
+        flash.classList.add('hidden');
+
+        flash.style.animation = '';
+    }, 750);
+}
+
 function closePost() {
     let modal = document.getElementById('uploadModal');
     let modalContent = document.getElementById('uploadModalContent');
+
     let form = document.getElementById('uploadForm');
     modalContent.style.animation = 'fadeOutDown 0.5s forwards';
     setTimeout(() => {

@@ -112,3 +112,12 @@
         border: 2px solid var(--invalidRed);
     }
 }
+
+@keyframes flashout {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
