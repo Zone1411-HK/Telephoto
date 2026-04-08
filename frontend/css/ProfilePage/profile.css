@@ -557,11 +557,11 @@ body {
 }
 
 #deleteProfile {
-    background-color: rgb(246, 155, 155);
+    background-color: rgb(245, 155, 155);
 }
 
 #deleteProfile:hover {
-    background-color: rgb(206, 115, 115);
+    background-color: rgb(205, 115, 115);
 }
 
 .customModal {
@@ -595,7 +595,7 @@ body {
     align-items: center;
     width: 50vw;
     height: 8vh;
-    background-color: rgb(130, 27, 27);
+    background-color: rgb(130, 25, 25);
     color: white;
     font-variant: small-caps;
 }
@@ -613,7 +613,7 @@ body {
     padding-top: 4vh;
     width: 50vw;
     height: 37vh;
-    color: rgb(130, 27, 27);
+    color: rgb(130, 25, 25);
     font-variant: small-caps;
     gap: 6vh;
 }
@@ -621,7 +621,7 @@ body {
 .deleteWarning {
     height: 10vh;
     text-align: center;
-    color: rgb(130, 27, 27);
+    color: rgb(130, 25, 25);
     font-variant: small-caps;
     font-size: 2.5vh;
     margin: 0;
@@ -645,13 +645,13 @@ body {
 }
 
 .deleteConfirmBtn {
-    background-color: rgb(144, 36, 36);
+    background-color: rgb(145, 35, 35);
     border: none;
     color: white;
 }
 
 .deleteConfirmBtn:hover {
-    background-color: rgb(116, 25, 25);
+    background-color: rgb(115, 25, 25);
 }
 
 .deleteCancelBtn {
@@ -683,11 +683,11 @@ body {
     height: 100%;
     width: 100%;
     aspect-ratio: 1/1;
-    stroke: rgb(116, 5, 5);
+    stroke: rgb(115, 5, 5);
 }
 
 .postDeletionDiv:hover {
-    background-color: rgb(246, 155, 155);
+    background-color: rgb(245, 155, 155);
 }
 
 #logoutWrapper {

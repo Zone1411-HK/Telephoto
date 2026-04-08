@@ -1,25 +1,25 @@
 :root {
-    --PrimaryLight1: rgb(250, 255, 212);
-    --Primary: rgb(240, 254, 190);
-    --PrimaryDark1: rgb(220, 234, 170);
-    --PrimaryDark2: rgb(200, 214, 150);
-    --PrimaryDark3: rgb(100, 114, 50);
-    --PrimaryAccent: rgb(163, 177, 115);
-    --Secondary: rgb(239, 239, 224);
+    --PrimaryLight1: rgb(250, 255, 210);
+    --Primary: rgb(240, 255, 190);
+    --PrimaryDark1: rgb(220, 235, 170);
+    --PrimaryDark2: rgb(200, 215, 150);
+    --PrimaryDark3: rgb(100, 115, 50);
+    --PrimaryAccent: rgb(165, 175, 115);
+    --Secondary: rgb(240, 240, 225);
     --SecondaryDark: rgb(220, 210, 180);
     --PostLight: rgb(255, 255, 240);
-    --Post: rgb(239, 239, 224);
-    --PostSecondary: rgb(219, 219, 204);
-    --PostAccent: rgb(139, 139, 124);
-    --PostDark: rgb(69, 69, 54);
-    --PostDarker: rgb(39, 39, 24);
-    --PostDarkest: rgb(19, 10, 4);
+    --Post: rgb(240, 240, 225);
+    --PostSecondary: rgb(220, 220, 205);
+    --PostAccent: rgb(140, 140, 125);
+    --PostDark: rgb(70, 70, 55);
+    --PostDarker: rgb(40, 40, 25);
+    --PostDarkest: rgb(20, 10, 5);
     --interactiveBlue: rgb(75, 100, 200);
     --interactiveBlueDark: rgb(25, 50, 150);
 
-    --Accent: rgb(82, 159, 163);
-    --AccentDark: rgb(0, 37, 41);
+    --Accent: rgb(80, 160, 165);
+    --AccentDark: rgb(0, 35, 40);
 
-    --invalidRed: rgb(191, 26, 26);
+    --invalidRed: rgb(190, 25, 25);
     --successGreen: rgb(50, 150, 30);
 }

@@ -1,10 +1,10 @@
 :root {
     --Hatter: rgb(245, 240, 245);
-    --LoginGomb: rgb(207, 173, 193);
-    --LoginGombBorder: rgb(187, 153, 173);
-    --LoginGombBoxShadow: rgb(217, 213, 233);
-    --NavBarColor: rgb(203, 217, 155);
-    --PostModalTopColor: rgb(188, 188, 188);
+    --LoginGomb: rgb(205, 175, 195);
+    --LoginGombBorder: rgb(185, 155, 175);
+    --LoginGombBoxShadow: rgb(215, 215, 235);
+    --NavBarColor: rgb(205, 215, 155);
+    --PostModalTopColor: rgb(190, 190, 190);
     --PostModalBottomColor: rgb(30, 30, 30);
 }
 
@@ -59,7 +59,7 @@
     max-height: 95vh;
     max-width: 95vw;
     z-index: 100;
-    box-shadow: 0 0 20px 1px rgba(79, 79, 64, 0.75);
+    box-shadow: 0 0 20px 1px rgba(80, 80, 65, 0.75);
     scrollbar-color: var(--PostAccent) var(--Secondary);
     border-radius: 50px;
     display: flex;
@@ -301,7 +301,7 @@
     max-height: 12%;
     min-height: 30px;
     width: 66%;
-    background-color: var(--PostAccent);
+    background-color: var(--LoginGomb);
     border: none;
     border-radius: 10px;
     color: var(--Secondary);
@@ -339,7 +339,7 @@
 }
 
 .toggleRegistrationLogin {
-    color: var(--interactiveBlue);
+    color: var(--LoginGomb);
     background-color: var(--Secondary);
     border: none;
     width: 30%;
@@ -367,7 +367,7 @@
     flex-direction: column;
     align-items: center;
     border-radius: 15px;
-    box-shadow: 0 0 10px 2px rgba(79, 79, 64, 0.75);
+    box-shadow: 0 0 10px 2px rgba(80, 80, 65, 0.75);
     top: 5vh;
     z-index: 1000;
     width: 350px;
