@@ -1,13 +1,13 @@
 :root {
     --Hatter: rgb(245, 240, 245);
-    --invalidRed: rgb(191, 26, 26);
+    --invalidRed: rgb(190, 25, 25);
     --successGreen: rgb(50, 150, 30);
-    --interactiveBlue: rgb(6, 7, 113);
-    --LoginGomb: rgb(207, 173, 193);
-    --LoginGombBorder: rgb(187, 153, 173);
-    --LoginGombBoxShadow: rgb(217, 213, 233);
-    --NavBarColor: rgb(203, 217, 155);
-    --PostModalTopColor: rgb(188, 188, 188);
+    --interactiveBlue: rgb(5, 5, 115);
+    --LoginGomb: rgb(205, 175, 195);
+    --LoginGombBorder: rgb(185, 155, 175);
+    --LoginGombBoxShadow: rgb(215, 215, 235);
+    --NavBarColor: rgb(205, 215, 155);
+    --PostModalTopColor: rgb(190, 190, 190);
     --PostModalBottomColor: rgb(30, 30, 30);
 }
 

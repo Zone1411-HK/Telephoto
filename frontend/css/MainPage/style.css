@@ -14,11 +14,14 @@ rgb(150, 100, 100)
 
 :root {
     --Hatter: rgb(245, 240, 245);
-    --invalidRed: rgb(191, 26, 26);
+    --invalidRed: rgb(190, 25, 25);
     --successGreen: rgb(50, 150, 30);
-    --interactiveBlue: rgb(6, 7, 113);
-    --NavBarColor: rgb(203, 217, 155);
-    --PostModalTopColor: rgb(188, 188, 188);
+    --interactiveBlue: rgb(5, 5, 115);
+    --LoginGomb: rgb(205, 175, 195);
+    --LoginGombBorder: rgb(185, 155, 175);
+    --LoginGombBoxShadow: rgb(215, 215, 235);
+    --NavBarColor: rgb(205, 215, 155);
+    --PostModalTopColor: rgb(190, 190, 190);
     --PostModalBottomColor: rgb(30, 30, 30);
 }
 
@@ -159,7 +162,7 @@ form {
 
 .trendingButton:hover,
 .egyebButton:hover {
-    filter: brightness(80%);
+    filter: brightness(90%);
 }
 
 .egyebButton {
@@ -227,7 +230,7 @@ form {
 
 #postSearchSVGWrapper:hover,
 #postSearchSVGWrapperMobile:hover {
-    filter: brightness(85%);
+    filter: brightness(90%);
 }
 
 .usernamePopup {
@@ -391,6 +394,7 @@ form {
     border-bottom: 1px solid var(--PrimaryAccent);
     text-align: center;
     color: #212e00;
+    margin-top: -13%;
 }
 
 .sortRow {
@@ -462,7 +466,7 @@ form {
 
 .activeSort {
     border-color: var(--PrimaryAccent) !important;
-    background-color: var(--PostLight);
+    filter: brightness(90%);
     color: var(--PostDark);
     font-weight: 400 !important;
 }
@@ -532,7 +536,7 @@ form {
 }
 
 #openPostUpload:hover {
-    filter: brightness(85%);
+    filter: brightness(90%);
 }
 
 #uploadModal {
@@ -581,6 +585,7 @@ form {
     color: rgb(20, 10, 7);
     -webkit-text-stroke: rgb(228, 228, 238) 3px;
     paint-order: stroke fill;
+    left: 10vh;
 }
 #uploadForm {
     margin-top: 5vh;
@@ -661,7 +666,7 @@ form {
 }
 
 #uploadFileLabelText:hover {
-    filter: brightness(85%);
+    filter: brightness(90%);
 }
 
 #tempSlideshowWrapper {
@@ -709,6 +714,7 @@ form {
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    background-color: rgb(25, 25, 25);
 }
 
 .uploadDescription,
@@ -823,7 +829,7 @@ form {
 }
 
 .addedTag:hover {
-    filter: brightness(85%);
+    filter: brightness(90%);
 }
 
 .uploadDescription textarea:focus,
@@ -903,7 +909,7 @@ form {
 }
 
 #cancelUpload button:hover {
-    filter: brightness(75%);
+    filter: brightness(80%);
 }
 
 .invalid {

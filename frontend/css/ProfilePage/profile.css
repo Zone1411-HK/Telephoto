@@ -550,6 +550,7 @@ body {
     height: 66%;
     border-radius: 4px;
     transition: 0.2s;
+    font-size: large;
 }
 #saveProfileModification:hover,
 #cancelProfileModification:hover {
