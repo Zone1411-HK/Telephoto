@@ -224,8 +224,8 @@ form {
 #postSearchSVGWrapper svg,
 #postSearchSVGWrapperMobile svg {
     height: 100%;
-    stroke-width: 1.5px;
-    stroke: var(--PrimaryAccent);
+    stroke-width: 2px;
+    stroke: var(--LoginGomb);
 }
 
 #postSearchSVGWrapper:hover,
@@ -274,7 +274,7 @@ form {
     height: calc(100% - 1vh);
     gap: 10vw;
     padding-left: 15vw;
-    scrollbar-color: var(--PostAccent) var(--SecondaryDark);
+    scrollbar-color: var(--LoginGomb) var(--SecondaryDark);
     scroll-behavior: smooth;
     margin-top: 1vh;
 }
@@ -530,7 +530,7 @@ form {
 }
 
 #openPostUpload svg {
-    stroke: var(--PrimaryAccent);
+    stroke: var(--LoginGomb);
     height: 66%;
     aspect-ratio: 1/1;
 }

@@ -44,7 +44,7 @@ body {
     align-items: center;
     left: 20px;
     top: 20px;
-    border: 2px solid #212e00;
+    border: 2px solid rgb(205, 175, 195);
     filter: brightness(100%);
 }
 

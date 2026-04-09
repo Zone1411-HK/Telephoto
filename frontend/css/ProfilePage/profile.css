@@ -185,8 +185,8 @@ body {
 
 #profileEmail,
 #profileRegistration {
-    font-size: 2.25vh;
-    color: #808e4e;
+    font-size: 2vh;
+    color: rgb(205, 175, 195);
 }
 
 #profileBiographyDiv {
