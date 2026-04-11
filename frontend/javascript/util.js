@@ -141,6 +141,43 @@ function previousSlideItem() {
     slideshowController(-1, slideshow);
 }
 
+function generateVideoControls(media, video) {
+    let controlDiv = document.createElement('div');
+    controlDiv.classList.add('customControls');
+
+    let volume = document.createElement('input');
+    volume.type = 'range';
+    volume.min = 0;
+    volume.max = 100;
+    volume.step = 1;
+
+    let progressContainer = document.createElement('div');
+    progressContainer.classList.add('customProgress');
+
+    let progressBar = document.createElement('div');
+
+    progressContainer.addEventListener('click', (e) => {
+        let boundingRectangle = progressContainer.getBoundingClientRect();
+        let distance = e.clientX - boundingRectangle.left;
+        let percent = distance / boundingRectangle.width;
+        if (percent >= 0.95) {
+            progressBar.style.width = '100%';
+            video.currentTime = video.duration;
+        } else if (percent <= 0.05) {
+            video.currentTime = 0;
+            progressBar.style.width = '1%';
+        } else {
+            video.currentTime = video.duration * percent;
+            progressBar.style.width = percent * 100 + '%';
+        }
+    });
+    progressContainer.appendChild(progressBar);
+
+    controlDiv.appendChild(progressContainer);
+
+    return controlDiv;
+}
+
 function generateSlideshow(links) {
     if (links == undefined) return document.createElement('div');
     let postImages = document.createElement('div');
@@ -170,17 +207,21 @@ function generateSlideshow(links) {
         let media;
         console.log(format);
         if (format == 'mp4' || format == 'avi' || format == 'hevc') {
-            media = document.createElement('video');
-            media.muted = true;
-            media.loop = true;
-            media.controls = true;
+            media = document.createElement('div');
+
+            let video = document.createElement('video');
+            video.muted = true;
+            video.loop = true;
+            video.controls = false;
 
             let source = document.createElement('source');
             source.src = '/uploads/' + content;
             source.type = 'video/' + format;
-            media.appendChild(source);
-            media.dataset.type = 'video';
+            video.appendChild(source);
+            video.dataset.type = 'video';
             if (i == 0) slideshow.style.backgroundImage = 'url("/images/videoBackground.png")';
+            media.appendChild(generateVideoControls(media, video));
+            media.appendChild(video);
         } else {
             media = document.createElement('img');
             media.src = '/uploads/' + content;

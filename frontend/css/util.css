@@ -134,9 +134,49 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    display: block;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: start;
     transition: 0.25s;
     backdrop-filter: blur(10px);
+}
+
+.customControls {
+    height: 10%;
+    width: 100%;
+    background-color: var(--PostSecondary);
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.customProgress {
+    width: 70%;
+    background-color: var(--PostSecondary);
+    box-shadow: 0 0 2px 1px var(--PostAccent);
+    border-radius: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+}
+
+.customProgress div {
+    border-radius: 50px;
+    margin-left: 5px;
+    margin-right: 5px;
+
+    background-color: var(--PostAccent);
+    height: 66%;
+    width: 1%;
+    transition: 0.15s;
+}
+
+.slideshowItem video {
+    height: 90%;
 }
 
 .activeSlideshowItem {
