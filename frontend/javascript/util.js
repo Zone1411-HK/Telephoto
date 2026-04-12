@@ -97,9 +97,12 @@ function slideshowController(move, slideshow) {
 
     let currentSlide = slides[j];
     currentSlide.classList.add('hidden');
+    console.log(currentSlide);
 
     if (currentSlide.dataset.type == 'video') {
-        currentSlide.pause();
+        currentSlide.children[0].children[0].dataset.state = 'paused';
+        currentSlide.children[0].children[0].innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" class="feather feather-play"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
+        currentSlide.children[1].pause();
         currentSlide.currentTime = 0;
     }
 
@@ -141,39 +144,202 @@ function previousSlideItem() {
     slideshowController(-1, slideshow);
 }
 
-function generateVideoControls(media, video) {
-    let controlDiv = document.createElement('div');
-    controlDiv.classList.add('customControls');
+function durationToTime(duration) {
+    let result;
 
-    let volume = document.createElement('input');
-    volume.type = 'range';
-    volume.min = 0;
-    volume.max = 100;
-    volume.step = 1;
+    let seconds = duration;
+    let minutes = Math.floor(seconds / 60);
 
+    seconds = Math.floor(seconds % 60).toString();
+    if (seconds.length == 1) seconds = '0' + seconds;
+
+    let hour = Math.floor(minutes / 60).toString();
+    minutes = Math.floor(minutes % 60).toString();
+    if (minutes.length == 1) minutes = '0' + minutes;
+
+    result = `${hour == '0' ? '' : hour + ':'}${minutes}:${seconds}`;
+
+    return result;
+}
+
+function updateVideoProgress(event, progressContainer, progressBar, video, currentVideoTime) {
+    let percent = video.currentTime / video.duration;
+    if (percent >= 0.95) {
+        progressBar.style.width = '100%';
+    } else if (percent <= 0.05) {
+        progressBar.style.width = '0%';
+    } else {
+        progressBar.style.width = percent * 100 + '%';
+    }
+    currentVideoTime.innerText = durationToTime(video.currentTime);
+}
+
+function generateProgressBar(video) {
     let progressContainer = document.createElement('div');
     progressContainer.classList.add('customProgress');
 
     let progressBar = document.createElement('div');
 
-    progressContainer.addEventListener('click', (e) => {
+    progressContainer.addEventListener('click', function (event) {
         let boundingRectangle = progressContainer.getBoundingClientRect();
-        let distance = e.clientX - boundingRectangle.left;
+        let distance = event.clientX - boundingRectangle.left;
         let percent = distance / boundingRectangle.width;
         if (percent >= 0.95) {
-            progressBar.style.width = '100%';
             video.currentTime = video.duration;
         } else if (percent <= 0.05) {
             video.currentTime = 0;
-            progressBar.style.width = '1%';
         } else {
             video.currentTime = video.duration * percent;
-            progressBar.style.width = percent * 100 + '%';
         }
     });
+
     progressContainer.appendChild(progressBar);
 
-    controlDiv.appendChild(progressContainer);
+    return progressContainer;
+}
+
+function generateVideoTime(video) {
+    let videoTimeWrapper = document.createElement('div');
+    videoTimeWrapper.classList.add('videoTimeWrapper');
+
+    let maxVideoTime = document.createElement('span');
+    let currentVideoTime = document.createElement('span');
+    currentVideoTime.innerText = '00:00';
+
+    video.addEventListener('loadeddata', function () {
+        maxVideoTime.innerText = '/' + durationToTime(video.duration);
+    });
+
+    videoTimeWrapper.appendChild(currentVideoTime);
+    videoTimeWrapper.appendChild(maxVideoTime);
+
+    return videoTimeWrapper;
+}
+
+function toggleVideoPause(video, button) {
+    if (button.dataset.state == 'playing') {
+        button.dataset.state = 'paused';
+        button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" class="feather feather-play"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
+        video.pause();
+    } else {
+        button.dataset.state = 'playing';
+        button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" class="feather feather-pause"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
+        video.play();
+    }
+}
+
+function generatePause(video) {
+    let pauseButton = document.createElement('button');
+    pauseButton.classList.add('videoButton');
+    pauseButton.dataset.state = 'paused';
+    pauseButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" class="feather feather-play"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
+    pauseButton.addEventListener('click', function () {
+        toggleVideoPause(video, pauseButton);
+    });
+
+    return pauseButton;
+}
+
+function toggleVolumePanel(volumeWrapper, toggleButton) {
+    if (toggleButton.dataset.state == 'closed') {
+        toggleButton.dataset.state = 'opened';
+        volumeWrapper.classList.remove('hidden');
+        volumeWrapper.style.animation = 'fadeInUp 0.5s forwards';
+        setTimeout(() => {
+            volumeWrapper.style.animation = '';
+        }, 500);
+    } else {
+        toggleButton.dataset.state = 'closed';
+        volumeWrapper.style.animation = 'fadeOutDown 0.5s forwards';
+        setTimeout(() => {
+            volumeWrapper.classList.add('hidden');
+            volumeWrapper.style.animation = '';
+        }, 500);
+    }
+}
+
+function adjustVolume(event, volumeWrapper, volumeBar, video, toggleButton) {
+    let boundingRectangle = volumeWrapper.getBoundingClientRect();
+    let distance = event.clientY - boundingRectangle.top;
+    let percent = 100 - (distance / boundingRectangle.height) * 100;
+
+    if (percent >= 95) {
+        video.volume = 1;
+        volumeBar.style.height = '100%';
+    } else if (percent <= 5) {
+        volumeBar.style.height = '0%';
+        toggleButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" class="feather feather-volume-x"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>`;
+        video.volume = 0;
+    } else {
+        volumeBar.style.height = percent + '%';
+        video.volume = Math.floor(percent) / 100;
+    }
+
+    if (percent >= 66) {
+        toggleButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" class="feather feather-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`;
+    } else {
+        if (percent != 0)
+            toggleButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" class="feather feather-volume-1"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`;
+    }
+}
+
+function generateVolumeControl(video) {
+    let wrapper = document.createElement('div');
+    wrapper.classList.add('volumeControlsContainer');
+    let toggleButton = document.createElement('button');
+    toggleButton.dataset.state = 'closed';
+    toggleButton.classList.add('volumeButton');
+    toggleButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" class="feather feather-volume-x"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>`;
+
+    let volumeWrapper = document.createElement('div');
+    volumeWrapper.classList.add('hidden', 'volumeBarWrapper');
+
+    let volumeBar = document.createElement('div');
+    volumeBar.classList.add('volumeBar');
+
+    volumeWrapper.appendChild(volumeBar);
+
+    toggleButton.addEventListener('click', function () {
+        toggleVolumePanel(volumeWrapper, toggleButton);
+    });
+
+    volumeWrapper.addEventListener('click', function (event) {
+        adjustVolume(event, volumeWrapper, volumeBar, video, toggleButton);
+    });
+
+    wrapper.appendChild(toggleButton);
+    wrapper.appendChild(volumeWrapper);
+
+    return wrapper;
+}
+
+function generateVideoControls(media, video) {
+    let controlDiv = document.createElement('div');
+    controlDiv.classList.add('customControls');
+
+    let pauseButton = generatePause(video);
+    let volume = generateVolumeControl(video);
+    let progressBar = generateProgressBar(video);
+    let videoTime = generateVideoTime(video);
+
+    video.addEventListener('timeupdate', function (event) {
+        updateVideoProgress(
+            event,
+            progressBar,
+            progressBar.children[0],
+            video,
+            videoTime.children[0]
+        );
+    });
+
+    video.addEventListener('click', function () {
+        toggleVideoPause(video, pauseButton);
+    });
+
+    controlDiv.appendChild(pauseButton);
+    controlDiv.appendChild(volume);
+    controlDiv.appendChild(progressBar);
+    controlDiv.appendChild(videoTime);
 
     return controlDiv;
 }
@@ -199,18 +365,16 @@ function generateSlideshow(links) {
     let slideshow = document.createElement('div');
     slideshow.classList.add('slideshow');
 
-    console.log(links);
     for (let i = 0; i < links.length; i++) {
         let content = links[i];
 
         let format = content.split('.')[1];
         let media;
-        console.log(format);
         if (format == 'mp4' || format == 'avi' || format == 'hevc') {
             media = document.createElement('div');
 
             let video = document.createElement('video');
-            video.muted = true;
+            video.volume = 0;
             video.loop = true;
             video.controls = false;
 
@@ -218,10 +382,10 @@ function generateSlideshow(links) {
             source.src = '/uploads/' + content;
             source.type = 'video/' + format;
             video.appendChild(source);
-            video.dataset.type = 'video';
             if (i == 0) slideshow.style.backgroundImage = 'url("/images/videoBackground.png")';
             media.appendChild(generateVideoControls(media, video));
             media.appendChild(video);
+            media.dataset.type = 'video';
         } else {
             media = document.createElement('img');
             media.src = '/uploads/' + content;
