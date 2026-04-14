@@ -1,17 +1,17 @@
+import * as utilFunctions from '../util.js';
+
 const socket = io();
+
 let currentURL = new URL(window.location.href);
 let currentUser;
-document.addEventListener('DOMContentLoaded', () => {
-    startUp();
-});
 
-async function startUp() {
+export async function startUp() {
     try {
-        if (await isLoggedIn()) {
+        if (await utilFunctions.isLoggedIn()) {
             postsByUser(document.getElementById('postsByUser'));
             profileInfos();
             profileAddEventListeners();
-            if (await isAdmin()) {
+            if (await utilFunctions.isAdmin()) {
                 let adminNav = document.createElement('a');
                 adminNav.href = '/admin';
                 adminNav.classList.add('navButton');
@@ -33,11 +33,11 @@ async function startUp() {
             window.location.href = '/login';
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
-function loadNewUserImg() {
+export function loadNewUserImg() {
     let fr = new FileReader();
     fr.addEventListener('load', function (e) {
         document.getElementById('tempImg').src = e.target.result;
@@ -49,7 +49,7 @@ function loadNewUserImg() {
     fr.readAsDataURL(this.files[0]);
 }
 
-function profileAddEventListeners() {
+export function profileAddEventListeners() {
     document.getElementById('postsByUser').addEventListener('click', postsByUser);
     document.getElementById('likedPosts').addEventListener('click', likedPosts);
     document.getElementById('dislikedPosts').addEventListener('click', dislikedPosts);
@@ -59,19 +59,21 @@ function profileAddEventListeners() {
     document.getElementById('deleteCancel').addEventListener('click', hideDeleteModal);
     document.getElementById('deleteConfirm').addEventListener('click', doDelete);
     document.getElementById('logoutWrapper').addEventListener('click', logout);
-    document.getElementById('closeComments').addEventListener('click', closeComments);
-    document.getElementById('commentSvgWrapper').addEventListener('click', sendComment);
+    document.getElementById('closeComments').addEventListener('click', utilFunctions.closeComments);
+    document
+        .getElementById('commentSvgWrapper')
+        .addEventListener('click', utilFunctions.sendComment);
     document.getElementById('profilePictureUpload').addEventListener('change', loadNewUserImg);
 }
 
-async function logout() {
+export async function logout() {
     const { Status } = await PostMethodFetch('/api/logout');
     if (Status == 'Success') {
         window.location.href = '/login';
     }
 }
 
-async function postsByUser() {
+export async function postsByUser() {
     let isTheUserSameAsProfile = currentUser == currentURL.searchParams.get('username');
 
     const { Status, posts } = await GetMethodFetch(
@@ -88,7 +90,7 @@ async function postsByUser() {
     }
 }
 
-async function likedPosts() {
+export async function likedPosts() {
     const { Status, posts } = await GetMethodFetch(
         '/api/likedPosts/' + currentURL.searchParams.get('username')
     );
@@ -99,7 +101,7 @@ async function likedPosts() {
     }
 }
 
-async function dislikedPosts() {
+export async function dislikedPosts() {
     const { Status, posts } = await GetMethodFetch(
         '/api/dislikedPosts/' + currentURL.searchParams.get('username')
     );
@@ -111,7 +113,7 @@ async function dislikedPosts() {
     }
 }
 
-async function savedPosts() {
+export async function savedPosts() {
     const { Status, posts } = await GetMethodFetch(
         '/api/savedPosts/' + currentURL.searchParams.get('username')
     );
@@ -122,7 +124,7 @@ async function savedPosts() {
     }
 }
 
-function generatePostDelete() {
+export function generatePostDelete() {
     let postDeletionDiv = document.createElement('div');
     postDeletionDiv.classList.add('postDeletionDiv');
     postDeletionDiv.innerHTML = `
@@ -147,7 +149,7 @@ function generatePostDelete() {
     return postDeletionDiv;
 }
 
-function generatePosts(posts, canDeletePost) {
+export function generatePosts(posts, canDeletePost) {
     if (canDeletePost) {
         //document.getElementById('postInfos').appendChild(generatePostDelete());
     } else {
@@ -226,7 +228,7 @@ function generatePosts(posts, canDeletePost) {
     }
 }
 
-function makeTypeActive(element) {
+export function makeTypeActive(element) {
     let activeElement = document.querySelector('.activeType');
     if (activeElement != undefined) {
         activeElement.classList.remove('activeType');
@@ -238,13 +240,13 @@ function makeTypeActive(element) {
     element.classList.add('activeType');
 }
 
-async function testing() {
+export async function testing() {
     const response = await PostMethodFetch('/api/saveUsername', {
         username: 'testasd'
     });
 }
 
-async function profileInfos() {
+export async function profileInfos() {
     const response = await GetMethodFetch(
         '/api/profileInfos/' + currentURL.searchParams.get('username')
     );
@@ -252,7 +254,7 @@ async function profileInfos() {
         document.getElementById('profileName').innerText = response.results[0].username;
         document.getElementById('profileEmail').innerText = response.results[0].email;
         document.getElementById('profileRegistration').innerText =
-            date_yyyy_MM_dd(response.results[0].registration_date) + ' óta';
+            utilFunctions.date_yyyy_MM_dd(response.results[0].registration_date) + ' óta';
         document.getElementById('profileBiography').innerText = response.results[0].biography;
 
         let profilePicture =
@@ -275,7 +277,7 @@ async function profileInfos() {
 
 let openedPostId;
 
-async function openPost() {
+export async function openPost() {
     openedPostId = this.dataset.postId;
     console.log(openedPostId);
 
@@ -287,25 +289,25 @@ async function openPost() {
         let content = document.getElementById('openedPost');
         content.replaceChildren();
         content.style.animation = 'fadeInUp 0.5s forwards';
-        modal.removeEventListener('click', closeModalByClickingOutside);
+        modal.removeEventListener('click', utilFunctions.closeModalByClickingOutside);
         modal.classList.remove('hidden');
-        modal.addEventListener('click', function () {
-            closeModalByClickingOutside(event, modal, post);
+        modal.addEventListener('click', function (event) {
+            utilFunctions.closeModalByClickingOutside(event, modal, post);
         });
 
         let post = document.createElement('div');
         post.classList.add('post');
 
-        let slideshow = generateSlideshow(Infos.links);
+        let slideshow = utilFunctions.generateSlideshow(Infos.links);
 
-        let timestamp = generateTimestamp(Infos.creation_date);
+        let timestamp = utilFunctions.generateTimestamp(Infos.creation_date);
         slideshow.appendChild(timestamp);
 
-        let tags = generateTags(Infos.tags, Infos.location);
+        let tags = utilFunctions.generateTags(Infos.tags, Infos.location);
 
-        let description = generateDescription(Infos.description);
+        let description = utilFunctions.generateDescription(Infos.description);
 
-        let interactionRow = await generateInteractions(
+        let interactionRow = await utilFunctions.generateInteractions(
             Infos.interactions[0].like,
             Infos.interactions[0].dislike,
             Infos.interactions[0].favorite,
@@ -314,7 +316,7 @@ async function openPost() {
             Infos.downvote
         );
 
-        let userRow = generateUserRow(Infos.username, Infos.profile_picture_link);
+        let userRow = utilFunctions.generateUserRow(Infos.username, Infos.profile_picture_link);
 
         let postcontent = document.createElement('div');
         postcontent.classList.add('postContent');
@@ -339,9 +341,9 @@ async function openPost() {
         post.dataset.postId = Infos.post_id;
 
         content.appendChild(post);
-        modal.removeEventListener('click', closeModalByClickingOutside);
+        modal.removeEventListener('click', utilFunctions.closeModalByClickingOutside);
         modal.addEventListener('click', () => {
-            closeModalByClickingOutside(event, modal, post);
+            utilFunctions.closeModalByClickingOutside(event, modal, post);
         });
 
         modal.classList.remove('hidden');
@@ -349,7 +351,7 @@ async function openPost() {
     }
 }
 
-function closePost() {
+export function closePost() {
     let modal = document.getElementById('openedPostModal');
 
     let post = document.getElementById('openedPost');
@@ -365,7 +367,7 @@ let usernameBefore;
 let profilePicBefore;
 let biographyBefore;
 
-function modifyProfile() {
+export function modifyProfile() {
     this.classList.add('hidden');
     document.getElementById('saveProfileModification').classList.remove('hidden');
     document
@@ -400,7 +402,7 @@ function modifyProfile() {
     console.log(usernameBefore + ' ' + profilePicBefore + ' ' + biographyBefore);
 }
 
-function isImageFormat(file) {
+export function isImageFormat(file) {
     if (!file) return false;
     let format = file.name.split('.')[1];
     if (
@@ -416,7 +418,7 @@ function isImageFormat(file) {
     }
     return false;
 }
-async function saveProfileChanges() {
+export async function saveProfileChanges() {
     let formdata = new FormData();
 
     let bio = document.getElementById('profileBiography');
@@ -475,7 +477,7 @@ async function saveProfileChanges() {
     bio.parentNode.classList.remove('modifyData');
 }
 
-function cancelProfileChanges() {
+export function cancelProfileChanges() {
     document.getElementById('profileModify').classList.remove('hidden');
     document.getElementById('saveProfileModification').classList.add('hidden');
     document.getElementById('deleteProfile').classList.add('hidden');
@@ -504,7 +506,7 @@ function cancelProfileChanges() {
     this.removeEventListener('click', cancelProfileChanges);
 }
 
-async function UploadPostMethod(url, data) {
+export async function UploadPostMethod(url, data) {
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -519,24 +521,24 @@ async function UploadPostMethod(url, data) {
     }
 }
 
-function showDeleteModal() {
+export function showDeleteModal() {
     document.getElementById('deleteConfirmModal').style.display = 'flex';
     document.getElementById('deleteModalContent').style.animation = 'fadeInUp 1s forwards';
 }
 
 let deletionType;
 
-function showDeleteModalPost() {
+export function showDeleteModalPost() {
     deletionType = 'Post';
     showDeleteModal();
 }
 
-function showDeleteModalProfile() {
+export function showDeleteModalProfile() {
     deletionType = 'Profile';
     showDeleteModal();
 }
 
-function hideDeleteModal() {
+export function hideDeleteModal() {
     deletionType = '';
     document.getElementById('deleteModalContent').style.animation = 'fadeOutDown 0.5s forwards';
     setTimeout(() => {
@@ -544,7 +546,7 @@ function hideDeleteModal() {
     }, 500);
 }
 
-async function doDelete() {
+export async function doDelete() {
     console.log(deletionType);
     if (currentUser == currentURL.searchParams.get('username')) {
         if (deletionType == 'Post') {

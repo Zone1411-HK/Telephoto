@@ -1009,4 +1009,8 @@ form {
         transform: rotateZ(90deg);
         width: 80vw;
     }
+
+    #openPostUpload {
+        display: none;
+    }
 }

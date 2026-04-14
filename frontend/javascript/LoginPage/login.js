@@ -1,4 +1,4 @@
-async function login() {
+export async function login() {
     try {
         let usernameInput = document.getElementById('loginUsername');
         let username = usernameInput.value;

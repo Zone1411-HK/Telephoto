@@ -1,3 +1,7 @@
+import * as utilFunctions from '../util.js';
+
+const socket = io();
+
 class ChatData {
     constructor(id, name, pictureLink, lastMessage, userOfLastMessage) {
         this.id = id;
@@ -8,7 +12,7 @@ class ChatData {
     }
 }
 
-function chatAddEventListeners() {
+export function chatAddEventListeners() {
     document.getElementById('newChat').addEventListener('click', openNewChatWindow);
     document.getElementById('newChatCancel').addEventListener('click', closeNewChatWindow);
     document.getElementById('newChatCreate').addEventListener('click', createNewChat);
@@ -16,7 +20,7 @@ function chatAddEventListeners() {
     document.getElementById('newChatImgInput').addEventListener('change', loadNewChatImg);
 }
 
-function loadNewChatImg() {
+export function loadNewChatImg() {
     let temp = new FileReader();
     temp.addEventListener('load', function (e) {
         document.getElementById('newChatImg').src = e.target.result;
@@ -24,7 +28,7 @@ function loadNewChatImg() {
     temp.readAsDataURL(this.files[0]);
 }
 
-async function getChats() {
+export async function getChats() {
     const doesChatIdExist = await GetMethodFetch('/api/sendChatId');
     let chatArray = await getChatData();
     if (Array.isArray(chatArray)) {
@@ -83,7 +87,7 @@ async function getChats() {
     }
 }
 
-async function getChatData() {
+export async function getChatData() {
     try {
         let chatArray = [];
         let username = await GetMethodFetch('/api/sendUsername');
@@ -116,7 +120,7 @@ async function getChatData() {
     }
 }
 
-async function closeChat() {
+export async function closeChat() {
     const response = await PostMethodFetch('/api/removeChatId');
 
     const chatWrapper = document.getElementById('openedChatWrapper');
@@ -128,7 +132,7 @@ async function closeChat() {
     await getChats();
 }
 
-async function generateChat(element) {
+export async function generateChat(element) {
     const doesChatIdExist = await GetMethodFetch('/api/sendChatId');
     let chatId;
     const chatName = document.createElement('h3');
@@ -201,7 +205,7 @@ async function generateChat(element) {
     openedChat.appendChild(messageInput);
 }
 
-async function openChat() {
+export async function openChat() {
     await generateChat(this);
     const openedChat = document.getElementById('openedChat');
     openedChat.style.animation = 'openChat 500ms linear 1 forwards';
@@ -212,14 +216,14 @@ async function openChat() {
     }, 500);
 }
 
-async function refreshChat() {
+export async function refreshChat() {
     await generateChat(this);
 
     document.getElementsByClassName('messagesDiv')[0].scrollTop =
         document.getElementsByClassName('messagesDiv')[0].scrollHeight;
 }
 
-function userPopup(event) {
+export function userPopup(event) {
     const popup = document.getElementsByClassName('usernamePopup');
     console.log(popup);
     let username = this.dataset.username;
@@ -238,7 +242,7 @@ function userPopup(event) {
     }
 }
 
-function removeUserpopup() {
+export function removeUserpopup() {
     const popup = document.getElementsByClassName('usernamePopup');
     if (popup.length != 0) {
         for (const p of popup) {
@@ -247,7 +251,7 @@ function removeUserpopup() {
     }
 }
 
-async function generateMessage(username, currentUsername, message, date) {
+export async function generateMessage(username, currentUsername, message, date) {
     const messageRow = document.createElement('div');
     messageRow.classList.add('messageRow');
 
@@ -281,7 +285,7 @@ async function generateMessage(username, currentUsername, message, date) {
     return messageRow;
 }
 
-function generateMessageInput() {
+export function generateMessageInput() {
     const div = document.createElement('div');
     div.classList.add('newMessageWrapper');
     const textArea = document.createElement('textarea');
@@ -306,13 +310,13 @@ function generateMessageInput() {
     return div;
 }
 
-function expandUpwards() {
+export function expandUpwards() {
     const inp = document.getElementById('newMessageInput');
     inp.style.height = 'auto';
     inp.style.height = Math.min(inp.scrollHeight, 200) + 'px';
 }
 
-async function sendMessage() {
+export async function sendMessage() {
     const newMessageInput = document.getElementById('newMessageInput');
     if (newMessageInput.value != '' && newMessageInput.value.replace(/\s/g, '').length != 0) {
         const newMessage = newMessageInput.value;
@@ -328,15 +332,15 @@ async function sendMessage() {
     }
 }
 
-function openNewChatWindow() {
+export function openNewChatWindow() {
     document.getElementById('newChatModal').classList.remove('hidden');
     document.getElementById('newChatContainer').style.animation = 'fadeInUp 0.5s forwards';
-    document.getElementById('newChatModal').addEventListener('click', function () {
-        closeModalByClickingOutside(event, this, this.children[0]);
+    document.getElementById('newChatModal').addEventListener('click', function (event) {
+        utilFunctions.closeModalByClickingOutside(event, this, this.children[0]);
     });
 }
 
-function closeNewChatWindow() {
+export function closeNewChatWindow() {
     document.getElementById('newChatContainer').style.animation = 'fadeOutDown 0.5s forwards';
     setTimeout(() => {
         document.getElementById('newChatModal').classList.add('hidden');
@@ -347,7 +351,7 @@ function closeNewChatWindow() {
     }, 500);
 }
 
-async function searchUser() {
+export async function searchUser() {
     const suggestionDiv = document.getElementById('newChatUserSuggestionList');
     const addedUser = document.getElementById('newChatAddedUsers');
     let { Result } = await GetMethodFetch('/api/sendUsername');
@@ -394,7 +398,7 @@ async function searchUser() {
     }
 }
 
-function addUser() {
+export function addUser() {
     const addedUsers = document.getElementById('newChatAddedUsers');
 
     let isAdded = false;
@@ -436,7 +440,7 @@ function addUser() {
     }*/
 }
 
-function removeAddedUser() {
+export function removeAddedUser() {
     const suggestionDiv = document.getElementById('newChatUserSuggestionList');
     let j = 0;
     while (
@@ -452,7 +456,7 @@ function removeAddedUser() {
     parent.removeChild(this);
 }
 
-async function createNewChat() {
+export async function createNewChat() {
     const form = document.getElementById('newChatForm');
     let formData = new FormData();
     formData.append('chatName', document.getElementById('newChatName').value);
@@ -517,7 +521,7 @@ async function createNewChat() {
     }
 }
 
-async function filePost(url, data) {
+export async function filePost(url, data) {
     try {
         let response = await fetch(url, {
             method: 'POST',

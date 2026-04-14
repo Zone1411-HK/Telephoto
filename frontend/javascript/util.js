@@ -1,4 +1,4 @@
-function date_yyyy_MM_dd(originDate) {
+export function date_yyyy_MM_dd(originDate) {
     const date = new Date(originDate);
     const year = date.getFullYear();
     let month = date.getMonth() + 1;
@@ -13,7 +13,7 @@ function date_yyyy_MM_dd(originDate) {
     return `${year}-${month}-${day}`;
 }
 
-function date_yyyy_MM_dd_hh_mm(originDate) {
+export function date_yyyy_MM_dd_hh_mm(originDate) {
     const date = new Date(originDate);
     const year = date.getFullYear();
     let month = date.getMonth() + 1;
@@ -40,20 +40,20 @@ function date_yyyy_MM_dd_hh_mm(originDate) {
     return `${year}-${month}-${day} ${hour}:${minute}`;
 }
 
-async function isLoggedIn() {
+export async function isLoggedIn() {
     try {
         const response = await GetMethodFetch('/api/sendUsername');
         return response.exists;
     } catch (error) {}
 }
 
-async function isAdmin() {
+export async function isAdmin() {
     const { Status } = await GetMethodFetch('/api/isAdmin');
     console.log(Status == 'success');
     return Status == 'success';
 }
 
-function nextSlide() {
+export function nextSlide() {
     this.style.pointerEvents = 'none';
     setTimeout(() => {
         this.style.pointerEvents = 'all';
@@ -61,7 +61,7 @@ function nextSlide() {
     slideShow(1);
 }
 
-function previousSlide() {
+export function previousSlide() {
     this.style.pointerEvents = 'none';
     setTimeout(() => {
         this.style.pointerEvents = 'all';
@@ -69,7 +69,7 @@ function previousSlide() {
     slideShow(-1);
 }
 
-function closeModalByClickingOutside(e, modal, modalContent) {
+export function closeModalByClickingOutside(e, modal, modalContent) {
     let clickedOutside = e.target == modal;
 
     if (clickedOutside) {
@@ -82,13 +82,13 @@ function closeModalByClickingOutside(e, modal, modalContent) {
     }
 }
 
-function openProfile() {
+export function openProfile() {
     let profileURL = new URL('/profile', 'http://127.0.0.1:3000/');
     profileURL.searchParams.set('username', this.dataset.username);
     window.location.href = profileURL;
 }
 
-function slideshowController(move, slideshow) {
+export function slideshowController(move, slideshow) {
     let slides = slideshow.children;
     let j = 0;
     while (j < slides.length && slides[j].classList.contains('hidden')) {
@@ -123,7 +123,7 @@ function slideshowController(move, slideshow) {
     }
 }
 
-function nextSlideItem() {
+export function nextSlideItem() {
     this.style.pointerEvents = 'none';
     setTimeout(() => {
         this.style.pointerEvents = 'all';
@@ -132,7 +132,7 @@ function nextSlideItem() {
     slideshowController(1, slideshow);
 }
 
-function previousSlideItem() {
+export function previousSlideItem() {
     this.style.pointerEvents = 'none';
     setTimeout(() => {
         this.style.pointerEvents = 'all';
@@ -141,7 +141,7 @@ function previousSlideItem() {
     slideshowController(-1, slideshow);
 }
 
-function generateSlideshow(links) {
+export function generateSlideshow(links) {
     if (links == undefined) return document.createElement('div');
     let postImages = document.createElement('div');
     postImages.classList.add('postImages');
@@ -162,13 +162,11 @@ function generateSlideshow(links) {
     let slideshow = document.createElement('div');
     slideshow.classList.add('slideshow');
 
-    console.log(links);
     for (let i = 0; i < links.length; i++) {
         let content = links[i];
 
         let format = content.split('.')[1];
         let media;
-        console.log(format);
         if (format == 'mp4' || format == 'avi' || format == 'hevc') {
             media = document.createElement('video');
             media.muted = true;
@@ -206,7 +204,7 @@ function generateSlideshow(links) {
     return postImages;
 }
 
-function generateTimestamp(rawDate) {
+export function generateTimestamp(rawDate) {
     const date = date_yyyy_MM_dd(rawDate);
     let element = document.createElement('div');
     element.classList.add('postTimestamp');
@@ -214,7 +212,7 @@ function generateTimestamp(rawDate) {
     return element;
 }
 
-function generateTags(tags, location) {
+export function generateTags(tags, location) {
     let wrapper = document.createElement('div');
     wrapper.classList.add('postTagWrapper');
 
@@ -238,7 +236,7 @@ function generateTags(tags, location) {
     return wrapper;
 }
 
-function generateDescription(description) {
+export function generateDescription(description) {
     let descriptionElement = document.createElement('div');
     descriptionElement.classList.add('postDescription');
     descriptionElement.innerText = description;
@@ -246,7 +244,7 @@ function generateDescription(description) {
     return descriptionElement;
 }
 
-async function generateInteractions(
+export async function generateInteractions(
     userUpvote,
     userDownvote,
     userFavorite,
@@ -274,7 +272,6 @@ async function generateInteractions(
     likeButton.setAttribute('type', 'button');
     likeButton.innerHTML = `<div><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#314b49ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-up"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></div><span class="interactionText">${upvoteText}</span>`;
     likeButton.classList.add('interactionButton');
-    console.log(userUpvote);
     if (userUpvote == 1) {
         likeButton.dataset.liked = 'true';
         likeButton.classList.add('activeLike');
@@ -385,7 +382,7 @@ async function generateInteractions(
     return interactionRow;
 }
 
-function generateUserRow(name, profilePicture) {
+export function generateUserRow(name, profilePicture) {
     let wrapper = document.createElement('div');
     wrapper.classList.add('postUserRow');
 
@@ -425,7 +422,7 @@ function generateUserRow(name, profilePicture) {
     return wrapper;
 }
 
-async function reportUser() {
+export async function reportUser() {
     const responseUser = await PostMethodFetch('/api/reportUser', {
         username: this.previousSibling.innerText
     });
@@ -440,7 +437,7 @@ async function reportUser() {
     }
 }
 
-async function like(div, postId) {
+export async function like(div, postId) {
     let dislikeDiv = div.parentNode.children[3];
     if (div.dataset.liked == 'true') {
         div.dataset.liked = 'false';
@@ -467,7 +464,7 @@ async function like(div, postId) {
     }
 }
 
-async function dislike(div, postId) {
+export async function dislike(div, postId) {
     let likeDiv = div.parentNode.children[0];
 
     console.log(div.dataset.disliked);
@@ -495,7 +492,7 @@ async function dislike(div, postId) {
     }
 }
 
-async function favoritePost(div, postId) {
+export async function favoritePost(div, postId) {
     if (div.dataset.favorite == 'true') {
         div.dataset.favorite = 'false';
         div.classList.remove('activeFavorite');
@@ -510,7 +507,7 @@ async function favoritePost(div, postId) {
     if (status != 'success') console.log('Valami hiba történt a poszt elmentése során!');
 }
 
-async function showComments(postId) {
+export async function showComments(postId) {
     let modal = document.getElementById('commentModal');
     let modalContent = document.getElementById('commentModalContent');
     modalContent.replaceChildren();
@@ -518,7 +515,7 @@ async function showComments(postId) {
     modal.dataset.postId = postId;
     modal.classList.remove('hidden');
     modal.removeEventListener('click', closeCommentModal);
-    modal.addEventListener('click', () => {
+    modal.addEventListener('click', (event) => {
         closeCommentModal(event, modal, document.getElementById('commentModalContentWrapper'));
     });
 
@@ -541,7 +538,7 @@ async function showComments(postId) {
     }
 }
 
-function generateCommentProfilePicture(src, username) {
+export function generateCommentProfilePicture(src, username) {
     let profilePictureWrapper = document.createElement('div');
     profilePictureWrapper.classList.add('profilePictureWrapper');
     profilePictureWrapper.dataset.username = username;
@@ -566,7 +563,7 @@ function generateCommentProfilePicture(src, username) {
     return profilePictureWrapper;
 }
 
-function generateCommentContent(content) {
+export function generateCommentContent(content) {
     let contentWrapper = document.createElement('div');
     contentWrapper.classList.add('commentContentWrapper');
 
@@ -578,7 +575,7 @@ function generateCommentContent(content) {
     return contentWrapper;
 }
 
-function generateCommentUsername(username) {
+export function generateCommentUsername(username) {
     let contentWrapper = document.createElement('div');
     contentWrapper.classList.add('commentUsernameWrapper');
     contentWrapper.dataset.username = username;
@@ -593,7 +590,7 @@ function generateCommentUsername(username) {
     return contentWrapper;
 }
 
-function generateCommentDate(date) {
+export function generateCommentDate(date) {
     let contentWrapper = document.createElement('div');
     contentWrapper.classList.add('commentDateWrapper');
 
@@ -606,7 +603,7 @@ function generateCommentDate(date) {
     return contentWrapper;
 }
 
-function generateComment(commentData) {
+export function generateComment(commentData) {
     let commentWrapper = document.createElement('div');
     commentWrapper.classList.add('commentWrapper');
 
@@ -625,7 +622,7 @@ function generateComment(commentData) {
     return commentWrapper;
 }
 
-function closeComments() {
+export function closeComments() {
     document.getElementById('commentModalContentWrapper').style.animation =
         'fadeOutDown 0.5s forwards';
     setTimeout(() => {
@@ -635,7 +632,7 @@ function closeComments() {
     }, 500);
 }
 
-async function sendComment() {
+export async function sendComment() {
     const modal = document.getElementById('commentModal');
     const textarea = document.getElementById('commentTextarea');
     const message = textarea.value;
@@ -649,7 +646,7 @@ async function sendComment() {
     }
 }
 
-function closeCommentModal(e, modal, modalContent) {
+export function closeCommentModal(e, modal, modalContent) {
     let clickedOutside = e.target == modal;
 
     if (clickedOutside) {

@@ -1,3 +1,6 @@
+import { login } from './login.js';
+import { registration } from './registration.js';
+
 let matchMedia = window.matchMedia('(width > 768px)');
 
 document.addEventListener('DOMContentLoaded', () => {

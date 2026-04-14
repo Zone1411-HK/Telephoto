@@ -1,36 +1,9 @@
+import * as utilFunctions from '../util.js';
+
 let type = 'top';
 let timeframe = 36500;
 
-document.addEventListener('DOMContentLoaded', () => {
-    startUpPosts();
-    //testFunction();
-});
-
-async function testFunction(username) {
-    const response = await PostMethodFetch('/api/saveUsername', {
-        username: username
-    });
-}
-
-/*
-function base(data, i) {
-    let object = {
-        username: data[i].username,
-        userPic: data[i].profile_picture_link,
-        pic: data[i].picture_link,
-        post_id: data[i].post_id,
-        description: data[i].description,
-        tags: data[i].tags,
-        location: data[i].location,
-        latitude: data[i].latitude,
-        longitude: data[i].longitude,
-        creation_date: data[i].creation_date
-    };
-
-    return object;
-}*/
-
-function addEventListenersToElements() {
+export function addEventListenersToElements() {
     const trendingButtons = document.querySelectorAll('.trendingButton');
     for (const button of trendingButtons) {
         button.addEventListener('click', trendingPosts);
@@ -42,18 +15,20 @@ function addEventListenersToElements() {
     document.getElementById('postSearchSVGWrapperMobile').addEventListener('click', function () {
         searchPost('postSearchMobile', this);
     });
-    document.getElementById('closeComments').addEventListener('click', closeComments);
-    document.getElementById('commentSvgWrapper').addEventListener('click', sendComment);
+    document.getElementById('closeComments').addEventListener('click', utilFunctions.closeComments);
+    document
+        .getElementById('commentSvgWrapper')
+        .addEventListener('click', utilFunctions.sendComment);
     document.getElementById('commentTextarea').addEventListener('keypress', function (e) {
         if (e.key == 'Enter') {
             e.preventDefault();
-            sendComment();
+            utilFunctions.sendComment();
         }
     });
     document.getElementById('openSort').addEventListener('click', toggleSort);
 }
 
-function toggleSort() {
+export function toggleSort() {
     if (this.dataset.opened == 'false') {
         openSort();
         this.dataset.opened = 'true';
@@ -63,7 +38,7 @@ function toggleSort() {
     }
 }
 
-function openSort() {
+export function openSort() {
     let sortDiv = document.getElementById('mobileSort');
     sortDiv.classList.remove('hidden');
     sortDiv.style.animation = 'fadeInUp 0.5s forwards';
@@ -72,7 +47,7 @@ function openSort() {
     }, 500);
 }
 
-function closeSort() {
+export function closeSort() {
     let sortDiv = document.getElementById('mobileSort');
     sortDiv.style.animation = 'fadeOutDown 0.5s forwards';
     setTimeout(() => {
@@ -81,7 +56,7 @@ function closeSort() {
     }, 500);
 }
 
-function removeActiveLoad() {
+export function removeActiveLoad() {
     const postLoads = document.querySelectorAll('.activeSort');
     for (const button of postLoads) {
         button.classList.remove('activeSort');
@@ -90,7 +65,7 @@ function removeActiveLoad() {
 
 let searchValue;
 
-async function getSearchedPosts(searchValue) {
+export async function getSearchedPosts(searchValue) {
     const response = await GetMethodFetch('/api/searchPosts/' + searchValue);
 
     if (response.status != 'failed') {
@@ -110,7 +85,7 @@ async function getSearchedPosts(searchValue) {
     }
 }
 
-async function searchPost(searchDiv, searchButton) {
+export async function searchPost(searchDiv, searchButton) {
     try {
         console.log(searchButton);
         searchValue = document.getElementById(searchDiv).value;
@@ -136,7 +111,7 @@ async function searchPost(searchDiv, searchButton) {
     }
 }
 
-async function trendingPosts() {
+export async function trendingPosts() {
     removeActiveLoad();
     const trendingButtons = document.querySelectorAll('.trendingButton');
     for (const button of trendingButtons) {
@@ -158,7 +133,7 @@ async function trendingPosts() {
     });
 }
 
-async function startUpPosts() {
+export async function startUpPosts() {
     const { status, result } = await PostMethodFetch('/api/setOffset', {
         type: 'reset',
         offset: 0
@@ -193,7 +168,7 @@ const getTopPosts = async () => {
     }
 };
 
-async function randomPlaceSort(searchValue) {
+export async function randomPlaceSort(searchValue) {
     type = searchValue;
 
     const response = await GetMethodFetch('/api/randomPlacesPosts/' + searchValue);
@@ -217,7 +192,7 @@ async function randomPlaceSort(searchValue) {
     }
 }
 
-function appendLoadMore(areThereMorePosts) {
+export function appendLoadMore(areThereMorePosts) {
     const loadMore = document.createElement('div');
     loadMore.classList.add('loadMorePost');
     if (areThereMorePosts) {
@@ -229,7 +204,7 @@ function appendLoadMore(areThereMorePosts) {
     document.getElementById('posts-container').appendChild(loadMore);
 }
 
-async function loadMorePost() {
+export async function loadMorePost() {
     if (type == 'top') {
         getTopPosts(timeframe);
     } else if (type == 'searched') {
@@ -240,7 +215,7 @@ async function loadMorePost() {
     this.remove();
 }
 
-function generateRope() {
+export function generateRope() {
     let ropediv = document.createElement('div');
     let rope = document.createElement('hr');
     let ropetexture = document.createElement('hr');
@@ -254,7 +229,7 @@ function generateRope() {
     return ropediv;
 }
 
-function generateClip() {
+export function generateClip() {
     let clip = document.createElement('div');
     let imgclip = document.createElement('div');
     let imgcliptexture = document.createElement('div');
@@ -275,16 +250,16 @@ const hangPictures = async (test) => {
 
     let ropediv = generateRope();
     let clip = generateClip();
-    let slideshow = generateSlideshow(test.links);
+    let slideshow = utilFunctions.generateSlideshow(test.links);
 
-    let timestamp = generateTimestamp(test.creation_date);
+    let timestamp = utilFunctions.generateTimestamp(test.creation_date);
     slideshow.appendChild(timestamp);
 
-    let tags = generateTags(test.tags, test.location);
+    let tags = utilFunctions.generateTags(test.tags, test.location);
 
-    let description = generateDescription(test.description);
+    let description = utilFunctions.generateDescription(test.description);
 
-    let interactionRow = await generateInteractions(
+    let interactionRow = await utilFunctions.generateInteractions(
         test.interactions[0].like,
         test.interactions[0].dislike,
         test.interactions[0].favorite,
@@ -293,7 +268,7 @@ const hangPictures = async (test) => {
         test.downvote
     );
 
-    let userRow = generateUserRow(test.username, test.profile_picture_link);
+    let userRow = utilFunctions.generateUserRow(test.username, test.profile_picture_link);
 
     let postcontent = document.createElement('div');
     postcontent.classList.add('postContent');

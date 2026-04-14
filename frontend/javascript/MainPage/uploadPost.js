@@ -1,29 +1,10 @@
-document.addEventListener('DOMContentLoaded', () => {
-    /*
-    const img = document.getElementById('test');
-    getGPS('/temp_images/asd.jpg').then((resolve) => {
-        const { Latitude, Longitude } = resolve;
-        console.log(Latitude + ' ' + Longitude);
-    });
-    */
-    document.getElementById('cancelPost').addEventListener('click', closePost);
-    document.getElementById('uploadFile').addEventListener('change', preLoadFiles);
-    document
-        .getElementById('uploadDescription')
-        .addEventListener('keyup', currentDescriptionLength);
-    document.getElementById('uploadTags').addEventListener('keydown', function (e) {
-        if (e.key == 'Enter') {
-            e.preventDefault();
-            generateTag(this);
-        }
-    });
-});
+import * as utilFunctions from '../util.js';
 
-function currentDescriptionLength() {
+export function currentDescriptionLength() {
     document.getElementById('descriptionLength').innerText = this.value.length + '/500';
 }
 
-function generateTag(input) {
+export function generateTag(input) {
     let existingTags = document.querySelectorAll('.addedTag');
     let alreadyAdded = false;
     for (const tag of existingTags) {
@@ -35,17 +16,15 @@ function generateTag(input) {
         let newTag = document.createElement('div');
         newTag.innerText = '#' + input.value;
         newTag.classList.add('addedTag');
-        newTag.addEventListener('click', removeTag);
+        newTag.addEventListener('click', function () {
+            this.remove();
+        });
         document.getElementById('forTags').appendChild(newTag);
         input.value = '';
     }
 }
 
-function removeTag() {
-    this.remove();
-}
-
-async function preLoadFiles() {
+export async function preLoadFiles() {
     let files = document.getElementById('uploadFile').files;
     let uploadFeedback = document.getElementById('uploadFeedback');
 
@@ -75,14 +54,16 @@ async function preLoadFiles() {
         uploadFeedback.style.color = 'var(--successGreen)';
 
         document.getElementById('tempSlideshowWrapper').replaceChildren();
-        document.getElementById('tempSlideshowWrapper').appendChild(generateSlideshow(links));
+        document
+            .getElementById('tempSlideshowWrapper')
+            .appendChild(utilFunctions.generateSlideshow(links));
     } else {
         uploadFeedback.innerText = 'Nem megfelelő egy vagy több fájl formátuma!';
         uploadFeedback.style.color = 'var(--invalidRed)';
     }
 }
 
-async function getGPS(file) {
+export async function getGPS(file) {
     try {
         const tags = await ExifReader.load(file, {
             includeTags: {
@@ -96,7 +77,7 @@ async function getGPS(file) {
     }
 }
 
-function rightFileFormats(files) {
+export function rightFileFormats(files) {
     let j = 0;
     while (j < files.length && fileFormats(files[j].type.split('/')[1])) {
         j++;
@@ -108,7 +89,7 @@ function rightFileFormats(files) {
     }
 }
 
-function fileFormats(format) {
+export function fileFormats(format) {
     return (
         format == 'mp4' ||
         format == 'avi' ||
@@ -123,7 +104,7 @@ function fileFormats(format) {
     );
 }
 
-async function uploadPost() {
+export async function uploadPost() {
     try {
         let files = document.getElementById('uploadFile').files;
 
@@ -186,7 +167,7 @@ async function uploadPost() {
     }
 }
 
-async function uploadFiles(apiUrl, files) {
+export async function uploadFiles(apiUrl, files) {
     try {
         let formData = new FormData();
         for (const file of files) {
@@ -203,7 +184,7 @@ async function uploadFiles(apiUrl, files) {
     }
 }
 
-function uploadClose() {
+export function uploadClose() {
     let modal = document.getElementById('uploadModal');
     let modalContent = document.getElementById('uploadModalContent');
     let flash = document.getElementById('flash');
@@ -237,7 +218,7 @@ function uploadClose() {
     document.getElementById('uploadPost').classList.add('disabledButton');
 
     form.reset();
-    modal.removeEventListener('click', closeModalByClickingOutside);
+    modal.removeEventListener('click', utilFunctions.closeModalByClickingOutside);
 
     setTimeout(() => {
         modal.classList.add('hidden');
@@ -249,7 +230,7 @@ function uploadClose() {
     }, 750);
 }
 
-function closePost() {
+export function closePost() {
     let modal = document.getElementById('uploadModal');
     let modalContent = document.getElementById('uploadModalContent');
 
@@ -261,7 +242,7 @@ function closePost() {
         }
 
         modal.classList.add('hidden');
-        modal.removeEventListener('click', closeModalByClickingOutside);
+        modal.removeEventListener('click', utilFunctions.closeModalByClickingOutside);
 
         modalContent.style.animation = '';
 

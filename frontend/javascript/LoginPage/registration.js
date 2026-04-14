@@ -1,6 +1,4 @@
-//TODO Visszajelzést adni a felhasználónak mi a probléma
-
-async function registration() {
+export async function registration() {
     try {
         let validInputs = 0;
         let errorMessage = '';

@@ -1,15 +1,73 @@
+import * as utilFunctions from '../util.js';
+import * as chatFunctions from './chat.js';
+import * as postFunctions from './post.js';
+import * as uploadPostFunctions from './uploadPost.js';
+import * as scrollFunctions from './scroll.js';
+
+let matchMedia = window.matchMedia('(width > 1000px)');
+let scrollDistance = 0;
+
 document.addEventListener('DOMContentLoaded', () => {
     startUp();
 });
 
+window.addEventListener('resize', () => {
+    let item = document.getElementById('posts-container');
+    if (matchMedia.matches) {
+        item.addEventListener('wheel', function (event) {
+            scrollFunctions.scrollHorizontal(event, item, matchMedia);
+        });
+        item.removeEventListener('wheel', scrollFunctions.hideTitleMobile);
+
+        document.getElementById('mobileSort').classList.add('hidden');
+        document.getElementById('openSort').dataset.opened = 'false';
+    } else {
+        item.removeEventListener('wheel', function (event) {
+            scrollFunctions.scrollHorizontal(event, matchMedia);
+        });
+        item.addEventListener('wheel', function () {
+            scrollDistance = scrollFunctions.hideTitleMobile(item, scrollDistance);
+        });
+    }
+});
+
 async function startUp() {
     try {
-        if (await isLoggedIn()) {
-            getChats();
-            chatAddEventListeners();
+        if (await utilFunctions.isLoggedIn()) {
+            chatFunctions.getChats();
+            chatFunctions.chatAddEventListeners();
             addEventListeners();
+            postFunctions.startUpPosts();
 
-            if (await isAdmin()) {
+            document
+                .getElementById('cancelPost')
+                .addEventListener('click', uploadPostFunctions.closePost);
+            document
+                .getElementById('uploadFile')
+                .addEventListener('change', uploadPostFunctions.preLoadFiles);
+            document
+                .getElementById('uploadDescription')
+                .addEventListener('keyup', uploadPostFunctions.currentDescriptionLength);
+            document.getElementById('uploadTags').addEventListener('keydown', function (e) {
+                if (e.key == 'Enter') {
+                    e.preventDefault();
+                    uploadPostFunctions.generateTag(this);
+                }
+            });
+
+            let item = document.getElementById('posts-container');
+            if (matchMedia.matches) {
+                item.addEventListener('wheel', function (event) {
+                    scrollFunctions.scrollHorizontal(event, item, matchMedia);
+                });
+            } else {
+                item.addEventListener('wheel', function () {
+                    console.log(scrollDistance);
+                    scrollDistance = scrollFunctions.hideTitleMobile(item, scrollDistance);
+                });
+            }
+
+            if (await utilFunctions.isAdmin()) {
                 let adminNav = document.createElement('a');
                 adminNav.href = '/admin';
                 adminNav.classList.add('navButton');
@@ -49,7 +107,7 @@ async function addEventListeners() {
             placeButtons[i].dataset.filled = 'true';
             placeButtons[i].disabled = false;
             placeButtons[i].classList.remove('disabledButton');
-            placeButtons[i].addEventListener('click', dunno);
+            placeButtons[i].addEventListener('click', searchRandomPlaces);
         }
 
         for (const button of placeButtons) {
@@ -72,12 +130,12 @@ function openUploadModal() {
     setTimeout(() => {
         modalContent.style.animation = '';
         modal.addEventListener('click', function (event) {
-            closeModalByClickingOutside(event, modal, modalContent);
+            utilFunctions.closeModalByClickingOutside(event, modal, modalContent);
         });
     }, 500);
 }
 
-async function dunno() {
+async function searchRandomPlaces() {
     const { status, result } = await PostMethodFetch('/api/setOffset', {
         type: 'reset',
         offset: 50
@@ -87,11 +145,5 @@ async function dunno() {
     }
     this.classList.add('activeSort');
     document.getElementById('posts-container').replaceChildren();
-    randomPlaceSort(this.value);
-}
-
-async function testing() {
-    const response = await PostMethodFetch('/api/saveUsername', {
-        username: 'testasd'
-    });
+    postFunctions.randomPlaceSort(this.value);
 }
