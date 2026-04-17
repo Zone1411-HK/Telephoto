@@ -1,6 +1,6 @@
 import * as utilFunctions from '../util.js';
-
-const socket = io();
+import { GetMethodFetch, PostMethodFetch } from '../fetch.js';
+import { socket } from '../socket.js';
 
 class ChatData {
     constructor(id, name, pictureLink, lastMessage, userOfLastMessage) {

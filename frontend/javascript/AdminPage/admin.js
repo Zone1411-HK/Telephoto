@@ -1,8 +1,11 @@
 import * as utilFunctions from '../util.js';
+import { GetMethodFetch, PostMethodFetch } from '../fetch.js';
+import { socket } from '../socket.js';
 
 let map;
 
 export async function startUp() {
+    console.log(socket);
     let loggedIn = await utilFunctions.isLoggedIn();
     if (!loggedIn) {
         window.location.href = '/login';
@@ -682,7 +685,7 @@ export async function confirmDelete() {
     if (this.dataset.deleteType == 'profile') {
         const userId = document.getElementById('openedProfile').dataset.userId;
         const deleteResponse = await PostMethodFetch('/api/deleteProfile', { userId: userId });
-        console.log(deleteResponse);
+        socket.emit('logoutUser', userId);
         closeProfile();
     }
     if (this.dataset.deleteType == 'post') {

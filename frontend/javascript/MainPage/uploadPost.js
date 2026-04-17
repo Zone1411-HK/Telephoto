@@ -1,4 +1,5 @@
 import * as utilFunctions from '../util.js';
+import { GetMethodFetch, PostMethodFetch } from '../fetch.js';
 
 export function currentDescriptionLength() {
     document.getElementById('descriptionLength').innerText = this.value.length + '/500';

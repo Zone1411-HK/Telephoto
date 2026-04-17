@@ -1,4 +1,5 @@
 import * as utilFunctions from '../util.js';
+import { GetMethodFetch, PostMethodFetch } from '../fetch.js';
 
 let type = 'top';
 let timeframe = 36500;

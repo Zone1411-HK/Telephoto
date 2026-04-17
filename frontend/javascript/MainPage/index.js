@@ -3,6 +3,7 @@ import * as chatFunctions from './chat.js';
 import * as postFunctions from './post.js';
 import * as uploadPostFunctions from './uploadPost.js';
 import * as scrollFunctions from './scroll.js';
+import { GetMethodFetch, PostMethodFetch } from '../fetch.js';
 
 let matchMedia = window.matchMedia('(width > 1000px)');
 let scrollDistance = 0;

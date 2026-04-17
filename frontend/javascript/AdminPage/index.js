@@ -1,14 +1,14 @@
 import * as adminFunctions from './admin.js';
+import { socket } from '../socket.js';
 
 let matchMedia = window.matchMedia('(width > 768px)');
-let socket = io();
 let userTrackerArray = [];
 let userTrackerTimeArray = [];
 
 socket.emit('requestActiveUsers');
 setInterval(() => {
     socket.emit('requestActiveUsers');
-}, 30000);
+}, 300);
 
 socket.on('responseActiveUsers', (activeUsers) => {
     if (userTrackerArray.length >= 5) {

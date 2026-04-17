@@ -1,3 +1,5 @@
+import { GetMethodFetch, PostMethodFetch } from '../fetch.js';
+
 export async function login() {
     try {
         let usernameInput = document.getElementById('loginUsername');
@@ -20,8 +22,8 @@ export async function login() {
             if (response.isLoggedIn) {
                 //const response = await PostMethodFetch('/api/saveUsername', { username: username });
                 //console.log(response);
-                window.location = '/';
                 console.log('success');
+                window.location = '/';
                 //getChats();
             } else {
                 console.log('fail');

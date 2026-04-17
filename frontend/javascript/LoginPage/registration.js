@@ -1,3 +1,5 @@
+import { GetMethodFetch, PostMethodFetch } from '../fetch.js';
+
 export async function registration() {
     try {
         let validInputs = 0;

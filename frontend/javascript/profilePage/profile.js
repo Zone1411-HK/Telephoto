@@ -1,4 +1,5 @@
 import * as utilFunctions from '../util.js';
+import { GetMethodFetch, PostMethodFetch } from '../fetch.js';
 
 const socket = io();
 
@@ -58,19 +59,12 @@ export function profileAddEventListeners() {
     document.getElementById('profileModify').addEventListener('click', modifyProfile);
     document.getElementById('deleteCancel').addEventListener('click', hideDeleteModal);
     document.getElementById('deleteConfirm').addEventListener('click', doDelete);
-    document.getElementById('logoutWrapper').addEventListener('click', logout);
+    document.getElementById('logoutWrapper').addEventListener('click', utilFunctions.logout);
     document.getElementById('closeComments').addEventListener('click', utilFunctions.closeComments);
     document
         .getElementById('commentSvgWrapper')
         .addEventListener('click', utilFunctions.sendComment);
     document.getElementById('profilePictureUpload').addEventListener('change', loadNewUserImg);
-}
-
-export async function logout() {
-    const { Status } = await PostMethodFetch('/api/logout');
-    if (Status == 'Success') {
-        window.location.href = '/login';
-    }
 }
 
 export async function postsByUser() {

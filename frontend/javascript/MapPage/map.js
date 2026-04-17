@@ -1,4 +1,5 @@
 import * as utilFunctions from '../util.js';
+import { GetMethodFetch } from '../fetch.js';
 
 let map;
 let markerCluster = L.markerClusterGroup({

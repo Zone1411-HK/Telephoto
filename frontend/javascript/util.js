@@ -1,3 +1,5 @@
+import { GetMethodFetch, PostMethodFetch } from './fetch.js';
+
 export function date_yyyy_MM_dd(originDate) {
     const date = new Date(originDate);
     const year = date.getFullYear();
@@ -43,8 +45,12 @@ export function date_yyyy_MM_dd_hh_mm(originDate) {
 export async function isLoggedIn() {
     try {
         const response = await GetMethodFetch('/api/sendUsername');
+        console.log(response);
         return response.exists;
-    } catch (error) {}
+    } catch (error) {
+        return false;
+        throw new Error(error);
+    }
 }
 
 export async function isAdmin() {
@@ -657,5 +663,12 @@ export function closeCommentModal(e, modal, modalContent) {
             modalContent.style.animation = '';
             document.getElementById('commentTextarea').value = '';
         }, 500);
+    }
+}
+
+export async function logout() {
+    const { Status } = await PostMethodFetch('/api/logout');
+    if (Status == 'Success') {
+        window.location.href = '/login';
     }
 }
