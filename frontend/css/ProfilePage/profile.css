@@ -139,7 +139,7 @@ body {
 }
 
 #profilePictureUploadLabel:hover {
-    filter: brightness(85%);
+    filter: brightness(90%);
 }
 
 #profileTextInfos {
@@ -225,7 +225,7 @@ body {
 }
 
 #profileModify:hover {
-    filter: brightness(80%);
+    filter: brightness(85%);
 }
 
 /*#endregion ProfileInfos*/
@@ -278,7 +278,7 @@ body {
 }
 
 .postSVGWrapper:hover {
-    filter: brightness(80%);
+    filter: brightness(85%);
 }
 
 .postSVGWrapper svg {
@@ -554,7 +554,7 @@ body {
 }
 #saveProfileModification:hover,
 #cancelProfileModification:hover {
-    filter: brightness(80%);
+    filter: brightness(85%);
 }
 
 #deleteProfile {

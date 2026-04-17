@@ -60,7 +60,7 @@
 }
 
 .navButton:hover {
-    filter: brightness(85%);
+    filter: brightness(90%);
 }
 
 .hidden {
@@ -117,7 +117,7 @@
 }
 .previous:hover,
 .next:hover {
-    filter: brightness(85%);
+    filter: brightness(90%);
 }
 
 .slideshow {
@@ -186,7 +186,7 @@
 }
 
 .mobileIcon:hover {
-    filter: brightness(80%);
+    filter: brightness(85%);
 }
 
 .mobileIcon svg {
@@ -367,7 +367,7 @@
 }
 
 .postUserReport:hover {
-    filter: brightness(85%);
+    filter: brightness(90%);
 }
 
 .postUserReport:hover svg {
@@ -397,7 +397,7 @@
 }
 
 .postUserImgWrapper:hover {
-    filter: brightness(85%);
+    filter: brightness(90%);
 }
 
 .postDescription {
@@ -447,7 +447,7 @@
 }
 
 .interactionButton:hover {
-    filter: brightness(85%);
+    filter: brightness(90%);
 }
 
 .interactionButton svg {
