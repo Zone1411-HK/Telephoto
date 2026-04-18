@@ -19,18 +19,18 @@ async function selectall() {
 
 async function addNewUser(username, salt, hash, email) {
     try {
-        const sql = `INSERT INTO users(username, password_salt, password_hash, email, is_admin, registration_date) VALUES("${username}", "${salt}", "${hash}", "${email}", false ,NOW())`;
-        const [result, fields] = await pool.execute(sql);
+        const sql = `INSERT INTO users(username, password_salt, password_hash, email, is_admin, registration_date) VALUES(?,?,?,?, false ,NOW())`;
+        const [result, fields] = await pool.execute(sql, [username, salt, hash, email]);
         return [result, fields];
     } catch (error) {
         console.error(error);
     }
 }
 
-async function loginSelect() {
-    const query = 'SELECT username, password_salt, password_hash FROM users';
-    const [rows] = await pool.execute(query);
-    return rows;
+async function loginSelect(username) {
+    const query = 'SELECT username, password_salt, password_hash FROM users WHERE username = ?';
+    const [rows] = await pool.execute(query, [username]);
+    return rows[0];
 }
 
 async function getUserByUsername(username) {
@@ -49,8 +49,15 @@ async function getUserByUsername(username) {
 async function createPost(username, description, tags, location, latitude, longitude) {
     try {
         let userId = await getUserByUsername(username);
-        const sql = `INSERT INTO posts(user_id, description, tags, location, latitude, longitude, creation_date) VALUES(${userId},"${description}","${tags}","${location}",${latitude}, ${longitude}, NOW())`;
-        const [rows, fields] = await pool.execute(sql);
+        const sql = `INSERT INTO posts(user_id, description, tags, location, latitude, longitude, creation_date) VALUES(?,?,?,?,?,?, NOW())`;
+        const [rows, fields] = await pool.execute(sql, [
+            userId,
+            description,
+            tags,
+            location,
+            latitude,
+            longitude
+        ]);
         return [rows, fields];
     } catch (error) {
         console.error(error);
@@ -385,6 +392,18 @@ async function allUsername() {
         throw new Error(error);
     }
 }
+
+async function usernameExists(username) {
+    try {
+        const sql = 'SELECT users.username FROM users WHERE users.username = ?';
+        const [rows] = await pool.execute(sql, [username]);
+        return rows.length == 0;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+usernameExists('adsjkfhsdfsj');
 
 //? Egy adott usernek az üzenetei
 async function messagesByUser(username) {
@@ -1089,5 +1108,6 @@ module.exports = {
     reportUser,
     reportPost,
     randomPlaces,
-    randomPlacesPosts
+    randomPlacesPosts,
+    usernameExists
 };

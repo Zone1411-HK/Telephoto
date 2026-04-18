@@ -1,7 +1,6 @@
 import * as utilFunctions from '../util.js';
 import { GetMethodFetch, PostMethodFetch } from '../fetch.js';
-
-const socket = io();
+import { socket } from '../socket.js';
 
 let currentURL = new URL(window.location.href);
 let currentUser;

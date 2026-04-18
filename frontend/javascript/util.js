@@ -48,15 +48,18 @@ export async function isLoggedIn() {
         console.log(response);
         return response.exists;
     } catch (error) {
-        return false;
         throw new Error(error);
     }
 }
 
 export async function isAdmin() {
-    const { Status } = await GetMethodFetch('/api/isAdmin');
-    console.log(Status == 'success');
-    return Status == 'success';
+    try {
+        const { Status } = await GetMethodFetch('/api/isAdmin');
+        console.log(Status == 'success');
+        return Status == 'success';
+    } catch (error) {
+        throw new Error(error);
+    }
 }
 
 export function nextSlide() {

@@ -109,6 +109,24 @@ export function adminAddEventListeners() {
 
     document.getElementById('slideshowLeft').addEventListener('click', previousSlide);
     document.getElementById('slideshowRight').addEventListener('click', nextSlide);
+
+    document.getElementById('commentDate').addEventListener('change', checkForValidDate);
+    document.getElementById('postInputCreationDate').addEventListener('change', checkForValidDate);
+    document.getElementById('profileRegDate').addEventListener('change', checkForValidDate);
+}
+
+export function checkForValidDate() {
+    let year = this.value.split('-')[0];
+    let month = this.value.split('-')[1];
+    let day = this.value.split('-')[2];
+    if (parseInt(year) < 1970) {
+        year = '1970';
+    }
+    if (parseInt(year) > 2050) {
+        year = '2050';
+    }
+
+    this.value = `${year}-${month}-${day}`;
 }
 
 export function loadAnimation() {
@@ -170,7 +188,9 @@ export async function openComment() {
             document.getElementById('commentUser').innerText =
                 `Felhasználó: ${commentData.username} #${commentData.user_id}`;
             document.getElementById('commentPost').innerText = `Poszt: #${commentData.post_id}`;
-            document.getElementById('commentDate').value = inputDate(commentData.comment_date);
+            document.getElementById('commentDate').value = utilFunctions.date_yyyy_MM_dd(
+                commentData.comment_date
+            );
             document.getElementById('commentContent').innerText = commentData.comment_content;
 
             if (this.dataset.reported == 'true') {
@@ -340,7 +360,7 @@ export async function openProfile() {
                 .classList.remove('adminActionClearEnabled');
         }
 
-        const dateString = inputDate(ProfileData[0].registration_date);
+        const dateString = utilFunctions.date_yyyy_MM_dd(ProfileData[0].registration_date);
         document.getElementById('profileUsername').value = ProfileData[0].username;
         document.getElementById('profileRegDate').value = `${dateString}`;
         document.getElementById('profileEmail').value = ProfileData[0].email;
@@ -514,7 +534,9 @@ export async function openPost() {
 
         generateMap(postData.latitude, postData.longitude);
 
-        document.getElementById('postInputCreationDate').value = inputDate(postData.creationDate);
+        document.getElementById('postInputCreationDate').value = utilFunctions.date_yyyy_MM_dd(
+            postData.creationDate
+        );
         document.getElementById('postUserNameId').innerText =
             `Felhasználó: ${postData.username} #${postData.userId}`;
         document.getElementById('postId').innerText = `Azonosító: #${postData.postId}`;
@@ -779,21 +801,6 @@ export function generateMap(lat, lon) {
     }
 
     map.invalidateSize();
-}
-
-export function inputDate(originDate) {
-    const date = new Date(originDate);
-    const year = date.getUTCFullYear();
-    let month = date.getUTCMonth() + 1;
-    if (month.toString().length == 1) {
-        month = '0' + month.toString();
-    }
-
-    let day = date.getUTCDate(date);
-    if (day.toString().length == 1) {
-        day = '0' + day.toString();
-    }
-    return `${year}-${month}-${day}`;
 }
 
 export function responsiveUsername() {

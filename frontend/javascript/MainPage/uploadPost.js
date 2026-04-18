@@ -81,6 +81,7 @@ export async function getGPS(file) {
 export function rightFileFormats(files) {
     let j = 0;
     while (j < files.length && fileFormats(files[j].type.split('/')[1])) {
+        console.log(files[j].type);
         j++;
     }
     if (j >= files.length) {

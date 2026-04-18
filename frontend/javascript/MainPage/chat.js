@@ -2,7 +2,7 @@ import * as utilFunctions from '../util.js';
 import { GetMethodFetch, PostMethodFetch } from '../fetch.js';
 import { socket } from '../socket.js';
 
-class ChatData {
+export class ChatData {
     constructor(id, name, pictureLink, lastMessage, userOfLastMessage) {
         this.id = id;
         this.name = name;
@@ -116,7 +116,7 @@ export async function getChatData() {
 
         return chatArray;
     } catch (error) {
-        return error.message;
+        throw new Error(error);
     }
 }
 
