@@ -1000,6 +1000,7 @@ form {
 
     .loadMorePost {
         height: 40%;
+        width: 100%;
     }
 
     .loadMorePost svg {

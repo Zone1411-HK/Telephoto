@@ -251,7 +251,7 @@ const hangPictures = async (test) => {
 
     let ropediv = generateRope();
     let clip = generateClip();
-    let slideshow = utilFunctions.generateSlideshow(test.links);
+    let slideshow = utilFunctions.generateSlideshow('/uploads/', test.links);
 
     let timestamp = utilFunctions.generateTimestamp(test.creation_date);
     slideshow.appendChild(timestamp);

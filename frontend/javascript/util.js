@@ -228,6 +228,9 @@ function generateVideoTime(video) {
 }
 
 function toggleVideoPause(video, button) {
+    console.log(video);
+    console.log(button);
+
     if (button.dataset.state == 'playing') {
         button.dataset.state = 'paused';
         button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" class="feather feather-play"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
@@ -241,6 +244,7 @@ function toggleVideoPause(video, button) {
 
 function generatePause(video) {
     let pauseButton = document.createElement('button');
+    pauseButton.type = 'button';
     pauseButton.classList.add('videoButton');
     pauseButton.dataset.state = 'paused';
     pauseButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" class="feather feather-play"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
@@ -252,6 +256,7 @@ function generatePause(video) {
 }
 
 function toggleVolumePanel(volumeWrapper, toggleButton) {
+    console.log(volumeWrapper);
     if (toggleButton.dataset.state == 'closed') {
         toggleButton.dataset.state = 'opened';
         volumeWrapper.classList.remove('hidden');
@@ -298,6 +303,7 @@ function generateVolumeControl(video) {
     let wrapper = document.createElement('div');
     wrapper.classList.add('volumeControlsContainer');
     let toggleButton = document.createElement('button');
+    toggleButton.type = 'button';
     toggleButton.dataset.state = 'closed';
     toggleButton.classList.add('volumeButton');
     toggleButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" class="feather feather-volume-x"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>`;
@@ -355,7 +361,7 @@ function generateVideoControls(media, video) {
     return controlDiv;
 }
 
-export function generateSlideshow(links) {
+export function generateSlideshow(directory, links) {
     if (links == undefined || links.length == 0) return document.createElement('div');
     let postImages = document.createElement('div');
     postImages.classList.add('postImages');
@@ -390,20 +396,24 @@ export function generateSlideshow(links) {
             video.controls = false;
 
             let source = document.createElement('source');
-            source.src = '/uploads/' + content;
+            source.src = directory + content;
             source.type = 'video/' + format;
+
+            let disclaimer = document.createElement('p');
+            disclaimer.innerText = 'A böngészője nem tudja lejátszani az alábbi videót!';
             video.appendChild(source);
+            video.appendChild(disclaimer);
             if (i == 0) slideshow.style.backgroundImage = 'url("/images/videoBackground.png")';
             media.appendChild(generateVideoControls(media, video));
             media.appendChild(video);
             media.dataset.type = 'video';
         } else {
             media = document.createElement('img');
-            media.src = '/uploads/' + content;
-            media.alt = '/uploads/' + content;
+            media.src = directory + content;
+            media.alt = directory + content;
             media.dataset.type = 'image';
 
-            if (i == 0) slideshow.style.backgroundImage = `url("/uploads/${content}")`;
+            if (i == 0) slideshow.style.backgroundImage = `url("${directory}${content}")`;
         }
 
         media.classList.add('slideshowItem');

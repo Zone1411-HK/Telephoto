@@ -40,14 +40,14 @@ export async function preLoadFiles() {
                 [file],
                 file.name
                     .normalize('NFD')
-                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/[\u0300-\u036f’]/g, '')
                     .replace(/\.(?=.*\.)/g, '-'),
                 {
                     type: file.type
                 }
             );
             renamedFiles.push(renamedFile);
-            links.push('../temp_images/temp-' + renamedFile.name);
+            links.push('temp-' + renamedFile.name);
         }
         console.log(links);
         let response = await uploadFiles('/api/tempUpload', renamedFiles);
@@ -57,7 +57,7 @@ export async function preLoadFiles() {
         document.getElementById('tempSlideshowWrapper').replaceChildren();
         document
             .getElementById('tempSlideshowWrapper')
-            .appendChild(utilFunctions.generateSlideshow(links));
+            .appendChild(utilFunctions.generateSlideshow('../temp_images/', links));
     } else {
         uploadFeedback.innerText = 'Nem megfelelő egy vagy több fájl formátuma!';
         uploadFeedback.style.color = 'var(--invalidRed)';
@@ -74,7 +74,7 @@ export async function getGPS(file) {
         });
         return tags.gps;
     } catch (error) {
-        console.error(error);
+        return null;
     }
 }
 

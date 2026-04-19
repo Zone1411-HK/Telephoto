@@ -305,7 +305,7 @@ export async function openPost() {
         let post = document.createElement('div');
         post.classList.add('post');
 
-        let slideshow = utilFunctions.generateSlideshow(Infos.links);
+        let slideshow = utilFunctions.generateSlideshow('/uploads/', Infos.links);
 
         let timestamp = utilFunctions.generateTimestamp(Infos.creation_date);
         slideshow.appendChild(timestamp);
