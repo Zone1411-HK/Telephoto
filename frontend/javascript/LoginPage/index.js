@@ -2,13 +2,14 @@ import { login } from './login.js';
 import { registration } from './registration.js';
 
 let matchMedia = window.matchMedia('(width > 768px)');
+let timer;
 
 document.addEventListener('DOMContentLoaded', () => {
     loginAddEventListeners();
 });
 
 function loginAddEventListeners() {
-    document.getElementById('loginButton').addEventListener('click', login);
+    document.getElementById('loginButton').addEventListener('click', submitLogin);
     document.getElementById('registrationButton').addEventListener('click', submitRegistration);
     document.getElementById('switchToRegistration').addEventListener('click', switchToRegistration);
     document.getElementById('switchToLogin').addEventListener('click', switchToLogin);
@@ -20,11 +21,13 @@ function loginAddEventListeners() {
 }
 
 async function submitRegistration() {
+    clearTimeout(timer);
     let response = await registration();
     console.log(response.success);
     document.getElementById('registrationFeedback').classList.remove('animFadeOutUp');
     document.getElementById('registrationFeedback').classList.add('animFadeInDown');
-    setTimeout(() => {
+
+    timer = setTimeout(() => {
         document.getElementById('registrationFeedback').classList.remove('animFadeInDown');
         document.getElementById('registrationFeedback').classList.add('animFadeOutUp');
     }, 5000);
@@ -40,6 +43,28 @@ async function submitRegistration() {
         document.getElementById('registrationMessage').innerText = response.errorMessage;
         document.getElementById('registrationStatus').classList.remove('successfulRegistration');
         document.getElementById('registrationStatus').classList.add('failedRegistration');
+    }
+}
+
+async function submitLogin() {
+    clearTimeout(timer);
+
+    let response = await login();
+    document.getElementById('registrationFeedback').classList.remove('animFadeOutUp');
+    document.getElementById('registrationFeedback').classList.add('animFadeInDown');
+    timer = setTimeout(() => {
+        document.getElementById('registrationFeedback').classList.remove('animFadeInDown');
+        document.getElementById('registrationFeedback').classList.add('animFadeOutUp');
+    }, 2000);
+
+    if (!response) {
+        document.getElementById('registrationStatus').innerText = 'Sikertelen';
+        document.getElementById('registrationMessage').innerText =
+            'Helytelen jelszó vagy felhasználónév!';
+        document.getElementById('registrationStatus').classList.remove('successfulRegistration');
+        document.getElementById('registrationStatus').classList.add('failedRegistration');
+    } else {
+        window.location.href = '/';
     }
 }
 

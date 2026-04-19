@@ -1,6 +1,7 @@
 import { GetMethodFetch, PostMethodFetch } from './fetch.js';
 
 export function date_yyyy_MM_dd(originDate) {
+    if (originDate == undefined || originDate == '') return '';
     const date = new Date(originDate);
     const year = date.getFullYear();
     let month = date.getMonth() + 1;
@@ -16,6 +17,7 @@ export function date_yyyy_MM_dd(originDate) {
 }
 
 export function date_yyyy_MM_dd_hh_mm(originDate) {
+    if (originDate == undefined || originDate == '') return '';
     const date = new Date(originDate);
     const year = date.getFullYear();
     let month = date.getMonth() + 1;
@@ -151,7 +153,7 @@ export function previousSlideItem() {
 }
 
 export function generateSlideshow(links) {
-    if (links == undefined) return document.createElement('div');
+    if (links == undefined || links.length == 0) return document.createElement('div');
     let postImages = document.createElement('div');
     postImages.classList.add('postImages');
 
@@ -214,6 +216,8 @@ export function generateSlideshow(links) {
 }
 
 export function generateTimestamp(rawDate) {
+    console.log(rawDate);
+    if (rawDate == undefined || rawDate == '') return document.createElement('div');
     const date = date_yyyy_MM_dd(rawDate);
     let element = document.createElement('div');
     element.classList.add('postTimestamp');
@@ -253,7 +257,7 @@ export function generateDescription(description) {
     return descriptionElement;
 }
 
-export async function generateInteractions(
+export function generateInteractions(
     userUpvote,
     userDownvote,
     userFavorite,
@@ -558,9 +562,9 @@ export function generateCommentProfilePicture(src, username) {
 
     let profilePicture = document.createElement('img');
 
-    src != null
-        ? (profilePicture.src = '/profile_images/' + src)
-        : (profilePicture.src = 'profile_images/defaultProfile.svg');
+    src == '' || src == undefined
+        ? (profilePicture.src = 'profile_images/defaultProfile.jpg')
+        : (profilePicture.src = '/profile_images/' + src);
 
     profilePicture.classList.add('commentProfilePicture');
     profilePicture.loading = 'lazy';

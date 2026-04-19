@@ -2,27 +2,10 @@ import * as utilFunctions from '../util.js';
 import { GetMethodFetch } from '../fetch.js';
 
 let map;
-let markerCluster = L.markerClusterGroup({
-    maxClusterRadius: 100,
-    iconCreateFunction: clusterIcon,
-
-    polygonOptions: {
-        color: '#859258',
-        weight: 1,
-        fillColor: '#b9c78a'
-    }
-});
+let markerCluster;
 
 let markers;
-const boundLines = {
-    minLatLine: L.polyline([
-        [0, 180],
-        [0, -180]
-    ]),
-    maxLatLine: null,
-    minLonLine: null,
-    maxLonLine: null
-};
+let boundLines;
 let isClosed = true;
 
 export async function startUp() {
@@ -46,6 +29,27 @@ export async function startUp() {
         generateMap();
 
         document.getElementById('filterSVGWrapper').addEventListener('click', toggleFilter);
+
+        markerCluster = L.markerClusterGroup({
+            maxClusterRadius: 100,
+            iconCreateFunction: clusterIcon,
+
+            polygonOptions: {
+                color: '#859258',
+                weight: 1,
+                fillColor: '#b9c78a'
+            }
+        });
+
+        boundLines = {
+            minLatLine: L.polyline([
+                [0, 180],
+                [0, -180]
+            ]),
+            maxLatLine: null,
+            minLonLine: null,
+            maxLonLine: null
+        };
 
         let filterInputs = document.querySelectorAll('.filterOptionInputs input');
         for (const input of filterInputs) {
@@ -109,7 +113,7 @@ export function filterPins() {
         if (i == 0 && this.value[i] == '-') {
             val += this.value[i];
         }
-        if (/[0-9]/.Infos(this.value[i])) {
+        if (/[0-9]/.test(this.value[i])) {
             val += this.value[i];
         }
         if (!dot && this.value[i] == '.') {
@@ -137,20 +141,22 @@ export function filterPins() {
 
     let min = this.parentNode.children[0];
     let max = this.parentNode.children[1];
-    if (parseFloat(max.value) < parseFloat(min.value) && this == max) {
-        max.classList.add('invalidFilter');
-        min.classList.remove('invalidFilter');
-    } else if (parseFloat(max.value) < parseFloat(min.value) && this == min) {
-        max.classList.remove('invalidFilter');
-        min.classList.add('invalidFilter');
-    } else {
-        max.classList.remove('invalidFilter');
-        min.classList.remove('invalidFilter');
-        markerCluster.clearLayers();
-        map.removeLayer(markerCluster);
+    if (val != '-' && val != '.') {
+        if (parseFloat(max.value) < parseFloat(min.value) && this == max) {
+            max.classList.add('invalidFilter');
+            min.classList.remove('invalidFilter');
+        } else if (parseFloat(max.value) < parseFloat(min.value) && this == min) {
+            max.classList.remove('invalidFilter');
+            min.classList.add('invalidFilter');
+        } else {
+            max.classList.remove('invalidFilter');
+            min.classList.remove('invalidFilter');
+            markerCluster.clearLayers();
+            map.removeLayer(markerCluster);
 
-        generateFilterLines(this, max);
-        generateFilteredMarkers();
+            generateFilterLines(this, max);
+            generateFilteredMarkers();
+        }
     }
 }
 

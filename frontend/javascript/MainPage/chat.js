@@ -189,7 +189,7 @@ export async function generateChat(element) {
 
     if (response.Result.length > 0) {
         for (const obj of response.Result) {
-            const messageRow = await generateMessage(
+            const messageRow = generateMessage(
                 obj.username,
                 currentUsername.Result,
                 obj.message,
@@ -251,7 +251,7 @@ export function removeUserpopup() {
     }
 }
 
-export async function generateMessage(username, currentUsername, message, date) {
+export function generateMessage(username, currentUsername, message, date) {
     const messageRow = document.createElement('div');
     messageRow.classList.add('messageRow');
 
@@ -259,10 +259,6 @@ export async function generateMessage(username, currentUsername, message, date) 
     messageContent.classList.add('message');
     messageContent.innerText = message;
     messageContent.dataset.username = username;
-
-    //! Eléggé bugosak. Nem tudom mi legyen vele
-    //messageContent.addEventListener('mouseenter', userPopup);
-    //messageContent.addEventListener('mouseleave', removeUserpopup);
 
     const messageDate = document.createElement('p');
     messageDate.classList.add('messageDate');

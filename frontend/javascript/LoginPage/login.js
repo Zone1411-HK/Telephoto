@@ -20,16 +20,14 @@ export async function login() {
                 password: password
             });
             if (response.isLoggedIn) {
-                //const response = await PostMethodFetch('/api/saveUsername', { username: username });
-                //console.log(response);
-                console.log('success');
-                window.location = '/';
-                //getChats();
+                return true;
             } else {
-                console.log('fail');
+                return false;
             }
         }
+        return false;
     } catch (error) {
         console.error(`LOGIN hiba: ${error.message}`);
+        return false;
     }
 }

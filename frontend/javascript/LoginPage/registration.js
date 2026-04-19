@@ -6,7 +6,7 @@ export async function registration() {
         let errorMessage = '';
         let usernameInput = document.getElementById('registrationUsername');
         let username = usernameInput.value;
-        if (username != '' && username.replace(/\s/g, '').length != 0) {
+        if (username != '' && username.replace(/\s/g, '').length >= 3) {
             const isUsernameAvailable = await GetMethodFetch(
                 '/api/isUsernameAvailable/' + username
             );
@@ -19,7 +19,7 @@ export async function registration() {
                 validInputs--;
             }
         } else {
-            errorMessage += 'Nem adott meg felhasználónevet!\n';
+            errorMessage += 'Nem elég hosszú felhasználónév!\n';
             usernameInput.classList.add('invalid');
             validInputs--;
         }
