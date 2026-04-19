@@ -1,35 +1,16 @@
-let socket = io();
-let userTrackerArray = [];
-let userTrackerTimeArray = [];
+import * as utilFunctions from '../util.js';
+import { GetMethodFetch, PostMethodFetch } from '../fetch.js';
+import { socket } from '../socket.js';
+
 let map;
-let matchMedia = window.matchMedia('(width > 768px)');
 
-socket.emit('requestActiveUsers');
-setInterval(() => {
-    socket.emit('requestActiveUsers');
-}, 30000);
-
-document.addEventListener('DOMContentLoaded', () => {
-    startUp();
-});
-window.addEventListener('resize', () => {
-    let sidebar = document.getElementById('sidebar');
-
-    if (!matchMedia.matches) {
-        sidebar.dataset.collapsed = 'false';
-        sidebar.classList.remove('collapsed');
-        for (let i = 1; i < sidebar.children.length; i++) {
-            sidebar.children[i].style.visibility = 'visible';
-        }
-    }
-});
-
-async function startUp() {
-    let loggedIn = await isLoggedIn();
+export async function startUp() {
+    console.log(socket);
+    let loggedIn = await utilFunctions.isLoggedIn();
     if (!loggedIn) {
         window.location.href = '/login';
     } else {
-        if (await isAdmin()) {
+        if (await utilFunctions.isAdmin()) {
             getProfiles();
             getPosts();
             getComments();
@@ -48,7 +29,7 @@ async function startUp() {
     }
 }
 
-function collapseSidebar() {
+export function collapseSidebar() {
     let sidebar = document.getElementById('sidebar');
     let adminContent = document.getElementById('adminContent');
     let isCollapsed = sidebar.dataset.collapsed;
@@ -67,7 +48,7 @@ function collapseSidebar() {
     toggleSidebarVisibility(sidebar);
 }
 
-function toggleSidebarVisibility(parent) {
+export function toggleSidebarVisibility(parent) {
     let children = parent.children;
     for (let i = 1; i < children.length; i++) {
         console.log(children[i].style.visibility);
@@ -82,7 +63,7 @@ function toggleSidebarVisibility(parent) {
 //! COMMENT
 //#region COMMENT
 
-function adminAddEventListeners() {
+export function adminAddEventListeners() {
     const navButtons = document.getElementsByClassName('altNavButton');
     for (const navButton of navButtons) {
         navButton.addEventListener('click', navButtonClick);
@@ -128,9 +109,27 @@ function adminAddEventListeners() {
 
     document.getElementById('slideshowLeft').addEventListener('click', previousSlide);
     document.getElementById('slideshowRight').addEventListener('click', nextSlide);
+
+    document.getElementById('commentDate').addEventListener('change', checkForValidDate);
+    document.getElementById('postInputCreationDate').addEventListener('change', checkForValidDate);
+    document.getElementById('profileRegDate').addEventListener('change', checkForValidDate);
 }
 
-function loadAnimation() {
+export function checkForValidDate() {
+    let year = this.value.split('-')[0];
+    let month = this.value.split('-')[1];
+    let day = this.value.split('-')[2];
+    if (parseInt(year) < 1970) {
+        year = '1970';
+    }
+    if (parseInt(year) > 2050) {
+        year = '2050';
+    }
+
+    this.value = `${year}-${month}-${day}`;
+}
+
+export function loadAnimation() {
     let panels = document.querySelectorAll('.adminPanel');
     for (let i = 0; i < panels.length; i++) {
         setTimeout(() => {
@@ -140,7 +139,7 @@ function loadAnimation() {
     }
 }
 
-async function getComments() {
+export async function getComments() {
     try {
         const response = await GetMethodFetch('/api/getCommentsAdmin');
         if (response.Status == 'Success') {
@@ -177,7 +176,7 @@ async function getComments() {
     }
 }
 
-async function openComment() {
+export async function openComment() {
     try {
         const commentId = this.dataset.commentId;
         const { Status, commentData } = await GetMethodFetch('/api/getCommentData/' + commentId);
@@ -189,7 +188,9 @@ async function openComment() {
             document.getElementById('commentUser').innerText =
                 `Felhasználó: ${commentData.username} #${commentData.user_id}`;
             document.getElementById('commentPost').innerText = `Poszt: #${commentData.post_id}`;
-            document.getElementById('commentDate').value = inputDate(commentData.comment_date);
+            document.getElementById('commentDate').value = utilFunctions.date_yyyy_MM_dd(
+                commentData.comment_date
+            );
             document.getElementById('commentContent').innerText = commentData.comment_content;
 
             if (this.dataset.reported == 'true') {
@@ -218,7 +219,7 @@ async function openComment() {
 
 let originalComment = {};
 
-async function modifyComment() {
+export async function modifyComment() {
     let modifiableDatas = document.querySelectorAll('.commentModifyData');
     for (const el of modifiableDatas) {
         originalComment[el.id] = el.value;
@@ -231,7 +232,7 @@ async function modifyComment() {
     this.style.display = 'none';
 }
 
-async function confirmCommentModification() {
+export async function confirmCommentModification() {
     let modifiedArray = document.querySelectorAll('.commentModifyData');
     console.log(modifiedArray);
     let j = 0;
@@ -254,7 +255,7 @@ async function confirmCommentModification() {
     }
 }
 
-async function clearComment() {
+export async function clearComment() {
     const commentId = document.getElementById('openedComment').dataset.commentId;
     console.log(commentId);
     const clearResponse = await PostMethodFetch('/api/clearComment', { commentId: commentId });
@@ -262,7 +263,7 @@ async function clearComment() {
     closeComment();
 }
 
-function closeComment() {
+export function closeComment() {
     try {
         let modifyArray = document.querySelectorAll('.commentModifyData');
         for (let el of modifyArray) {
@@ -285,7 +286,7 @@ function closeComment() {
     }
 }
 
-async function deleteComment() {
+export async function deleteComment() {
     document.getElementById('deleteConfirmModal').style.display = 'flex';
     document.getElementById('deleteConfirm').dataset.deleteType = 'comment';
 }
@@ -294,7 +295,7 @@ async function deleteComment() {
 //! PROFILE
 //#region PROFILE
 
-async function getProfiles() {
+export async function getProfiles() {
     try {
         const response = await GetMethodFetch('/api/getProfilesAdmin');
         if (response.Status == 'Success') {
@@ -333,7 +334,7 @@ async function getProfiles() {
     }
 }
 
-async function openProfile() {
+export async function openProfile() {
     const userId = this.dataset.userId;
     const { Status, ProfileData } = await GetMethodFetch('/api/getProfileData/' + userId);
     if (Status == 'Success' && ProfileData.length != 0) {
@@ -359,7 +360,7 @@ async function openProfile() {
                 .classList.remove('adminActionClearEnabled');
         }
 
-        const dateString = inputDate(ProfileData[0].registration_date);
+        const dateString = utilFunctions.date_yyyy_MM_dd(ProfileData[0].registration_date);
         document.getElementById('profileUsername').value = ProfileData[0].username;
         document.getElementById('profileRegDate').value = `${dateString}`;
         document.getElementById('profileEmail').value = ProfileData[0].email;
@@ -378,7 +379,7 @@ async function openProfile() {
 
 let originalData;
 
-function modifyProfile() {
+export function modifyProfile() {
     originalData = {};
     this.style.display = 'none';
     document.getElementById('profActionConfirmModify').style.display = 'flex';
@@ -392,7 +393,7 @@ function modifyProfile() {
 }
 
 //TODO ADMIN PROFILT CSAK SAJÁT MAGA TUDJA MÓDOSíTANI
-async function confirmModificationProfile() {
+export async function confirmModificationProfile() {
     const emailRegExp = /^[A-Za-z0-9]+@[A-Za-z0-9]+\.[A-Za-z0-9]/;
     let isValid = true;
     let modifyArray = document.querySelectorAll('.profileData');
@@ -439,7 +440,7 @@ async function confirmModificationProfile() {
     }
 }
 
-function closeProfile() {
+export function closeProfile() {
     let modifyArray = document.querySelectorAll('.profileData');
     for (let el of modifyArray) {
         el.disabled = true;
@@ -458,12 +459,12 @@ function closeProfile() {
     getComments();
 }
 
-async function deleteProfile() {
+export async function deleteProfile() {
     document.getElementById('deleteConfirmModal').style.display = 'flex';
     document.getElementById('deleteConfirm').dataset.deleteType = 'profile';
 }
 
-async function clearProfile() {
+export async function clearProfile() {
     const userId = document.getElementById('openedProfile').dataset.userId;
     const clearResponse = await PostMethodFetch('/api/clearProfile', { userId: userId });
     console.log(clearResponse);
@@ -475,7 +476,7 @@ async function clearProfile() {
 //! POST
 //#region POST
 
-async function getPosts() {
+export async function getPosts() {
     try {
         const response = await GetMethodFetch('/api/getPostsAdmin');
         if (response.Status == 'Success') {
@@ -509,7 +510,7 @@ async function getPosts() {
     }
 }
 
-async function openPost() {
+export async function openPost() {
     const postId = this.dataset.postId;
     const { Status, postData } = await GetMethodFetch('/api/getPostData/' + postId);
     if (Status == 'Success' && postData.length != 0) {
@@ -533,7 +534,9 @@ async function openPost() {
 
         generateMap(postData.latitude, postData.longitude);
 
-        document.getElementById('postInputCreationDate').value = inputDate(postData.creationDate);
+        document.getElementById('postInputCreationDate').value = utilFunctions.date_yyyy_MM_dd(
+            postData.creationDate
+        );
         document.getElementById('postUserNameId').innerText =
             `Felhasználó: ${postData.username} #${postData.userId}`;
         document.getElementById('postId').innerText = `Azonosító: #${postData.postId}`;
@@ -568,7 +571,7 @@ async function openPost() {
     }
 }
 
-function closePost() {
+export function closePost() {
     let modifyArray = document.querySelectorAll('.postModifyData');
     for (let el of modifyArray) {
         el.disabled = true;
@@ -589,12 +592,12 @@ function closePost() {
     getComments();
 }
 
-async function deletePost() {
+export async function deletePost() {
     document.getElementById('deleteConfirmModal').style.display = 'flex';
     document.getElementById('deleteConfirm').dataset.deleteType = 'post';
 }
 
-async function clearPost() {
+export async function clearPost() {
     const postId = document.getElementById('openedPost').dataset.postId;
     const clearResponse = await PostMethodFetch('/api/clearPost', { postId: postId });
     console.log(clearResponse);
@@ -603,7 +606,7 @@ async function clearPost() {
 
 let originalPost = {};
 
-function modifyPost() {
+export function modifyPost() {
     let modifiableDatas = document.querySelectorAll('.postModifyData');
     for (const el of modifiableDatas) {
         originalPost[el.id] = el.value;
@@ -619,7 +622,7 @@ function modifyPost() {
 
 let tempMarker;
 
-function placeMarker() {
+export function placeMarker() {
     let val = '';
     let dot = false;
     for (let i = 0; i < this.value.length; i++) {
@@ -670,7 +673,7 @@ function placeMarker() {
     }
 }
 
-async function confirmPostModification() {
+export async function confirmPostModification() {
     let modifiedArray = document.querySelectorAll('.postModifyData');
     console.log(modifiedArray);
     let j = 0;
@@ -695,16 +698,16 @@ async function confirmPostModification() {
 
 //#endregion
 
-function closeDeleteModal() {
+export function closeDeleteModal() {
     document.getElementById('deleteConfirmModal').style.display = 'none';
     document.getElementById('deleteConfirm').dataset.deleteType = '';
 }
 
-async function confirmDelete() {
+export async function confirmDelete() {
     if (this.dataset.deleteType == 'profile') {
         const userId = document.getElementById('openedProfile').dataset.userId;
         const deleteResponse = await PostMethodFetch('/api/deleteProfile', { userId: userId });
-        console.log(deleteResponse);
+        socket.emit('logoutUser', userId);
         closeProfile();
     }
     if (this.dataset.deleteType == 'post') {
@@ -724,7 +727,7 @@ async function confirmDelete() {
     closeDeleteModal();
 }
 
-function slideShow(move) {
+export function slideShow(move) {
     let slides = document.getElementsByClassName('pictures');
     let j = 0;
     while (j < slides.length && !slides[j].classList.contains('active')) {
@@ -749,7 +752,7 @@ function slideShow(move) {
     }
 }
 
-function nextSlide() {
+export function nextSlide() {
     this.style.pointerEvents = 'none';
     setTimeout(() => {
         this.style.pointerEvents = 'all';
@@ -757,7 +760,7 @@ function nextSlide() {
     slideShow(1);
 }
 
-function previousSlide() {
+export function previousSlide() {
     this.style.pointerEvents = 'none';
     setTimeout(() => {
         this.style.pointerEvents = 'all';
@@ -765,7 +768,7 @@ function previousSlide() {
     slideShow(-1);
 }
 
-function generateMap(lat, lon) {
+export function generateMap(lat, lon) {
     let tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 20,
         noWrap: true
@@ -800,22 +803,7 @@ function generateMap(lat, lon) {
     map.invalidateSize();
 }
 
-function inputDate(originDate) {
-    const date = new Date(originDate);
-    const year = date.getUTCFullYear();
-    let month = date.getUTCMonth() + 1;
-    if (month.toString().length == 1) {
-        month = '0' + month.toString();
-    }
-
-    let day = date.getUTCDate(date);
-    if (day.toString().length == 1) {
-        day = '0' + day.toString();
-    }
-    return `${year}-${month}-${day}`;
-}
-
-function responsiveUsername() {
+export function responsiveUsername() {
     let username = document.getElementById('adminUsername');
     let length = username.innerText.length;
     if (length > 5) {
@@ -837,14 +825,14 @@ function responsiveUsername() {
     }
 }
 
-function generateBarChart(arr) {
+export function generateBarChart(userTrackerArray, userTrackerTimeArray) {
     const yAxis = document.getElementById('yAxis');
     yAxis.replaceChildren();
     const nullPoint = document.createElement('span');
     nullPoint.innerText = 0;
     yAxis.appendChild(nullPoint);
 
-    let maxValue = Math.max(...arr);
+    let maxValue = Math.max(...userTrackerArray);
 
     for (let i = 1; i < 5; i++) {
         if ((maxValue * (i / 4)) % 1 == 0) {
@@ -859,15 +847,15 @@ function generateBarChart(arr) {
     columnDiv.replaceChildren();
     let timeDiv = document.getElementById('userTrackerTimes');
     timeDiv.replaceChildren();
-    for (let i = 0; i < arr.length; i++) {
+    for (let i = 0; i < userTrackerArray.length; i++) {
         let column = document.createElement('div');
         column.classList.add('userTrackerColumn');
-        column.style.height = ratio * arr[i] + '%';
+        column.style.height = ratio * userTrackerArray[i] + '%';
 
         let tooltip = document.createElement('span');
         tooltip.classList.add('userTrackerTooltip');
-        tooltip.innerText = arr[i];
-        if (ratio * arr[i] < 40) {
+        tooltip.innerText = userTrackerArray[i];
+        if (ratio * userTrackerArray[i] < 40) {
             tooltip.style.paddingTop = '5%';
             tooltip.style.fontSize = '0.6vw';
         } else {
@@ -883,18 +871,7 @@ function generateBarChart(arr) {
     }
 }
 
-socket.on('responseActiveUsers', (activeUsers) => {
-    if (userTrackerArray.length >= 5) {
-        userTrackerArray.shift();
-        userTrackerTimeArray.shift();
-    }
-    userTrackerTimeArray.push(convertToTime(Date.now()));
-    userTrackerArray.push(activeUsers);
-
-    generateBarChart(userTrackerArray);
-});
-
-function convertToTime(unix) {
+export function convertToTime(unix) {
     let date = new Date(unix);
     let hour = date.getHours(date);
 
@@ -905,7 +882,7 @@ function convertToTime(unix) {
     return `${hour}:${minute}`;
 }
 
-function sortArray(arr) {
+export function sortArray(arr) {
     for (let i = 0; i < arr.length - 1; i++) {
         for (let j = i + 1; j < arr.length; j++) {
             if (arr[j] < arr[i]) {
@@ -918,7 +895,7 @@ function sortArray(arr) {
     return arr;
 }
 
-function navButtonClick() {
+export function navButtonClick() {
     const navButtons = document.getElementsByClassName('altNavButton');
     console.log(navButtons);
     for (const navButton of navButtons) {
@@ -931,7 +908,7 @@ function navButtonClick() {
     }
 }
 
-function searchFocus() {
+export function searchFocus() {
     const searches = document.getElementsByClassName('searchId');
     for (const search of searches) {
         if (this == search) {

@@ -1,4 +1,6 @@
-async function login() {
+import { GetMethodFetch, PostMethodFetch } from '../fetch.js';
+
+export async function login() {
     try {
         let usernameInput = document.getElementById('loginUsername');
         let username = usernameInput.value;
@@ -18,16 +20,14 @@ async function login() {
                 password: password
             });
             if (response.isLoggedIn) {
-                //const response = await PostMethodFetch('/api/saveUsername', { username: username });
-                //console.log(response);
-                window.location = '/';
-                console.log('success');
-                //getChats();
+                return true;
             } else {
-                console.log('fail');
+                return false;
             }
         }
+        return false;
     } catch (error) {
         console.error(`LOGIN hiba: ${error.message}`);
+        return false;
     }
 }

@@ -58,14 +58,8 @@ router.get('/testsql', async (request, response) => {
 router.get('/isUsernameAvailable/:name', async (request, response) => {
     try {
         const name = request.params.name;
-        const usernames = await database.allUsername();
-        let j = 0;
+        const isAvailable = await database.usernameExists(name);
 
-        while (j < usernames.length && usernames[j].username != name) {
-            j++;
-        }
-
-        let isAvailable = j == usernames.length ? true : false;
         response.status(200).json({
             status: isAvailable ? 'success' : 'failed',
             available: isAvailable
@@ -99,23 +93,13 @@ router.post('/registration', async (request, response) => {
 //#region login
 router.post('/login', async (request, response) => {
     try {
-        const loginSelect = await database.loginSelect();
         const { username, password } = request.body;
-        let isVerified = false;
-        let j = 0;
-        while (j < loginSelect.length && !isVerified) {
-            if (
-                loginSelect[j].username == username &&
-                VerifyHashedString(
-                    password,
-                    loginSelect[j].password_salt,
-                    loginSelect[j].password_hash
-                )
-            ) {
-                isVerified = true;
-            }
-            j++;
-        }
+        const loginSelect = await database.loginSelect(username);
+        let isVerified = VerifyHashedString(
+            password,
+            loginSelect.password_salt,
+            loginSelect.password_hash
+        );
 
         if (isVerified) {
             const userId = await database.getUserByUsername(username);
@@ -161,7 +145,7 @@ router.get('/isAdmin', async (request, response) => {
             });
         }
     } catch (error) {
-        throw new Error(`Hiba az "isAdmin" middleware-ben: ${error}`);
+        throw new Error(`Hiba az "/isAdmin" végpontban`);
     }
 });
 

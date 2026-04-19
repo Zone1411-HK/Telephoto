@@ -1,4 +1,4 @@
-async function GetMethodFetch(url) {
+export async function GetMethodFetch(url) {
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -10,7 +10,7 @@ async function GetMethodFetch(url) {
     }
 }
 
-async function PostMethodFetch(url, data) {
+export async function PostMethodFetch(url, data) {
     try {
         const response = await fetch(url, {
             method: 'POST',

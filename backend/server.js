@@ -30,6 +30,11 @@ io.on('connection', (socket) => {
         console.log('user disconnected');
         console.log('Active users: ', activeUsers);
     });
+
+    socket.on('logoutUser', (userId) => {
+        console.log('USER LOGGED OUT');
+        io.emit('logoutUser', userId);
+    });
 });
 
 http.listen(port, ip, () => {

@@ -1,12 +1,12 @@
-//TODO Visszajelzést adni a felhasználónak mi a probléma
+import { GetMethodFetch, PostMethodFetch } from '../fetch.js';
 
-async function registration() {
+export async function registration() {
     try {
         let validInputs = 0;
         let errorMessage = '';
         let usernameInput = document.getElementById('registrationUsername');
         let username = usernameInput.value;
-        if (username != '' && username.replace(/\s/g, '').length != 0) {
+        if (username != '' && username.replace(/\s/g, '').length >= 3) {
             const isUsernameAvailable = await GetMethodFetch(
                 '/api/isUsernameAvailable/' + username
             );
@@ -19,7 +19,7 @@ async function registration() {
                 validInputs--;
             }
         } else {
-            errorMessage += 'Nem adott meg felhasználónevet!\n';
+            errorMessage += 'Nem elég hosszú felhasználónév!\n';
             usernameInput.classList.add('invalid');
             validInputs--;
         }
