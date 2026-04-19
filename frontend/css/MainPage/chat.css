@@ -69,7 +69,7 @@
     border-bottom: 1px solid var(--PostDark);
     margin: 0;
     width: 95%;
-    color: var(--PostDark);
+    color: var(--LoginGombBorder);
 }
 
 .chatImgDiv {
@@ -181,7 +181,7 @@
     justify-content: end;
     align-items: center;
     border: none;
-    background-color: var(--PostDark);
+    background-color: var(--LoginGombBorder);
     padding: 0;
     filter: brightness(100%);
     transition: 0.25s;
@@ -206,7 +206,6 @@
     width: 80%;
     padding-left: 5%;
     padding-right: 3%;
-    padding-top: 2px;
 }
 
 .openedChatName h3 {
@@ -282,7 +281,7 @@
     flex-direction: row;
     width: 100%;
     height: 5vh;
-    background-color: var(--PostDark);
+    background-color: var(--LoginGombBorder);
     z-index: 1;
 }
 
@@ -355,7 +354,7 @@
 }
 .newMessageWrapper button svg {
     stroke-width: 1.5px;
-    stroke: var(--PostDark);
+    stroke: var(--LoginGombBorder);
 }
 
 .newMessageWrapper button:hover {
@@ -371,7 +370,6 @@
     flex-direction: row;
     justify-content: center;
     background-color: rgba(30, 30, 30, 0.9);
-
     left: 0;
     top: 0;
     padding-top: 4vh;
@@ -380,10 +378,10 @@
 #newChatContainer {
     width: 35vw;
     height: 80vh;
-    background-color: var(--Post);
+    background-color: var(--SecondaryDark);
     display: flex;
     flex-direction: column;
-    border-radius: 15px;
+    border-radius: 10px;
     gap: 15px;
     align-items: center;
     box-shadow: 0 0 10px 2px var(--PostDark);
@@ -427,7 +425,7 @@
     width: 75%;
     font-size: 1.5rem;
     transition: 0.25s;
-    border-radius: 5px;
+    border-radius: 10px;
     background-color: var(--PostLight);
     border: 1px solid var(--PostAccent);
     max-height: 4rem;
@@ -467,13 +465,13 @@
     width: 75%;
     border: 1px solid var(--PostAccent);
     background-color: var(--PostLight);
-    border-radius: 5px;
+    border-radius: 10px;
     flex: 1 1 0;
     max-height: 4rem;
     outline: none;
     padding-left: 10px;
     font-size: 1.5rem;
-    color: var(--PostDark);
+    color: var(--LoginGombBorder);
 }
 
 #newChatUsers {
@@ -481,14 +479,14 @@
     width: 75%;
     display: flex;
     flex-direction: column;
-    padding-top: 3%;
+    padding-top: 5%;
 }
 
 #newChatUserWrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 3px;
+    padding-top: 5px;
     flex: 6 6 0;
     gap: 5px;
 }
@@ -498,10 +496,10 @@
     outline: none;
     border: 1px solid var(--PostAccent);
     background-color: var(--PostLight);
-    color: var(--PostDark);
+    color: var(--LoginGombBorder);
     padding-left: 10px;
     font-size: 1.5rem;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 #newChatUserSuggestionList,
@@ -532,7 +530,7 @@
     flex-direction: row;
     gap: 10px;
     font-size: 1rem;
-    color: var(--PostDark);
+    color: var(--LoginGombBorder);
     background-color: var(--PostLight);
     align-items: center;
     border-bottom: 1px solid var(--PostAccent);
@@ -561,7 +559,6 @@
     align-items: center;
     gap: 5%;
     width: 75%;
-
     height: 10%;
     padding-bottom: 2%;
 }
@@ -576,17 +573,21 @@
 
 #newChatCreate,
 #newChatCancel {
-    border-radius: 5px;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     height: 80%;
     filter: brightness(100%);
     background-color: var(--PostLight);
     border: 1px solid var(--PostAccent);
     transition: 0.25s;
-    color: var(--PostDark);
+    color: var(--LoginGombBorder);
+    border-radius: 10px;
 }
 
 #newChatCreate:hover,
 #newChatCancel:hover {
     filter: brightness(85%);
+}
+
+#newChatPic{
+    color: var(--LoginGombBorder);
 }

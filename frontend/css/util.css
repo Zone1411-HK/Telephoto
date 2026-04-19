@@ -60,7 +60,7 @@
 }
 
 .navButton:hover {
-    filter: brightness(85%);
+    filter: brightness(90%);
 }
 
 .hidden {
@@ -117,7 +117,7 @@
 }
 .previous:hover,
 .next:hover {
-    filter: brightness(85%);
+    filter: brightness(90%);
 }
 
 .slideshow {
@@ -134,9 +134,147 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    display: block;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: start;
     transition: 0.25s;
     backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 0;
+}
+
+.customControls {
+    height: 10%;
+    width: 100%;
+    background-color: var(--PostSecondary);
+    padding: 5px 10px 5px 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-top: 1px solid var(--PostAccent);
+}
+
+.customProgress {
+    flex: 7 7 0;
+    background-color: var(--PostSecondary);
+    box-shadow: 0 0 2px 0px var(--LoginGombDark);
+    border: 1px solid var(--LoginGombDark);
+    border-radius: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 80%;
+    position: relative;
+}
+
+.customProgress div {
+    border-radius: 50px;
+    margin-left: 5px;
+    margin-right: 5px;
+    background-color: var(--LoginGombDark);
+    height: 66%;
+    position: relative;
+    min-width: 2%;
+    width: 2%;
+    transition: 0.15s;
+}
+
+.videoButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    flex: 1 1 0;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 0 2px 0px var(--LoginGombDark);
+    border: 1px solid var(--LoginGombDark);
+    background-color: var(--PostSecondary);
+    filter: brightness(100%);
+    transition: 0.25s;
+}
+
+.volumeControlsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    flex: 1 1 0;
+}
+
+.volumeButton {
+    height: 100%;
+    width: 100%;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 0 2px 0px var(--LoginGombDark);
+    border: 1px solid var(--LoginGombDark);
+    background-color: var(--PostSecondary);
+    filter: brightness(100%);
+    transition: 0.25s;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.videoButton:hover,
+.volumeButton:hover {
+    filter: brightness(85%);
+}
+
+.videoButton svg,
+.volumeButton svg {
+    height: 100%;
+    aspect-ratio: 1/1;
+    stroke: var(--LoginGombDark);
+    stroke-width: 1.5;
+}
+
+.volumeBarWrapper {
+    position: absolute;
+    width: 5%;
+    width: 15px;
+    height: 27.5%;
+    border-radius: 8px;
+    bottom: 12%;
+    box-shadow: 0 0 2px 0px var(--LoginGombDark);
+    border: 1px solid var(--LoginGombDark);
+    background-color: var(--PostSecondary);
+    z-index: 1;
+    padding: 7px 4px 7px 4px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: end;
+}
+
+.volumeBar {
+    width: 100%;
+    height: 0%;
+    border-radius: inherit;
+    background-color: var(--LoginGombDark);
+    transition: 0.1s;
+}
+
+.videoTimeWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 15%;
+    font-size: 0.9rem;
+    color: var(--LoginGombDark);
+}
+
+.slideshowItem video {
+    height: 90%;
 }
 
 .activeSlideshowItem {
@@ -186,7 +324,7 @@
 }
 
 .mobileIcon:hover {
-    filter: brightness(80%);
+    filter: brightness(85%);
 }
 
 .mobileIcon svg {
@@ -367,7 +505,7 @@
 }
 
 .postUserReport:hover {
-    filter: brightness(85%);
+    filter: brightness(90%);
 }
 
 .postUserReport:hover svg {
@@ -397,7 +535,7 @@
 }
 
 .postUserImgWrapper:hover {
-    filter: brightness(85%);
+    filter: brightness(90%);
 }
 
 .postDescription {
@@ -447,7 +585,7 @@
 }
 
 .interactionButton:hover {
-    filter: brightness(85%);
+    filter: brightness(90%);
 }
 
 .interactionButton svg {

@@ -8,6 +8,10 @@
     --PostModalBottomColor: rgb(30, 30, 30);
 }
 
+body{
+    font-family: 'Josefin Sans', sans-serif;
+}
+
 #root {
     overflow: hidden;
     display: flex;
