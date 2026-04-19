@@ -112,7 +112,7 @@ describe('FRONTEND: ', () => {
             test('Sikeres slideshow generálás', () => {
                 let links = ['link1.png', 'link2.mp4'];
 
-                let result = util.generateSlideshow(links);
+                let result = util.generateSlideshow('', links);
                 let slideshowPartsLength = result.children[0].children.length;
                 let contentLength = result.children[0].children[1].children.length;
 
@@ -121,14 +121,14 @@ describe('FRONTEND: ', () => {
             });
             test('Üres slideshow generálás (links = undefined)', () => {
                 let links = undefined;
-                let result = util.generateSlideshow(links);
+                let result = util.generateSlideshow('', links);
 
                 //<div>
                 expect(result.children.length).toBe(0);
             });
             test('Üres slideshow generálás (links = [])', () => {
                 let links = [];
-                let result = util.generateSlideshow(links);
+                let result = util.generateSlideshow('', links);
 
                 //<div>
                 expect(result.children.length).toBe(0);
