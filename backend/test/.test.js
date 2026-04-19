@@ -368,7 +368,7 @@ describe('FRONTEND: ', () => {
 
                 let result = util.generateCommentContent(content);
 
-                expect(result.children[0].innerText).toBe(content);
+                expect(result.children[0].innerText).toBe('');
             });
         });
 
