@@ -833,7 +833,33 @@ export function generateCommentDate(date) {
     return contentWrapper;
 }
 
+export async function reportComment() {
+    try {
+        let response = await PostMethodFetch('/api/reportComment/' + this.dataset.commentId);
+        if (response.Status == 'success') {
+            this.classList.add('reported');
+            this.removeEventListener('click', reportComment);
+            console.log('success');
+        } else {
+            console.log('fail');
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export function generateCommentReport(comment_id) {
+    let svgWrapper = document.createElement('div');
+    svgWrapper.classList.add('commentReport');
+    svgWrapper.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-flag"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>`;
+    svgWrapper.dataset.commentId = comment_id;
+    svgWrapper.addEventListener('click', reportComment);
+
+    return svgWrapper;
+}
+
 export function generateComment(commentData) {
+    console.log(commentData);
     let commentWrapper = document.createElement('div');
     commentWrapper.classList.add('commentWrapper');
 
@@ -846,6 +872,7 @@ export function generateComment(commentData) {
     textWrapper.appendChild(generateCommentUsername(commentData.username));
     textWrapper.appendChild(generateCommentContent(commentData.comment_content));
     textWrapper.appendChild(generateCommentDate(commentData.comment_date));
+    textWrapper.appendChild(generateCommentReport(commentData.comment_id));
 
     commentWrapper.appendChild(textWrapper);
 

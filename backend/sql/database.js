@@ -361,7 +361,7 @@ async function loadProfile(username) {
 async function loadComments(postId) {
     try {
         const commentsSql = `
-        SELECT users.username, users.profile_picture_link, comments.comment_content, comments.comment_date
+        SELECT comments.comment_id, users.username, users.profile_picture_link, comments.comment_content, comments.comment_date
         FROM comments 
         INNER JOIN users ON users.user_id = comments.user_id 
         INNER JOIN posts ON posts.post_id = comments.post_id 
@@ -1019,6 +1019,21 @@ async function reportUser(username) {
     }
 }
 
+async function reportComment(commentId) {
+    try {
+        const sql = `
+        UPDATE comments
+        SET is_reported = 1
+        WHERE comment_id = ?;
+        `;
+        const response = await pool.execute(sql, [commentId]);
+        return response[0].affectedRows == 1;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+
 async function reportPost(postId) {
     try {
         const sql = `
@@ -1109,5 +1124,6 @@ module.exports = {
     reportPost,
     randomPlaces,
     randomPlacesPosts,
-    usernameExists
+    usernameExists,
+    reportComment
 };

@@ -546,6 +546,23 @@ router.get('/commentInfos/:postId', async (request, response) => {
 });
 //#endregion
 
+router.post('/reportComment/:commentId', async (request, response) => {
+    try {
+        let commentId = request.params.commentId;
+        let success = await database.reportComment(commentId);
+
+        response.status(200).json({
+            Status: success ? 'success' : 'failed'
+        });
+    } catch (error) {
+        console.log(error);
+        response.status(500).json({
+            Status: 'failed',
+            Error: error
+        });
+    }
+});
+
 //! CHAT
 //#region Chat
 //! FELHASZNÁLÓ CHATJEI
