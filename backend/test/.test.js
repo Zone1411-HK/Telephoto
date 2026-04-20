@@ -413,7 +413,7 @@ describe('FRONTEND: ', () => {
                 let result = util.generateComment(commentData);
 
                 expect([result.children.length, result.children[1].children.length]).toStrictEqual([
-                    2, 3
+                    2, 4
                 ]);
             });
         });
