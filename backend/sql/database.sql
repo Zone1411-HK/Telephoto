@@ -9,185 +9,371 @@ COLLATE utf8_hungarian_ci;
 -- Táblák létrehozása kezdete
 USE telephoto;
 
-CREATE TABLE users(
-    user_id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) NOT NULL,
-    password_salt VARCHAR(32) NOT NULL,
-    password_hash VARCHAR(128) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    profile_picture_link TEXT,
-    biography TEXT,
-    is_admin BOOLEAN DEFAULT FALSE,
-    is_reported BOOLEAN DEFAULT FALSE,
-    registration_date DATETIME
-);
-CREATE TABLE posts(
-    post_id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    description TEXT,
-    tags TEXT,
-    location VARCHAR(176),
-    latitude FLOAT,
-    longitude FLOAT,
-    creation_date DATETIME,
-    is_reported BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-CREATE TABLE pictures(
-	picture_id INT PRIMARY KEY AUTO_INCREMENT,
-    post_id INT NOT NULL,
-    picture_link TEXT NOT NULL,
-    FOREIGN KEY(post_id) REFERENCES posts(post_id) ON DELETE CASCADE
-);
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Gép: 127.0.0.1
+-- Létrehozás ideje: 2026. Ápr 21. 12:24
+-- Kiszolgáló verziója: 10.4.32-MariaDB
+-- PHP verzió: 8.2.12
 
-CREATE TABLE interactions(
-    interaction_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
- 	user_id INT NOT NULL,
-    post_id INT NOT NULL,
-    upvote BOOLEAN,
-    downvote BOOLEAN,
-    FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY(post_id) REFERENCES posts(post_id) ON DELETE CASCADE
-);
-
-CREATE TABLE favorites(
-  post_id INT NOT NULL,
-  user_id INT NOT NULL,
-  is_favorited BOOLEAN,
-  FOREIGN KEY(post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
-  FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
-CREATE TABLE comments(
-    comment_id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    post_id INT NOT NULL,
-    comment_content VARCHAR(150) NOT NULL,
-    comment_date TIMESTAMP,
-    is_reported BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY(post_id) REFERENCES posts(post_id) ON DELETE CASCADE
-);
-
-CREATE TABLE chats(
-    chat_id INT PRIMARY KEY AUTO_INCREMENT,
-    chat_name VARCHAR(50) NOT NULL,
-    chat_picture_link TEXT NOT NULL
-);
-CREATE TABLE chat_members(
-    member_id INT PRIMARY KEY AUTO_INCREMENT,
-    chat_id INT NOT NULL,
-    user_id INT NOT NULL,
-    FOREIGN KEY(chat_id) REFERENCES chats(chat_id) ON DELETE CASCADE,
-    FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
 
-);
-CREATE TABLE messages(
-    member_id INT,
-    message VARCHAR(200) NOT NULL,
-    message_date DATETIME,
-    FOREIGN KEY(member_id) REFERENCES chat_members(member_id) ON DELETE CASCADE
-);
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-CREATE TABLE deleted_posts( 
-    post_id INT NOT NULL,
-    user_id INT NOT NULL,
-    description TEXT,
-    tags TEXT,
-    location VARCHAR(176),
-    latitude FLOAT,
-    longitude FLOAT,
-    creation_date DATETIME,
-    deleted_at TIMESTAMP
-);
+--
+-- Adatbázis: `telephoto`
+--
 
-CREATE TABLE deleted_pictures(
-	picture_id INT NOT NULL,
-    post_id INT NOT NULL,
-    picture_link TEXT NOT NULL,
-    deleted_at TIMESTAMP
+-- --------------------------------------------------------
 
-);
+--
+-- Tábla szerkezet ehhez a táblához `chats`
+--
 
-CREATE TRIGGER delete_post
-BEFORE DELETE ON posts
-FOR EACH ROW
-INSERT INTO deleted_posts(post_id, user_id, description, tags, location, latitude, longitude, creation_date, deleted_at)
-VALUES(OLD.post_id, OLD.user_id, OLD.description, OLD.tags, OLD.location, OLD.latitude, OLD.longitude, OLD.creation_date, NOW());
+CREATE TABLE `chats` (
+  `chat_id` int(11) NOT NULL,
+  `chat_name` varchar(50) NOT NULL,
+  `chat_picture_link` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
-CREATE TRIGGER delete_post_interactions
-BEFORE DELETE ON posts
-FOR EACH ROW
-DELETE FROM interactions 
-WHERE interactions.post_id = OLD.post_id;
+-- --------------------------------------------------------
 
-CREATE TRIGGER delete_post_favorites
-BEFORE DELETE ON posts
-FOR EACH ROW
-DELETE FROM favorites 
-WHERE favorites.post_id = OLD.post_id;
+--
+-- Tábla szerkezet ehhez a táblához `chat_members`
+--
 
-CREATE TRIGGER delete_post_comments
-BEFORE DELETE ON posts
-FOR EACH ROW
-DELETE FROM comments 
-WHERE comments.post_id = OLD.post_id;
+CREATE TABLE `chat_members` (
+  `member_id` int(11) NOT NULL,
+  `chat_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
-CREATE TRIGGER delete_post_pictures
-BEFORE DELETE ON posts
-FOR EACH ROW
-DELETE FROM pictures 
-WHERE pictures.post_id = OLD.post_id;
+--
+-- Eseményindítók `chat_members`
+--
+DELIMITER $$
+CREATE TRIGGER `check_chat_for_delete` AFTER DELETE ON `chat_members` FOR EACH ROW BEGIN
+DELETE FROM chats
+WHERE (SELECT COUNT(chat_members.user_id) FROM chat_members WHERE chat_members.chat_id = OLD.chat_id) < 2;
 
-CREATE TRIGGER save_deleted_pictures
-BEFORE DELETE ON pictures
-FOR EACH ROW 
-INSERT INTO deleted_pictures(picture_id, post_id, picture_link, deleted_at)
-VALUES(OLD.picture_id, OLD.post_id, OLD.picture_link, NOW());
+END
+$$
+DELIMITER ;
 
+-- --------------------------------------------------------
 
+--
+-- Tábla szerkezet ehhez a táblához `comments`
+--
 
-CREATE TRIGGER delete_user_favorites
-BEFORE DELETE ON users
-FOR EACH ROW
-DELETE FROM favorites 
-WHERE favorites.user_id = OLD.user_id;
+CREATE TABLE `comments` (
+  `comment_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `comment_content` varchar(150) NOT NULL,
+  `comment_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `is_reported` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
-CREATE TRIGGER delete_user_interactions
-BEFORE DELETE ON users
-FOR EACH ROW
-DELETE FROM interactions 
-WHERE interactions.user_id = OLD.user_id;
+-- --------------------------------------------------------
 
-CREATE TRIGGER delete_user_comments
-BEFORE DELETE ON users
-FOR EACH ROW
-DELETE FROM comments 
-WHERE comments.user_id = OLD.user_id;
+--
+-- Tábla szerkezet ehhez a táblához `deleted_pictures`
+--
 
-CREATE TRIGGER delete_user_posts
-BEFORE DELETE ON users
-FOR EACH ROW
-DELETE FROM posts 
-WHERE posts.user_id = OLD.user_id;
+CREATE TABLE `deleted_pictures` (
+  `picture_id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `picture_link` text NOT NULL,
+  `deleted_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
-CREATE TRIGGER delete_user_messages
-BEFORE DELETE ON users
-FOR EACH ROW
-DELETE FROM messages 
-WHERE messages.member_id IN (SELECT member_id FROM chat_members WHERE user_id = OLD.user_id) ;
+-- --------------------------------------------------------
 
-CREATE TRIGGER delete_chatmember_messages
-BEFORE DELETE ON chat_members
-FOR EACH ROW
-DELETE FROM messages 
-WHERE OLD.member_id = messages.member_id;
+--
+-- Tábla szerkezet ehhez a táblához `deleted_posts`
+--
 
-CREATE TRIGGER delete_user_member
-BEFORE DELETE ON users
-FOR EACH ROW
-DELETE FROM chat_members 
-WHERE chat_members.user_id = OLD.user_id;
+CREATE TABLE `deleted_posts` (
+  `post_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `description` text DEFAULT NULL,
+  `tags` text DEFAULT NULL,
+  `location` varchar(176) DEFAULT NULL,
+  `latitude` float DEFAULT NULL,
+  `longitude` float DEFAULT NULL,
+  `creation_date` datetime DEFAULT NULL,
+  `deleted_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
--- Táblák létrehozása vége
+-- --------------------------------------------------------
+
+--
+-- Tábla szerkezet ehhez a táblához `favorites`
+--
+
+CREATE TABLE `favorites` (
+  `post_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `is_favorited` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tábla szerkezet ehhez a táblához `interactions`
+--
+
+CREATE TABLE `interactions` (
+  `interaction_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `upvote` tinyint(1) DEFAULT NULL,
+  `downvote` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tábla szerkezet ehhez a táblához `messages`
+--
+
+CREATE TABLE `messages` (
+  `member_id` int(11) DEFAULT NULL,
+  `message` varchar(200) NOT NULL,
+  `message_date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tábla szerkezet ehhez a táblához `pictures`
+--
+
+CREATE TABLE `pictures` (
+  `picture_id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `picture_link` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tábla szerkezet ehhez a táblához `posts`
+--
+
+CREATE TABLE `posts` (
+  `post_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `description` text DEFAULT NULL,
+  `tags` text DEFAULT NULL,
+  `location` varchar(176) DEFAULT NULL,
+  `latitude` float DEFAULT NULL,
+  `longitude` float DEFAULT NULL,
+  `creation_date` datetime DEFAULT NULL,
+  `is_reported` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tábla szerkezet ehhez a táblához `users`
+--
+
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password_salt` varchar(32) NOT NULL,
+  `password_hash` varchar(128) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `profile_picture_link` text DEFAULT NULL,
+  `biography` text DEFAULT NULL,
+  `is_admin` tinyint(1) DEFAULT 0,
+  `is_reported` tinyint(1) DEFAULT 0,
+  `registration_date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+--
+-- Eseményindítók `users`
+--
+DELIMITER $$
+CREATE TRIGGER `delete_user_member` BEFORE DELETE ON `users` FOR EACH ROW DELETE FROM chat_members 
+WHERE chat_members.user_id = OLD.user_id
+$$
+DELIMITER ;
+
+--
+-- Indexek a kiírt táblákhoz
+--
+
+--
+-- A tábla indexei `chats`
+--
+ALTER TABLE `chats`
+  ADD PRIMARY KEY (`chat_id`);
+
+--
+-- A tábla indexei `chat_members`
+--
+ALTER TABLE `chat_members`
+  ADD PRIMARY KEY (`member_id`),
+  ADD KEY `chat_id` (`chat_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- A tábla indexei `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`comment_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `post_id` (`post_id`);
+
+--
+-- A tábla indexei `favorites`
+--
+ALTER TABLE `favorites`
+  ADD KEY `post_id` (`post_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- A tábla indexei `interactions`
+--
+ALTER TABLE `interactions`
+  ADD PRIMARY KEY (`interaction_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `post_id` (`post_id`);
+
+--
+-- A tábla indexei `messages`
+--
+ALTER TABLE `messages`
+  ADD KEY `member_id` (`member_id`);
+
+--
+-- A tábla indexei `pictures`
+--
+ALTER TABLE `pictures`
+  ADD PRIMARY KEY (`picture_id`),
+  ADD KEY `post_id` (`post_id`);
+
+--
+-- A tábla indexei `posts`
+--
+ALTER TABLE `posts`
+  ADD PRIMARY KEY (`post_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- A tábla indexei `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`);
+
+--
+-- A kiírt táblák AUTO_INCREMENT értéke
+--
+
+--
+-- AUTO_INCREMENT a táblához `chats`
+--
+ALTER TABLE `chats`
+  MODIFY `chat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT a táblához `chat_members`
+--
+ALTER TABLE `chat_members`
+  MODIFY `member_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT a táblához `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT a táblához `interactions`
+--
+ALTER TABLE `interactions`
+  MODIFY `interaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT a táblához `pictures`
+--
+ALTER TABLE `pictures`
+  MODIFY `picture_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT a táblához `posts`
+--
+ALTER TABLE `posts`
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT a táblához `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- Megkötések a kiírt táblákhoz
+--
+
+--
+-- Megkötések a táblához `chat_members`
+--
+ALTER TABLE `chat_members`
+  ADD CONSTRAINT `chat_members_ibfk_1` FOREIGN KEY (`chat_id`) REFERENCES `chats` (`chat_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `chat_members_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Megkötések a táblához `comments`
+--
+ALTER TABLE `comments`
+  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE;
+
+--
+-- Megkötések a táblához `favorites`
+--
+ALTER TABLE `favorites`
+  ADD CONSTRAINT `favorites_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `favorites_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Megkötések a táblához `interactions`
+--
+ALTER TABLE `interactions`
+  ADD CONSTRAINT `interactions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `interactions_ibfk_2` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE;
+
+--
+-- Megkötések a táblához `messages`
+--
+ALTER TABLE `messages`
+  ADD CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `chat_members` (`member_id`) ON DELETE CASCADE;
+
+--
+-- Megkötések a táblához `pictures`
+--
+ALTER TABLE `pictures`
+  ADD CONSTRAINT `pictures_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE;
+
+--
+-- Megkötések a táblához `posts`
+--
+ALTER TABLE `posts`
+  ADD CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
