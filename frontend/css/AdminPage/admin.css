@@ -245,50 +245,6 @@
     gap: 10%;
 }
 
-.searchLabel {
-    width: 100%;
-    height: 45%;
-    background-color: white;
-    display: flex;
-    flex-direction: row;
-    border-radius: 5px;
-    align-items: center;
-    border: 1px solid white;
-}
-
-.focusSearch {
-    border: 1px solid aqua;
-}
-
-.searchLabel input {
-    border: none;
-    outline: none;
-    border-radius: 5px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    width: 75%;
-    padding: 0;
-    padding-left: 6%;
-    font-size: 20px;
-    height: 100%;
-}
-
-.searchLabel button {
-    width: 25%;
-    background-color: var(--PrimaryDark);
-    border: none;
-    border-bottom-right-radius: 5px;
-    border-top-right-radius: 5px;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-}
-.searchLabel button:hover {
-    background-color: rgb(64, 80, 88);
-}
-
 #activeUsers {
     border-bottom: 1px solid white;
     width: 90%;
@@ -537,16 +493,18 @@ td {
     height: 4vh;
     font-size: 1.65vh;
     font-weight: 370;
+    cursor: pointer;
+    transition: 0.25s;
+    filter: brightness(100%);
+    background-color: var(--PrimaryLight);
 }
 
 tr {
     border-bottom: 1px solid var(--SecondaryDark);
     width: 100%;
-    user-select: none;
 }
 tr:hover td {
-    background-color: var(--HoverLight);
-    cursor: pointer;
+    filter: brightness(90%);
 }
 
 .commentContent {
@@ -791,9 +749,6 @@ tr:hover td {
     cursor: pointer;
 }
 
-#adminActionClear {
-}
-
 .disabledButton {
     transition: 0.25s;
     background-color: rgb(200, 200, 200);
@@ -810,22 +765,26 @@ tr:hover td {
 }
 
 .adminProfile {
-    background-color: #dfc5fe;
-    color: #381760;
+    background-color: hsl(220, 80%, 90%);
+    color: rgb(5, 5, 55);
+}
+
+.adminProfile td {
+    background-color: rgb(205, 205, 255);
+    color: rgb(5, 5, 55);
 }
 .adminProfile div::selection {
     color: white;
     background-color: #381760;
 }
 
-.reported {
+.reported td {
     background-color: rgb(230, 154, 154);
     color: rgb(139, 46, 46) !important;
 }
-
-.reported:hover td {
-    color: rgb(230, 154, 154);
-    background-color: rgb(139, 46, 46);
+.reported {
+    background-color: rgb(230, 154, 154);
+    color: rgb(139, 46, 46) !important;
 }
 
 .reported div::selection {

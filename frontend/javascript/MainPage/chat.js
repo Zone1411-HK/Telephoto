@@ -366,9 +366,9 @@ export async function searchUser() {
 
                     const img = document.createElement('img');
                     if (val.profile_picture_link == null) {
-                        img.src = '/user_pics/default.svg';
+                        img.src = '/profile_images/defaultProfile.svg';
                     } else {
-                        img.src = '/user_pics/' + val.profile_picture_link;
+                        img.src = '/profile_images/' + val.profile_picture_link;
                     }
                     img.classList.add('suggestedImg');
 
@@ -412,9 +412,9 @@ export function addUser() {
 
         const img = document.createElement('img');
         if (this.dataset.userPic == 'null') {
-            img.src = '/user_pics/default.svg';
+            img.src = '/profile_images/defaultProfile.svg';
         } else {
-            img.src = '/user_pics/' + this.dataset.userPic;
+            img.src = '/profile_images/' + this.dataset.userPic;
         }
         img.classList.add('addedImg');
 
@@ -471,16 +471,19 @@ export async function createNewChat() {
         formData.append('userIds', userIds);
 
         let img = document.getElementById('newChatImgInput').files[0];
-        let newImg = new File(
-            [img],
-            img.name
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .replace(/\.(?=.*\.)/g, '-'),
-            {
-                type: img.type
-            }
-        );
+        let newImg = '';
+        if (img) {
+            newImg = new File(
+                [img],
+                img.name
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/\.(?=.*\.)/g, '-'),
+                {
+                    type: img.type
+                }
+            );
+        }
 
         formData.append('img', newImg);
 

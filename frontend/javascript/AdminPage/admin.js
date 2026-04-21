@@ -191,7 +191,7 @@ export async function openComment() {
             document.getElementById('commentDate').value = utilFunctions.date_yyyy_MM_dd(
                 commentData.comment_date
             );
-            document.getElementById('commentContent').innerText = commentData.comment_content;
+            document.getElementById('commentContent').value = commentData.comment_content;
 
             if (this.dataset.reported == 'true') {
                 document.getElementById('openedComment').classList.add('reported');
@@ -249,6 +249,12 @@ export async function confirmCommentModification() {
             commentContent: modifiedArray[1].value
         });
         if (modifyResponse.Status == 'Success') {
+            let modifiableDatas = document.querySelectorAll('.commentModifyData');
+            for (const el of modifiableDatas) {
+                el.disabled = true;
+                el.style.backgroundColor = '';
+                el.style.color = '';
+            }
             closeComment();
             document.getElementById('commentBack').classList.add('hidden');
         }
@@ -370,7 +376,7 @@ export async function openProfile() {
             document.getElementById('profilePic').src =
                 '/profile_images/' + ProfileData[0].profile_picture_link;
         } else {
-            document.getElementById('profilePic').src = '/images/defaultProfile.svg';
+            document.getElementById('profilePic').src = '/profile_images/defaultProfile.svg';
         }
     } else {
         alert('Valami probléma történt.\n\nKérjük próbálja meg később.');

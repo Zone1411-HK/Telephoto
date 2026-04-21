@@ -627,7 +627,7 @@ export function generateUserRow(name, profilePicture) {
     let img = document.createElement('img');
     img.src = profilePicture
         ? '/profile_images/' + profilePicture
-        : '/profile_images/defaultProfile.jpg';
+        : '/profile_images/defaultProfile.svg';
     img.alt = 'Profil Kép';
     img.classList.add('postUserImg');
     img.loading = 'lazy';
@@ -780,7 +780,7 @@ export function generateCommentProfilePicture(src, username) {
     let profilePicture = document.createElement('img');
 
     src == '' || src == undefined
-        ? (profilePicture.src = 'profile_images/defaultProfile.jpg')
+        ? (profilePicture.src = 'profile_images/defaultProfile.svg')
         : (profilePicture.src = '/profile_images/' + src);
 
     profilePicture.classList.add('commentProfilePicture');

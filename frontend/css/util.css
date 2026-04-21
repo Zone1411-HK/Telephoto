@@ -540,12 +540,16 @@
 
 .postDescription {
     border: 1px solid rgb(175, 175, 175);
+    word-break: break-all;
     width: 90%;
     height: 30%;
     padding: 10px;
     margin-top: 5px;
     border-radius: 3px;
     color: rgb(80, 75, 70);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--PostAccent) var(--Post);
 }
 
 .interactionRow {
@@ -798,17 +802,15 @@
 .commentContentWrapper {
     height: 100%;
     width: 50%;
-    word-break: break-all;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--PostAccent) var(--Post);
 }
 .commentContent {
     margin: 0;
     font-size: 2vh;
     font-weight: 350;
-    height: 100%;
-    max-height: 50px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--PostAccent) var(--Post);
+    word-break: break-all;
 }
 
 .commentReport {

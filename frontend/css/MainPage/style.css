@@ -587,6 +587,7 @@ form {
 #uploadForm {
     margin-top: 5vh;
     height: 90%;
+    max-height: 90%;
     gap: 2.5%;
     width: 100%;
     overflow-y: auto;
@@ -619,6 +620,7 @@ form {
 }
 
 #descriptionTags {
+    max-height: 37%;
     flex: 4 4 0;
     width: 100%;
     display: flex;
@@ -772,7 +774,9 @@ form {
     padding: 8px;
     border: 1px solid rgb(208, 208, 218);
     box-shadow: 0 0 1px 2px rgb(108, 108, 118);
-
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(208, 208, 218) black;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -792,6 +796,7 @@ form {
     border: 1px solid rgb(208, 208, 218);
     box-shadow: 0 0 1px 2px rgb(108, 108, 118);
     color: rgb(50, 50, 50);
+    overflow-y: hidden;
 }
 
 #forTags {
@@ -826,7 +831,8 @@ form {
 }
 
 .addedTag:hover {
-    filter: brightness(90%);
+    background-color: rgb(208, 188, 198);
+    filter: brightness(95%);
 }
 
 .uploadDescription textarea:focus,

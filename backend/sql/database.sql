@@ -11,89 +11,89 @@ USE telephoto;
 
 CREATE TABLE users(
     user_id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50),
-    password_salt VARCHAR(32),
-    password_hash VARCHAR(128),
-    email VARCHAR(100),
-    profile_picture_link VARCHAR(200),
-    biography VARCHAR(500),
-    is_admin BOOLEAN,
+    username VARCHAR(50) NOT NULL,
+    password_salt VARCHAR(32) NOT NULL,
+    password_hash VARCHAR(128) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    profile_picture_link TEXT,
+    biography TEXT,
+    is_admin BOOLEAN DEFAULT FALSE,
     is_reported BOOLEAN DEFAULT FALSE,
     registration_date DATETIME
 );
 CREATE TABLE posts(
     post_id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT,
-    description VARCHAR(500),
+    user_id INT NOT NULL,
+    description TEXT,
     tags TEXT,
     location VARCHAR(176),
     latitude FLOAT,
     longitude FLOAT,
     creation_date DATETIME,
     is_reported BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY(user_id) REFERENCES users(user_id)
+    FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 CREATE TABLE pictures(
 	picture_id INT PRIMARY KEY AUTO_INCREMENT,
-    post_id INT,
+    post_id INT NOT NULL,
     picture_link TEXT NOT NULL,
-    FOREIGN KEY(post_id) REFERENCES posts(post_id)
+    FOREIGN KEY(post_id) REFERENCES posts(post_id) ON DELETE CASCADE
 );
 
 CREATE TABLE interactions(
     interaction_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
- 	user_id INT,
-    post_id INT,
+ 	user_id INT NOT NULL,
+    post_id INT NOT NULL,
     upvote BOOLEAN,
     downvote BOOLEAN,
-    FOREIGN KEY(user_id) REFERENCES users(user_id),
-    FOREIGN KEY(post_id) REFERENCES posts(post_id)
+    FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY(post_id) REFERENCES posts(post_id) ON DELETE CASCADE
 );
 
 CREATE TABLE favorites(
   post_id INT NOT NULL,
   user_id INT NOT NULL,
-  is_favorited BOOLEAN NOT NULL,
-  FOREIGN KEY(post_id) REFERENCES posts(post_id),
-  FOREIGN KEY(user_id) REFERENCES users(user_id)
+  is_favorited BOOLEAN,
+  FOREIGN KEY(post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
+  FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE comments(
     comment_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     post_id INT NOT NULL,
-    comment_content VARCHAR(150),
+    comment_content VARCHAR(150) NOT NULL,
     comment_date TIMESTAMP,
     is_reported BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY(user_id) REFERENCES users(user_id),
-    FOREIGN KEY(post_id) REFERENCES posts(post_id)
+    FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY(post_id) REFERENCES posts(post_id) ON DELETE CASCADE
 );
 
 CREATE TABLE chats(
     chat_id INT PRIMARY KEY AUTO_INCREMENT,
-    chat_name VARCHAR(50),
-    chat_picture_link VARCHAR(200)
+    chat_name VARCHAR(50) NOT NULL,
+    chat_picture_link TEXT NOT NULL
 );
 CREATE TABLE chat_members(
     member_id INT PRIMARY KEY AUTO_INCREMENT,
-    chat_id INT,
-    user_id INT,
-    FOREIGN KEY(chat_id) REFERENCES chats(chat_id),
-    FOREIGN KEY(user_id) REFERENCES users(user_id)
+    chat_id INT NOT NULL,
+    user_id INT NOT NULL,
+    FOREIGN KEY(chat_id) REFERENCES chats(chat_id) ON DELETE CASCADE,
+    FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
 
 
 );
 CREATE TABLE messages(
     member_id INT,
-    message VARCHAR(200),
+    message VARCHAR(200) NOT NULL,
     message_date DATETIME,
-    FOREIGN KEY(member_id) REFERENCES chat_members(member_id)
+    FOREIGN KEY(member_id) REFERENCES chat_members(member_id) ON DELETE CASCADE
 );
 
 CREATE TABLE deleted_posts( 
-    post_id INT,
-    user_id INT,
-    description VARCHAR(500),
+    post_id INT NOT NULL,
+    user_id INT NOT NULL,
+    description TEXT,
     tags TEXT,
     location VARCHAR(176),
     latitude FLOAT,
