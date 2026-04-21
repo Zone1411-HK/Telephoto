@@ -1330,11 +1330,12 @@ router.get('/randomPlacesPosts/:place', async (request, response) => {
 //! FÜGGVÉNYEK
 //? Hash-eljük a megadott stringet, és visszaadunk egy salt, és egy hash változót.
 function HashString(string) {
-    //? salt: egy 16 karakteres random string amit átkonvertálunl hex-é
+    //? salt: egy 32 karakteres random string amit átkonvertálunl hex-é
     const salt = crypto.randomBytes(16).toString('hex');
-
-    //? hash: a string, és salt alapján generált 64 karakteres string amit átkonvertálunk hex-é
+    console.log(salt);
+    //? hash: a string, és salt alapján generált 128 karakteres string amit átkonvertálunk hex-é
     const hash = crypto.scryptSync(string, salt, 64).toString('hex');
+    console.log(hash);
     return { salt, hash };
 }
 
