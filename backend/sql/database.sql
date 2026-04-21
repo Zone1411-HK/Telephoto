@@ -14,7 +14,7 @@ USE telephoto;
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Ápr 21. 12:24
+-- Létrehozás ideje: 2026. Ápr 21. 12:55
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -81,37 +81,6 @@ CREATE TABLE `comments` (
   `comment_content` varchar(150) NOT NULL,
   `comment_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `is_reported` tinyint(1) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
-
--- --------------------------------------------------------
-
---
--- Tábla szerkezet ehhez a táblához `deleted_pictures`
---
-
-CREATE TABLE `deleted_pictures` (
-  `picture_id` int(11) NOT NULL,
-  `post_id` int(11) NOT NULL,
-  `picture_link` text NOT NULL,
-  `deleted_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
-
--- --------------------------------------------------------
-
---
--- Tábla szerkezet ehhez a táblához `deleted_posts`
---
-
-CREATE TABLE `deleted_posts` (
-  `post_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `description` text DEFAULT NULL,
-  `tags` text DEFAULT NULL,
-  `location` varchar(176) DEFAULT NULL,
-  `latitude` float DEFAULT NULL,
-  `longitude` float DEFAULT NULL,
-  `creation_date` datetime DEFAULT NULL,
-  `deleted_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 -- --------------------------------------------------------
@@ -200,6 +169,13 @@ CREATE TABLE `users` (
   `is_reported` tinyint(1) DEFAULT 0,
   `registration_date` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+--
+-- A tábla adatainak kiíratása `users`
+--
+
+INSERT INTO `users` (`user_id`, `username`, `password_salt`, `password_hash`, `email`, `profile_picture_link`, `biography`, `is_admin`, `is_reported`, `registration_date`) VALUES
+(13, 'asd', '544be4136e54df39f4fbcfda42747842', 'b97bab6ea445f6625847d51fbbf9fb0ed229cc744d82affe5a6b9948dbd6dcfe463216776a761118e7acc36fc01fc4561ae73b3de2e6d7844e3a76b3931f1b0a', 'a@a.com', NULL, NULL, 0, 0, '2026-04-21 12:31:29');
 
 --
 -- Eseményindítók `users`
@@ -321,7 +297,7 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT a táblához `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Megkötések a kiírt táblákhoz
