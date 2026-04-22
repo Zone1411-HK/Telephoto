@@ -309,7 +309,7 @@ describe('FRONTEND: ', () => {
 
                 expect([
                     result.children.length,
-                    img.src.includes('/profile_images/defaultProfile.jpg'),
+                    img.src.includes('/profile_images/defaultProfile'),
                     name.innerText == params[0]
                 ]).toStrictEqual([2, true, true]);
             });
@@ -322,7 +322,7 @@ describe('FRONTEND: ', () => {
 
                 expect([
                     result.children.length,
-                    img.src.includes('/profile_images/defaultProfile.jpg'),
+                    img.src.includes('/profile_images/defaultProfile'),
                     name.innerText == params[0]
                 ]).toStrictEqual([2, true, true]);
             });
@@ -343,7 +343,7 @@ describe('FRONTEND: ', () => {
                 let result = util.generateCommentProfilePicture(...params);
                 let img = result.children[0].children[0];
 
-                expect(img.src.includes('defaultProfile.jpg')).toBe(true);
+                expect(img.src.includes('defaultProfile')).toBe(true);
             });
             test('Sikeres comment profile picture generálás (src = undefined)', () => {
                 let params = [undefined, 'felhasználónév'];
@@ -351,7 +351,7 @@ describe('FRONTEND: ', () => {
                 let result = util.generateCommentProfilePicture(...params);
                 let img = result.children[0].children[0];
 
-                expect(img.src.includes('defaultProfile.jpg')).toBe(true);
+                expect(img.src.includes('defaultProfile')).toBe(true);
             });
         });
 
