@@ -510,13 +510,46 @@ export async function createNewChat() {
                 closeNewChatWindow();
                 getChats();
             } else {
-                alert('Valami hiba történt');
+                let errorDiv = document.getElementById('chatError');
+                errorDiv.classList.remove('hidden');
+                errorDiv.style.animation = 'fadeInDown 0.5s forwards';
+                let errorMessageP = document.getElementById('chatErrorMessage');
+                errorMessageP.innerText = 'Valami hiba történt';
+
+                setTimeout(() => {
+                    errorDiv.style.animation = 'fadeOutUp 0.5s forwards';
+                    setTimeout(() => {
+                        errorDiv.classList.add('hidden');
+                    }, 500);
+                }, 3000);
             }
         } else {
-            alert(errorMessage);
+            let errorDiv = document.getElementById('chatError');
+            errorDiv.classList.remove('hidden');
+            errorDiv.style.animation = 'fadeInDown 0.5s forwards';
+            let errorMessageP = document.getElementById('chatErrorMessage');
+            errorMessageP.innerText = errorMessage;
+
+            setTimeout(() => {
+                errorDiv.style.animation = 'fadeOutUp 0.5s forwards';
+                setTimeout(() => {
+                    errorDiv.classList.add('hidden');
+                }, 500);
+            }, 3000);
         }
     } else {
-        alert('Nincs hozzáadott felhasználó!');
+        let errorDiv = document.getElementById('chatError');
+        errorDiv.classList.remove('hidden');
+        errorDiv.style.animation = 'fadeInDown 0.5s forwards';
+        let errorMessageP = document.getElementById('chatErrorMessage');
+        errorMessageP.innerText = 'Nincs hozzáadott felhasználó';
+
+        setTimeout(() => {
+            errorDiv.style.animation = 'fadeOutUp 0.5s forwards';
+            setTimeout(() => {
+                errorDiv.classList.add('hidden');
+            }, 500);
+        }, 3000);
     }
 }
 

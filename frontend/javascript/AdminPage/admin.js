@@ -379,7 +379,18 @@ export async function openProfile() {
             document.getElementById('profilePic').src = '/profile_images/defaultProfile.svg';
         }
     } else {
-        alert('Valami probléma történt.\n\nKérjük próbálja meg később.');
+        let errorDiv = document.getElementById('errorMessageDiv');
+        errorDiv.classList.remove('hidden');
+        errorDiv.style.animation = 'fadeInDown 0.5s forwards';
+        let errorMessage = document.getElementById('errorMessage');
+        errorMessage.innerText = 'Valami probléma történt.\n\nKérjük próbálja meg később.';
+
+        setTimeout(() => {
+            errorDiv.style.animation = 'fadeOutUp 0.5s forwards';
+            setTimeout(() => {
+                errorDiv.classList.add('hidden');
+            }, 500);
+        }, 3000);
     }
 }
 
@@ -573,7 +584,18 @@ export async function openPost() {
 
         //generateMap(10, 10);
     } else {
-        alert('Valami probléma történt.\n\nKérjük próbálja meg később.');
+        let errorDiv = document.getElementById('errorMessageDiv');
+        errorDiv.classList.remove('hidden');
+        errorDiv.style.animation = 'fadeInDown 0.5s forwards';
+        let errorMessage = document.getElementById('errorMessage');
+        errorMessage.innerText = 'Valami probléma történt.\n\nKérjük próbálja meg később.';
+
+        setTimeout(() => {
+            errorDiv.style.animation = 'fadeOutUp 0.5s forwards';
+            setTimeout(() => {
+                errorDiv.classList.add('hidden');
+            }, 500);
+        }, 3000);
     }
 }
 
