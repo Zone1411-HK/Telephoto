@@ -755,6 +755,7 @@
     flex-direction: row;
     position: relative;
     transition: 0.25s;
+    overflow-x: auto;
 }
 
 .commentWrapper:hover {
@@ -763,11 +764,14 @@
 
 .profilePictureWrapper {
     height: 100%;
+    flex-grow: 0;
+    flex-shrink: 1;
     aspect-ratio: 1/1;
     filter: brightness(100%);
     background-color: var(--Post);
     border-radius: 10px;
     cursor: pointer;
+    transition: 0.25s;
 }
 
 .profilePictureWrapper:hover {
@@ -802,6 +806,7 @@
 .commentContentWrapper {
     height: 100%;
     width: 50%;
+    flex: 5 5 0;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--PostAccent) var(--Post);
@@ -810,12 +815,12 @@
     margin: 0;
     font-size: 2vh;
     font-weight: 350;
-    word-break: break-all;
 }
 
 .commentReport {
-    width: 7.5%;
+    flex: 1 1 0;
     height: 100%;
+    min-width: 0%;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -825,6 +830,7 @@
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
     transition: 0.25s;
+    border-radius: 10px;
 }
 
 .commentReport:hover {
@@ -844,13 +850,12 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 22.5%;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
+    flex: 2 2 0;
+    padding-right: 5%;
 }
 
 .commentUsername {
-    font-size: 3.5vh;
+    font-size: 2vh;
     letter-spacing: 1px;
     font-weight: 400;
     margin: 0;
@@ -860,6 +865,8 @@
     border-radius: 5px;
     cursor: pointer;
     color: var(--PostDark);
+    overflow-x: hidden;
+    text-overflow: ellipsis;
 }
 
 .commentUsername:hover {
@@ -873,8 +880,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    padding-left: 2.5%;
-    width: 20%;
+    width: 17.5%;
 }
 
 .commentDate {

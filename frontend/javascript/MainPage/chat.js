@@ -446,7 +446,7 @@ export function removeAddedUser() {
         j++;
     }
 
-    suggestionDiv.children[j].classList.remove('selected');
+    if (j < suggestionDiv.children.length) suggestionDiv.children[j].classList.remove('selected');
 
     const parent = this.parentNode;
     parent.removeChild(this);

@@ -41,7 +41,10 @@ export async function preLoadFiles() {
                 file.name
                     .normalize('NFD')
                     .replace(/[\u0300-\u036f’]/g, '')
-                    .replace(/\.(?=.*\.)/g, '-'),
+                    .replace(/\.(?=.*\.)/g, '-')
+                    .replace(/\(/g, '')
+                    .replace(/\)/g, '')
+                    .replace(' ', ''),
                 {
                     type: file.type
                 }
@@ -125,7 +128,10 @@ export async function uploadPost() {
                         .replace(/[\u0300-\u036f]/g, '')
 
                         //? keres egy pontot (\.) ha utána van még pont (?=.*\.) (asszem)
-                        .replace(/\.(?=.*\.)/g, '-'),
+                        .replace(/\.(?=.*\.)/g, '-')
+                        .replace(/\(/g, '')
+                        .replace(/\)/g, '')
+                        .replace(' ', ''),
                     {
                         type: file.type
                     }

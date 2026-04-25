@@ -95,20 +95,27 @@ router.post('/login', async (request, response) => {
     try {
         const { username, password } = request.body;
         const loginSelect = await database.loginSelect(username);
-        let isVerified = VerifyHashedString(
-            password,
-            loginSelect.password_salt,
-            loginSelect.password_hash
-        );
+        if (loginSelect) {
+            let isVerified = VerifyHashedString(
+                password,
+                loginSelect.password_salt,
+                loginSelect.password_hash
+            );
 
-        if (isVerified) {
-            const userId = await database.getUserByUsername(username);
-            request.session.username = username;
-            request.session.userId = userId;
-            response.status(200).json({
-                status: 'Successful login',
-                isLoggedIn: true
-            });
+            if (isVerified) {
+                const userId = await database.getUserByUsername(username);
+                request.session.username = username;
+                request.session.userId = userId;
+                response.status(200).json({
+                    status: 'Successful login',
+                    isLoggedIn: true
+                });
+            } else {
+                response.status(200).json({
+                    status: 'Failed login',
+                    isLoggedIn: false
+                });
+            }
         } else {
             response.status(200).json({
                 status: 'Failed login',
