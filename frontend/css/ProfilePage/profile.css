@@ -172,7 +172,7 @@ body {
 #profileName {
     font-size: 3.5vh;
     font-variant: small-caps;
-    color: #404e0e;
+    color: var(--PostDark);
     outline: none;
 }
 
@@ -209,7 +209,7 @@ body {
     height: 100%;
     font-size: 1.75vh;
     margin: 0;
-    color: #404e0e;
+    color: var(--PostDark);
     outline: none;
 }
 

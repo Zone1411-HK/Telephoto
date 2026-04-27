@@ -330,6 +330,13 @@ export async function sendMessage() {
 
 export function openNewChatWindow() {
     document.getElementById('newChatModal').classList.remove('hidden');
+    document.getElementById('newChatModal').addEventListener('click', function (event) {
+        utilFunctions.closeModalByClickingOutside(
+            event,
+            this,
+            document.getElementById('newChatContainer')
+        );
+    });
     document.getElementById('newChatContainer').style.animation = 'fadeInUp 0.5s forwards';
     document.getElementById('newChatModal').addEventListener('click', function (event) {
         utilFunctions.closeModalByClickingOutside(event, this, this.children[0]);

@@ -8,7 +8,7 @@ let userTrackerTimeArray = [];
 socket.emit('requestActiveUsers');
 setInterval(() => {
     socket.emit('requestActiveUsers');
-}, 300);
+}, 30000);
 
 socket.on('responseActiveUsers', (activeUsers) => {
     if (userTrackerArray.length >= 5) {

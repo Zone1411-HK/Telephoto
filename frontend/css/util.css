@@ -27,7 +27,7 @@
     height: 5vh;
     background-color: rgb(240, 255, 190);
     z-index: 2;
-    box-shadow: 0px 0px 5px 0px #212e00;
+    box-shadow: 0px -5px 5px -3px var(--PrimaryAccent);
     bottom: 0;
 }
 

@@ -18,9 +18,6 @@ export async function startUp() {
             loadAnimation();
             let { Status, exists, Result } = await GetMethodFetch('/api/sendUsername');
             if (Status == 'Success' && exists) {
-                let profileURL = new URL('/profile', 'http://127.0.0.1:3000/');
-                profileURL.searchParams.set('username', Result);
-                document.getElementById('mobileProfilGomb').href = profileURL;
                 document.getElementById('adminUsername').innerText = Result;
             }
         } else {
@@ -36,7 +33,7 @@ export function collapseSidebar() {
 
     if (isCollapsed == 'true') {
         sidebar.dataset.collapsed = 'false';
-        this.style.right = '-2.5vh';
+        this.style.right = '-20px';
         sidebar.classList.remove('collapsed');
         adminContent.style.width = '88vw';
     } else {
@@ -224,8 +221,7 @@ export async function modifyComment() {
     for (const el of modifiableDatas) {
         originalComment[el.id] = el.value;
         el.disabled = false;
-        el.style.backgroundColor = 'var(--PrimaryLight)';
-        el.style.color = 'var(--SecondaryDark)';
+        el.style.borderColor = 'black';
     }
     console.log(originalComment);
     document.getElementById('commentActionConfirmModify').style.display = 'flex';
@@ -639,6 +635,7 @@ export function modifyPost() {
     for (const el of modifiableDatas) {
         originalPost[el.id] = el.value;
         el.disabled = false;
+        el.style.borderColor = 'black';
     }
     console.log(originalPost);
     document.getElementById('postActionConfirmModify').style.display = 'flex';
