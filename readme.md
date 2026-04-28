@@ -1,11 +1,10 @@
 <h1 align="center">TEENDŐK</h1>
 <ul>
    <li>Térkép felületen egyedi pin-ek a posztokhoz</li>
-   <li>Térkép felület csiszolása</li>
    <li>Főoldalon posztok rendezése</li>
 </ul>
 
-<h1 align="center">NodeJS - Template project</h1>
+<h1 align="center">Telephoto</h1>
 
 ## readme.md preview megnyitása:<br>
 
