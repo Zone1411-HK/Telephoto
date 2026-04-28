@@ -256,10 +256,9 @@ router.post('/uploadComment', async (request, response) => {
         });
     } catch (error) {
         response.status(500).json({
-            message: 'Nem jó',
+            status: 'Failed',
             error: error.message
         });
-        console.log(error);
     }
 });
 
@@ -275,10 +274,9 @@ router.get('/interactions/:postId', async (request, response) => {
         });
     } catch (error) {
         response.status(500).json({
-            message: 'Nem jó',
+            status: 'Failed',
             error: error.message
         });
-        console.log(error);
     }
 });
 
@@ -294,10 +292,9 @@ router.post('/uploadInteraction', async (request, response) => {
         });
     } catch (error) {
         response.status(500).json({
-            message: 'Nem jó',
+            status: 'Failed',
             error: error.message
         });
-        console.log(error);
     }
 });
 
@@ -385,16 +382,23 @@ const postTypeOffset = {
 };
 
 router.post('/setOffset', async (request, response) => {
-    const { type, offset } = request.body;
-    if (type == 'reset') {
-        postTypeOffset.offset = 0;
-        postTypeOffset.type = 'reset';
-    } else {
-        postTypeOffset.type = type;
-        postTypeOffset.offset += offset;
-    }
+    try {
+        const { type, offset } = request.body;
+        if (type == 'reset') {
+            postTypeOffset.offset = 0;
+            postTypeOffset.type = 'reset';
+        } else {
+            postTypeOffset.type = type;
+            postTypeOffset.offset += offset;
+        }
 
-    response.status(200).json({ status: 'success', result: postTypeOffset });
+        response.status(200).json({ status: 'success', result: postTypeOffset });
+    } catch (error) {
+        response.status(500).json({
+            status: 'Failed',
+            error: error
+        });
+    }
 });
 
 router.get('/topPosts/:timeFrame', async (request, response) => {
@@ -414,7 +418,10 @@ router.get('/topPosts/:timeFrame', async (request, response) => {
             });
         }
     } catch (error) {
-        console.log(error);
+        response.status(500).json({
+            status: 'Failed',
+            error: error
+        });
     }
 });
 
@@ -435,11 +442,13 @@ router.get('/searchPosts/:search', async (request, response) => {
             });
         }
     } catch (error) {
-        console.log(error);
+        response.status(500).json({
+            status: 'Failed',
+            error: error
+        });
     }
 });
 
-//! PROFIL ADATOK (nincs kész)
 router.get('/profileInfos/:username', async (request, response) => {
     try {
         let username = request.params.username;
@@ -453,7 +462,10 @@ router.get('/profileInfos/:username', async (request, response) => {
             results: data
         });
     } catch (error) {
-        console.log(error);
+        response.status(500).json({
+            status: 'Failed',
+            error: error
+        });
     }
 });
 
@@ -469,7 +481,6 @@ router.get('/postsByUser/:username', async (request, response) => {
             posts: userPosts == null ? [] : userPosts
         });
     } catch (error) {
-        console.log(error);
         response.status(500).json({
             Status: 'Failed',
             Message: error
@@ -479,12 +490,10 @@ router.get('/postsByUser/:username', async (request, response) => {
 router.get('/likedPosts/:username', async (request, response) => {
     try {
         let username = request.params.username;
-        console.log(username);
 
         if (!username) {
             username = request.session.username;
         }
-        console.log(username);
 
         const likedPosts = await database.userLiked(username);
 
@@ -493,7 +502,6 @@ router.get('/likedPosts/:username', async (request, response) => {
             posts: likedPosts == null ? [] : likedPosts
         });
     } catch (error) {
-        console.log(error);
         response.status(500).json({
             Status: 'Failed',
             Message: error
@@ -513,7 +521,6 @@ router.get('/dislikedPosts/:username', async (request, response) => {
             posts: dislikedPosts == null ? [] : dislikedPosts
         });
     } catch (error) {
-        console.log(error);
         response.status(500).json({
             Status: 'Failed',
             Message: error
@@ -528,12 +535,13 @@ router.get('/savedPosts/:username', async (request, response) => {
         }
         const savedPosts = await database.userSaved(username);
 
+        console.log(savedPosts);
+
         response.status(200).json({
             Status: 'Success',
             posts: savedPosts == null ? [] : savedPosts
         });
     } catch (error) {
-        console.log(error);
         response.status(500).json({
             Status: 'Failed',
             Message: error
@@ -562,7 +570,6 @@ router.post('/reportComment/:commentId', async (request, response) => {
             Status: success ? 'success' : 'failed'
         });
     } catch (error) {
-        console.log(error);
         response.status(500).json({
             Status: 'failed',
             Error: error
@@ -582,7 +589,6 @@ router.get('/chatsOfUser/:username', async (request, response) => {
             Result: sqlData
         });
     } catch (error) {
-        console.error(error);
         response.status(500).json({
             Status: 'Failed',
             Message: 'A "/chatsOfUser" végpont nem működik!'
@@ -610,7 +616,6 @@ router.get('/messagesOfChat', async (request, response) => {
             Result: formattedDataArr
         });
     } catch (error) {
-        console.error(error);
         response.status(500).json({
             Status: 'Failed',
             Message: 'A "/messagesOfChat" végpont nem működik!'
@@ -626,7 +631,6 @@ router.get('/lastMessageOfChat/:chatId', async (request, response) => {
             Result: sqlData[0]
         });
     } catch (error) {
-        console.error(error);
         response.status(500).json({
             Status: 'Failed',
             Message: 'A "/lastMessageOfChat" végpont nem működik!'
@@ -642,7 +646,6 @@ router.post('/sendMessage', async (request, response) => {
             Status: 'Success'
         });
     } catch (error) {
-        console.error(error);
         response.status(500).json({
             Status: 'Failed',
             Message: 'A "/sendMessage" végpont nem működik!'
@@ -657,7 +660,6 @@ router.post('/saveChatId', async (request, response) => {
             Status: 'Success'
         });
     } catch (error) {
-        console.error(error);
         response.status(500).json({
             Status: 'Failed',
             Message: 'A "/saveChatId" végpont nem működik!'
@@ -680,7 +682,6 @@ router.get('/sendChatId', async (request, response) => {
             });
         }
     } catch (error) {
-        console.error(error);
         response.status(500).json({
             Status: 'Failed',
             Message: 'A "/sendChatId" végpont nem működik!'
@@ -703,7 +704,6 @@ router.post('/removeChatId', async (request, response) => {
             });
         }
     } catch (error) {
-        console.error(error);
         response.status(500).json({
             Status: 'Failed',
             Message: 'A "/removeChatId" végpont nem működik!'
@@ -726,7 +726,6 @@ router.get('/storedChatIdInfos', async (request, response) => {
             });
         }
     } catch (error) {
-        console.error(error);
         response.status(500).json({
             Status: 'Failed',
             Message: 'A "/removeChatId" végpont nem működik!'
@@ -759,7 +758,6 @@ router.post('/createChat', chatUpload.single('img'), async (request, response) =
             Status: result
         });
     } catch (error) {
-        console.log(error);
         response.status(500).json({
             Status: 'Failed',
             Message: 'A "/createChat" végpont nem működik!',
@@ -795,7 +793,6 @@ router.post('/saveUsername', async (request, response) => {
             Status: 'Success'
         });
     } catch (error) {
-        console.error(error);
         response.status(500).json({
             Status: 'Failed',
             Message: 'A "/saveUsername" végpont nem működik!'
@@ -819,7 +816,6 @@ router.get('/sendUsername', async (request, response) => {
             });
         }
     } catch (error) {
-        console.error(error);
         response.status(500).json({
             Status: 'Failed',
             Message: 'A "/sendUsername" végpont nem működik!'
@@ -842,7 +838,6 @@ router.post('/removeUsername', async (request, response) => {
             });
         }
     } catch (error) {
-        console.error(error);
         response.status(500).json({
             Status: 'Failed',
             Message: 'A "/removeUsername" végpont nem működik!'
@@ -871,11 +866,6 @@ router.get('/sendUserId', async (request, response) => {
         let userId = request.session.userId;
         if (!userId) {
             userId = await database.getUserByUsername(request.session.username);
-            /*
-            response.status(200).json({
-                Status: 'Failed',
-                exists: false
-            });*/
         }
         if (!!userId) {
             response.status(200).json({
@@ -885,7 +875,6 @@ router.get('/sendUserId', async (request, response) => {
             });
         }
     } catch (error) {
-        console.error(error);
         response.status(500).json({
             Status: 'Failed',
             Message: 'A "/sendUserId" végpont nem működik!'
@@ -908,7 +897,6 @@ router.post('/removeUserId', async (request, response) => {
             });
         }
     } catch (error) {
-        console.error(error);
         response.status(500).json({
             Status: 'Failed',
             Message: 'A "/removeUserId" végpont nem működik!'
@@ -1273,7 +1261,6 @@ router.post('/modifyProfile', profileUpload.single('profilePic'), async (request
             });
         }
     } catch (error) {
-        console.log(error);
         response.status(500).json({
             Status: 'failed',
             Message: error
@@ -1288,7 +1275,6 @@ router.post('/logout', async (request, response) => {
             Status: 'Success'
         });
     } catch (error) {
-        console.log(error);
         response.status(500).json({
             Status: 'Failed',
             Message: error
@@ -1304,7 +1290,6 @@ router.get('/randomPlaces', async (request, response) => {
             places: places
         });
     } catch (error) {
-        console.log(error);
         response.status(500).json({
             Status: 'Failed',
             Message: error
@@ -1326,7 +1311,6 @@ router.get('/randomPlacesPosts/:place', async (request, response) => {
             places: places
         });
     } catch (error) {
-        console.log(error);
         response.status(500).json({
             Status: 'Failed',
             Message: error
@@ -1339,10 +1323,8 @@ router.get('/randomPlacesPosts/:place', async (request, response) => {
 function HashString(string) {
     //? salt: egy 32 karakteres random string amit átkonvertálunl hex-é
     const salt = crypto.randomBytes(16).toString('hex');
-    console.log(salt);
     //? hash: a string, és salt alapján generált 128 karakteres string amit átkonvertálunk hex-é
     const hash = crypto.scryptSync(string, salt, 64).toString('hex');
-    console.log(hash);
     return { salt, hash };
 }
 

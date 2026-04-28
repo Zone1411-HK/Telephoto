@@ -1,5 +1,2 @@
 # node_modules mappák ignorálása mindenhol
 **/node_modules/
-*.png
-*.jpg
-*.mp4

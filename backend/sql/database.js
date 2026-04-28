@@ -35,11 +35,9 @@ async function loginSelect(username) {
 
 async function getUserByUsername(username) {
     try {
-        console.log(username);
         const sql = `SELECT user_id FROM users WHERE username = ?`;
         const values = [username];
         const [rows] = await pool.execute(sql, [username]);
-        console.log(rows[0].user_id);
         return rows[0].user_id;
     } catch (error) {
         console.error(error);
@@ -76,8 +74,8 @@ async function createComment(userId, postId, commentContent) {
 
 async function createPicture(postId, pictureLink) {
     try {
-        const sql = `INSERT INTO pictures(post_id, picture_link) VALUES (${postId}, "${pictureLink}")`;
-        const [rows, fields] = await pool.execute(sql);
+        const sql = `INSERT INTO pictures(post_id, picture_link) VALUES (?,?)`;
+        const [rows, fields] = await pool.execute(sql, [postId, pictureLink]);
         return [rows, fields];
     } catch (error) {
         console.error(error);
@@ -86,8 +84,8 @@ async function createPicture(postId, pictureLink) {
 
 async function findUserOfPost(postId) {
     try {
-        const sql = `SELECT posts.user_id FROM posts WHERE posts.post_id = ${postId} `;
-        const [rows] = await pool.execute(sql);
+        const sql = `SELECT posts.user_id FROM posts WHERE posts.post_id = ? `;
+        const [rows] = await pool.execute(sql, [postId]);
         let user = rows[0].user_id;
         return user;
     } catch (error) {
@@ -108,7 +106,6 @@ async function getPostDataByPostId(postId, userId) {
         `;
 
         const [rows] = await pool.execute(topPostsSql, [postId]);
-        console.log(rows);
 
         result = await getAllInteractions(userId, rows);
         return await postPictures(result);
@@ -210,7 +207,6 @@ async function randomPlacesPosts(userId, place, offset) {
         ORDER BY SUM(interactions.upvote) - SUM(interactions.downvote) DESC
         LIMIT 50 OFFSET ?;`;
 
-        console.log(place + ' ' + offset);
         let [rows] = await pool.execute(sql, [place, offset]);
         result = await getAllInteractions(userId, rows);
         return await postPictures(result);
@@ -286,26 +282,56 @@ async function getAllInteractions(userId, posts) {
                 queryPlaceholder += `?,`;
             }
         }
-        const sql = `
-        SELECT interactions.post_id, interactions.upvote, interactions.downvote, favorites.is_favorited 
+        const interactionsSQL = `
+        SELECT interactions.post_id, interactions.upvote, interactions.downvote
         FROM interactions
-        LEFT JOIN favorites ON interactions.post_id = favorites.post_id 
         WHERE interactions.user_id = ? AND interactions.post_id IN (${queryPlaceholder});`;
-        const [rows] = await pool.execute(sql, [userId, ...postIds]);
+        let interactionResult = await pool.execute(interactionsSQL, [userId, ...postIds]);
+        let interactionRows = interactionResult[0];
+
+        const favoritesSQL = `
+        SELECT favorites.post_id, favorites.is_favorited 
+        FROM favorites
+        WHERE favorites.user_id = ? AND favorites.post_id IN (${queryPlaceholder});`;
+        let favoritesResult = await pool.execute(favoritesSQL, [userId, ...postIds]);
+        let favoritesRows = favoritesResult[0];
 
         let interactions = {};
-        for (const row of rows) {
+        for (const row of interactionRows) {
             if (interactions[row.post_id] == undefined) interactions[row.post_id] = [];
             interactions[row.post_id].push({
                 like: row.upvote,
-                dislike: row.downvote,
-                favorite: row.is_favorited
+                dislike: row.downvote
             });
+        }
+
+        for (const row of favoritesRows) {
+            if (interactions[row.post_id] == undefined) interactions[row.post_id] = [];
+            let tempObj = [
+                {
+                    like: interactions[row.post_id][0].like,
+                    dislike: interactions[row.post_id][0].dislike,
+                    favorite: row.is_favorited
+                }
+            ];
+            interactions[row.post_id] = tempObj;
+        }
+
+        let finalInteractions = [];
+
+        for (let row of Object.entries(interactions)) {
+            if (row[1][0].favorite == undefined) {
+                row[1][0] = {
+                    like: row[1][0].like,
+                    dislike: row[1][0].dislike,
+                    favorite: 0
+                };
+            }
         }
 
         for (const post of result) {
             if (interactions[post.post_id] == undefined) {
-                post['interactions'] = post[post.post_id] = [{ like: 0, dislike: 0, favorite: 0 }];
+                post['interactions'] = [{ like: 0, dislike: 0, favorite: 0 }];
             } else {
                 post['interactions'] = interactions[post.post_id];
             }
@@ -313,7 +339,7 @@ async function getAllInteractions(userId, posts) {
 
         return result;
     } catch (error) {
-        console.log(error);
+        throw new Error(error);
     }
 }
 
@@ -622,7 +648,6 @@ async function deleteProfile(userId) {
         WHERE users.user_id = ?;
         `;
         let [fields] = await pool.execute(sql, [userId]);
-        console.log(fields);
         return 'Success';
     } catch (error) {
         throw new Error(error);
@@ -846,7 +871,7 @@ async function userPosted(username) {
 
         return posts;
     } catch (error) {
-        console.log(error);
+        throw new Error(error);
     }
 }
 
@@ -863,7 +888,7 @@ async function userLiked(username) {
 
         return await postPictures(rows);
     } catch (error) {
-        console.log(error);
+        throw new Error(error);
     }
 }
 
@@ -880,7 +905,7 @@ async function userDisliked(username) {
 
         return await postPictures(rows);
     } catch (error) {
-        console.log(error);
+        throw new Error(error);
     }
 }
 
@@ -897,7 +922,7 @@ async function userSaved(username) {
 
         return await postPictures(rows);
     } catch (error) {
-        console.log(error);
+        throw new Error(error);
     }
 }
 
@@ -929,7 +954,7 @@ async function updateProfileName(username, newUsername) {
         await pool.execute(sql, [newUsername, userId]);
         return 'success';
     } catch (error) {
-        console.log(error);
+        throw new Error(error);
     }
 }
 
@@ -945,7 +970,7 @@ async function updateProfileBiography(username, biography) {
         await pool.execute(sql, [biography, userId]);
         return 'success';
     } catch (error) {
-        console.log(error);
+        throw new Error(error);
     }
 }
 
@@ -961,7 +986,7 @@ async function updateProfilePicture(username, profileLink) {
         await pool.execute(sql, [profileLink, userId]);
         return 'success';
     } catch (error) {
-        console.log(error);
+        throw new Error(error);
     }
 }
 
@@ -1038,7 +1063,6 @@ async function randomPlaces() {
         const [rows] = await pool.execute(sql);
         return rows;
     } catch (error) {
-        console.log(error);
         return [];
     }
 }

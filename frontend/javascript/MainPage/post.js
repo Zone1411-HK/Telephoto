@@ -88,15 +88,12 @@ export async function getSearchedPosts(searchValue) {
 
 export async function searchPost(searchDiv, searchButton) {
     try {
-        console.log(searchButton);
         searchValue = document.getElementById(searchDiv).value;
         if (searchValue.length >= 2) {
             const setOffsetResponse = await PostMethodFetch('/api/setOffset', {
                 type: 'reset',
                 offset: 0
             });
-
-            console.log(setOffsetResponse);
 
             let posts = document.getElementById('posts-container');
             posts.replaceChildren();
@@ -176,7 +173,6 @@ export async function randomPlaceSort(searchValue) {
 
     if (response.status != 'failed') {
         const data = response.places;
-        console.log(data);
 
         for (let i = 0; i < data.length; i++) {
             await hangPictures(data[i]);
@@ -259,6 +255,9 @@ const hangPictures = async (test) => {
     let tags = utilFunctions.generateTags(test.tags, test.location);
 
     let description = utilFunctions.generateDescription(test.description);
+
+    console.log(test.post_id);
+    console.log(test);
 
     let interactionRow = await utilFunctions.generateInteractions(
         test.interactions[0].like,

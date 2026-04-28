@@ -54,6 +54,9 @@ async function startUp() {
                     e.preventDefault();
                     uploadPostFunctions.generateTag(this);
                 }
+                if (e.key == '#') {
+                    e.preventDefault();
+                }
             });
 
             let item = document.getElementById('posts-container');

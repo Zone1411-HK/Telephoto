@@ -424,11 +424,15 @@ export async function saveProfileChanges() {
     let name = document.getElementById('profileName');
     let pictureEl = document.getElementById('profilePicture');
     let picture = document.getElementById('profilePictureUpload');
+    let available;
 
-    let available = await GetMethodFetch('/api/isUsernameAvailable/' + name.textContent);
+    if (name.textContent.length >= 3) {
+        available = await GetMethodFetch('/api/isUsernameAvailable/' + name.textContent);
+        available = available.available;
+    } else {
+        available = false;
+    }
 
-    formdata.append('targetUser', currentURL.searchParams.get('username'));
-    formdata.append('username', name.textContent);
     formdata.append('biography', bio.value);
 
     let file = picture.files[0];
@@ -447,9 +451,11 @@ export async function saveProfileChanges() {
           )
         : undefined;
     formdata.append('profilePic', isImageFormat(uploadFile) ? uploadFile : undefined);
-    console.log();
     formdata.append('currentProfilePicture', pictureEl.src.split('/profile_images/')[1]);
-    if (available.available || name.innerText == usernameBefore) {
+    if (available || name.innerText == usernameBefore) {
+        formdata.append('targetUser', currentURL.searchParams.get('username'));
+        formdata.append('username', name.textContent);
+
         let { Status } = await UploadPostMethod('/api/modifyProfile', formdata);
         if (Status == 'success') {
             currentURL.searchParams.set('username', name.textContent);
@@ -457,6 +463,9 @@ export async function saveProfileChanges() {
         } else {
             console.log(Status);
         }
+    } else {
+        name.innerText = usernameBefore;
+        bio.value = biographyBefore;
     }
 
     document.getElementById('profileModify').classList.remove('hidden');

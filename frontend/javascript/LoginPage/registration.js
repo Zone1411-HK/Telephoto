@@ -76,8 +76,6 @@ export async function registration() {
                 email: email,
                 password: password
             });
-            //console.log(response);
-            //usernameInput.value = '';
             emailInput.value = '';
             usernameInput.value = '';
             passwordConfirmInput.value = '';
