@@ -9,72 +9,76 @@ let boundLines;
 let isClosed = true;
 
 export async function startUp() {
-    if (await utilFunctions.isLoggedIn()) {
-        if (await utilFunctions.isAdmin()) {
-            let adminNav = document.createElement('a');
-            adminNav.href = '/admin';
-            adminNav.classList.add('navButton');
-            adminNav.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><span>Admin</span>`;
+    try {
+        if (await utilFunctions.isLoggedIn()) {
+            if (await utilFunctions.isAdmin()) {
+                let adminNav = document.createElement('a');
+                adminNav.href = '/admin';
+                adminNav.classList.add('navButton');
+                adminNav.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><span>Admin</span>`;
 
-            document.getElementById('nav').appendChild(adminNav);
+                document.getElementById('nav').appendChild(adminNav);
 
-            let adminNavMobile = document.createElement('a');
-            adminNavMobile.href = '/admin';
-            adminNavMobile.classList.add('mobileIcon');
-            adminNavMobile.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
+                let adminNavMobile = document.createElement('a');
+                adminNavMobile.href = '/admin';
+                adminNavMobile.classList.add('mobileIcon');
+                adminNavMobile.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
 
-            document.getElementById('navMobile').appendChild(adminNavMobile);
-        }
-
-        generateMap();
-
-        document.getElementById('filterSVGWrapper').addEventListener('click', toggleFilter);
-
-        markerCluster = L.markerClusterGroup({
-            maxClusterRadius: 100,
-            iconCreateFunction: clusterIcon,
-
-            polygonOptions: {
-                color: '#859258',
-                weight: 1,
-                fillColor: '#b9c78a'
+                document.getElementById('navMobile').appendChild(adminNavMobile);
             }
-        });
 
-        boundLines = {
-            minLatLine: L.polyline([
-                [0, 180],
-                [0, -180]
-            ]),
-            maxLatLine: null,
-            minLonLine: null,
-            maxLonLine: null
-        };
+            generateMap();
 
-        let filterInputs = document.querySelectorAll('.filterOptionInputs input');
-        for (const input of filterInputs) {
-            input.value = '';
-            input.addEventListener('input', filterPins);
+            document.getElementById('filterSVGWrapper').addEventListener('click', toggleFilter);
+
+            markerCluster = L.markerClusterGroup({
+                maxClusterRadius: 100,
+                iconCreateFunction: clusterIcon,
+
+                polygonOptions: {
+                    color: '#859258',
+                    weight: 1,
+                    fillColor: '#b9c78a'
+                }
+            });
+
+            boundLines = {
+                minLatLine: L.polyline([
+                    [0, 180],
+                    [0, -180]
+                ]),
+                maxLatLine: null,
+                minLonLine: null,
+                maxLonLine: null
+            };
+
+            let filterInputs = document.querySelectorAll('.filterOptionInputs input');
+            for (const input of filterInputs) {
+                input.value = '';
+                input.addEventListener('input', filterPins);
+            }
+
+            document.getElementById('modalClose').addEventListener('click', exitPost);
+            document.getElementById('resetFilter').addEventListener('click', resetFilter);
+            document
+                .getElementById('closeComments')
+                .addEventListener('click', utilFunctions.closeComments);
+            document
+                .getElementById('commentSvgWrapper')
+                .addEventListener('click', utilFunctions.sendComment);
+
+            let { Status, exists, Result } = await GetMethodFetch('/api/sendUsername');
+            if (Status == 'Success' && exists) {
+                let profileURL = new URL('/profile', 'http://127.0.0.1:3000/');
+                profileURL.searchParams.set('username', Result);
+                document.getElementById('profilGomb').href = profileURL;
+                document.getElementById('mobileProfilGomb').href = profileURL;
+            }
+        } else {
+            window.location.href = '/login';
         }
-
-        document.getElementById('modalClose').addEventListener('click', exitPost);
-        document.getElementById('resetFilter').addEventListener('click', resetFilter);
-        document
-            .getElementById('closeComments')
-            .addEventListener('click', utilFunctions.closeComments);
-        document
-            .getElementById('commentSvgWrapper')
-            .addEventListener('click', utilFunctions.sendComment);
-
-        let { Status, exists, Result } = await GetMethodFetch('/api/sendUsername');
-        if (Status == 'Success' && exists) {
-            let profileURL = new URL('/profile', 'http://127.0.0.1:3000/');
-            profileURL.searchParams.set('username', Result);
-            document.getElementById('profilGomb').href = profileURL;
-            document.getElementById('mobileProfilGomb').href = profileURL;
-        }
-    } else {
-        window.location.href = '/login';
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -373,58 +377,62 @@ export function generateFilteredMarkers() {
 }
 
 export async function openPost() {
-    let postId = this.dataset.postId;
-    let { Status, Infos } = await GetMethodFetch('/api/postInfos/' + postId);
+    try {
+        let postId = this.dataset.postId;
+        let { Status, Infos } = await GetMethodFetch('/api/postInfos/' + postId);
 
-    if (Status == 'Success') {
-        console.log(Infos);
-        let modal = document.getElementById('postModal');
-        let content = document.getElementById('modalContent');
-        content.style.animation = 'fadeInUp 0.5s forwards';
-        modal.removeEventListener('click', utilFunctions.closeModalByClickingOutside);
-        modal.classList.remove('hidden');
-        modal.addEventListener('click', function (event) {
-            utilFunctions.closeModalByClickingOutside(event, modal, content);
-        });
+        if (Status == 'Success') {
+            console.log(Infos);
+            let modal = document.getElementById('postModal');
+            let content = document.getElementById('modalContent');
+            content.style.animation = 'fadeInUp 0.5s forwards';
+            modal.removeEventListener('click', utilFunctions.closeModalByClickingOutside);
+            modal.classList.remove('hidden');
+            modal.addEventListener('click', function (event) {
+                utilFunctions.closeModalByClickingOutside(event, modal, content);
+            });
 
-        content.replaceChildren();
+            content.replaceChildren();
 
-        let post = document.createElement('div');
-        post.classList.add('post');
+            let post = document.createElement('div');
+            post.classList.add('post');
 
-        let slideshow = utilFunctions.generateSlideshow('/uploads/', Infos.links);
+            let slideshow = utilFunctions.generateSlideshow('/uploads/', Infos.links);
 
-        let timestamp = utilFunctions.generateTimestamp(Infos.creation_date);
-        slideshow.appendChild(timestamp);
+            let timestamp = utilFunctions.generateTimestamp(Infos.creation_date);
+            slideshow.appendChild(timestamp);
 
-        let tags = utilFunctions.generateTags(Infos.tags, Infos.location);
+            let tags = utilFunctions.generateTags(Infos.tags, Infos.location);
 
-        let description = utilFunctions.generateDescription(Infos.description);
+            let description = utilFunctions.generateDescription(Infos.description);
 
-        let interactionRow = await utilFunctions.generateInteractions(
-            Infos.interactions[0].like,
-            Infos.interactions[0].dislike,
-            Infos.interactions[0].favorite,
-            Infos.post_id,
-            Infos.upvote,
-            Infos.downvote
-        );
+            let interactionRow = await utilFunctions.generateInteractions(
+                Infos.interactions[0].like,
+                Infos.interactions[0].dislike,
+                Infos.interactions[0].favorite,
+                Infos.post_id,
+                Infos.upvote,
+                Infos.downvote
+            );
 
-        let userRow = utilFunctions.generateUserRow(Infos.username, Infos.profile_picture_link);
+            let userRow = utilFunctions.generateUserRow(Infos.username, Infos.profile_picture_link);
 
-        let postcontent = document.createElement('div');
-        postcontent.classList.add('postContent');
+            let postcontent = document.createElement('div');
+            postcontent.classList.add('postContent');
 
-        postcontent.appendChild(slideshow);
+            postcontent.appendChild(slideshow);
 
-        postcontent.appendChild(interactionRow);
-        postcontent.appendChild(userRow);
-        postcontent.appendChild(tags);
-        postcontent.appendChild(description);
+            postcontent.appendChild(interactionRow);
+            postcontent.appendChild(userRow);
+            postcontent.appendChild(tags);
+            postcontent.appendChild(description);
 
-        post.appendChild(postcontent);
-        post.dataset.postId = Infos.post_id;
+            post.appendChild(postcontent);
+            post.dataset.postId = Infos.post_id;
 
-        content.appendChild(post);
+            content.appendChild(post);
+        }
+    } catch (error) {
+        console.error(error);
     }
 }

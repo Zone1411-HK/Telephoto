@@ -5,24 +5,27 @@ import { socket } from '../socket.js';
 let map;
 
 export async function startUp() {
-    console.log(socket);
-    let loggedIn = await utilFunctions.isLoggedIn();
-    if (!loggedIn) {
-        window.location.href = '/login';
-    } else {
-        if (await utilFunctions.isAdmin()) {
-            getProfiles();
-            getPosts();
-            getComments();
-            adminAddEventListeners();
-            loadAnimation();
-            let { Status, exists, Result } = await GetMethodFetch('/api/sendUsername');
-            if (Status == 'Success' && exists) {
-                document.getElementById('adminUsername').innerText = Result;
-            }
+    try {
+        let loggedIn = await utilFunctions.isLoggedIn();
+        if (!loggedIn) {
+            window.location.href = '/login';
         } else {
-            window.location.href = '/';
+            if (await utilFunctions.isAdmin()) {
+                getProfiles();
+                getPosts();
+                getComments();
+                adminAddEventListeners();
+                loadAnimation();
+                let { Status, exists, Result } = await GetMethodFetch('/api/sendUsername');
+                if (Status == 'Success' && exists) {
+                    document.getElementById('adminUsername').innerText = Result;
+                }
+            } else {
+                window.location.href = '/';
+            }
         }
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -229,40 +232,50 @@ export async function modifyComment() {
 }
 
 export async function confirmCommentModification() {
-    let modifiedArray = document.querySelectorAll('.commentModifyData');
-    console.log(modifiedArray);
-    let j = 0;
-    while (
-        j < modifiedArray.length &&
-        modifiedArray[j].value == Object.values(originalComment)[j]
-    ) {
-        j++;
-    }
-    if (j < modifiedArray.length) {
-        const modifyResponse = await PostMethodFetch('/api/updateCommentData', {
-            commentId: document.getElementById('openedComment').dataset.commentId,
-            commentDate: modifiedArray[0].value,
-            commentContent: modifiedArray[1].value
-        });
-        if (modifyResponse.Status == 'Success') {
-            let modifiableDatas = document.querySelectorAll('.commentModifyData');
-            for (const el of modifiableDatas) {
-                el.disabled = true;
-                el.style.backgroundColor = '';
-                el.style.color = '';
-            }
-            closeComment();
-            document.getElementById('commentBack').classList.add('hidden');
+    try {
+        let modifiedArray = document.querySelectorAll('.commentModifyData');
+        console.log(modifiedArray);
+        let j = 0;
+        while (
+            j < modifiedArray.length &&
+            modifiedArray[j].value == Object.values(originalComment)[j]
+        ) {
+            j++;
         }
+        if (j < modifiedArray.length) {
+            const modifyResponse = await PostMethodFetch('/api/updateCommentData', {
+                commentId: document.getElementById('openedComment').dataset.commentId,
+                commentDate: modifiedArray[0].value,
+                commentContent: modifiedArray[1].value
+            });
+            if (modifyResponse.Status == 'Success') {
+                let modifiableDatas = document.querySelectorAll('.commentModifyData');
+                for (const el of modifiableDatas) {
+                    el.disabled = true;
+                    el.style.backgroundColor = '';
+                    el.style.color = '';
+                }
+                closeComment();
+                document.getElementById('commentBack').classList.add('hidden');
+            }
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 
 export async function clearComment() {
-    const commentId = document.getElementById('openedComment').dataset.commentId;
-    console.log(commentId);
-    const clearResponse = await PostMethodFetch('/api/clearComment', { commentId: commentId });
-    console.log(clearResponse);
-    closeComment();
+    try {
+        const commentId = document.getElementById('openedComment').dataset.commentId;
+        console.log(commentId);
+        const clearResponse = await PostMethodFetch('/api/clearComment', {
+            commentId: commentId
+        });
+        console.log(clearResponse);
+        closeComment();
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 export function closeComment() {
@@ -337,56 +350,66 @@ export async function getProfiles() {
 }
 
 export async function openProfile() {
-    const userId = this.dataset.userId;
-    const { Status, ProfileData } = await GetMethodFetch('/api/getProfileData/' + userId);
-    if (Status == 'Success' && ProfileData.length != 0) {
-        document.getElementById('openedProfile').style.display = 'flex';
-        document.getElementById('openedProfile').dataset.userId = userId;
-        document.getElementById('profilesTableDiv').style.display = 'none';
-        document.getElementById('profileBack').classList.remove('hidden');
+    try {
+        const userId = this.dataset.userId;
+        const { Status, ProfileData } = await GetMethodFetch('/api/getProfileData/' + userId);
+        if (Status == 'Success' && ProfileData.length != 0) {
+            document.getElementById('openedProfile').style.display = 'flex';
+            document.getElementById('openedProfile').dataset.userId = userId;
+            document.getElementById('profilesTableDiv').style.display = 'none';
+            document.getElementById('profileBack').classList.remove('hidden');
 
-        if (this.dataset.admin == 'true') {
-            document.getElementById('openedProfile').classList.add('adminProfile');
-        }
+            if (this.dataset.admin == 'true') {
+                document.getElementById('openedProfile').classList.add('adminProfile');
+            }
 
-        if (this.dataset.reported == 'true') {
-            document.getElementById('openedProfile').classList.add('reported');
-            document.getElementById('profActionClearH3').addEventListener('click', clearProfile);
-            document.getElementById('profActionClearH3').classList.remove('disabledButton');
-            document.getElementById('profActionClearH3').classList.add('adminActionClearEnabled');
+            if (this.dataset.reported == 'true') {
+                document.getElementById('openedProfile').classList.add('reported');
+                document
+                    .getElementById('profActionClearH3')
+                    .addEventListener('click', clearProfile);
+                document.getElementById('profActionClearH3').classList.remove('disabledButton');
+                document
+                    .getElementById('profActionClearH3')
+                    .classList.add('adminActionClearEnabled');
+            } else {
+                document.getElementById('profActionClearH3').classList.add('disabledButton');
+                document
+                    .getElementById('profActionClearH3')
+                    .removeEventListener('click', clearProfile);
+                document
+                    .getElementById('profActionClearH3')
+                    .classList.remove('adminActionClearEnabled');
+            }
+
+            const dateString = utilFunctions.date_yyyy_MM_dd(ProfileData[0].registration_date);
+            document.getElementById('profileUsername').value = ProfileData[0].username;
+            document.getElementById('profileRegDate').value = `${dateString}`;
+            document.getElementById('profileEmail').value = ProfileData[0].email;
+            document.getElementById('profileId').innerText = ProfileData[0].user_id;
+            document.getElementById('profileBiography').value = ProfileData[0].biography;
+            if (ProfileData[0].profile_picture_link != null) {
+                document.getElementById('profilePic').src =
+                    '/profile_images/' + ProfileData[0].profile_picture_link;
+            } else {
+                document.getElementById('profilePic').src = '/profile_images/defaultProfile.svg';
+            }
         } else {
-            document.getElementById('profActionClearH3').classList.add('disabledButton');
-            document.getElementById('profActionClearH3').removeEventListener('click', clearProfile);
-            document
-                .getElementById('profActionClearH3')
-                .classList.remove('adminActionClearEnabled');
-        }
+            let errorDiv = document.getElementById('errorMessageDiv');
+            errorDiv.classList.remove('hidden');
+            errorDiv.style.animation = 'fadeInDown 0.5s forwards';
+            let errorMessage = document.getElementById('errorMessage');
+            errorMessage.innerText = 'Valami probléma történt.\n\nKérjük próbálja meg később.';
 
-        const dateString = utilFunctions.date_yyyy_MM_dd(ProfileData[0].registration_date);
-        document.getElementById('profileUsername').value = ProfileData[0].username;
-        document.getElementById('profileRegDate').value = `${dateString}`;
-        document.getElementById('profileEmail').value = ProfileData[0].email;
-        document.getElementById('profileId').innerText = ProfileData[0].user_id;
-        document.getElementById('profileBiography').value = ProfileData[0].biography;
-        if (ProfileData[0].profile_picture_link != null) {
-            document.getElementById('profilePic').src =
-                '/profile_images/' + ProfileData[0].profile_picture_link;
-        } else {
-            document.getElementById('profilePic').src = '/profile_images/defaultProfile.svg';
-        }
-    } else {
-        let errorDiv = document.getElementById('errorMessageDiv');
-        errorDiv.classList.remove('hidden');
-        errorDiv.style.animation = 'fadeInDown 0.5s forwards';
-        let errorMessage = document.getElementById('errorMessage');
-        errorMessage.innerText = 'Valami probléma történt.\n\nKérjük próbálja meg később.';
-
-        setTimeout(() => {
-            errorDiv.style.animation = 'fadeOutUp 0.5s forwards';
             setTimeout(() => {
-                errorDiv.classList.add('hidden');
-            }, 500);
-        }, 3000);
+                errorDiv.style.animation = 'fadeOutUp 0.5s forwards';
+                setTimeout(() => {
+                    errorDiv.classList.add('hidden');
+                }, 500);
+            }, 3000);
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -405,51 +428,54 @@ export function modifyProfile() {
     }
 }
 
-//TODO ADMIN PROFILT CSAK SAJÁT MAGA TUDJA MÓDOSíTANI
 export async function confirmModificationProfile() {
-    const emailRegExp = /^[A-Za-z0-9]+@[A-Za-z0-9]+\.[A-Za-z0-9]/;
-    let isValid = true;
-    let modifyArray = document.querySelectorAll('.profileData');
-    let data = {};
-    data.userId = document.getElementById('openedProfile').dataset.userId;
+    try {
+        const emailRegExp = /^[A-Za-z0-9]+@[A-Za-z0-9]+\.[A-Za-z0-9]/;
+        let isValid = true;
+        let modifyArray = document.querySelectorAll('.profileData');
+        let data = {};
+        data.userId = document.getElementById('openedProfile').dataset.userId;
 
-    for (const el of modifyArray) {
-        data[el.id] = el.value;
-    }
-
-    if (originalData.profileUsername != data.profileUsername) {
-        const isUsernameAvailable = await GetMethodFetch(
-            '/api/isUsernameAvailable/' + data.profileUsername
-        );
-        if (!isUsernameAvailable.available || data.profileUsername.length > 50) {
-            isValid = false;
-            document.getElementById('profileUsername').style.border = '1px solid red';
-        } else {
-            document.getElementById('profileUsername').style.border = '1px solid black';
+        for (const el of modifyArray) {
+            data[el.id] = el.value;
         }
-    }
 
-    if (data.profileEmail != originalData.profileEmail) {
-        if (!emailRegExp.test(data.profileEmail) || data.profileEmail.length > 100) {
-            isValid = false;
-            document.getElementById('profileEmail').style.border = '1px solid red';
-        } else {
-            document.getElementById('profileEmail').style.border = '1px solid black';
+        if (originalData.profileUsername != data.profileUsername) {
+            const isUsernameAvailable = await GetMethodFetch(
+                '/api/isUsernameAvailable/' + data.profileUsername
+            );
+            if (!isUsernameAvailable.available || data.profileUsername.length > 50) {
+                isValid = false;
+                document.getElementById('profileUsername').style.border = '1px solid red';
+            } else {
+                document.getElementById('profileUsername').style.border = '1px solid black';
+            }
         }
-    }
 
-    if (data.profileBiography != originalData.profileBiography) {
-        if (data.profileBiography.length > 500) {
-            isValid = false;
-            document.getElementById('profileBiography').style.border = '1px solid red';
-        } else {
-            document.getElementById('profileBiography').style.border = '1px solid black';
+        if (data.profileEmail != originalData.profileEmail) {
+            if (!emailRegExp.test(data.profileEmail) || data.profileEmail.length > 100) {
+                isValid = false;
+                document.getElementById('profileEmail').style.border = '1px solid red';
+            } else {
+                document.getElementById('profileEmail').style.border = '1px solid black';
+            }
         }
-    }
 
-    if (isValid) {
-        const updateResponse = await PostMethodFetch('/api/updateProfileData', data);
-        closeProfile();
+        if (data.profileBiography != originalData.profileBiography) {
+            if (data.profileBiography.length > 500) {
+                isValid = false;
+                document.getElementById('profileBiography').style.border = '1px solid red';
+            } else {
+                document.getElementById('profileBiography').style.border = '1px solid black';
+            }
+        }
+
+        if (isValid) {
+            const updateResponse = await PostMethodFetch('/api/updateProfileData', data);
+            closeProfile();
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -478,10 +504,14 @@ export async function deleteProfile() {
 }
 
 export async function clearProfile() {
-    const userId = document.getElementById('openedProfile').dataset.userId;
-    const clearResponse = await PostMethodFetch('/api/clearProfile', { userId: userId });
-    console.log(clearResponse);
-    closeProfile();
+    try {
+        const userId = document.getElementById('openedProfile').dataset.userId;
+        const clearResponse = await PostMethodFetch('/api/clearProfile', { userId: userId });
+        console.log(clearResponse);
+        closeProfile();
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 //#endregion
@@ -524,74 +554,78 @@ export async function getPosts() {
 }
 
 export async function openPost() {
-    const postId = this.dataset.postId;
-    const { Status, postData } = await GetMethodFetch('/api/getPostData/' + postId);
-    if (Status == 'Success' && postData.length != 0) {
-        document.getElementById('openedPost').style.display = 'flex';
-        document.getElementById('openedPost').dataset.postId = postId;
-        document.getElementById('postsTableDiv').style.display = 'none';
-        document.getElementById('postBack').classList.remove('hidden');
+    try {
+        const postId = this.dataset.postId;
+        const { Status, postData } = await GetMethodFetch('/api/getPostData/' + postId);
+        if (Status == 'Success' && postData.length != 0) {
+            document.getElementById('openedPost').style.display = 'flex';
+            document.getElementById('openedPost').dataset.postId = postId;
+            document.getElementById('postsTableDiv').style.display = 'none';
+            document.getElementById('postBack').classList.remove('hidden');
 
-        if (this.dataset.reported == 'true') {
-            document.getElementById('openedPost').classList.add('reported');
-            document.getElementById('postActionClearH3').addEventListener('click', clearPost);
-            document.getElementById('postActionClearH3').classList.remove('disabledButton');
-            document.getElementById('postActionClearH3').classList.add('adminActionClearEnabled');
+            if (this.dataset.reported == 'true') {
+                document.getElementById('openedPost').classList.add('reported');
+                document.getElementById('postActionClearH3').addEventListener('click', clearPost);
+                document.getElementById('postActionClearH3').classList.remove('disabledButton');
+                document
+                    .getElementById('postActionClearH3')
+                    .classList.add('adminActionClearEnabled');
+            } else {
+                document.getElementById('postActionClearH3').classList.add('disabledButton');
+                document
+                    .getElementById('postActionClearH3')
+                    .removeEventListener('click', clearPost);
+                document
+                    .getElementById('postActionClearH3')
+                    .classList.remove('adminActionClearEnabled');
+            }
+
+            generateMap(postData.latitude, postData.longitude);
+
+            document.getElementById('postInputCreationDate').value = utilFunctions.date_yyyy_MM_dd(
+                postData.creationDate
+            );
+            document.getElementById('postUserNameId').innerText =
+                `Felhasználó: ${postData.username} #${postData.userId}`;
+            document.getElementById('postId').innerText = `Azonosító: #${postData.postId}`;
+
+            let elArray = document.getElementsByClassName('postData');
+            for (let i = 0; i < elArray.length; i++) {
+                elArray[i].value = Object.values(postData)[i];
+            }
+
+            const slideshow = document.getElementById('slideshowContent');
+            slideshow.replaceChildren();
+
+            let pictures = Object.values(postData.pictureLinks);
+
+            let pic = document.createElement('img');
+            pic.src = '/uploads/' + pictures[0];
+            pic.classList.add('pictures', 'active');
+            slideshow.appendChild(pic);
+
+            for (let i = 1; i < pictures.length; i++) {
+                let p = document.createElement('img');
+                p.src = '/uploads/' + pictures[i];
+                p.classList.add('pictures');
+                slideshow.appendChild(p);
+            }
         } else {
-            document.getElementById('postActionClearH3').classList.add('disabledButton');
-            document.getElementById('postActionClearH3').removeEventListener('click', clearPost);
-            document
-                .getElementById('postActionClearH3')
-                .classList.remove('adminActionClearEnabled');
-        }
+            let errorDiv = document.getElementById('errorMessageDiv');
+            errorDiv.classList.remove('hidden');
+            errorDiv.style.animation = 'fadeInDown 0.5s forwards';
+            let errorMessage = document.getElementById('errorMessage');
+            errorMessage.innerText = 'Valami probléma történt.\n\nKérjük próbálja meg később.';
 
-        generateMap(postData.latitude, postData.longitude);
-
-        document.getElementById('postInputCreationDate').value = utilFunctions.date_yyyy_MM_dd(
-            postData.creationDate
-        );
-        document.getElementById('postUserNameId').innerText =
-            `Felhasználó: ${postData.username} #${postData.userId}`;
-        document.getElementById('postId').innerText = `Azonosító: #${postData.postId}`;
-
-        let elArray = document.getElementsByClassName('postData');
-        for (let i = 0; i < elArray.length; i++) {
-            elArray[i].value = Object.values(postData)[i];
-        }
-
-        const slideshow = document.getElementById('slideshowContent');
-        slideshow.replaceChildren();
-
-        let pictures = Object.values(postData.pictureLinks);
-
-        let pic = document.createElement('img');
-        pic.src = '/uploads/' + pictures[0];
-        pic.classList.add('pictures', 'active');
-        slideshow.appendChild(pic);
-
-        console.log(pictures);
-
-        for (let i = 1; i < pictures.length; i++) {
-            let p = document.createElement('img');
-            p.src = '/uploads/' + pictures[i];
-            p.classList.add('pictures');
-            slideshow.appendChild(p);
-        }
-
-        //generateMap(10, 10);
-    } else {
-        let errorDiv = document.getElementById('errorMessageDiv');
-        errorDiv.classList.remove('hidden');
-        errorDiv.style.animation = 'fadeInDown 0.5s forwards';
-        let errorMessage = document.getElementById('errorMessage');
-        errorMessage.innerText = 'Valami probléma történt.\n\nKérjük próbálja meg később.';
-
-        setTimeout(() => {
-            errorDiv.style.animation = 'fadeOutUp 0.5s forwards';
             setTimeout(() => {
-                errorDiv.classList.add('hidden');
-            }, 500);
-        }, 3000);
+                errorDiv.style.animation = 'fadeOutUp 0.5s forwards';
+                setTimeout(() => {
+                    errorDiv.classList.add('hidden');
+                }, 500);
+            }, 3000);
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -622,10 +656,14 @@ export async function deletePost() {
 }
 
 export async function clearPost() {
-    const postId = document.getElementById('openedPost').dataset.postId;
-    const clearResponse = await PostMethodFetch('/api/clearPost', { postId: postId });
-    console.log(clearResponse);
-    closePost();
+    try {
+        const postId = document.getElementById('openedPost').dataset.postId;
+        const clearResponse = await PostMethodFetch('/api/clearPost', { postId: postId });
+        console.log(clearResponse);
+        closePost();
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 let originalPost = {};
@@ -699,25 +737,32 @@ export function placeMarker() {
 }
 
 export async function confirmPostModification() {
-    let modifiedArray = document.querySelectorAll('.postModifyData');
-    console.log(modifiedArray);
-    let j = 0;
-    while (j < modifiedArray.length && modifiedArray[j].value == Object.values(originalPost)[j]) {
-        j++;
-    }
-    if (j < modifiedArray.length) {
-        const modifyResponse = await PostMethodFetch('/api/updatePostData', {
-            postId: document.getElementById('openedPost').dataset.postId,
-            postInputCreationDate: modifiedArray[0].value,
-            postDescription: modifiedArray[1].value,
-            postTags: modifiedArray[2].value,
-            postLocationName: modifiedArray[3].value,
-            postLatitude: modifiedArray[4].value,
-            postLongitude: modifiedArray[5].value
-        });
-        if (modifyResponse.Status == 'Success') {
-            closePost();
+    try {
+        let modifiedArray = document.querySelectorAll('.postModifyData');
+        console.log(modifiedArray);
+        let j = 0;
+        while (
+            j < modifiedArray.length &&
+            modifiedArray[j].value == Object.values(originalPost)[j]
+        ) {
+            j++;
         }
+        if (j < modifiedArray.length) {
+            const modifyResponse = await PostMethodFetch('/api/updatePostData', {
+                postId: document.getElementById('openedPost').dataset.postId,
+                postInputCreationDate: modifiedArray[0].value,
+                postDescription: modifiedArray[1].value,
+                postTags: modifiedArray[2].value,
+                postLocationName: modifiedArray[3].value,
+                postLatitude: modifiedArray[4].value,
+                postLongitude: modifiedArray[5].value
+            });
+            if (modifyResponse.Status == 'Success') {
+                closePost();
+            }
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -729,27 +774,33 @@ export function closeDeleteModal() {
 }
 
 export async function confirmDelete() {
-    if (this.dataset.deleteType == 'profile') {
-        const userId = document.getElementById('openedProfile').dataset.userId;
-        const deleteResponse = await PostMethodFetch('/api/deleteProfile', { userId: userId });
-        socket.emit('logoutUser', userId);
-        closeProfile();
+    try {
+        if (this.dataset.deleteType == 'profile') {
+            const userId = document.getElementById('openedProfile').dataset.userId;
+            const deleteResponse = await PostMethodFetch('/api/deleteProfile', {
+                userId: userId
+            });
+            socket.emit('logoutUser', userId);
+            closeProfile();
+        }
+        if (this.dataset.deleteType == 'post') {
+            const postId = document.getElementById('openedPost').dataset.postId;
+            const deleteResponse = await PostMethodFetch('/api/deletePost', { postId: postId });
+            console.log(deleteResponse);
+            closePost();
+        }
+        if (this.dataset.deleteType == 'comment') {
+            const commentId = document.getElementById('openedComment').dataset.commentId;
+            const deleteResponse = await PostMethodFetch('/api/deleteComment', {
+                commentId: commentId
+            });
+            console.log(deleteResponse);
+            closeComment();
+        }
+        closeDeleteModal();
+    } catch (error) {
+        console.error(error);
     }
-    if (this.dataset.deleteType == 'post') {
-        const postId = document.getElementById('openedPost').dataset.postId;
-        const deleteResponse = await PostMethodFetch('/api/deletePost', { postId: postId });
-        console.log(deleteResponse);
-        closePost();
-    }
-    if (this.dataset.deleteType == 'comment') {
-        const commentId = document.getElementById('openedComment').dataset.commentId;
-        const deleteResponse = await PostMethodFetch('/api/deleteComment', {
-            commentId: commentId
-        });
-        console.log(deleteResponse);
-        closeComment();
-    }
-    closeDeleteModal();
 }
 
 export function slideShow(move) {

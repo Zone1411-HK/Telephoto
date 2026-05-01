@@ -73,53 +73,69 @@ export function profileAddEventListeners() {
 }
 
 export async function postsByUser() {
-    let isTheUserSameAsProfile = currentUser == currentURL.searchParams.get('username');
+    try {
+        let isTheUserSameAsProfile = currentUser == currentURL.searchParams.get('username');
 
-    const { Status, posts } = await GetMethodFetch(
-        '/api/postsByUser/' + currentURL.searchParams.get('username')
-    );
-    if (Status == 'Success') {
-        generatePosts(posts, isTheUserSameAsProfile);
-        try {
-            makeTypeActive(this);
-        } catch (error) {
-            makeTypeActive(document.getElementById('postsByUser'));
+        const { Status, posts } = await GetMethodFetch(
+            '/api/postsByUser/' + currentURL.searchParams.get('username')
+        );
+        if (Status == 'Success') {
+            generatePosts(posts, isTheUserSameAsProfile);
+            try {
+                makeTypeActive(this);
+            } catch (error) {
+                makeTypeActive(document.getElementById('postsByUser'));
+            }
+            console.log('Posztok sikeresen betöltve');
         }
-        console.log('Posztok sikeresen betöltve');
+    } catch (error) {
+        console.error(error);
     }
 }
 
 export async function likedPosts() {
-    const { Status, posts } = await GetMethodFetch(
-        '/api/likedPosts/' + currentURL.searchParams.get('username')
-    );
-    if (Status == 'Success') {
-        generatePosts(posts, false);
-        makeTypeActive(this);
-        console.log('Posztok sikeresen betöltve');
+    try {
+        const { Status, posts } = await GetMethodFetch(
+            '/api/likedPosts/' + currentURL.searchParams.get('username')
+        );
+        if (Status == 'Success') {
+            generatePosts(posts, false);
+            makeTypeActive(this);
+            console.log('Posztok sikeresen betöltve');
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 
 export async function dislikedPosts() {
-    const { Status, posts } = await GetMethodFetch(
-        '/api/dislikedPosts/' + currentURL.searchParams.get('username')
-    );
-    if (Status == 'Success') {
-        console.log(posts);
-        generatePosts(posts, false);
-        makeTypeActive(this);
-        console.log('Posztok sikeresen betöltve');
+    try {
+        const { Status, posts } = await GetMethodFetch(
+            '/api/dislikedPosts/' + currentURL.searchParams.get('username')
+        );
+        if (Status == 'Success') {
+            console.log(posts);
+            generatePosts(posts, false);
+            makeTypeActive(this);
+            console.log('Posztok sikeresen betöltve');
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 
 export async function savedPosts() {
-    const { Status, posts } = await GetMethodFetch(
-        '/api/savedPosts/' + currentURL.searchParams.get('username')
-    );
-    if (Status == 'Success') {
-        generatePosts(posts, false);
-        makeTypeActive(this);
-        console.log('Posztok sikeresen betöltve');
+    try {
+        const { Status, posts } = await GetMethodFetch(
+            '/api/savedPosts/' + currentURL.searchParams.get('username')
+        );
+        if (Status == 'Success') {
+            generatePosts(posts, false);
+            makeTypeActive(this);
+            console.log('Posztok sikeresen betöltve');
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -239,114 +255,116 @@ export function makeTypeActive(element) {
     element.classList.add('activeType');
 }
 
-export async function testing() {
-    const response = await PostMethodFetch('/api/saveUsername', {
-        username: 'testasd'
-    });
-}
-
 export async function profileInfos() {
-    const response = await GetMethodFetch(
-        '/api/profileInfos/' + currentURL.searchParams.get('username')
-    );
-    if (response.status == 'Success') {
-        document.getElementById('profileName').innerText = response.results[0].username;
-        document.getElementById('profileEmail').innerText = response.results[0].email;
-        document.getElementById('profileRegistration').innerText =
-            utilFunctions.date_yyyy_MM_dd(response.results[0].registration_date) + ' óta';
-        document.getElementById('profileBiography').innerText = response.results[0].biography;
+    try {
+        const response = await GetMethodFetch(
+            '/api/profileInfos/' + currentURL.searchParams.get('username')
+        );
+        if (response.status == 'Success') {
+            document.getElementById('profileName').innerText = response.results[0].username;
+            document.getElementById('profileEmail').innerText = response.results[0].email;
+            document.getElementById('profileRegistration').innerText =
+                utilFunctions.date_yyyy_MM_dd(response.results[0].registration_date) + ' óta';
+            document.getElementById('profileBiography').innerText = response.results[0].biography;
 
-        let profilePicture =
-            response.results[0].profile_picture_link == null
-                ? 'defaultProfile.svg'
-                : response.results[0].profile_picture_link;
+            let profilePicture =
+                response.results[0].profile_picture_link == null
+                    ? 'defaultProfile.svg'
+                    : response.results[0].profile_picture_link;
 
-        document.getElementById('profilePicture').src = '/profile_images/' + profilePicture;
-        document.getElementById('profilePictureDiv').style.backgroundImage =
-            `url("/profile_images/${profilePicture}")`;
-        console.log('Profil adatok sikeresen betöltve');
-    } else {
-        const disclaimer = document.createElement('p');
-        disclaimer.innerText = 'Nincsen ilyen profil!';
-        disclaimer.classList.add('disclaimer');
-        document.getElementById('root').replaceChildren();
-        document.getElementById('root').appendChild(disclaimer);
+            document.getElementById('profilePicture').src = '/profile_images/' + profilePicture;
+            document.getElementById('profilePictureDiv').style.backgroundImage =
+                `url("/profile_images/${profilePicture}")`;
+            console.log('Profil adatok sikeresen betöltve');
+        } else {
+            const disclaimer = document.createElement('p');
+            disclaimer.innerText = 'Nincsen ilyen profil!';
+            disclaimer.classList.add('disclaimer');
+            document.getElementById('root').replaceChildren();
+            document.getElementById('root').appendChild(disclaimer);
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 
 let openedPostId;
 
 export async function openPost() {
-    openedPostId = this.dataset.postId;
-    console.log(openedPostId);
+    try {
+        openedPostId = this.dataset.postId;
+        console.log(openedPostId);
 
-    let { Status, Infos } = await GetMethodFetch('/api/postInfos/' + openedPostId);
+        let { Status, Infos } = await GetMethodFetch('/api/postInfos/' + openedPostId);
 
-    if (Status == 'Success') {
-        console.log(Infos);
-        let modal = document.getElementById('openedPostModal');
-        let content = document.getElementById('openedPost');
-        content.replaceChildren();
-        content.style.animation = 'fadeInUp 0.5s forwards';
-        modal.removeEventListener('click', utilFunctions.closeModalByClickingOutside);
-        modal.classList.remove('hidden');
-        modal.addEventListener('click', function (event) {
-            utilFunctions.closeModalByClickingOutside(event, modal, post);
-        });
+        if (Status == 'Success') {
+            console.log(Infos);
+            let modal = document.getElementById('openedPostModal');
+            let content = document.getElementById('openedPost');
+            content.replaceChildren();
+            content.style.animation = 'fadeInUp 0.5s forwards';
+            modal.removeEventListener('click', utilFunctions.closeModalByClickingOutside);
+            modal.classList.remove('hidden');
+            modal.addEventListener('click', function (event) {
+                utilFunctions.closeModalByClickingOutside(event, modal, post);
+            });
 
-        let post = document.createElement('div');
-        post.classList.add('post');
+            let post = document.createElement('div');
+            post.classList.add('post');
 
-        let slideshow = utilFunctions.generateSlideshow('/uploads/', Infos.links);
+            let slideshow = utilFunctions.generateSlideshow('/uploads/', Infos.links);
 
-        let timestamp = utilFunctions.generateTimestamp(Infos.creation_date);
-        slideshow.appendChild(timestamp);
+            let timestamp = utilFunctions.generateTimestamp(Infos.creation_date);
+            slideshow.appendChild(timestamp);
 
-        let tags = utilFunctions.generateTags(Infos.tags, Infos.location);
+            let tags = utilFunctions.generateTags(Infos.tags, Infos.location);
 
-        let description = utilFunctions.generateDescription(Infos.description);
+            let description = utilFunctions.generateDescription(Infos.description);
 
-        let interactionRow = await utilFunctions.generateInteractions(
-            Infos.interactions[0].like,
-            Infos.interactions[0].dislike,
-            Infos.interactions[0].favorite,
-            Infos.post_id,
-            Infos.upvote,
-            Infos.downvote
-        );
+            let interactionRow = await utilFunctions.generateInteractions(
+                Infos.interactions[0].like,
+                Infos.interactions[0].dislike,
+                Infos.interactions[0].favorite,
+                Infos.post_id,
+                Infos.upvote,
+                Infos.downvote
+            );
 
-        let userRow = utilFunctions.generateUserRow(Infos.username, Infos.profile_picture_link);
+            let userRow = utilFunctions.generateUserRow(Infos.username, Infos.profile_picture_link);
 
-        let postcontent = document.createElement('div');
-        postcontent.classList.add('postContent');
+            let postcontent = document.createElement('div');
+            postcontent.classList.add('postContent');
 
-        postcontent.appendChild(slideshow);
+            postcontent.appendChild(slideshow);
 
-        postcontent.appendChild(interactionRow);
-        postcontent.appendChild(userRow);
-        postcontent.appendChild(tags);
-        postcontent.appendChild(description);
+            postcontent.appendChild(interactionRow);
+            postcontent.appendChild(userRow);
+            postcontent.appendChild(tags);
+            postcontent.appendChild(description);
 
-        let selectionType = document.querySelector('.activeType');
-        if (
-            currentURL.searchParams.get('username') == currentUser &&
-            selectionType.id == 'postsByUser'
-        ) {
-            let deleteButton = generatePostDelete();
-            postcontent.appendChild(deleteButton);
+            let selectionType = document.querySelector('.activeType');
+            if (
+                currentURL.searchParams.get('username') == currentUser &&
+                selectionType.id == 'postsByUser'
+            ) {
+                let deleteButton = generatePostDelete();
+                postcontent.appendChild(deleteButton);
+            }
+
+            post.appendChild(postcontent);
+            post.dataset.postId = Infos.post_id;
+
+            content.appendChild(post);
+            modal.removeEventListener('click', utilFunctions.closeModalByClickingOutside);
+            modal.addEventListener('click', () => {
+                utilFunctions.closeModalByClickingOutside(event, modal, post);
+            });
+
+            modal.classList.remove('hidden');
+            post.style.animation = 'fadeInUp 0.5s forwards';
         }
-
-        post.appendChild(postcontent);
-        post.dataset.postId = Infos.post_id;
-
-        content.appendChild(post);
-        modal.removeEventListener('click', utilFunctions.closeModalByClickingOutside);
-        modal.addEventListener('click', () => {
-            utilFunctions.closeModalByClickingOutside(event, modal, post);
-        });
-
-        modal.classList.remove('hidden');
-        post.style.animation = 'fadeInUp 0.5s forwards';
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -418,71 +436,78 @@ export function isImageFormat(file) {
     return false;
 }
 export async function saveProfileChanges() {
-    let formdata = new FormData();
+    try {
+        let formdata = new FormData();
 
-    let bio = document.getElementById('profileBiography');
-    let name = document.getElementById('profileName');
-    let pictureEl = document.getElementById('profilePicture');
-    let picture = document.getElementById('profilePictureUpload');
-    let available;
+        let bio = document.getElementById('profileBiography');
+        let name = document.getElementById('profileName');
+        let pictureEl = document.getElementById('profilePicture');
+        let picture = document.getElementById('profilePictureUpload');
+        let available;
 
-    if (name.textContent.length >= 3) {
-        available = await GetMethodFetch('/api/isUsernameAvailable/' + name.textContent);
-        available = available.available;
-    } else {
-        available = false;
-    }
-
-    formdata.append('biography', bio.value);
-
-    let file = picture.files[0];
-    let uploadFile = file
-        ? new File(
-              [file],
-              file.name
-                  .normalize('NFD')
-                  .replace(/[\u0300-\u036f]/g, '')
-
-                  //? keres egy pontot (\.) ha utána van még pont (?=.*\.) (asszem)
-                  .replace(/\.(?=.*\.)/g, '-'),
-              {
-                  type: file.type
-              }
-          )
-        : undefined;
-    formdata.append('profilePic', isImageFormat(uploadFile) ? uploadFile : undefined);
-    formdata.append('currentProfilePicture', pictureEl.src.split('/profile_images/')[1]);
-    if (available || name.innerText == usernameBefore) {
-        formdata.append('targetUser', currentURL.searchParams.get('username'));
-        formdata.append('username', name.textContent);
-
-        let { Status } = await UploadPostMethod('/api/modifyProfile', formdata);
-        if (Status == 'success') {
-            currentURL.searchParams.set('username', name.textContent);
-            window.location.href = currentURL;
+        if (name.textContent.length >= 3) {
+            available = await GetMethodFetch('/api/isUsernameAvailable/' + name.textContent);
+            available = available.available;
         } else {
-            console.log(Status);
+            available = false;
         }
-    } else {
-        name.innerText = usernameBefore;
-        bio.value = biographyBefore;
+
+        formdata.append('biography', bio.value);
+
+        let file = picture.files[0];
+        let uploadFile = file
+            ? new File(
+                  [file],
+                  file.name
+                      .normalize('NFD')
+                      .replace(/[\u0300-\u036f]/g, '')
+
+                      //? keres egy pontot (\.) ha utána van még pont (?=.*\.) (asszem)
+                      .replace(/\.(?=.*\.)/g, '-')
+                      .replace(/\(/g, '')
+                      .replace(/\)/g, '')
+                      .replace(' ', ''),
+                  {
+                      type: file.type
+                  }
+              )
+            : undefined;
+        formdata.append('profilePic', isImageFormat(uploadFile) ? uploadFile : undefined);
+        formdata.append('currentProfilePicture', pictureEl.src.split('/profile_images/')[1]);
+        if (available || name.innerText == usernameBefore) {
+            formdata.append('targetUser', currentURL.searchParams.get('username'));
+            formdata.append('username', name.textContent);
+
+            let { Status } = await UploadPostMethod('/api/modifyProfile', formdata);
+            if (Status == 'success') {
+                currentURL.searchParams.set('username', name.textContent);
+                window.location.href = currentURL;
+            } else {
+                console.log(Status);
+            }
+        } else {
+            name.innerText = usernameBefore;
+            bio.value = biographyBefore;
+        }
+
+        document.getElementById('profileModify').classList.remove('hidden');
+        document.getElementById('cancelProfileModification').classList.add('hidden');
+        document.getElementById('profilePictureUploadLabel').classList.add('hidden');
+        document.getElementById('deleteProfile').classList.add('hidden');
+        document.getElementById('tempImg').src = '';
+        document.getElementById('tempImg').classList.add('hidden');
+        this.classList.add('hidden');
+
+        pictureEl.classList.remove('hidden');
+
+        name.classList.remove('modifyData');
+        name.contentEditable = false;
+
+        bio.disabled = true;
+        bio.parentNode.classList.remove('modifyData');
+    } catch (error) {
+        console.error(error);
     }
-
-    document.getElementById('profileModify').classList.remove('hidden');
-    document.getElementById('cancelProfileModification').classList.add('hidden');
-    document.getElementById('profilePictureUploadLabel').classList.add('hidden');
-    document.getElementById('deleteProfile').classList.add('hidden');
-    document.getElementById('tempImg').src = '';
-    document.getElementById('tempImg').classList.add('hidden');
-    this.classList.add('hidden');
-
-    pictureEl.classList.remove('hidden');
-
-    name.classList.remove('modifyData');
-    name.contentEditable = false;
-
-    bio.disabled = true;
-    bio.parentNode.classList.remove('modifyData');
 }
 
 export function cancelProfileChanges() {
@@ -554,8 +579,22 @@ export function hideDeleteModal() {
     }, 500);
 }
 
+function showErrorMessage(message) {
+    let errorDiv = document.getElementById('errorAlert');
+    errorDiv.classList.remove('hidden');
+    errorDiv.style.animation = 'fadeInDown 0.5s forwards';
+    let errorMessage = document.getElementById('errorMessage');
+    errorMessage.innerText = message;
+
+    setTimeout(() => {
+        errorDiv.style.animation = 'fadeOutUp 0.5s forwards';
+        setTimeout(() => {
+            errorDiv.classList.add('hidden');
+        }, 500);
+    }, 3000);
+}
+
 export async function doDelete() {
-    console.log(deletionType);
     if (currentUser == currentURL.searchParams.get('username')) {
         if (deletionType == 'Post') {
             try {
@@ -568,7 +607,7 @@ export async function doDelete() {
                     closePost();
                     postsByUser();
                 } else {
-                    alert('Valami hiba történt!');
+                    showErrorMessage('Valami hiba történt!');
                 }
             } catch (error) {
                 console.error(error);
@@ -584,16 +623,16 @@ export async function doDelete() {
                     await PostMethodFetch('/api/removeUsername');
                     window.location.href = '/login';
                 } else {
-                    alert('Valami hiba történt!');
+                    showErrorMessage('Valami hiba történt!');
                 }
             } catch (error) {
                 console.error(error);
             }
         } else {
-            alert('Valami hiba történt!');
+            showErrorMessage('Valami hiba történt!');
         }
     } else {
-        alert('Önnek nincsen ehhez jogusultsága!');
         hideDeleteModal();
+        showErrorMessage('Önnek nincsen ehhez jogusultsága!');
     }
 }

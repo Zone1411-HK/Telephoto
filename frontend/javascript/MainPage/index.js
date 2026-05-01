@@ -102,27 +102,31 @@ async function startUp() {
 }
 
 async function addEventListeners() {
-    let randomPlacesResponse = await GetMethodFetch('/api/randomPlaces');
-    if (randomPlacesResponse.Status == 'success') {
-        let placeButtons = document.querySelectorAll('.egyebButton');
+    try {
+        let randomPlacesResponse = await GetMethodFetch('/api/randomPlaces');
+        if (randomPlacesResponse.Status == 'success') {
+            let placeButtons = document.querySelectorAll('.egyebButton');
 
-        for (let i = 0; i < randomPlacesResponse.places.length; i++) {
-            placeButtons[i].value = randomPlacesResponse.places[i].location;
-            placeButtons[i].dataset.filled = 'true';
-            placeButtons[i].disabled = false;
-            placeButtons[i].classList.remove('disabledButton');
-            placeButtons[i].addEventListener('click', searchRandomPlaces);
-        }
+            for (let i = 0; i < randomPlacesResponse.places.length; i++) {
+                placeButtons[i].value = randomPlacesResponse.places[i].location;
+                placeButtons[i].dataset.filled = 'true';
+                placeButtons[i].disabled = false;
+                placeButtons[i].classList.remove('disabledButton');
+                placeButtons[i].addEventListener('click', searchRandomPlaces);
+            }
 
-        for (const button of placeButtons) {
-            if (button.dataset.filled != 'true') {
-                button.disabled = true;
-                button.classList.add('disabledButton');
+            for (const button of placeButtons) {
+                if (button.dataset.filled != 'true') {
+                    button.disabled = true;
+                    button.classList.add('disabledButton');
+                }
             }
         }
+        document.getElementById('mobileUpload').addEventListener('click', openUploadModal);
+        document.getElementById('openPostUpload').addEventListener('click', openUploadModal);
+    } catch (error) {
+        console.error(error);
     }
-    document.getElementById('mobileUpload').addEventListener('click', openUploadModal);
-    document.getElementById('openPostUpload').addEventListener('click', openUploadModal);
 }
 
 function openUploadModal() {
@@ -140,14 +144,18 @@ function openUploadModal() {
 }
 
 async function searchRandomPlaces() {
-    const { status, result } = await PostMethodFetch('/api/setOffset', {
-        type: 'reset',
-        offset: 50
-    });
-    for (const element of document.querySelectorAll('.activeSort')) {
-        element.classList.remove('activeSort');
+    try {
+        const { status, result } = await PostMethodFetch('/api/setOffset', {
+            type: 'reset',
+            offset: 50
+        });
+        for (const element of document.querySelectorAll('.activeSort')) {
+            element.classList.remove('activeSort');
+        }
+        this.classList.add('activeSort');
+        document.getElementById('posts-container').replaceChildren();
+        postFunctions.randomPlaceSort(this.value);
+    } catch (error) {
+        console.error(error);
     }
-    this.classList.add('activeSort');
-    document.getElementById('posts-container').replaceChildren();
-    postFunctions.randomPlaceSort(this.value);
 }

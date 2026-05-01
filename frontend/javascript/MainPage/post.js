@@ -67,22 +67,26 @@ export function removeActiveLoad() {
 let searchValue;
 
 export async function getSearchedPosts(searchValue) {
-    const response = await GetMethodFetch('/api/searchPosts/' + searchValue);
+    try {
+        const response = await GetMethodFetch('/api/searchPosts/' + searchValue);
 
-    if (response.status != 'failed') {
-        const data = response.results;
+        if (response.status != 'failed') {
+            const data = response.results;
 
-        for (let i = 0; i < data.length; i++) {
-            await hangPictures(data[i]);
+            for (let i = 0; i < data.length; i++) {
+                await hangPictures(data[i]);
+            }
+            type = 'searched';
+            const { status, result } = await PostMethodFetch('/api/setOffset', {
+                type: type,
+                offset: 50
+            });
+            appendLoadMore(data.length == 50);
+        } else {
+            appendLoadMore(false);
         }
-        type = 'searched';
-        const { status, result } = await PostMethodFetch('/api/setOffset', {
-            type: type,
-            offset: 50
-        });
-        appendLoadMore(data.length == 50);
-    } else {
-        appendLoadMore(false);
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -110,36 +114,44 @@ export async function searchPost(searchDiv, searchButton) {
 }
 
 export async function trendingPosts() {
-    removeActiveLoad();
-    const trendingButtons = document.querySelectorAll('.trendingButton');
-    for (const button of trendingButtons) {
-        button.removeEventListener('click', trendingPosts);
-    }
-    this.classList.add('activeSort');
-
-    let posts = document.getElementById('posts-container');
-    posts.replaceChildren();
-    const { status, result } = await PostMethodFetch('/api/setOffset', {
-        type: 'reset',
-        offset: 0
-    });
-    timeframe = this.children[1].value;
-    getTopPosts().then(() => {
+    try {
+        removeActiveLoad();
+        const trendingButtons = document.querySelectorAll('.trendingButton');
         for (const button of trendingButtons) {
-            button.addEventListener('click', trendingPosts);
+            button.removeEventListener('click', trendingPosts);
         }
-    });
+        this.classList.add('activeSort');
+
+        let posts = document.getElementById('posts-container');
+        posts.replaceChildren();
+        const { status, result } = await PostMethodFetch('/api/setOffset', {
+            type: 'reset',
+            offset: 0
+        });
+        timeframe = this.children[1].value;
+        getTopPosts().then(() => {
+            for (const button of trendingButtons) {
+                button.addEventListener('click', trendingPosts);
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 export async function startUpPosts() {
-    const { status, result } = await PostMethodFetch('/api/setOffset', {
-        type: 'reset',
-        offset: 0
-    });
-    await getTopPosts();
-    addEventListenersToElements();
-    const trendingButtons = document.querySelectorAll('.trendingButton');
-    trendingButtons[trendingButtons.length - 1].classList.add('activeSort');
+    try {
+        const { status, result } = await PostMethodFetch('/api/setOffset', {
+            type: 'reset',
+            offset: 0
+        });
+        await getTopPosts();
+        addEventListenersToElements();
+        const trendingButtons = document.querySelectorAll('.trendingButton');
+        trendingButtons[trendingButtons.length - 1].classList.add('activeSort');
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 const getTopPosts = async () => {
@@ -167,25 +179,29 @@ const getTopPosts = async () => {
 };
 
 export async function randomPlaceSort(searchValue) {
-    type = searchValue;
+    try {
+        type = searchValue;
 
-    const response = await GetMethodFetch('/api/randomPlacesPosts/' + searchValue);
+        const response = await GetMethodFetch('/api/randomPlacesPosts/' + searchValue);
 
-    if (response.status != 'failed') {
-        const data = response.places;
+        if (response.status != 'failed') {
+            const data = response.places;
 
-        for (let i = 0; i < data.length; i++) {
-            await hangPictures(data[i]);
+            for (let i = 0; i < data.length; i++) {
+                await hangPictures(data[i]);
+            }
+
+            const { status, result } = await PostMethodFetch('/api/setOffset', {
+                type: type,
+                offset: 50
+            });
+
+            appendLoadMore(data.length == 50);
+        } else {
+            appendLoadMore(false);
         }
-
-        const { status, result } = await PostMethodFetch('/api/setOffset', {
-            type: type,
-            offset: 50
-        });
-
-        appendLoadMore(data.length == 50);
-    } else {
-        appendLoadMore(false);
+    } catch (error) {
+        console.error(error);
     }
 }
 

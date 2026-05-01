@@ -29,61 +29,65 @@ export function loadNewChatImg() {
 }
 
 export async function getChats() {
-    const doesChatIdExist = await GetMethodFetch('/api/sendChatId');
-    let chatArray = await getChatData();
-    if (Array.isArray(chatArray)) {
-        const existingChats = document.getElementById('existingChats');
-        existingChats.replaceChildren();
-        for (const chat of chatArray) {
-            const chatDiv = document.createElement('div');
-            chatDiv.classList.add('chat');
+    try {
+        const doesChatIdExist = await GetMethodFetch('/api/sendChatId');
+        let chatArray = await getChatData();
+        if (Array.isArray(chatArray)) {
+            const existingChats = document.getElementById('existingChats');
+            existingChats.replaceChildren();
+            for (const chat of chatArray) {
+                const chatDiv = document.createElement('div');
+                chatDiv.classList.add('chat');
 
-            const chatImgDiv = document.createElement('div');
-            chatImgDiv.classList.add('chatImgDiv');
+                const chatImgDiv = document.createElement('div');
+                chatImgDiv.classList.add('chatImgDiv');
 
-            const chatImgBorder = document.createElement('div');
-            chatImgBorder.classList.add('chatImgBorder');
+                const chatImgBorder = document.createElement('div');
+                chatImgBorder.classList.add('chatImgBorder');
 
-            const chatImg = document.createElement('img');
-            chatImg.classList.add('chatImg');
-            chatImg.src = '/chat_images/' + chat.pictureLink;
-            chatImgBorder.appendChild(chatImg);
+                const chatImg = document.createElement('img');
+                chatImg.classList.add('chatImg');
+                chatImg.src = '/chat_images/' + chat.pictureLink;
+                chatImgBorder.appendChild(chatImg);
 
-            chatImgDiv.appendChild(chatImgBorder);
+                chatImgDiv.appendChild(chatImgBorder);
 
-            chatDiv.appendChild(chatImgDiv);
+                chatDiv.appendChild(chatImgDiv);
 
-            const chatTexts = document.createElement('div');
-            chatTexts.classList.add('chatTexts');
+                const chatTexts = document.createElement('div');
+                chatTexts.classList.add('chatTexts');
 
-            const chatName = document.createElement('h3');
-            chatName.innerText = chat.name;
-            chatName.classList.add('chatName');
-            chatTexts.appendChild(chatName);
+                const chatName = document.createElement('h3');
+                chatName.innerText = chat.name;
+                chatName.classList.add('chatName');
+                chatTexts.appendChild(chatName);
 
-            const lastMessage = document.createElement('p');
-            lastMessage.classList.add('lastText');
-            if (chat.lastMessage != '') {
-                lastMessage.innerText = chat.userOfLastMessage + ': ' + chat.lastMessage;
-            } else {
-                lastMessage.innerText = 'Nincs még üzenet ebben a beszélgetésben!';
+                const lastMessage = document.createElement('p');
+                lastMessage.classList.add('lastText');
+                if (chat.lastMessage != '') {
+                    lastMessage.innerText = chat.userOfLastMessage + ': ' + chat.lastMessage;
+                } else {
+                    lastMessage.innerText = 'Nincs még üzenet ebben a beszélgetésben!';
+                }
+                chatTexts.appendChild(lastMessage);
+
+                chatDiv.appendChild(chatTexts);
+                chatDiv.dataset.id = chat.id;
+                chatDiv.dataset.name = chat.name;
+                chatDiv.addEventListener('click', openChat);
+                existingChats.appendChild(chatDiv);
+
+                socket.emit('joinRoom', chat.id);
             }
-            chatTexts.appendChild(lastMessage);
-
-            chatDiv.appendChild(chatTexts);
-            chatDiv.dataset.id = chat.id;
-            chatDiv.dataset.name = chat.name;
-            chatDiv.addEventListener('click', openChat);
-            existingChats.appendChild(chatDiv);
-
-            socket.emit('joinRoom', chat.id);
+        } else {
+            console.error(chatArray);
         }
-    } else {
-        console.error(chatArray);
-    }
 
-    if (doesChatIdExist.exists == true) {
-        openChat();
+        if (doesChatIdExist.exists == true) {
+            openChat();
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -121,88 +125,96 @@ export async function getChatData() {
 }
 
 export async function closeChat() {
-    const response = await PostMethodFetch('/api/removeChatId');
+    try {
+        const response = await PostMethodFetch('/api/removeChatId');
 
-    const chatWrapper = document.getElementById('openedChatWrapper');
-    chatWrapper.classList.add('invisible');
+        const chatWrapper = document.getElementById('openedChatWrapper');
+        chatWrapper.classList.add('invisible');
 
-    const chatContainer = document.getElementById('chatContainer');
-    chatContainer.classList.remove('invisible');
+        const chatContainer = document.getElementById('chatContainer');
+        chatContainer.classList.remove('invisible');
 
-    await getChats();
+        await getChats();
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 export async function generateChat(element) {
-    const doesChatIdExist = await GetMethodFetch('/api/sendChatId');
-    let chatId;
-    const chatName = document.createElement('h3');
+    try {
+        const doesChatIdExist = await GetMethodFetch('/api/sendChatId');
+        let chatId;
+        const chatName = document.createElement('h3');
 
-    if (doesChatIdExist.exists == false) {
-        chatId = element.dataset.id;
-        const chatIdResponse = await PostMethodFetch('/api/saveChatId', {
-            chatId: chatId
-        });
-        chatName.innerText = element.dataset.name;
-    } else {
-        chatId = doesChatIdExist.Result;
-        const infos = await GetMethodFetch('/api/storedChatIdInfos');
-        chatName.innerText = infos.Result;
-    }
-
-    const chatContainer = document.getElementById('chatContainer');
-    chatContainer.classList.add('invisible');
-
-    const chatWrapper = document.getElementById('openedChatWrapper');
-    chatWrapper.classList.remove('invisible');
-
-    const openedChat = document.getElementById('openedChat');
-    openedChat.dataset.chatId = chatId;
-    openedChat.replaceChildren();
-
-    const nav = document.createElement('div');
-    nav.classList.add('openedChatNav');
-
-    const chatNameDiv = document.createElement('div');
-    chatNameDiv.classList.add('openedChatName');
-
-    chatNameDiv.appendChild(chatName);
-
-    const chatNameCloseDiv = document.createElement('div');
-    chatNameCloseDiv.classList.add('openedChatClose');
-
-    const closeButton = document.createElement('button');
-    closeButton.type = 'button';
-    closeButton.addEventListener('click', closeChat);
-    closeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
-
-    chatNameCloseDiv.appendChild(closeButton);
-
-    nav.appendChild(chatNameDiv);
-    nav.appendChild(chatNameCloseDiv);
-
-    openedChat.appendChild(nav);
-    const messagesDiv = document.createElement('div');
-    messagesDiv.classList.add('messagesDiv');
-    const response = await GetMethodFetch('/api/messagesOfChat');
-
-    const currentUsername = await GetMethodFetch('/api/sendUsername');
-
-    if (response.Result.length > 0) {
-        for (const obj of response.Result) {
-            const messageRow = generateMessage(
-                obj.username,
-                currentUsername.Result,
-                obj.message,
-                obj.message_date
-            );
-            messagesDiv.appendChild(messageRow);
+        if (doesChatIdExist.exists == false) {
+            chatId = element.dataset.id;
+            const chatIdResponse = await PostMethodFetch('/api/saveChatId', {
+                chatId: chatId
+            });
+            chatName.innerText = element.dataset.name;
+        } else {
+            chatId = doesChatIdExist.Result;
+            const infos = await GetMethodFetch('/api/storedChatIdInfos');
+            chatName.innerText = infos.Result;
         }
+
+        const chatContainer = document.getElementById('chatContainer');
+        chatContainer.classList.add('invisible');
+
+        const chatWrapper = document.getElementById('openedChatWrapper');
+        chatWrapper.classList.remove('invisible');
+
+        const openedChat = document.getElementById('openedChat');
+        openedChat.dataset.chatId = chatId;
+        openedChat.replaceChildren();
+
+        const nav = document.createElement('div');
+        nav.classList.add('openedChatNav');
+
+        const chatNameDiv = document.createElement('div');
+        chatNameDiv.classList.add('openedChatName');
+
+        chatNameDiv.appendChild(chatName);
+
+        const chatNameCloseDiv = document.createElement('div');
+        chatNameCloseDiv.classList.add('openedChatClose');
+
+        const closeButton = document.createElement('button');
+        closeButton.type = 'button';
+        closeButton.addEventListener('click', closeChat);
+        closeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+
+        chatNameCloseDiv.appendChild(closeButton);
+
+        nav.appendChild(chatNameDiv);
+        nav.appendChild(chatNameCloseDiv);
+
+        openedChat.appendChild(nav);
+        const messagesDiv = document.createElement('div');
+        messagesDiv.classList.add('messagesDiv');
+        const response = await GetMethodFetch('/api/messagesOfChat');
+
+        const currentUsername = await GetMethodFetch('/api/sendUsername');
+
+        if (response.Result.length > 0) {
+            for (const obj of response.Result) {
+                const messageRow = generateMessage(
+                    obj.username,
+                    currentUsername.Result,
+                    obj.message,
+                    obj.message_date
+                );
+                messagesDiv.appendChild(messageRow);
+            }
+        }
+
+        openedChat.appendChild(messagesDiv);
+
+        const messageInput = generateMessageInput();
+        openedChat.appendChild(messageInput);
+    } catch (error) {
+        console.error(error);
     }
-
-    openedChat.appendChild(messagesDiv);
-
-    const messageInput = generateMessageInput();
-    openedChat.appendChild(messageInput);
 }
 
 export async function openChat() {
@@ -313,18 +325,22 @@ export function expandUpwards() {
 }
 
 export async function sendMessage() {
-    const newMessageInput = document.getElementById('newMessageInput');
-    if (newMessageInput.value != '' && newMessageInput.value.replace(/\s/g, '').length != 0) {
-        const newMessage = newMessageInput.value;
-        const chatId = document.getElementById('openedChat').dataset.chatId;
-        let username = await GetMethodFetch('/api/sendUsername');
-        username = username.Result;
-        socket.emit('newMessage', chatId);
-        const response = await PostMethodFetch('/api/sendMessage', {
-            message: newMessage,
-            chatId: chatId,
-            username: username
-        });
+    try {
+        const newMessageInput = document.getElementById('newMessageInput');
+        if (newMessageInput.value != '' && newMessageInput.value.replace(/\s/g, '').length != 0) {
+            const newMessage = newMessageInput.value;
+            const chatId = document.getElementById('openedChat').dataset.chatId;
+            let username = await GetMethodFetch('/api/sendUsername');
+            username = username.Result;
+            socket.emit('newMessage', chatId);
+            const response = await PostMethodFetch('/api/sendMessage', {
+                message: newMessage,
+                chatId: chatId,
+                username: username
+            });
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -355,49 +371,53 @@ export function closeNewChatWindow() {
 }
 
 export async function searchUser() {
-    const suggestionDiv = document.getElementById('newChatUserSuggestionList');
-    const addedUser = document.getElementById('newChatAddedUsers');
-    let { Result } = await GetMethodFetch('/api/sendUsername');
+    try {
+        const suggestionDiv = document.getElementById('newChatUserSuggestionList');
+        const addedUser = document.getElementById('newChatAddedUsers');
+        let { Result } = await GetMethodFetch('/api/sendUsername');
 
-    if (this.value.length >= 3) {
-        const { Status, Data } = await GetMethodFetch('/api/searchUser/' + this.value);
-        if (Status == 'Success') {
-            suggestionDiv.replaceChildren();
-            for (const val of Data) {
-                if (val.username != Result) {
-                    const user = document.createElement('div');
-                    user.classList.add('suggestedUser');
-                    user.dataset.userId = val.user_id;
-                    user.dataset.username = val.username;
-                    user.dataset.userPic = val.profile_picture_link;
+        if (this.value.length >= 3) {
+            const { Status, Data } = await GetMethodFetch('/api/searchUser/' + this.value);
+            if (Status == 'Success') {
+                suggestionDiv.replaceChildren();
+                for (const val of Data) {
+                    if (val.username != Result) {
+                        const user = document.createElement('div');
+                        user.classList.add('suggestedUser');
+                        user.dataset.userId = val.user_id;
+                        user.dataset.username = val.username;
+                        user.dataset.userPic = val.profile_picture_link;
 
-                    const img = document.createElement('img');
-                    if (val.profile_picture_link == null) {
-                        img.src = '/profile_images/defaultProfile.svg';
-                    } else {
-                        img.src = '/profile_images/' + val.profile_picture_link;
-                    }
-                    img.classList.add('suggestedImg');
-
-                    const name = document.createElement('div');
-                    name.innerText = val.username;
-
-                    user.appendChild(img);
-                    user.appendChild(name);
-                    user.addEventListener('click', addUser);
-
-                    for (const child of addedUser.children) {
-                        if (child.dataset.userId == user.dataset.userId) {
-                            user.classList.add('selected');
+                        const img = document.createElement('img');
+                        if (val.profile_picture_link == null) {
+                            img.src = '/profile_images/defaultProfile.svg';
+                        } else {
+                            img.src = '/profile_images/' + val.profile_picture_link;
                         }
-                    }
+                        img.classList.add('suggestedImg');
 
-                    suggestionDiv.appendChild(user);
+                        const name = document.createElement('div');
+                        name.innerText = val.username;
+
+                        user.appendChild(img);
+                        user.appendChild(name);
+                        user.addEventListener('click', addUser);
+
+                        for (const child of addedUser.children) {
+                            if (child.dataset.userId == user.dataset.userId) {
+                                user.classList.add('selected');
+                            }
+                        }
+
+                        suggestionDiv.appendChild(user);
+                    }
                 }
             }
+        } else {
+            suggestionDiv.replaceChildren();
         }
-    } else {
-        suggestionDiv.replaceChildren();
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -460,68 +480,88 @@ export function removeAddedUser() {
 }
 
 export async function createNewChat() {
-    const form = document.getElementById('newChatForm');
-    let formData = new FormData();
-    formData.append('chatName', document.getElementById('newChatName').value);
+    try {
+        const form = document.getElementById('newChatForm');
+        let formData = new FormData();
+        formData.append('chatName', document.getElementById('newChatName').value);
 
-    const addedUsers = document.querySelectorAll('.addedUser');
+        const addedUsers = document.querySelectorAll('.addedUser');
 
-    if (addedUsers.length != 0) {
-        let userIds = [];
+        if (addedUsers.length != 0) {
+            let userIds = [];
 
-        for (const user of addedUsers) {
-            userIds.push(user.dataset.userId);
-        }
-
-        let { userId } = await GetMethodFetch('/api/sendUserId');
-        userIds.push(userId);
-        formData.append('userIds', userIds);
-
-        let img = document.getElementById('newChatImgInput').files[0];
-        let newImg = '';
-        if (img) {
-            newImg = new File(
-                [img],
-                img.name
-                    .normalize('NFD')
-                    .replace(/[\u0300-\u036f]/g, '')
-                    .replace(/\.(?=.*\.)/g, '-'),
-                {
-                    type: img.type
-                }
-            );
-        }
-
-        formData.append('img', newImg);
-
-        let errorMessage;
-        let isValid = true;
-        for (const value of formData.values()) {
-            if (value == '') {
-                isValid = false;
-                errorMessage = 'Nem töltötte ki az összes mezőt!';
+            for (const user of addedUsers) {
+                userIds.push(user.dataset.userId);
             }
-            try {
-                if (value.type.split('/')[0] != 'image') {
+
+            let { userId } = await GetMethodFetch('/api/sendUserId');
+            userIds.push(userId);
+            formData.append('userIds', userIds);
+
+            let img = document.getElementById('newChatImgInput').files[0];
+            let newImg = '';
+            if (img) {
+                newImg = new File(
+                    [img],
+                    img.name
+                        .normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '')
+                        .replace(/\.(?=.*\.)/g, '-')
+                        .replace(/\(/g, '')
+                        .replace(/\)/g, '')
+                        .replace(' ', ''),
+                    {
+                        type: img.type
+                    }
+                );
+            }
+
+            formData.append('img', newImg);
+
+            let errorMessage;
+            let isValid = true;
+            for (const value of formData.values()) {
+                if (value == '') {
                     isValid = false;
-                    errorMessage = 'Nem megfelelő formátumú fájl feltöltve!';
+                    errorMessage = 'Nem töltötte ki az összes mezőt!';
                 }
-            } catch (error) {}
-        }
+                try {
+                    if (value.type.split('/')[0] != 'image') {
+                        isValid = false;
+                        errorMessage = 'Nem megfelelő formátumú fájl feltöltve!';
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
 
-        if (isValid) {
-            const { Status } = await filePost('/api/createChat', formData);
+            if (isValid) {
+                const { Status } = await filePost('/api/createChat', formData);
 
-            if (Status == 'Success') {
-                form.reset();
-                closeNewChatWindow();
-                getChats();
+                if (Status == 'Success') {
+                    form.reset();
+                    closeNewChatWindow();
+                    getChats();
+                } else {
+                    let errorDiv = document.getElementById('chatError');
+                    errorDiv.classList.remove('hidden');
+                    errorDiv.style.animation = 'fadeInDown 0.5s forwards';
+                    let errorMessageP = document.getElementById('chatErrorMessage');
+                    errorMessageP.innerText = 'Valami hiba történt';
+
+                    setTimeout(() => {
+                        errorDiv.style.animation = 'fadeOutUp 0.5s forwards';
+                        setTimeout(() => {
+                            errorDiv.classList.add('hidden');
+                        }, 500);
+                    }, 3000);
+                }
             } else {
                 let errorDiv = document.getElementById('chatError');
                 errorDiv.classList.remove('hidden');
                 errorDiv.style.animation = 'fadeInDown 0.5s forwards';
                 let errorMessageP = document.getElementById('chatErrorMessage');
-                errorMessageP.innerText = 'Valami hiba történt';
+                errorMessageP.innerText = errorMessage;
 
                 setTimeout(() => {
                     errorDiv.style.animation = 'fadeOutUp 0.5s forwards';
@@ -535,7 +575,7 @@ export async function createNewChat() {
             errorDiv.classList.remove('hidden');
             errorDiv.style.animation = 'fadeInDown 0.5s forwards';
             let errorMessageP = document.getElementById('chatErrorMessage');
-            errorMessageP.innerText = errorMessage;
+            errorMessageP.innerText = 'Nincs hozzáadott felhasználó';
 
             setTimeout(() => {
                 errorDiv.style.animation = 'fadeOutUp 0.5s forwards';
@@ -544,19 +584,8 @@ export async function createNewChat() {
                 }, 500);
             }, 3000);
         }
-    } else {
-        let errorDiv = document.getElementById('chatError');
-        errorDiv.classList.remove('hidden');
-        errorDiv.style.animation = 'fadeInDown 0.5s forwards';
-        let errorMessageP = document.getElementById('chatErrorMessage');
-        errorMessageP.innerText = 'Nincs hozzáadott felhasználó';
-
-        setTimeout(() => {
-            errorDiv.style.animation = 'fadeOutUp 0.5s forwards';
-            setTimeout(() => {
-                errorDiv.classList.add('hidden');
-            }, 500);
-        }, 3000);
+    } catch (error) {
+        console.error(error);
     }
 }
 

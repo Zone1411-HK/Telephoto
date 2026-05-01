@@ -653,17 +653,21 @@ export function generateUserRow(name, profilePicture) {
 }
 
 export async function reportUser() {
-    const responseUser = await PostMethodFetch('/api/reportUser', {
-        username: this.previousSibling.innerText
-    });
+    try {
+        const responseUser = await PostMethodFetch('/api/reportUser', {
+            username: this.previousSibling.innerText
+        });
 
-    const responsePost = await PostMethodFetch('/api/reportPost', {
-        postId: this.parentNode.parentNode.parentNode.dataset.postId
-    });
+        const responsePost = await PostMethodFetch('/api/reportPost', {
+            postId: this.parentNode.parentNode.parentNode.dataset.postId
+        });
 
-    if (responsePost.Status == 'success' && responseUser.Status == 'success') {
-        this.classList.add('reported');
-        this.removeEventListener('click', reportUser);
+        if (responsePost.Status == 'success' && responseUser.Status == 'success') {
+            this.classList.add('reported');
+            this.removeEventListener('click', reportUser);
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -683,14 +687,18 @@ export async function like(div, postId) {
     dislikeDiv.dataset.disliked = 'false';
     dislikeDiv.classList.remove('activeLike');
 
-    const { status } = await PostMethodFetch('/api/uploadInteraction', {
-        postId: postId,
-        likeValue: div.dataset.liked == 'true' ? true : false,
-        dislikeValue: false
-    });
+    try {
+        const { status } = await PostMethodFetch('/api/uploadInteraction', {
+            postId: postId,
+            likeValue: div.dataset.liked == 'true' ? true : false,
+            dislikeValue: false
+        });
 
-    if (status != 'success') {
-        console.log('Valami hiba történt a like-olás során');
+        if (status != 'success') {
+            console.log('Valami hiba történt a like-olás során');
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -711,14 +719,19 @@ export async function dislike(div, postId) {
     }
     likeDiv.dataset.liked = 'false';
     likeDiv.classList.remove('activeLike');
-    const { status } = await PostMethodFetch('/api/uploadInteraction', {
-        postId: postId,
-        likeValue: false,
-        dislikeValue: div.dataset.disliked == 'true' ? true : false
-    });
 
-    if (status != 'success') {
-        console.log('Valami hiba történt a dislike-olás során');
+    try {
+        const { status } = await PostMethodFetch('/api/uploadInteraction', {
+            postId: postId,
+            likeValue: false,
+            dislikeValue: div.dataset.disliked == 'true' ? true : false
+        });
+
+        if (status != 'success') {
+            console.log('Valami hiba történt a dislike-olás során');
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -730,11 +743,16 @@ export async function favoritePost(div, postId) {
         div.dataset.favorite = 'true';
         div.classList.add('activeFavorite');
     }
-    const { status } = await PostMethodFetch('/api/favoritePost', {
-        postId: postId,
-        favoriteValue: div.dataset.favorite == 'true' ? true : false
-    });
-    if (status != 'success') console.log('Valami hiba történt a poszt elmentése során!');
+
+    try {
+        const { status } = await PostMethodFetch('/api/favoritePost', {
+            postId: postId,
+            favoriteValue: div.dataset.favorite == 'true' ? true : false
+        });
+        if (status != 'success') console.log('Valami hiba történt a poszt elmentése során!');
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 export async function showComments(postId) {
@@ -749,22 +767,26 @@ export async function showComments(postId) {
         closeCommentModal(event, modal, document.getElementById('commentModalContentWrapper'));
     });
 
-    const { status, results } = await GetMethodFetch('/api/commentInfos/' + postId);
+    try {
+        const { status, results } = await GetMethodFetch('/api/commentInfos/' + postId);
 
-    if (status == 'Success') {
-        if (results.length == 0) {
-            const encourageText = document.createElement('p');
-            encourageText.innerText =
-                'Még senki sem kommentelt ehhez a poszthoz.\nLegyél te az első!';
-            encourageText.classList.add('encourageText');
+        if (status == 'Success') {
+            if (results.length == 0) {
+                const encourageText = document.createElement('p');
+                encourageText.innerText =
+                    'Még senki sem kommentelt ehhez a poszthoz.\nLegyél te az első!';
+                encourageText.classList.add('encourageText');
 
-            modalContent.appendChild(encourageText);
-        } else {
-            for (const commentData of results) {
-                //console.log(commentData);
-                modalContent.appendChild(generateComment(commentData));
+                modalContent.appendChild(encourageText);
+            } else {
+                for (const commentData of results) {
+                    //console.log(commentData);
+                    modalContent.appendChild(generateComment(commentData));
+                }
             }
         }
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -894,12 +916,16 @@ export async function sendComment() {
     const textarea = document.getElementById('commentTextarea');
     const message = textarea.value;
     if (message != '' && message.replace(/\s/g, '').length != 0) {
-        await PostMethodFetch('/api/uploadComment', {
-            postId: modal.dataset.postId,
-            commentContent: message
-        });
-        showComments(modal.dataset.postId);
-        textarea.value = '';
+        try {
+            await PostMethodFetch('/api/uploadComment', {
+                postId: modal.dataset.postId,
+                commentContent: message
+            });
+            showComments(modal.dataset.postId);
+            textarea.value = '';
+        } catch (error) {
+            console.error(error);
+        }
     }
 }
 
@@ -918,8 +944,12 @@ export function closeCommentModal(e, modal, modalContent) {
 }
 
 export async function logout() {
-    const { Status } = await PostMethodFetch('/api/logout');
-    if (Status == 'Success') {
-        window.location.href = '/login';
+    try {
+        const { Status } = await PostMethodFetch('/api/logout');
+        if (Status == 'Success') {
+            window.location.href = '/login';
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
