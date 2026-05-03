@@ -75,7 +75,11 @@ export async function getGPS(file) {
             },
             expanded: true
         });
-        return tags.gps;
+
+        return {
+            Latitude: tags.gps.Latitude ? tags.gps.Latitude : null,
+            Longitude: tags.gps.Longitude ? tags.gps.Longitude : null
+        };
     } catch (error) {
         return null;
     }

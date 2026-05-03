@@ -43,11 +43,9 @@ app.use('/', router);
 //!Szerver futtatása
 app.use(express.static(path.join(__dirname, '../frontend'))); //?frontend mappa tartalmának betöltése az oldal működéséhez
 
-app.use('/node', express.static(path.join(__dirname, '../backend/node_modules'))); //! Ezért nem tudom Kardos megöl-e
+app.use('/node', express.static(path.join(__dirname, '../backend/node_modules')));
 
-app.use('/uploads', express.static(path.join(__dirname, '../backend/uploads'))); //! Ezért nem tudom Kardos megöl-e 2
-
-app.use('/user_pics', express.static(path.join(__dirname, '../backend/user_pics'))); //! Ezért nem tudom Kardos megöl-e 3
+app.use('/uploads', express.static(path.join(__dirname, '../backend/uploads')));
 
 app.use('/chat_images', express.static(path.join(__dirname, '../backend/chat_images')));
 

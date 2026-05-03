@@ -1067,6 +1067,16 @@ async function randomPlaces() {
     }
 }
 
+async function profilePicture(userId) {
+    try {
+        const sql = `SELECT users.profile_picture_link FROM users WHERE users.user_id = ?`;
+        const [rows] = await pool.execute(sql, [userId]);
+        return rows[0];
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 //!Export
 module.exports = {
     selectall,
@@ -1125,5 +1135,6 @@ module.exports = {
     randomPlaces,
     randomPlacesPosts,
     usernameExists,
-    reportComment
+    reportComment,
+    profilePicture
 };
