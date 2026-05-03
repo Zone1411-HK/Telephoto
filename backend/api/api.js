@@ -1242,10 +1242,11 @@ router.post('/modifyProfile', profileUpload.single('profilePic'), async (request
         let initiatingUser = request.session.username;
         let filename = request.file ? request.file.filename : currentProfilePicture;
 
-        let { profile_picture_link } = await database.profilePicture(request.session.userId);
-
         try {
-            if (profile_picture_link != 'defaultProfile.svg') {
+            if (
+                currentProfilePicture != 'defaultProfile.svg' &&
+                filename != currentProfilePicture
+            ) {
                 fs.unlink('../backend/profile_images/' + profile_picture_link);
             }
         } catch (error) {
