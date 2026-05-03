@@ -14,7 +14,7 @@ USE telephoto;
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Ápr 28. 20:01
+-- Létrehozás ideje: 2026. Máj 03. 22:31
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -203,7 +203,10 @@ INSERT INTO `interactions` (`interaction_id`, `user_id`, `post_id`, `upvote`, `d
 (48, 9, 16, 1, 0),
 (49, 10, 16, 1, 0),
 (50, 10, 17, 1, 0),
-(51, 3, 18, 1, 0);
+(51, 3, 18, 1, 0),
+(52, 6, 20, 1, 0),
+(53, 6, 21, 1, 0),
+(54, 6, 22, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -260,7 +263,15 @@ INSERT INTO `pictures` (`picture_id`, `post_id`, `picture_link`) VALUES
 (19, 16, '1777398309807-mac.jpg'),
 (20, 17, '1777398661295-pez-refill-orange.jpg'),
 (21, 18, '1777399041198-Header_VIE_Habsburger-1080x675.webp'),
-(22, 19, '1777399179094-a73d50bf8f85909b7b5aa61f3622e486.jpeg');
+(22, 19, '1777399179094-a73d50bf8f85909b7b5aa61f3622e486.jpeg'),
+(23, 20, '1777836344015-20230901_185222[1].jpg'),
+(24, 21, '1777838520943-20221025_123948.jpg'),
+(25, 21, '1777838520946-20231028_204110.jpg'),
+(26, 22, '1777840068982-20250420_135656.jpg'),
+(27, 22, '1777840068987-20250420_142641.jpg'),
+(28, 22, '1777840068992-20250420_142651.jpg'),
+(29, 22, '1777840068997-20250420_144606.jpg'),
+(30, 22, '1777840069005-20250420_145458.jpg');
 
 -- --------------------------------------------------------
 
@@ -299,7 +310,10 @@ INSERT INTO `posts` (`post_id`, `user_id`, `description`, `tags`, `location`, `l
 (16, 9, 'NA JÓÓÓÓ EZ NAGYON DURVÁN JÓ', '#apple #macbook #macbook neo ', '', NULL, NULL, '2026-04-28 19:45:09', 0),
 (17, 10, 'Mindjárt megérkezik egy hatalmas pez szállítmány', '#pez #eskü jön ', 'Trefort', NULL, NULL, '2026-04-28 19:51:01', 0),
 (18, 3, 'NA IDE IS ELJUTOTTAM NAGYON SZÉP EZ BÉCS', '', 'BÉCS', 48.1883, 16.3543, '2026-04-28 19:57:21', 0),
-(19, 2, 'elmentunk a hetvegen berlinbe az unokakkal', '#berlin #csalad #unokak #nemet #nemetorszag ', 'berlin', 52.5163, 13.3781, '2026-04-28 19:59:39', 0);
+(19, 2, 'elmentunk a hetvegen berlinbe az unokakkal', '#berlin #csalad #unokak #nemet #nemetorszag ', 'berlin', 52.5163, 13.3781, '2026-04-28 19:59:39', 0),
+(20, 6, 'Szép az ég', '', 'Budapest', 47.4749, 19.1503, '2026-05-03 21:25:44', 0),
+(21, 6, 'Hold és a Napfogyatkozás', '#sky #moon #sun ', 'Budapest', NULL, NULL, '2026-05-03 22:02:00', 0),
+(22, 6, 'Repülők', '#planes ', 'Budapest', 47.4476, 19.2175, '2026-05-03 22:27:49', 0);
 
 -- --------------------------------------------------------
 
@@ -330,7 +344,7 @@ INSERT INTO `users` (`user_id`, `username`, `password_salt`, `password_hash`, `e
 (3, 'Horváth Lajos', '6bebf8fdb5d3957d56c3e92a136ed8fe', '7cdae3d8e22a758321d00ea8fb4fa35e469a48e415ca1837c421c48cd63aca99ace6aca2da9a8a9f98435cc310e9fe1757951e8fb569407f3301a32049d64304', 'hlajos@freemail.com', '1777389677942-horvathlajos.png', 'CSAKA LEGSZEBB VIRÁGOK VANNAK AZ OLDALAMON', 0, 0, '2026-04-28 16:58:28'),
 (4, 'pthGraphy', '32fd350b1d1699d1d88190e0ab3adce7', '0310addfe372ac85e2faf76268b922425f7328700bb1904afee260de9bf594adfaee4fb76696cdcef924bd193ed87f4e7a02a2aa09178ceec3b164d7353fbe69', 'pth123@gmail.com', '1777393505379-pthGraphy.png', 'Kiskorom óta szenvedélyem a fotózás. Remélem tetszenek a képeim. Kamerám: Canon EOS R8', 0, 0, '2026-04-28 16:58:59'),
 (5, 'suloslaszlo', '3b0110886090e68dfdfb09d157165c45', '36b4381d8b30718b6da0ab58c386acb25b2a73a9fc1b5fa6f136e607dfa2d61b39c20f04280721ef4fd97c9b43addca38eeabe1e3f99e319a1a9193cbfa901d6', 'lacika@gmail.com', '1777393862882-portal.jpg', '', 0, 0, '2026-04-28 16:59:28'),
-(6, 'beni', '4e3f764a8e80dcbfc0ef5a490d8c3662', '678e3dc2f077d9ec47bef5b079613e45baccecbef1c0daf20c109f672ae9a1c46c48b77ea4b7da5b3433bce11ce75e59cd1129da6cc417c5d61e43f8626e51df', 'bugattibeni@gmail.com', '1777394874926-Untitled.png', '', 0, 0, '2026-04-28 17:00:18'),
+(6, 'beni', '4e3f764a8e80dcbfc0ef5a490d8c3662', '678e3dc2f077d9ec47bef5b079613e45baccecbef1c0daf20c109f672ae9a1c46c48b77ea4b7da5b3433bce11ce75e59cd1129da6cc417c5d61e43f8626e51df', 'bugattibeni@gmail.com', '1777394874926-Untitled.png', '#1 Ferrari fan, Fotós', 0, 0, '2026-04-28 17:00:18'),
 (7, 'mxn', '2454cd196b3fdd137ec06bfeab6d7a6d', '9e5d1af7fd81238bc8b46216a78ebaaeadda5920cdb45eca6ac5ed87cb9a47faabfdc2f3f05dec44dcddd98999e67d0408e336af8986a490e6390925046952dc', 'noera2005@gmail.com', '1777394153382-602.png', '#1 ARSENAL FAN ÉS #1 MADUEKE HATER', 0, 0, '2026-04-28 17:00:43'),
 (8, 'reppthor13', '9cd9a35cfa02e4ea2c5ae613478c1b71', '5b204dbd2a6b81138c03f6554204fb54e565689d7945e0ffbce23bec8b4e7ef4b77d5579d726f844710cdbe40e52f7d86d1d91035b8bb2b120da4c5fd49b9fca', 'tomiking0327@gmail.com', '1777398524661-nota.png', 'Nem tudom 6-7.', 0, 0, '2026-04-28 17:01:26'),
 (9, 'appleFanBoi', '38ea735d649e83029a559305afa224d7', '466abb86cefa686554cddcc6429967c38db23f5556e15c2a8edb5923f35448294e97c0098d9dbd5e77e818dca88a9eb3410a27d8129b6adc3ae3cbbccd675cb8', 'bavrGabor@gmail.com', '1777398361999-Apple_logo_grey-svg.png', 'Legnagyobb apple fan. Okosba vannak dolgaim', 0, 0, '2026-04-28 17:01:55'),
@@ -438,19 +452,19 @@ ALTER TABLE `comments`
 -- AUTO_INCREMENT a táblához `interactions`
 --
 ALTER TABLE `interactions`
-  MODIFY `interaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `interaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT a táblához `pictures`
 --
 ALTER TABLE `pictures`
-  MODIFY `picture_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `picture_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT a táblához `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT a táblához `users`
