@@ -1,5 +1,3 @@
-<h1 align="center">TEENDŐK</h1>
-
 <h1 align="center">Telephoto</h1>
 
 ## readme.md preview megnyitása:<br>
