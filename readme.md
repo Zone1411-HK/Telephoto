@@ -1,8 +1,4 @@
 <h1 align="center">TEENDŐK</h1>
-<ul>
-   <li>Térkép felületen egyedi pin-ek a posztokhoz</li>
-   <li>Főoldalon posztok rendezése</li>
-</ul>
 
 <h1 align="center">Telephoto</h1>
 
